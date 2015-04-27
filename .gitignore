@@ -1,0 +1,7 @@
+*.o
+.*.swp
+*.cmake
+Makefile
+CMakeFiles/
+CMakeCache.txt
+[Bb]uild/

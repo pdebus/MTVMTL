@@ -1,1 +1,0 @@
-/usr/bin/c++       CMakeFiles/manifold_test.dir/manifold_test.cpp.o  -o manifold_test -rdynamic 
