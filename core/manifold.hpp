@@ -20,6 +20,7 @@ struct Manifold< EUCLIDIAN, N > {
 	static const MANIFOLD_TYPE MyType;
 
 	// Scalar type of manifold
+	//typedef double scalar_type;
 	typedef double scalar_type;
 	typedef double dist_type;
 	
