@@ -16,4 +16,8 @@ add_executable(data_test data_test.cpp)
 add_test(data_test data_test)
 target_link_libraries(data_test ${OpenCV_LIBS} gomp)
 
+add_executable(functional_test functional_test.cpp)
+add_test(functional_test functional_test)
+target_link_libraries(functional_test ${OpenCV_LIBS} gomp)
+
 

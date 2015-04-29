@@ -2,6 +2,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #include "../core/data.hpp"
+#include "../core/functional.hpp"
 
 #include <vpp/vpp.hh>
 #include <vpp/utils/opencv_bridge.hh>
@@ -24,23 +25,15 @@ int main(int argc, const char *argv[])
 	data_t myData=data_t();
 	
 	myData.rgb_imread(argv[1]);
-
-	cv::namedWindow( "Display window", cv::WINDOW_NORMAL ); 
-
-	// Convert Picture of double to uchar
-	vpp::image2d<vpp::vuchar3> img(myData.noise_img_.domain());
-	vpp::pixel_wise(img, myData.noise_img_) | [] (auto& i, auto& n) {
-	    vec3d v = n;
-	    vpp::vuchar3 vu = vpp::vuchar3::Zero();
-	    vu[0]=(unsigned char) n[0];
-	    vu[1]=(unsigned char) n[1];
-	    vu[2]=(unsigned char) n[2];
-	    i = vu;
-	};
 	
-	cv::imshow( "Display window", vpp::to_opencv(img));
-	//cv::imshow( "Display window", vpp::to_opencv(myData.noise_img_));
+	typedef Functional<FIRSTORDER, ISO, mf_t, data_t> func_t;
+	func_t myFunc(3.0, myData);
 
-	cv::waitKey(0);
+	func_t::return_type result = 0.0;
+	    
+	result = myFunc.evaluateJ();
+
+	std::cout << "Functional evaluation for Picture " << argv[1] << ": " << result << std::endl;
+
 	return 0;
 }

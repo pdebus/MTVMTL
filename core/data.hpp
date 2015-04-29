@@ -31,10 +31,11 @@ class Data< MANIFOLD, 2>{
 
 	// Storage typedefs
 	typedef vpp::image2d<value_type> storage_type;
-	typedef vpp::image2d<double> weights_mat;
+	typedef double weights_type;
+	typedef vpp::image2d<weights_type> weights_mat;
 	typedef vpp::image2d<short int> inp_mat;
 
-	inline void rgb_imread(const char* filename); 
+	void rgb_imread(const char* filename); 
 
 	inline bool doInpaint() const { return inpaint_; }
 
@@ -62,12 +63,28 @@ class Data<MANIFOLD, 3>{
 template < typename MANIFOLD >
 const int Data<MANIFOLD, 2>::img_dim = 2;
 
-
+//TODO: static assert to avoid data that has not exactly 3 channels
 template < typename MANIFOLD >
-inline void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
-    noise_img_ = vpp::clone(vpp::from_opencv<value_type >(cv::imread(filename)), vpp::_border = 1);
-    img_ = storage_type(noise_img_.domain());
+void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
+	vpp::image2d<vpp::vuchar3> input_image;
+	input_image = vpp::clone(vpp::from_opencv<vpp::vuchar3 >(cv::imread(filename)));
+	noise_img_ = storage_type(input_image.domain());
+	// Convert Picture of uchar to double 
+	    vpp::pixel_wise(input_image, noise_img_) | [] (auto& i, auto& n) {
+	    value_type v = value_type::Zero();
+	    vpp::vuchar3 vu = i;
+	    // TODO: insert manifold scalar type, replace c-style casts
+	    v[0]=(double) vu[0];
+	    v[1]=(double) vu[1];
+	    v[2]=(double) vu[2];
+	    n = v;
+	};
+    img_ = vpp::clone(noise_img_, vpp::_border = 1);
+    //TODO: Remove test: make noise different to image 
+    vpp::pixel_wise(img_) | [] (auto & i) { i*=1.0001; };
+    //
     weights_ = weights_mat(noise_img_.domain());
+    inpaint_ = false;
 }
 
 

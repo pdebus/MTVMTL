@@ -19,13 +19,13 @@ enum ALGORITHM {
 };
 
 enum FUNCTIONAL_ORDER {
-    FIRST,
-    SECOND
+    FIRSTORDER,
+    SECONDORDER
 };
 
 enum FUNCTIONAL_DISC {
-    ISOTROPIC,
-    ANISOTROPIC
+    ISO,
+    ANISO
 };
 
 enum PAR {
