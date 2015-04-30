@@ -1,4 +1,6 @@
 #include <iostream>
+#include <limits>
+
 #include <opencv2/highgui/highgui.hpp>
 
 #include "../core/data.hpp"
@@ -28,13 +30,13 @@ int main(int argc, const char *argv[])
 	cv::namedWindow( "Display window", cv::WINDOW_NORMAL ); 
 
 	// Convert Picture of double to uchar
-	vpp::image2d<vpp::vuchar3> img(myData.noise_img_.domain());
-	vpp::pixel_wise(img, myData.noise_img_) | [] (auto& i, auto& n) {
-	    vec3d v = n;
+	vpp::image2d<vpp::vuchar3> img(myData.img_.domain());
+	vpp::pixel_wise(img, myData.img_) | [] (auto& i, auto& n) {
+	    vec3d v = n * (double) std::numeric_limits<unsigned char>::max();
 	    vpp::vuchar3 vu = vpp::vuchar3::Zero();
-	    vu[0]=(unsigned char) n[0];
-	    vu[1]=(unsigned char) n[1];
-	    vu[2]=(unsigned char) n[2];
+	    vu[0]=(unsigned char) v[0];
+	    vu[1]=(unsigned char) v[1];
+	    vu[2]=(unsigned char) v[2];
 	    i = vu;
 	};
 	

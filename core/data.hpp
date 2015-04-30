@@ -2,6 +2,8 @@
 #define TVTML_DATA_HPP
 
 // system includes
+#include <limits>
+#include <iostream>
 
 // video++ includes
 #include <vpp/vpp.hh>
@@ -39,6 +41,8 @@ class Data< MANIFOLD, 2>{
 
 	inline bool doInpaint() const { return inpaint_; }
 
+	void output_weights(const weights_mat& mat) const;
+
 //    private:
 	// Data members
 	// TODO Don't forget to initialize with 1px border
@@ -48,7 +52,8 @@ class Data< MANIFOLD, 2>{
 	weights_mat weights_;
 
 	bool inpaint_;
-	inp_mat inp_; // should be inverted for internal use 
+	inp_mat inp_; 
+	weights_mat iweights_;
 };
 
 
@@ -77,16 +82,33 @@ void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
 	    v[0]=(double) vu[0];
 	    v[1]=(double) vu[1];
 	    v[2]=(double) vu[2];
-	    n = v;
+	    n = v / (double) std::numeric_limits<unsigned char>::max();
 	};
     img_ = vpp::clone(noise_img_, vpp::_border = 1);
     //TODO: Remove test: make noise different to image 
-    vpp::pixel_wise(img_) | [] (auto & i) { i*=1.0001; };
+    vpp::pixel_wise(img_) | [] (auto & i) { i*=0.9999; };
     //
     weights_ = weights_mat(noise_img_.domain());
+    iweights_ = vpp::clone(weights_);
+    vpp::fill(iweights_, 1.0);
     inpaint_ = false;
 }
 
+template < typename MANIFOLD >
+void Data<MANIFOLD, 2>::output_weights(const weights_mat& weights) const{
+    int nr = weights.nrows();
+    int nc = weights.ncols();
+
+    for (int r=0; r<nr; r++){
+//	std::cout << "\nRow #" << r << ":" << std::endl;
+	const typename Data<MANIFOLD,2>::weights_type* cur = &weights(r,0);
+	for (int c=0; c<nc; c++){
+	    std::cout << cur[c];
+	    if(c != nc-1) std::cout << ",";
+	}
+	std::cout <<  std::endl;
+    }
+}
 
 }// end namespace tvmtl
 
