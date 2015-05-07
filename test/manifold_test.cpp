@@ -23,19 +23,24 @@ int main(int argc, const char *argv[])
 	std::cout << "\nDistance:" << std::endl;
 	std::cout << mf_t::dist_squared(vec1, vec2) << std::endl;
 
-	typedef typename mf_t::deriv1_type vec6d;
-	typedef typename mf_t::deriv2_type mat6x6;
+	typedef typename mf_t::deriv2_type mat3x3;
 
-	vec6d d1;
-	mf_t::deriv1_dist_squared(vec1, vec2, d1);
-	mat6x6 d2; 
-	mf_t::deriv2_dist_squared(vec1, vec2, d2);
+	vec3d d1x,d1y;
+	mf_t::deriv1x_dist_squared(vec1, vec2, d1x);
+	mf_t::deriv1y_dist_squared(vec1, vec2, d1y);
+	mat3x3 d2xx, d2xy, d2yy; 
+	mf_t::deriv2xx_dist_squared(vec1, vec2, d2xx);
+	mf_t::deriv2xy_dist_squared(vec1, vec2, d2xy);
+	mf_t::deriv2yy_dist_squared(vec1, vec2, d2yy);
 	
 	std::cout << "\nFirst Derivative:" << std::endl;
-	std::cout << d1 << std::endl;
+	std::cout << d1x << std::endl;
+	std::cout << d1y << std::endl;
 
 	std::cout << "\nSecond Derivative:" << std::endl;
-	std::cout << d2 << std::endl;
+	std::cout << d2xx << std::endl;
+	std::cout << d2xy << std::endl;
+	std::cout << d2yy << std::endl;
 
 	return 0;
 }

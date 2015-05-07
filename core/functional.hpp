@@ -98,13 +98,13 @@ typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::return_type Functional< 
     // Vertical Neighbours
     vpp::pixel_wise(Y, N)(vpp::_col_backward) | [&] (weights_type& y, auto& nbh) { y = MANIFOLD::dist_squared(nbh(0,0),nbh(0,1)); };
 
-    /*
-    std::cout << "\nX-Weights:" << std::endl;
-    data_.output_weights(X);
-    std::cout << "\nY-Weights:" << std::endl;
-    data_.output_weights(Y);
-    std::cout << std::endl;
-    */
+	/*
+	std::cout << "\nX-Weights:" << std::endl;
+        data_.output_weights(X);
+	std::cout << "\nY-Weights:" << std::endl;
+        data_.output_weights(Y);
+	std::cout << std::endl;
+	*/
 
     // Compute IRLS Weights
     // TODO:	- Maybe put in different function
@@ -113,14 +113,14 @@ typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::return_type Functional< 
     data_.weights_ = vpp::pixel_wise(data_.iweights_, X, Y) | g ;
 
     
-    //std::cout << "\nIRLS Weights:" << std::endl;
-    //data_.output_weights(data_.weights_);
+	//std::cout << "\nIRLS Weights:" << std::endl;
+	//data_.output_weights(data_.weights_);
     
 
     J2 = vpp::sum( vpp::pixel_wise(data_.weights_) | [&] (weights_type& w) {return 1.0/w;} );
 
-    //std::cout << "J1: " << J1 << std::endl;
-    //std::cout << "J2: " << J2 << std::endl;
+	//std::cout << "J1: " << J1 << std::endl;
+	//std::cout << "J2: " << J2 << std::endl;
 
     return 0.5 * J1 + lambda_* J2;
 }

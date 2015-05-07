@@ -30,23 +30,27 @@ struct Manifold< EUCLIDIAN, N > {
 	typedef const value_type&		    cref_type;
 
 	//TODO: Does Ref<> variant also work?
-	//typedef Eigen::Ref< value_type >		   ref_type;
+	//typedef Eigen::Ref< value_type >	    ref_type;
 	//typedef const Eigen::Ref< const value_type > cref_type;
 
 	// Derivative Typedefs
-	typedef Eigen::Matrix<scalar_type, 2*N, 1>   deriv1_type;
+	typedef value_type			     deriv1_type;
 	typedef deriv1_type&			     deriv1_ref_type;
 	
-	//typedef Eigen::Ref<deriv1_type>		     deriv1_ref_type;
-	typedef Eigen::Matrix<scalar_type, 2*N, 2*N> deriv2_type;
+	//typedef Eigen::Ref<deriv1_type>	     deriv1_ref_type;
+	typedef Eigen::Matrix<scalar_type, N, N>     deriv2_type;
 	typedef deriv2_type&			     deriv2_ref_type;
-	//typedef Eigen::Ref<deriv2_type>		     deriv2_ref_type;
+	//typedef Eigen::Ref<deriv2_type>	     deriv2_ref_type;
 
 
 	// Manifold distance functions (for IRLS)
 	inline static dist_type dist_squared(cref_type x, cref_type y);
-	inline static void deriv1_dist_squared(cref_type x, cref_type y, deriv1_ref_type result);
-	inline static void deriv2_dist_squared(cref_type x, cref_type y, deriv2_ref_type result);
+	inline static void deriv1x_dist_squared(cref_type x, cref_type y, deriv1_ref_type result);
+	inline static void deriv1y_dist_squared(cref_type x, cref_type y, deriv1_ref_type result);
+
+	inline static void deriv2xx_dist_squared(cref_type x, cref_type y, deriv2_ref_type result);
+	inline static void deriv2xy_dist_squared(cref_type x, cref_type y, deriv2_ref_type result);
+	inline static void deriv2yy_dist_squared(cref_type x, cref_type y, deriv2_ref_type result);
 
 	// Manifold exponentials und logarithms ( for Proximal point)
 	inline static void exp(cref_type x, cref_type y, ref_type result);
@@ -81,28 +85,43 @@ const MANIFOLD_TYPE Manifold < EUCLIDIAN, N>::MyType = EUCLIDIAN; // Outside def
 // Squared Euclidian distance function
 template <int N>
 inline typename Manifold < EUCLIDIAN, N>::dist_type Manifold < EUCLIDIAN, N>::dist_squared( cref_type x, cref_type y ){
-    value_type v = x-y;
-    return v.squaredNorm();
+    //value_type v = x-y;
+    return (x-y).squaredNorm();
 }
 
-// Derivative of Squared Euclidian distance
+
+
+// Derivative of Squared Euclidian distance w.r.t. first argument
 template <int N>
-inline void Manifold < EUCLIDIAN, N>::deriv1_dist_squared( cref_type x, cref_type y, deriv1_ref_type result){
-    result << 2 * (x-y), -2 * (x-y);
-    //result.head<N>() = 2 * (x-y);
-    //result.tail<N>() = -2 * (x-y);
+inline void Manifold < EUCLIDIAN, N>::deriv1x_dist_squared( cref_type x, cref_type y, deriv1_ref_type result){
+    result << 2 * (x-y); 
 }
-
-
-// Second Derivative of Squared Euclidian distance
+// Derivative of Squared Euclidian distance w.r.t. second argument
 template <int N>
-inline void Manifold < EUCLIDIAN, N>::deriv2_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
-    
-    result << 2 * Eigen::Matrix<scalar_type, N, N>::Identity(), - 2 * Eigen::Matrix<scalar_type, N, N>::Identity(), -2 * Eigen::Matrix<scalar_type, N, N>::Identity(), 2 * Eigen::Matrix<scalar_type, N, N>::Identity();
-    //result = 2 * deriv2_type::Identity();
-    //result.bottomLeftCorner<N,N>() = -2 * Eigen::Matrix<scalar_type, N, N>::Identity();
-    //result.topRightCorner<N,N>() = -2 * Eigen::Matrix<scalar_type, N, N>::Identity();
+inline void Manifold < EUCLIDIAN, N>::deriv1y_dist_squared( cref_type x, cref_type y, deriv1_ref_type result){
+    result << 2 * (y-x); 
 }
+
+
+
+
+// Second Derivative of Squared Euclidian distance w.r.t first argument
+template <int N>
+inline void Manifold < EUCLIDIAN, N>::deriv2xx_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
+    result << 2 * deriv2_type::Identity();
+}
+// Second Derivative of Squared Euclidian distance w.r.t first and second argument
+template <int N>
+inline void Manifold < EUCLIDIAN, N>::deriv2xy_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
+    result << -2 * deriv2_type::Identity();
+}
+// Second Derivative of Squared Euclidian distance w.r.t second argument
+template <int N>
+inline void Manifold < EUCLIDIAN, N>::deriv2yy_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
+    result << 2 * deriv2_type::Identity();
+}
+
+
 
 // Exponential and Logarithm Map
 template <int N>
