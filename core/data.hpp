@@ -4,6 +4,8 @@
 // system includes
 #include <limits>
 #include <iostream>
+#include <fstream>
+
 
 // video++ includes
 #include <vpp/vpp.hh>
@@ -41,7 +43,7 @@ class Data< MANIFOLD, 2>{
 
 	inline bool doInpaint() const { return inpaint_; }
 
-	void output_weights(const weights_mat& mat) const;
+	void output_weights(const weights_mat& mat, const char* filename) const;
 
 //    private:
 	// Data members
@@ -84,7 +86,8 @@ void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
 	    v[2]=(double) vu[2];
 	    n = v / (double) std::numeric_limits<unsigned char>::max();
 	};
-    img_ = vpp::clone(noise_img_, vpp::_border = 1);
+    //img_ = vpp::clone(noise_img_, vpp::_border = 1);
+    img_ = vpp::clone(noise_img_);
     //TODO: Remove test: make noise different to image 
     vpp::pixel_wise(img_) | [] (auto & i) { i*=0.9999; };
     //
@@ -95,19 +98,22 @@ void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
 }
 
 template < typename MANIFOLD >
-void Data<MANIFOLD, 2>::output_weights(const weights_mat& weights) const{
+void Data<MANIFOLD, 2>::output_weights(const weights_mat& weights, const char* filename) const{
     int nr = weights.nrows();
     int nc = weights.ncols();
 
+    std::fstream f;
+    f.open(filename, std::fstream::out);
+
     for (int r=0; r<nr; r++){
-//	std::cout << "\nRow #" << r << ":" << std::endl;
 	const typename Data<MANIFOLD,2>::weights_type* cur = &weights(r,0);
 	for (int c=0; c<nc; c++){
-	    std::cout << cur[c];
-	    if(c != nc-1) std::cout << ",";
+	    f << cur[c];
+	    if(c != nc-1) f << ",";
 	}
-	std::cout <<  std::endl;
+	f <<  std::endl;
     }
+    f.close();
 }
 
 }// end namespace tvmtl
