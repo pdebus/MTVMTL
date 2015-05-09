@@ -230,10 +230,9 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 
     // Flatten to single gradient vector
     // TODO: Check if this can be also realized via Eigen::Map to the imageND data
-    DJ_ = gradient_type::Constant(nr*nc*value_dim,42); 
-
-    vpp::pixel_wise(grad, grad.domain()) | [&] (value_type& p, vpp::vint2 coord) { DJ_.segment(3*(nc*coord[0]+coord[1]), value_dim) << p; };
-    //vpp::pixel_wise(grad, grad.domain()) | [&] (value_type& p, vpp::vint2 coord) { DJ_.segment(3*(coord[0]+nr*coord[1]), value_dim) = p; };
+    DJ_ = gradient_type(nr*nc*value_dim); 
+    //vpp::pixel_wise(grad, grad.domain()) | [&] (value_type& p, vpp::vint2 coord) { DJ_.segment(nc*coord[0]+coord[1], value_dim) << p; };
+    vpp::pixel_wise(grad, grad.domain()) | [&] (value_type& p, vpp::vint2 coord) { DJ_.segment(coord[0]+nr*coord[1], value_dim) << p; };
 
     std::fstream f;
     f.open("gradJ.csv",std::fstream::out);

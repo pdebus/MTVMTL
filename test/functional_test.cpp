@@ -32,6 +32,7 @@ int main(int argc, const char *argv[])
 	func_t::return_type result = 0.0;
 	    
 	result = myFunc.evaluateJ();
+	myFunc.evaluateDJ();
 
 	std::cout << "Functional evaluation for Picture " << argv[1] << ": " << result << std::endl;
 
