@@ -71,7 +71,8 @@ class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
 	// Evaluation functions
 	return_type evaluateJ();
 	void  evaluateDJ();
-
+	
+	void output_img(const img_type& img, const char* filename) const;
 
     private:
 	param_type lambda_;
@@ -164,6 +165,9 @@ typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::return_type Functional< 
 template < typename MANIFOLD, class DATA >
 void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 
+    output_img(data_.img_,"img.csv");
+    vpp::fill(data_.weights_, 1.0); // Reset for Debugging
+
     img_type grad = img_type(data_.img_.domain());
     int nr = data_.img_.nrows();
     int nc = data_.img_.ncols();
@@ -179,11 +183,6 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
     }
     
     //GRADIENT OF TV TERM
-    img_type XD1, XD2, YD1, YD2;
-    XD1 = img_type(data_.img_.domain());
-    XD2 = img_type(data_.img_.domain());
-    YD1 = img_type(data_.img_.domain());
-    YD2 = img_type(data_.img_.domain());
 
     // Neighbourhood box
     nbh_type N = nbh_type(data_.img_);
@@ -196,44 +195,63 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 
     // Horizontal derivatives and weighting
     // ... w.r.t. to first argument
-    vpp::pixel_wise(XD1, data_.weights_, N) | [&] (value_type& x, weights_type& w, auto& nbh) { 
-	MANIFOLD::deriv1x_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
-    auto grad_subX1  = grad | without_last_col;
-    auto deriv_subX1 = XD1 | without_last_col;
-    vpp::pixel_wise(grad_subX1, deriv_subX1) | [&] (value_type& g, value_type& d) { g+=d*lambda_; };
+    {
+	img_type XD1 = img_type(data_.img_.domain());
+	vpp::pixel_wise(XD1, data_.weights_, N) | [&] (value_type& x, weights_type& w, auto& nbh) { 
+	    MANIFOLD::deriv1x_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
+	output_img(XD1,"XD1.csv");
+	auto grad_subX1  = grad | without_last_col;
+	auto deriv_subX1 = XD1 | without_last_col;
+	vpp::pixel_wise(grad_subX1, deriv_subX1) | [&] (value_type& g, value_type& d) { g+=d*lambda_; };
+    } // Memory for temporary XD1 gets deallocated after this scope
 
     // ... w.r.t. second argument
-    vpp::pixel_wise(XD2, data_.weights_, N) | [&] (value_type& x, weights_type& w ,auto& nbh) { 
-	MANIFOLD::deriv1y_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
-    auto grad_subX2  = grad | without_first_col;
-    auto deriv_subX2 = XD2 | without_last_col;
-    vpp::pixel_wise(grad_subX2, deriv_subX2) | [&] (value_type& g, value_type& d) { g+=d*lambda_; };
-
+    {
+	img_type XD2 = img_type(data_.img_.domain());
+	vpp::pixel_wise(XD2, data_.weights_, N) | [&] (value_type& x, weights_type& w ,auto& nbh) { 
+	   MANIFOLD::deriv1y_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
+	output_img(XD2,"XD2.csv");
+	auto grad_subX2  = grad | without_first_col;
+        auto deriv_subX2 = XD2 | without_last_col;
+	vpp::pixel_wise(grad_subX2, deriv_subX2) | [&] (value_type& g, value_type& d) { g+=d*lambda_; };
+    }
 
 
     // Vertical derivatives and weighting
     // ... w.r.t. first argument
-    vpp::pixel_wise(YD1, data_.weights_, N) | [&] (value_type& y, weights_type& w, auto& nbh) { 
-	MANIFOLD::deriv1x_dist_squared(nbh(0,0), nbh(1,0), y); y*=w; };
-    auto grad_subY1  = grad | without_last_row;
-    auto deriv_subY1 = YD1 | without_last_row;
-    vpp::pixel_wise(grad_subY1, deriv_subY1) | [&] (value_type& g, value_type& d) { g+=d*lambda_; };
+    {
+	img_type YD1 = img_type(data_.img_.domain());
+	vpp::pixel_wise(YD1, data_.weights_, N) | [&] (value_type& y, weights_type& w, auto& nbh) { 
+	    MANIFOLD::deriv1x_dist_squared(nbh(0,0), nbh(1,0), y); y*=w; };
+	output_img(YD1,"YD1.csv");
+	auto grad_subY1  = grad | without_last_row;
+	auto deriv_subY1 = YD1 | without_last_row;
+	vpp::pixel_wise(grad_subY1, deriv_subY1) | [&] (value_type& g, value_type& d) { g+=d*lambda_; };
+    }
 
     // ... w.r.t second argument
-    vpp::pixel_wise(YD2, data_.weights_, N) | [&] (value_type& y, weights_type& w, auto& nbh) { 
-	MANIFOLD::deriv1y_dist_squared(nbh(0,0), nbh(1,0), y); y*=w; };
-    auto grad_subY2  = grad | without_first_row;
-    auto deriv_subY2 = YD2 | without_last_row;
-    vpp::pixel_wise(grad_subY2, deriv_subY2) | [&] (value_type& g, value_type& d) { g+=d*lambda_; };
+    {
+	img_type YD2 = img_type(data_.img_.domain());
+	vpp::pixel_wise(YD2, data_.weights_, N) | [&] (value_type& y, weights_type& w, auto& nbh) { 
+		MANIFOLD::deriv1y_dist_squared(nbh(0,0), nbh(1,0), y); y*=w; };
+	output_img(YD2,"YD2.csv");
+        auto grad_subY2  = grad | without_first_row;
+	auto deriv_subY2 = YD2 | without_last_row;
+        vpp::pixel_wise(grad_subY2, deriv_subY2) | [&] (value_type& g, value_type& d) { g+=d*lambda_; };
+    }
 
-
+    output_img(grad,"grad.csv");
 
     // Flatten to single gradient vector
     // TODO: Check if this can be also realized via Eigen::Map to the imageND data
-    DJ_ = gradient_type::Constant(nr*nc*value_dim,42); 
+    DJ_ = gradient_type::Zero(nr*nc*value_dim); 
 
-    vpp::pixel_wise(grad, grad.domain()) | [&] (value_type& p, vpp::vint2 coord) { DJ_.segment(3*(nc*coord[0]+coord[1]), value_dim) << p; };
-    //vpp::pixel_wise(grad, grad.domain()) | [&] (value_type& p, vpp::vint2 coord) { DJ_.segment(3*(coord[0]+nr*coord[1]), value_dim) = p; };
+    // flatten rowwise
+    // TODO: Switch to rowise after Debug
+    //vpp::pixel_wise(grad, grad.domain()) | [&] (value_type& p, vpp::vint2 coord) { DJ_.segment(3*(nc*coord[0]+coord[1]), value_dim) = p; };
+    
+    // flatten colwise (as in Matlab code)
+    vpp::pixel_wise(grad, grad.domain()) | [&] (value_type& p, vpp::vint2 coord) { DJ_.segment(3*(coord[0]+nr*coord[1]), value_dim) = p; };
 
     std::fstream f;
     f.open("gradJ.csv",std::fstream::out);
@@ -241,6 +259,27 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
     f.close();
 
 }
+
+
+template < typename MANIFOLD, class DATA >
+void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::output_img(const img_type& img, const char* filename) const{
+    int nr = img.nrows();
+    int nc = img.ncols();
+
+    std::fstream f;
+    f.open(filename, std::fstream::out);
+    Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "", "");
+    for (int r=0; r<nr; r++){
+	const value_type* cur = &img(r,0);
+	for (int c=0; c<nc; c++){
+	    f << cur[c].format(CommaInitFmt);
+	    if(c != nc-1) f << ",";
+	}
+	f <<  std::endl;
+    }
+    f.close();
+}
+
 
 }// end namespace tvtml
 

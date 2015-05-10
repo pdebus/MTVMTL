@@ -34,9 +34,9 @@ int main(int argc, const char *argv[])
 	vpp::pixel_wise(img, myData.img_) | [] (auto& i, auto& n) {
 	    vec3d v = n * (double) std::numeric_limits<unsigned char>::max();
 	    vpp::vuchar3 vu = vpp::vuchar3::Zero();
-	    vu[0]=(unsigned char) v[0];
+	    vu[0]=(unsigned char) v[2];
 	    vu[1]=(unsigned char) v[1];
-	    vu[2]=(unsigned char) v[2];
+	    vu[2]=(unsigned char) v[0];
 	    i = vu;
 	};
 	

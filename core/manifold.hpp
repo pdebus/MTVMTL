@@ -94,12 +94,12 @@ inline typename Manifold < EUCLIDIAN, N>::dist_type Manifold < EUCLIDIAN, N>::di
 // Derivative of Squared Euclidian distance w.r.t. first argument
 template <int N>
 inline void Manifold < EUCLIDIAN, N>::deriv1x_dist_squared( cref_type x, cref_type y, deriv1_ref_type result){
-    result << 2 * (x-y); 
+    result =  2 * (x-y); 
 }
 // Derivative of Squared Euclidian distance w.r.t. second argument
 template <int N>
 inline void Manifold < EUCLIDIAN, N>::deriv1y_dist_squared( cref_type x, cref_type y, deriv1_ref_type result){
-    result << 2 * (y-x); 
+    result = 2 * (y-x); 
 }
 
 

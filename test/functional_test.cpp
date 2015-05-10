@@ -30,8 +30,10 @@ int main(int argc, const char *argv[])
 	func_t myFunc(3.0, myData);
 
 	func_t::return_type result = 0.0;
-	    
+	
+	//Functional evaluation
 	result = myFunc.evaluateJ();
+	//Gradient
 	myFunc.evaluateDJ();
 
 	std::cout << "Functional evaluation for Picture " << argv[1] << ": " << result << std::endl;

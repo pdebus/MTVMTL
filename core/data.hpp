@@ -81,9 +81,9 @@ void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
 	    value_type v = value_type::Zero();
 	    vpp::vuchar3 vu = i;
 	    // TODO: insert manifold scalar type, replace c-style casts
-	    v[0]=(double) vu[0];
+	    v[0]=(double) vu[2]; //opencv saves as BGR
 	    v[1]=(double) vu[1];
-	    v[2]=(double) vu[2];
+	    v[2]=(double) vu[0];
 	    n = v / (double) std::numeric_limits<unsigned char>::max();
 	};
     //img_ = vpp::clone(noise_img_, vpp::_border = 1);
