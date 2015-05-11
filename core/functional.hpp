@@ -41,6 +41,8 @@ class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
 	typedef typename MANIFOLD::value_type value_type;
 	typedef typename MANIFOLD::ref_type ref_type;
 	typedef typename MANIFOLD::cref_type cref_type;
+	typedef typename MANIFOLD::deriv1_type deriv1_type;
+	typedef typename MANIFOLD::deriv2_type deriv2_type;
 
 	// Data typedef and constants
 	static const int img_dim = DATA::img_dim;
@@ -58,7 +60,8 @@ class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
 	typedef double param_type;
 	typedef double return_type;
 	typedef Eigen::Matrix<scalar_type, Eigen::Dynamic,1> gradient_type;
-	typedef Eigen::SparseMatrix<scalar_type> hessian_type;
+	typedef vpp::imageNd<deriv2_type, img_dim> hessian_type;
+	typedef Eigen::SparseMatrix<scalar_type> sparse_hessian_type;
 
 	//Constructor
 	Functional(param_type lambda, DATA dat):
@@ -66,11 +69,16 @@ class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
 	    data_(dat)
 	{
 	    eps2_=0.0;
-	}
+/*	    int nr = data_.img_.nrows();
+	    int nc = data_.img_.ncols();
+	    int sparsedim = nr*nc*value_dim;
+	    HJ_ = sparse_hessian_type(sphdim,sphdim);*/
+    	}
 	
 	// Evaluation functions
 	return_type evaluateJ();
 	void  evaluateDJ();
+	void  evaluateHJ();
 	
 	void output_img(const img_type& img, const char* filename) const;
 
@@ -79,7 +87,7 @@ class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
 	param_type eps2_;
 	DATA& data_;
 	gradient_type DJ_;
-	hessian_type  HJ_;
+	sparse_hessian_type HJ_;
 };
 
 
@@ -120,13 +128,12 @@ typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::return_type Functional< 
     
     // Vertical Neighbours
     vpp::pixel_wise(Y, N) | [&] (weights_type& y, auto& nbh) { y = MANIFOLD::dist_squared(nbh(0,0),nbh(1,0)); };
-    
     weights_type *lastrow = &Y(nr-1,0);
     for(int c=0; c< nc; c++) lastrow[c]=0.0;
 	
 	
-        data_.output_weights(X,"XWeights.csv");
-        data_.output_weights(Y,"YWeights.csv");
+        //data_.output_weights(X,"XWeights.csv");
+        //data_.output_weights(Y,"YWeights.csv");
 	
 
     // Compute IRLS Weights
@@ -137,26 +144,12 @@ typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::return_type Functional< 
     auto g =  [&] (weights_type& iw, weights_type& x, weights_type& y) { return iw / std::sqrt(x+y+eps2_); };
     data_.weights_ = vpp::pixel_wise(data_.iweights_, X, Y) | g ;
     
-   /* 
-    for(int r=0; r<nr; r++){
-	
-	weights_type* w = &data_.weights_(r,0);
-	weights_type* iw = &data_.iweights_(r, 0);
-	weights_type* x = &X(r,0);
-	weights_type* y = &Y(r,0);
-	
-	for(int c=0; c<nc; c++)
-	    w[c] =  iw[c] / std::sqrt(x[c]+y[c]+eps2_);
-    }
-    
-
-   */ 
-    data_.output_weights(data_.weights_,"IRLS_Weights.csv");
+    //data_.output_weights(data_.weights_,"IRLS_Weights.csv");
 
     J2 = vpp::sum( vpp::pixel_wise(data_.weights_) | [&] (weights_type& w) {return 1.0/w;} );
 
-	std::cout << "J1: " << J1 << std::endl;
-	std::cout << "J2: " << J2 << std::endl;
+	//std::cout << "J1: " << J1 << std::endl;
+	//std::cout << "J2: " << J2 << std::endl;
 
     return 0.5 * J1 + lambda_* J2;
 }
@@ -165,7 +158,7 @@ typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::return_type Functional< 
 template < typename MANIFOLD, class DATA >
 void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 
-    output_img(data_.img_,"img.csv");
+    //output_img(data_.img_,"img.csv");
     vpp::fill(data_.weights_, 1.0); // Reset for Debugging
 
     img_type grad = img_type(data_.img_.domain());
@@ -195,7 +188,9 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 
     // Horizontal derivatives and weighting
     // ... w.r.t. to first argument
-    {
+    // FIXME:  Memory for temporary XD1 should be freed after this block scope
+
+    //{ FIXME
 	img_type XD1 = img_type(data_.img_.domain());
 	vpp::pixel_wise(XD1, data_.weights_, N) | [&] (value_type& x, weights_type& w, auto& nbh) { 
 	    MANIFOLD::deriv1x_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
@@ -203,10 +198,9 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 	auto grad_subX1  = grad | without_last_col;
 	auto deriv_subX1 = XD1 | without_last_col;
 	vpp::pixel_wise(grad_subX1, deriv_subX1) | [&] (value_type& g, value_type& d) { g+=d*lambda_; };
-    } // Memory for temporary XD1 gets deallocated after this scope
-
+    //} 
     // ... w.r.t. second argument
-    {
+    //{
 	img_type XD2 = img_type(data_.img_.domain());
 	vpp::pixel_wise(XD2, data_.weights_, N) | [&] (value_type& x, weights_type& w ,auto& nbh) { 
 	   MANIFOLD::deriv1y_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
@@ -214,12 +208,12 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 	auto grad_subX2  = grad | without_first_col;
         auto deriv_subX2 = XD2 | without_last_col;
 	vpp::pixel_wise(grad_subX2, deriv_subX2) | [&] (value_type& g, value_type& d) { g+=d*lambda_; };
-    }
+    //}
 
 
     // Vertical derivatives and weighting
     // ... w.r.t. first argument
-    {
+    //{
 	img_type YD1 = img_type(data_.img_.domain());
 	vpp::pixel_wise(YD1, data_.weights_, N) | [&] (value_type& y, weights_type& w, auto& nbh) { 
 	    MANIFOLD::deriv1x_dist_squared(nbh(0,0), nbh(1,0), y); y*=w; };
@@ -227,10 +221,10 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 	auto grad_subY1  = grad | without_last_row;
 	auto deriv_subY1 = YD1 | without_last_row;
 	vpp::pixel_wise(grad_subY1, deriv_subY1) | [&] (value_type& g, value_type& d) { g+=d*lambda_; };
-    }
+    //}
 
     // ... w.r.t second argument
-    {
+    //{
 	img_type YD2 = img_type(data_.img_.domain());
 	vpp::pixel_wise(YD2, data_.weights_, N) | [&] (value_type& y, weights_type& w, auto& nbh) { 
 		MANIFOLD::deriv1y_dist_squared(nbh(0,0), nbh(1,0), y); y*=w; };
@@ -238,25 +232,74 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
         auto grad_subY2  = grad | without_first_row;
 	auto deriv_subY2 = YD2 | without_last_row;
         vpp::pixel_wise(grad_subY2, deriv_subY2) | [&] (value_type& g, value_type& d) { g+=d*lambda_; };
-    }
+    //}
 
     output_img(grad,"grad.csv");
 
     // Flatten to single gradient vector
-    // TODO: Check if this can be also realized via Eigen::Map to the imageND data
+	// TODO: Check if this can be also realized via Eigen::Map to the imageND data
     DJ_ = gradient_type::Zero(nr*nc*value_dim); 
 
     // flatten rowwise
-    // TODO: Switch to rowise after Debug
+	// TODO: Switch to rowise after Debug
     //vpp::pixel_wise(grad, grad.domain()) | [&] (value_type& p, vpp::vint2 coord) { DJ_.segment(3*(nc*coord[0]+coord[1]), value_dim) = p; };
     
     // flatten colwise (as in Matlab code)
     vpp::pixel_wise(grad, grad.domain()) | [&] (value_type& p, vpp::vint2 coord) { DJ_.segment(3*(coord[0]+nr*coord[1]), value_dim) = p; };
 
+    
     std::fstream f;
     f.open("gradJ.csv",std::fstream::out);
     f << DJ_;
     f.close();
+    
+}
+
+// Evaluation of Hessian J
+template < typename MANIFOLD, class DATA >
+void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
+    vpp::fill(data_.weights_, 1.0); // Reset for Debugging
+
+    hessian_type hessian(data_.img_.domain());
+    int nr = data_.img_.nrows();
+    int nc = data_.img_.ncols();
+    int sparsedim = nr*nc*value_dim;
+    
+   
+        
+    //HESSIAN OF FIDELITY TERM
+
+    sparse_hessian_type HF(sparsedim,sparsedim);
+    HF.reserve(Eigen::VectorXi::Constant(nc,value_dim));
+	
+    if(data_.doInpaint()){
+	auto f = [] (deriv2_type& h, value_type& i, value_type& n, bool inp ) { MANIFOLD::deriv2xx_dist_squared(i,n,h); h*=(1-inp); };
+	vpp::pixel_wise(hessian, data_.img_, data_.noise_img_, data_.inp_) | f;
+    }
+    else{
+	auto f = [] (deriv2_type& h, value_type& i, value_type& n) { MANIFOLD::deriv2xx_dist_squared(i,n,h); };
+	vpp::pixel_wise(hessian, data_.img_, data_.noise_img_) | f;
+    }
+    
+    
+    auto local2globalInsert = [&](deriv2_type& h, vpp::vint2 coord) { 
+	int pos = 3*(coord[0]+nr*coord[1]); // columnwise flattening
+	for(int local_row=0; local_row<h.rows(); local_row++)
+	    for(int local_col=0; local_col<h.cols(); local_col++)
+		if(h(local_row, local_col)!=0)
+		    HF.insert(pos+local_row, pos+local_col) = h(local_row, local_col);
+    };
+
+    vpp::pixel_wise(hessian, hessian.domain())(/*vpp::_no_threads*/) | local2globalInsert;
+                     
+    std::cout << HF.nonZeros() << std::endl; 
+    
+    //HESSIAN OF TV TERM
+
+    // Neighbourhood box
+   // nbh_type N = nbh_type(data_.img_);
+    
+
 
 }
 

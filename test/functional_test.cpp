@@ -35,6 +35,8 @@ int main(int argc, const char *argv[])
 	result = myFunc.evaluateJ();
 	//Gradient
 	myFunc.evaluateDJ();
+	//Hessian
+	myFunc.evaluateHJ();
 
 	std::cout << "Functional evaluation for Picture " << argv[1] << ": " << result << std::endl;
 
