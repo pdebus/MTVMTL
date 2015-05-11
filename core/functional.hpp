@@ -120,16 +120,18 @@ typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::return_type Functional< 
     X = weights_mat(data_.img_.domain());
     Y = weights_mat(data_.img_.domain());
 
-    // TODO: Try to replace omp loops
+    // TODO: Try to replace omp loops e.g. by box2d (nr-1,0) (nr-1,nc-1) or Iterator
     // Horizontal Neighbours
     vpp::pixel_wise(X, N) | [&] (weights_type& x, auto& nbh) { x = MANIFOLD::dist_squared(nbh(0,0),nbh(0,1)); };
     #pragma omp parallel for
-    for(int r=0; r< nr; r++) X(r,nc-1)=0.0;
+    for(int r=0; r< nr; r++) 
+	X(r,nc-1)=0.0;
     
     // Vertical Neighbours
     vpp::pixel_wise(Y, N) | [&] (weights_type& y, auto& nbh) { y = MANIFOLD::dist_squared(nbh(0,0),nbh(1,0)); };
     weights_type *lastrow = &Y(nr-1,0);
-    for(int c=0; c< nc; c++) lastrow[c]=0.0;
+    for(int c=0; c< nc; c++) 
+	lastrow[c]=0.0;
 	
 	
         //data_.output_weights(X,"XWeights.csv");
@@ -281,7 +283,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 	vpp::pixel_wise(hessian, data_.img_, data_.noise_img_) | f;
     }
     
-    
+   //TODO: Check whether all 2nd-derivative matrices are symmetric s.t. only half the matrix need to be traversed. e.g. local_col=local_row instead of 0
     auto local2globalInsert = [&](deriv2_type& h, vpp::vint2 coord) { 
 	int pos = 3*(coord[0]+nr*coord[1]); // columnwise flattening
 	for(int local_row=0; local_row<h.rows(); local_row++)
@@ -293,9 +295,9 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     vpp::pixel_wise(hessian, hessian.domain())(/*vpp::_no_threads*/) | local2globalInsert;
                    
     if (sparsedim<70)
-        std::cout << HF << std::endl; 
+        std::cout << "HF:\n" << HF << std::endl; 
     else
-        std::cout << "Non-Zeros: " << HF.nonZeros() << std::endl; 
+        std::cout << "HF Non-Zeros: " << HF.nonZeros() << std::endl; 
 
     
     //HESSIAN OF TV TERM
@@ -312,7 +314,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     vpp::box2d without_last_row(vpp::vint2(0,0), vpp::vint2(nr-2, nc-1)); // subdomain without last row
     vpp::box2d without_first_row(vpp::vint2(1,0), vpp::vint2(nr-1, nc-1)); // subdomain without first row
 
-    // Horizontal Second Derivatives
+    // Horizontal Second Derivatives and weighting
     // ... w.r.t. first arguments
     hessian_type XD11(data_.img_.domain());
     vpp::pixel_wise(XD11, data_.weights_, N) | [&] (deriv2_type& x, weights_type& w, auto& nbh) { 
@@ -322,7 +324,8 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     auto deriv_subX11 = XD11 | without_last_col;
     vpp::pixel_wise(hess_subX11, deriv_subX11) | [&] (deriv2_type& h, deriv2_type& d) { h=d; };
     #pragma omp parallel for
-    for(int r=0; r< nr; r++) hessian(r,nc-1)=deriv2_type::Zero(); // set last column to zero
+    for(int r=0; r< nr; r++) 
+	hessian(r,nc-1)=deriv2_type::Zero(); // set last column to zero
     
     //... w.r.t. second arguments
     hessian_type XD22(data_.img_.domain());
@@ -333,7 +336,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     auto deriv_subX22 = XD22 | without_first_col;
     vpp::pixel_wise(hess_subX22, deriv_subX22) | [&] (deriv2_type& h, deriv2_type& d) { h+=d; };
 
-    // Vertical Second Derivatives
+    // Vertical Second Derivatives weighting
     //... w.r.t. first arguments
     hessian_type YD11(data_.img_.domain());
     vpp::pixel_wise(YD11, data_.weights_, N) | [&] (deriv2_type& x, weights_type& w, auto& nbh) { 
@@ -352,24 +355,56 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     auto deriv_subY22 = YD22 | without_first_row;
     vpp::pixel_wise(hess_subY22, deriv_subY22) | [&] (deriv2_type& h, deriv2_type& d) { h+=d; };
     
-
-    // TODO: Make single version for both cases and including an offset
+    // Insert elementwise into sparse Hessian
+    // NOTE: Eventually make single version for both cases, including an offset
     // --> additional parameters sparse_mat, offset
+    int row_offset=0;
+    int col_offset=0;
     auto local2globalInsertHTV = [&](deriv2_type& h, vpp::vint2 coord) { 
 	int pos = 3*(coord[0]+nr*coord[1]); // columnwise flattening
 	for(int local_row=0; local_row<h.rows(); local_row++)
 	    for(int local_col=0; local_col<h.cols(); local_col++)
 		if(h(local_row, local_col)!=0)
-		    HTV.insert(pos+local_row, pos+local_col) = h(local_row, local_col);
+		    HTV.insert(pos + row_offset + local_row, pos + col_offset + local_col) = h(local_row, local_col);
     };
     vpp::pixel_wise(hessian, hessian.domain())(/*vpp::_no_threads*/) | local2globalInsertHTV;
                    
+    // Horizontal Second Derivatives and weighting
+    // ... w.r.t. first and second arguments 
+    hessian_type XD12(without_last_col);
+    vpp::pixel_wise(XD12, data_.weights_ | without_last_col, N) | [&] (deriv2_type& x, weights_type& w, auto& nbh) { 
+	    MANIFOLD::deriv2xy_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
+    //output_img(XD12,"XD12.csv");
+
+    // Offsets for upper nyth subdiagonal
+    row_offset=0;
+    col_offset=value_dim*nr;
+    vpp::pixel_wise(XD12, XD12.domain())(/*vpp::_no_threads*/) | local2globalInsertHTV;
+
+    // Vertical Second Derivatives and weighting
+    //... w.r.t. second arguments
+    hessian_type YD12(data_.img_.domain());
+    vpp::pixel_wise(YD12, data_.weights_, N) | [&] (deriv2_type& x, weights_type& w, auto& nbh) { 
+	    MANIFOLD::deriv2xy_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
+    //output_img(YD12,"YD12.csv");
+    //Set last row to zero
+    deriv2_type *lastrow = &YD12(nr-1,0);
+    for(int c=0; c< nc; c++) 
+	lastrow[c]=deriv2_type::Zero();
+    
+    // Offsets for first upper subdiagonal
+    row_offset=0;
+    col_offset=value_dim;
+    vpp::pixel_wise(YD12 | without_last_row, without_last_row)(/*vpp_no_threads*/) | local2globalInsertHTV;
+    for(int c=0; c<nc-1; c++) 
+	local2globalInsertHTV(lastrow[c], vpp::vint2(nr-1,c));
+
     if (sparsedim<70)
-        std::cout << HTV << std::endl; 
+        std::cout << "HTV\n" << HTV << std::endl; 
     else
-        std::cout << "Non-Zeros: " << HTV.nonZeros() << std::endl; 
+        std::cout << "HTV Non-Zeros: " << HTV.nonZeros() << std::endl; 
 
-
+    //HJ_= HF + lambda_*HTV;
 
 }
 
