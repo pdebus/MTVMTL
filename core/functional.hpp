@@ -291,14 +291,84 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     };
 
     vpp::pixel_wise(hessian, hessian.domain())(/*vpp::_no_threads*/) | local2globalInsert;
-                     
-    std::cout << HF.nonZeros() << std::endl; 
+                   
+    if (sparsedim<70)
+        std::cout << HF << std::endl; 
+    else
+        std::cout << "Non-Zeros: " << HF.nonZeros() << std::endl; 
+
     
     //HESSIAN OF TV TERM
-
+    sparse_hessian_type HTV(sparsedim,sparsedim);
+    HTV.reserve(Eigen::VectorXi::Constant(nc,value_dim));
+	
     // Neighbourhood box
-   // nbh_type N = nbh_type(data_.img_);
+    nbh_type N = nbh_type(data_.img_);
     
+    // Subimage boxes
+    // TODO: Make static class variables
+    vpp::box2d without_last_col(vpp::vint2(0,0), vpp::vint2(nr-1, nc-2)); // subdomain without last column
+    vpp::box2d without_first_col(vpp::vint2(0,1), vpp::vint2(nr-1, nc-1)); // subdomain without first column
+    vpp::box2d without_last_row(vpp::vint2(0,0), vpp::vint2(nr-2, nc-1)); // subdomain without last row
+    vpp::box2d without_first_row(vpp::vint2(1,0), vpp::vint2(nr-1, nc-1)); // subdomain without first row
+
+    // Horizontal Second Derivatives
+    // ... w.r.t. first arguments
+    hessian_type XD11(data_.img_.domain());
+    vpp::pixel_wise(XD11, data_.weights_, N) | [&] (deriv2_type& x, weights_type& w, auto& nbh) { 
+	    MANIFOLD::deriv2xx_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
+    //output_img(XD11,"XD11.csv");
+    auto hess_subX11  = hessian | without_last_col;
+    auto deriv_subX11 = XD11 | without_last_col;
+    vpp::pixel_wise(hess_subX11, deriv_subX11) | [&] (deriv2_type& h, deriv2_type& d) { h=d; };
+    #pragma omp parallel for
+    for(int r=0; r< nr; r++) hessian(r,nc-1)=deriv2_type::Zero(); // set last column to zero
+    
+    //... w.r.t. second arguments
+    hessian_type XD22(data_.img_.domain());
+    vpp::pixel_wise(XD22, data_.weights_, N) | [&] (deriv2_type& x, weights_type& w, auto& nbh) { 
+	    MANIFOLD::deriv2yy_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
+    //output_img(XD22,"XD22.csv");
+    auto hess_subX22  = hessian | without_first_col;
+    auto deriv_subX22 = XD22 | without_first_col;
+    vpp::pixel_wise(hess_subX22, deriv_subX22) | [&] (deriv2_type& h, deriv2_type& d) { h+=d; };
+
+    // Vertical Second Derivatives
+    //... w.r.t. first arguments
+    hessian_type YD11(data_.img_.domain());
+    vpp::pixel_wise(YD11, data_.weights_, N) | [&] (deriv2_type& x, weights_type& w, auto& nbh) { 
+	    MANIFOLD::deriv2xx_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
+    //output_img(YD11,"YD11.csv");
+    auto hess_subY11  = hessian | without_last_row;
+    auto deriv_subY11 = YD11 | without_last_row;
+    vpp::pixel_wise(hess_subY11, deriv_subY11) | [&] (deriv2_type& h, deriv2_type& d) { h+=d; };
+    
+    //... w.r.t. second arguments
+    hessian_type YD22(data_.img_.domain());
+    vpp::pixel_wise(YD22, data_.weights_, N) | [&] (deriv2_type& x, weights_type& w, auto& nbh) { 
+	    MANIFOLD::deriv2xx_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
+    //output_img(YD22,"YD22.csv");
+    auto hess_subY22  = hessian | without_first_row;
+    auto deriv_subY22 = YD22 | without_first_row;
+    vpp::pixel_wise(hess_subY22, deriv_subY22) | [&] (deriv2_type& h, deriv2_type& d) { h+=d; };
+    
+
+    // TODO: Make single version for both cases and including an offset
+    // --> additional parameters sparse_mat, offset
+    auto local2globalInsertHTV = [&](deriv2_type& h, vpp::vint2 coord) { 
+	int pos = 3*(coord[0]+nr*coord[1]); // columnwise flattening
+	for(int local_row=0; local_row<h.rows(); local_row++)
+	    for(int local_col=0; local_col<h.cols(); local_col++)
+		if(h(local_row, local_col)!=0)
+		    HTV.insert(pos+local_row, pos+local_col) = h(local_row, local_col);
+    };
+    vpp::pixel_wise(hessian, hessian.domain())(/*vpp::_no_threads*/) | local2globalInsertHTV;
+                   
+    if (sparsedim<70)
+        std::cout << HTV << std::endl; 
+    else
+        std::cout << "Non-Zeros: " << HTV.nonZeros() << std::endl; 
+
 
 
 }
