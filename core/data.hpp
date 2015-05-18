@@ -92,6 +92,7 @@ void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
     vpp::pixel_wise(img_) | [] (auto & i) { i*=0.9999; };
     //
     weights_ = weights_mat(noise_img_.domain());
+    vpp::fill(weights_, 1.0);
     iweights_ = vpp::clone(weights_);
     vpp::fill(iweights_, 1.0);
     inpaint_ = false;

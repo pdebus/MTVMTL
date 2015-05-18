@@ -97,16 +97,18 @@ class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
 template < typename MANIFOLD, class DATA >
 typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::return_type Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateJ(){
 
+    vpp::fill(data_.weights_, 1.0); // Reset for Debugging
+
     // sum d^2(img, img_noise)
     return_type J1, J2;
     J1 = J2 = 0.0;
 
     if(data_.doInpaint()){
-	auto f = [] (value_type& i, value_type& n, bool inp ) { return MANIFOLD::dist_squared(i,n)*(1-inp); };
+	auto f = [] (const value_type& i, const value_type& n, const bool inp ) { return MANIFOLD::dist_squared(i,n)*(1-inp); };
 	J1 = vpp::sum(vpp::pixel_wise(data_.img_, data_.noise_img_, data_.inp_) | f);
     }
     else{
-	auto f = [] (value_type& i, value_type& n) { return MANIFOLD::dist_squared(i,n); };
+	auto f = [] (const value_type& i, const value_type& n) { return MANIFOLD::dist_squared(i,n); };
 	J1 = vpp::sum(vpp::pixel_wise(data_.img_, data_.noise_img_) | f);
     }
 
@@ -122,13 +124,13 @@ typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::return_type Functional< 
 
     // TODO: Try to replace omp loops e.g. by box2d (nr-1,0) (nr-1,nc-1) or Iterator
     // Horizontal Neighbours
-    vpp::pixel_wise(X, N) | [&] (weights_type& x, auto& nbh) { x = MANIFOLD::dist_squared(nbh(0,0),nbh(0,1)); };
+    vpp::pixel_wise(X, N) | [&] (weights_type& x, const auto& nbh) { x = MANIFOLD::dist_squared(nbh(0,0),nbh(0,1)); };
     #pragma omp parallel for
     for(int r=0; r< nr; r++) 
 	X(r,nc-1)=0.0;
     
     // Vertical Neighbours
-    vpp::pixel_wise(Y, N) | [&] (weights_type& y, auto& nbh) { y = MANIFOLD::dist_squared(nbh(0,0),nbh(1,0)); };
+    vpp::pixel_wise(Y, N) | [&] (weights_type& y, const auto& nbh) { y = MANIFOLD::dist_squared(nbh(0,0),nbh(1,0)); };
     weights_type *lastrow = &Y(nr-1,0);
     for(int c=0; c< nc; c++) 
 	lastrow[c]=0.0;
@@ -143,12 +145,12 @@ typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::return_type Functional< 
     //		- Calculation of weights and inverse weights could also be put in single pixel_wise
     
     
-    auto g =  [&] (weights_type& iw, weights_type& x, weights_type& y) { return iw / std::sqrt(x+y+eps2_); };
-    data_.weights_ = vpp::pixel_wise(data_.iweights_, X, Y) | g ;
+    auto g =  [&] (weights_type& w, const weights_type& iw, const weights_type& x, const weights_type& y) { w = iw / std::sqrt(x+y+eps2_); };
+    vpp::pixel_wise(data_.weights_, data_.iweights_, X, Y) | g ;
     
     //data_.output_weights(data_.weights_,"IRLS_Weights.csv");
 
-    J2 = vpp::sum( vpp::pixel_wise(data_.weights_) | [&] (weights_type& w) {return 1.0/w;} );
+    J2 = vpp::sum( vpp::pixel_wise(data_.weights_) | [&] (const weights_type& w) {return 1.0/w;} );
 
 	//std::cout << "J1: " << J1 << std::endl;
 	//std::cout << "J2: " << J2 << std::endl;
@@ -169,11 +171,11 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
     
     //GRADIENT OF FIDELITY TERM
     if(data_.doInpaint()){
-	auto f = [] (value_type& g, value_type& i, value_type& n, bool inp ) { MANIFOLD::deriv1x_dist_squared(i,n,g); g*=(1-inp); };
+	auto f = [] (value_type& g, const value_type& i, const value_type& n, const bool inp ) { MANIFOLD::deriv1x_dist_squared(i,n,g); g*=(1-inp); };
 	vpp::pixel_wise(grad, data_.img_, data_.noise_img_, data_.inp_) | f;
     }
     else{
-	auto f = [] (value_type& g,value_type& i, value_type& n) { MANIFOLD::deriv1x_dist_squared(i,n,g); };
+	auto f = [] (value_type& g, const value_type& i, const value_type& n) { MANIFOLD::deriv1x_dist_squared(i,n,g); };
 	vpp::pixel_wise(grad, data_.img_, data_.noise_img_) | f;
     }
     
@@ -194,22 +196,22 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 
     //{ FIXME
 	img_type XD1 = img_type(data_.img_.domain());
-	vpp::pixel_wise(XD1, data_.weights_, N) | [&] (value_type& x, weights_type& w, auto& nbh) { 
+	vpp::pixel_wise(XD1, data_.weights_, N) | [&] (value_type& x, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv1x_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
 	output_img(XD1,"XD1.csv");
 	auto grad_subX1  = grad | without_last_col;
 	auto deriv_subX1 = XD1 | without_last_col;
-	vpp::pixel_wise(grad_subX1, deriv_subX1) | [&] (value_type& g, value_type& d) { g+=d*lambda_; };
+	vpp::pixel_wise(grad_subX1, deriv_subX1) | [&] (value_type& g, const value_type& d) { g+=d*lambda_; };
     //} 
     // ... w.r.t. second argument
     //{
 	img_type XD2 = img_type(data_.img_.domain());
-	vpp::pixel_wise(XD2, data_.weights_, N) | [&] (value_type& x, weights_type& w ,auto& nbh) { 
+	vpp::pixel_wise(XD2, data_.weights_, N) | [&] (value_type& x, const weights_type& w ,const auto& nbh) { 
 	   MANIFOLD::deriv1y_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
 	output_img(XD2,"XD2.csv");
 	auto grad_subX2  = grad | without_first_col;
         auto deriv_subX2 = XD2 | without_last_col;
-	vpp::pixel_wise(grad_subX2, deriv_subX2) | [&] (value_type& g, value_type& d) { g+=d*lambda_; };
+	vpp::pixel_wise(grad_subX2, deriv_subX2) | [&] (value_type& g, const value_type& d) { g+=d*lambda_; };
     //}
 
 
@@ -217,23 +219,23 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
     // ... w.r.t. first argument
     //{
 	img_type YD1 = img_type(data_.img_.domain());
-	vpp::pixel_wise(YD1, data_.weights_, N) | [&] (value_type& y, weights_type& w, auto& nbh) { 
+	vpp::pixel_wise(YD1, data_.weights_, N) | [&] (value_type& y, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv1x_dist_squared(nbh(0,0), nbh(1,0), y); y*=w; };
 	output_img(YD1,"YD1.csv");
 	auto grad_subY1  = grad | without_last_row;
 	auto deriv_subY1 = YD1 | without_last_row;
-	vpp::pixel_wise(grad_subY1, deriv_subY1) | [&] (value_type& g, value_type& d) { g+=d*lambda_; };
+	vpp::pixel_wise(grad_subY1, deriv_subY1) | [&] (value_type& g, const value_type& d) { g+=d*lambda_; };
     //}
 
     // ... w.r.t second argument
     //{
 	img_type YD2 = img_type(data_.img_.domain());
-	vpp::pixel_wise(YD2, data_.weights_, N) | [&] (value_type& y, weights_type& w, auto& nbh) { 
+	vpp::pixel_wise(YD2, data_.weights_, N) | [&] (value_type& y, const weights_type& w, const auto& nbh) { 
 		MANIFOLD::deriv1y_dist_squared(nbh(0,0), nbh(1,0), y); y*=w; };
 	output_img(YD2,"YD2.csv");
         auto grad_subY2  = grad | without_first_row;
 	auto deriv_subY2 = YD2 | without_last_row;
-        vpp::pixel_wise(grad_subY2, deriv_subY2) | [&] (value_type& g, value_type& d) { g+=d*lambda_; };
+        vpp::pixel_wise(grad_subY2, deriv_subY2) | [&] (value_type& g, const value_type& d) { g+=d*lambda_; };
     //}
 
     output_img(grad,"grad.csv");
@@ -247,7 +249,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
     //vpp::pixel_wise(grad, grad.domain()) | [&] (value_type& p, vpp::vint2 coord) { DJ_.segment(3*(nc*coord[0]+coord[1]), value_dim) = p; };
     
     // flatten colwise (as in Matlab code)
-    vpp::pixel_wise(grad, grad.domain()) | [&] (value_type& p, vpp::vint2 coord) { DJ_.segment(3*(coord[0]+nr*coord[1]), value_dim) = p; };
+    vpp::pixel_wise(grad, grad.domain()) | [&] (const value_type& p, const vpp::vint2 coord) { DJ_.segment(3*(coord[0]+nr*coord[1]), value_dim) = p; };
 
     
     std::fstream f;
@@ -275,11 +277,11 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     HF.reserve(Eigen::VectorXi::Constant(nc,value_dim));
 	
     if(data_.doInpaint()){
-	auto f = [] (deriv2_type& h, value_type& i, value_type& n, bool inp ) { MANIFOLD::deriv2xx_dist_squared(i,n,h); h*=(1-inp); };
+	auto f = [] (deriv2_type& h, const value_type& i, const value_type& n, const bool inp ) { MANIFOLD::deriv2xx_dist_squared(i,n,h); h*=(1-inp); };
 	vpp::pixel_wise(hessian, data_.img_, data_.noise_img_, data_.inp_) | f;
     }
     else{
-	auto f = [] (deriv2_type& h, value_type& i, value_type& n) { MANIFOLD::deriv2xx_dist_squared(i,n,h); };
+	auto f = [] (deriv2_type& h, const value_type& i, const value_type& n) { MANIFOLD::deriv2xx_dist_squared(i,n,h); };
 	vpp::pixel_wise(hessian, data_.img_, data_.noise_img_) | f;
     }
     
@@ -317,50 +319,50 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     // Horizontal Second Derivatives and weighting
     // ... w.r.t. first arguments
     hessian_type XD11(data_.img_.domain());
-    vpp::pixel_wise(XD11, data_.weights_, N) | [&] (deriv2_type& x, weights_type& w, auto& nbh) { 
+    vpp::pixel_wise(XD11, data_.weights_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv2xx_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
     //output_img(XD11,"XD11.csv");
     auto hess_subX11  = hessian | without_last_col;
     auto deriv_subX11 = XD11 | without_last_col;
-    vpp::pixel_wise(hess_subX11, deriv_subX11) | [&] (deriv2_type& h, deriv2_type& d) { h=d; };
+    vpp::pixel_wise(hess_subX11, deriv_subX11) | [&] (deriv2_type& h, const deriv2_type& d) { h=d; };
     #pragma omp parallel for
     for(int r=0; r< nr; r++) 
 	hessian(r,nc-1)=deriv2_type::Zero(); // set last column to zero
     
     //... w.r.t. second arguments
     hessian_type XD22(data_.img_.domain());
-    vpp::pixel_wise(XD22, data_.weights_, N) | [&] (deriv2_type& x, weights_type& w, auto& nbh) { 
+    vpp::pixel_wise(XD22, data_.weights_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv2yy_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
     //output_img(XD22,"XD22.csv");
     auto hess_subX22  = hessian | without_first_col;
     auto deriv_subX22 = XD22 | without_first_col;
-    vpp::pixel_wise(hess_subX22, deriv_subX22) | [&] (deriv2_type& h, deriv2_type& d) { h+=d; };
+    vpp::pixel_wise(hess_subX22, deriv_subX22) | [&] (deriv2_type& h, const deriv2_type& d) { h+=d; };
 
     // Vertical Second Derivatives weighting
     //... w.r.t. first arguments
     hessian_type YD11(data_.img_.domain());
-    vpp::pixel_wise(YD11, data_.weights_, N) | [&] (deriv2_type& x, weights_type& w, auto& nbh) { 
+    vpp::pixel_wise(YD11, data_.weights_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv2xx_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
     //output_img(YD11,"YD11.csv");
     auto hess_subY11  = hessian | without_last_row;
     auto deriv_subY11 = YD11 | without_last_row;
-    vpp::pixel_wise(hess_subY11, deriv_subY11) | [&] (deriv2_type& h, deriv2_type& d) { h+=d; };
+    vpp::pixel_wise(hess_subY11, deriv_subY11) | [&] (deriv2_type& h, const deriv2_type& d) { h+=d; };
     
     //... w.r.t. second arguments
     hessian_type YD22(data_.img_.domain());
-    vpp::pixel_wise(YD22, data_.weights_, N) | [&] (deriv2_type& x, weights_type& w, auto& nbh) { 
+    vpp::pixel_wise(YD22, data_.weights_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv2xx_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
     //output_img(YD22,"YD22.csv");
     auto hess_subY22  = hessian | without_first_row;
     auto deriv_subY22 = YD22 | without_first_row;
-    vpp::pixel_wise(hess_subY22, deriv_subY22) | [&] (deriv2_type& h, deriv2_type& d) { h+=d; };
+    vpp::pixel_wise(hess_subY22, deriv_subY22) | [&] (deriv2_type& h, const deriv2_type& d) { h+=d; };
     
     // Insert elementwise into sparse Hessian
     // NOTE: Eventually make single version for both cases, including an offset
     // --> additional parameters sparse_mat, offset
     int row_offset=0;
     int col_offset=0;
-    auto local2globalInsertHTV = [&](deriv2_type& h, vpp::vint2 coord) { 
+    auto local2globalInsertHTV = [&](const deriv2_type& h, const vpp::vint2 coord) { 
 	int pos = 3*(coord[0]+nr*coord[1]); // columnwise flattening
 	for(int local_row=0; local_row<h.rows(); local_row++)
 	    for(int local_col=0; local_col<h.cols(); local_col++)
@@ -372,7 +374,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     // Horizontal Second Derivatives and weighting
     // ... w.r.t. first and second arguments 
     hessian_type XD12(without_last_col);
-    vpp::pixel_wise(XD12, data_.weights_ | without_last_col, N) | [&] (deriv2_type& x, weights_type& w, auto& nbh) { 
+    vpp::pixel_wise(XD12, data_.weights_ | without_last_col, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv2xy_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
     //output_img(XD12,"XD12.csv");
 
@@ -384,7 +386,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     // Vertical Second Derivatives and weighting
     //... w.r.t. second arguments
     hessian_type YD12(data_.img_.domain());
-    vpp::pixel_wise(YD12, data_.weights_, N) | [&] (deriv2_type& x, weights_type& w, auto& nbh) { 
+    vpp::pixel_wise(YD12, data_.weights_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv2xy_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
     //output_img(YD12,"YD12.csv");
     //Set last row to zero
@@ -404,7 +406,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     else
         std::cout << "HTV Non-Zeros: " << HTV.nonZeros() << std::endl; 
 
-    //HJ_= HF + lambda_*HTV;
+    HJ_= HF + lambda_*HTV;
 
 }
 
