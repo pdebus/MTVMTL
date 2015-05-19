@@ -28,7 +28,7 @@ enum FUNCTIONAL_DISC {
     ANISO
 };
 
-enum PAR {
+enum PARALLEL {
     SEQ,
     OMP,
     CUDA

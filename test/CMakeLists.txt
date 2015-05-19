@@ -20,4 +20,7 @@ add_executable(functional_test functional_test.cpp)
 add_test(functional_test functional_test)
 target_link_libraries(functional_test ${OpenCV_LIBS} gomp)
 
+add_executable(tvmin_test tvmin_test.cpp)
+add_test(tvmin_test tvmin_test)
+target_link_libraries(tvmin_test ${OpenCV_LIBS} gomp)
 
