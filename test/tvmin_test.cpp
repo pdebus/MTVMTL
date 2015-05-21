@@ -25,11 +25,15 @@ int main(int argc, const char *argv[])
 	myData.rgb_imread(argv[1]);
 	
 	typedef Functional<FIRSTORDER, ISO, mf_t, data_t> func_t;
-	func_t myFunc(3.0, myData);
-
+	func_t myFunc(0.1, myData);
+	
 	typedef TV_Minimizer< IRLS, func_t, mf_t, data_t, OMP > tvmin_t;
 	tvmin_t myTVMin(myFunc, myData);
-
+	
+	std::cout << "Smoothen picture to obtain initial state for Newton iteration..." << std::endl;
+	myTVMin.smoothening(10);
+	std::cout << "Start TV minimization..." << std::endl;
+	myTVMin.minimize();
 
 	return 0;
 }

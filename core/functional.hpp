@@ -58,13 +58,13 @@ class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
 
 	// Functional parameters and return types
 	typedef double param_type;
-	typedef double return_type;
+	typedef double result_type;
 	typedef Eigen::Matrix<scalar_type, Eigen::Dynamic,1> gradient_type;
 	typedef vpp::imageNd<deriv2_type, img_dim> hessian_type;
 	typedef Eigen::SparseMatrix<scalar_type> sparse_hessian_type;
 
 	//Constructor
-	Functional(param_type lambda, DATA dat):
+	Functional(param_type lambda, DATA& dat):
 	    lambda_(lambda),
 	    data_(dat)
 	{
@@ -73,11 +73,16 @@ class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
 	
 	// Evaluation functions
 	void updateWeights();
-	return_type evaluateJ();
+	result_type evaluateJ();
 	void  evaluateDJ();
 	void  evaluateHJ();
 	
 	void output_img(const img_type& img, const char* filename) const;
+
+	inline param_type getlambda() const { return lambda_; }
+	inline param_type geteps2() const { return eps2_; }
+	inline const gradient_type& getDJ() const { return DJ_; }
+	inline const sparse_hessian_type& getHJ() const { return HJ_; }
 
     private:
 	param_type lambda_;
@@ -121,8 +126,8 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateWeights(){
     //data_.output_weights(Y,"YWeights.csv");
 	
     
-    auto g =  [&] (weights_type& w, const weights_type& iw, const weights_type& x, const weights_type& y) { w = iw / std::sqrt(x+y+eps2_); };
-    vpp::pixel_wise(data_.weights_, data_.iweights_, X, Y) | g ;
+    auto g =  [&] (weights_type& w, const weights_type& ew, const weights_type& x, const weights_type& y) { w = ew / std::sqrt(x+y+eps2_); };
+    vpp::pixel_wise(data_.weights_, data_.edge_weights_, X, Y) | g ;
     
     //data_.output_weights(data_.weights_,"IRLS_Weights.csv");
 }
@@ -130,10 +135,10 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateWeights(){
 
 // Evaluation of J
 template < typename MANIFOLD, class DATA >
-typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::return_type Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateJ(){
+typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::result_type Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateJ(){
 
     // sum d^2(img, img_noise)
-    return_type J1, J2;
+    result_type J1, J2;
     J1 = J2 = 0.0;
 
     if(data_.doInpaint()){
@@ -160,7 +165,7 @@ template < typename MANIFOLD, class DATA >
 void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 
     //output_img(data_.img_,"img.csv");
-    vpp::fill(data_.weights_, 1.0); // Reset for Debugging
+    //vpp::fill(data_.weights_, 1.0); // Reset for Debugging
 
     img_type grad = img_type(data_.img_.domain());
     int nr = data_.img_.nrows();
@@ -216,7 +221,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 	img_type YD1 = img_type(data_.img_.domain());
 	vpp::pixel_wise(YD1, data_.weights_, N) | [&] (value_type& y, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv1x_dist_squared(nbh(0,0), nbh(1,0), y); y*=w; };
-	output_img(YD1,"YD1.csv");
+	//output_img(YD1,"YD1.csv");
 	auto grad_subY1  = grad | without_last_row;
 	auto deriv_subY1 = YD1 | without_last_row;
 	vpp::pixel_wise(grad_subY1, deriv_subY1) | [&] (value_type& g, const value_type& d) { g+=d*lambda_; };
@@ -227,13 +232,13 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 	img_type YD2 = img_type(data_.img_.domain());
 	vpp::pixel_wise(YD2, data_.weights_, N) | [&] (value_type& y, const weights_type& w, const auto& nbh) { 
 		MANIFOLD::deriv1y_dist_squared(nbh(0,0), nbh(1,0), y); y*=w; };
-	output_img(YD2,"YD2.csv");
+	//output_img(YD2,"YD2.csv");
         auto grad_subY2  = grad | without_first_row;
 	auto deriv_subY2 = YD2 | without_last_row;
         vpp::pixel_wise(grad_subY2, deriv_subY2) | [&] (value_type& g, const value_type& d) { g+=d*lambda_; };
     }
 
-    output_img(grad,"grad.csv");
+    //output_img(grad,"grad.csv");
 
     // Flatten to single gradient vector
 	// TODO: Check if this can be also realized via Eigen::Map to the imageND data
@@ -247,17 +252,17 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
     vpp::pixel_wise(grad, grad.domain()) | [&] (const value_type& p, const vpp::vint2 coord) { DJ_.segment(3*(coord[0]+nr*coord[1]), value_dim) = p; };
 
     
-    std::fstream f;
-    f.open("gradJ.csv",std::fstream::out);
-    f << DJ_;
-    f.close();
+    //std::fstream f;
+    //f.open("gradJ.csv",std::fstream::out);
+    //f << DJ_;
+    //f.close();
     
 }
 
 // Evaluation of Hessian J
 template < typename MANIFOLD, class DATA >
 void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
-    vpp::fill(data_.weights_, 1.0); // Reset for Debugging
+    //vpp::fill(data_.weights_, 1.0); // Reset for Debugging
 
     hessian_type hessian(data_.img_.domain());
     int nr = data_.img_.nrows();
@@ -291,10 +296,10 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 
     vpp::pixel_wise(hessian, hessian.domain())(/*vpp::_no_threads*/) | local2globalInsert;
                    
-    if (sparsedim<70)
-        std::cout << "HF:\n" << HF << std::endl; 
-    else
-        std::cout << "HF Non-Zeros: " << HF.nonZeros() << std::endl; 
+    //if (sparsedim<70)
+    //    std::cout << "HF:\n" << HF << std::endl; 
+    //else
+    //    std::cout << "HF Non-Zeros: " << HF.nonZeros() << std::endl; 
 
     
     //HESSIAN OF TV TERM
@@ -403,12 +408,12 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 	for(int c=0; c<nc-1; c++) 
 	    local2globalInsertHTV(lastrow[c], vpp::vint2(nr-1,c));
     }
-
+    /*
     if (sparsedim<70)
         std::cout << "HTV\n" << HTV << std::endl; 
     else
         std::cout << "HTV Non-Zeros: " << HTV.nonZeros() << std::endl; 
-
+    */
     HJ_= HF + lambda_*HTV;
 
 }

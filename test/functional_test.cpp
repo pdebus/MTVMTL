@@ -29,7 +29,7 @@ int main(int argc, const char *argv[])
 	typedef Functional<FIRSTORDER, ISO, mf_t, data_t> func_t;
 	func_t myFunc(3.0, myData);
 
-	func_t::return_type result = 0.0;
+	func_t::result_type result = 0.0;
 	
 	//Functional evaluation
 	result = myFunc.evaluateJ();

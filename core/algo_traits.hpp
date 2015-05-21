@@ -26,7 +26,7 @@ struct algo_traits<IRLS> {
     static const bool use_preconditioner = false;
     
     template <typename H>
-    using solver = Eigen::SimplicialLDLT<H>;
+    using solver = Eigen::SimplicialLDLT<H, Eigen::Upper>;
 
 };
 

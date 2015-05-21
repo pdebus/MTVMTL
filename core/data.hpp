@@ -52,10 +52,10 @@ class Data< MANIFOLD, 2>{
 	storage_type img_;
 	storage_type noise_img_;
 	weights_mat weights_;
+	weights_mat edge_weights_;
 
 	bool inpaint_;
 	inp_mat inp_; 
-	weights_mat iweights_;
 };
 
 
@@ -88,13 +88,15 @@ void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
 	};
     //img_ = vpp::clone(noise_img_, vpp::_border = 1);
     img_ = vpp::clone(noise_img_);
-    //TODO: Remove test: make noise different to image 
-    vpp::pixel_wise(img_) | [] (auto & i) { i*=0.9999; };
-    //
+    //Testnoise for Functional Debugging 
+    //vpp::pixel_wise(img_) | [] (auto & i) { i*=0.9999; };
+
+
+    //TODO: Write separate input functions for weights and inpainting matrices
     weights_ = weights_mat(noise_img_.domain());
     vpp::fill(weights_, 1.0);
-    iweights_ = vpp::clone(weights_);
-    vpp::fill(iweights_, 1.0);
+    edge_weights_ = vpp::clone(weights_);
+    vpp::fill(edge_weights_, 1.0);
     inpaint_ = false;
 }
 
