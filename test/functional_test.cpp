@@ -1,11 +1,13 @@
 #include <iostream>
 #include <opencv2/highgui/highgui.hpp>
 
+#define TV_FUNC_DEBUG
 #include "../core/data.hpp"
 #include "../core/functional.hpp"
 
 #include <vpp/vpp.hh>
 #include <vpp/utils/opencv_bridge.hh>
+
 
 int main(int argc, const char *argv[])
 {
