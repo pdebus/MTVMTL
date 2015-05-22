@@ -19,7 +19,7 @@ int main(int argc, const char *argv[])
 	}
 
 	typedef Manifold< EUCLIDIAN, 3 > mf_t;
-
+	
 	typedef Data< mf_t, 2> data_t;	
 	data_t myData=data_t();
 	myData.rgb_imread(argv[1]);
@@ -34,6 +34,25 @@ int main(int argc, const char *argv[])
 	myTVMin.smoothening(10);
 	std::cout << "Start TV minimization..." << std::endl;
 	myTVMin.minimize();
+	
+	cv::namedWindow( "Display window", cv::WINDOW_NORMAL ); 
+
+	// Convert Picture of double to uchar
+	vpp::image2d<vpp::vuchar3> img(myData.img_.domain());
+	vpp::pixel_wise(img, myData.img_) | [] (auto& i, auto& n) {
+	    mf_t::value_type v = n * (double) std::numeric_limits<unsigned char>::max();
+	    vpp::vuchar3 vu = vpp::vuchar3::Zero();
+	    vu[0]=(unsigned char) v[2];
+	    vu[1]=(unsigned char) v[1];
+	    vu[2]=(unsigned char) v[0];
+	    i = vu;
+	};
+	
+	cv::imwrite("denoised.jpg", to_opencv(img));
+	cv::imshow( "Display window", vpp::to_opencv(img));
+	//cv::imshow( "Display window", vpp::to_opencv(myData.noise_img_));
+
+	cv::waitKey(0);
 
 	return 0;
 }
