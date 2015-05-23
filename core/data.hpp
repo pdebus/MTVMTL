@@ -6,12 +6,16 @@
 #include <iostream>
 #include <fstream>
 
+// OpenCV includes
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#ifdef TV_DATA_DEBUG
+    #include <opencv2/highgui/highgui.hpp>
+#endif
 
 // video++ includes
 #include <vpp/vpp.hh>
 #include <vpp/utils/opencv_bridge.hh>
-
-// Eigen includes
 
 // own includes 
 #include "manifold.hpp"
@@ -40,6 +44,7 @@ class Data< MANIFOLD, 2>{
 	typedef vpp::image2d<short int> inp_mat;
 
 	void rgb_imread(const char* filename); 
+	void makeEdgeWeights(); 
 
 	inline bool doInpaint() const { return inpaint_; }
 
@@ -70,6 +75,49 @@ class Data<MANIFOLD, 3>{
 template < typename MANIFOLD >
 const int Data<MANIFOLD, 2>::img_dim = 2;
 
+template < typename MANIFOLD >
+void Data<MANIFOLD, 2>::makeEdgeWeights(){
+   
+    cv::Mat gray, edge;
+    
+    { // Local Scope to save memory
+	vpp::image2d<vpp::vuchar3> ucharimg(noise_img_.domain());
+	
+	// Convert double to uchar function
+	auto double2uchar = [] (auto& i, const auto& n) {
+	    value_type v = n * static_cast<typename MANIFOLD::scalar_type>(std::numeric_limits<unsigned char>::max());
+	    vpp::vuchar3 vu = vpp::vuchar3::Zero();
+	    vu[0]=static_cast<unsigned char>(v[2]);
+	    vu[1]=static_cast<unsigned char>(v[1]);
+	    vu[2]=static_cast<unsigned char>(v[0]);
+	    i = vu;
+	}; 
+
+	vpp::pixel_wise(ucharimg, noise_img_) | double2uchar;
+	cv::Mat src = vpp::to_opencv(ucharimg);
+	cv::cvtColor(src, gray, CV_BGR2GRAY);
+    }
+
+    cv::blur(gray, edge, cv::Size(3,3));
+    cv::Canny(edge, edge, 50, 150, 3);
+    
+    #ifdef TV_DATA_DEBUG
+	cv::namedWindow( "Detected Edges", cv::WINDOW_NORMAL ); 
+	cv::imshow("Detected Edges", edge);
+	cv::waitKey(0);
+    #endif
+
+    vpp::image2d<unsigned char> ucharweights = vpp::from_opencv<unsigned char>(edge);
+    vpp::pixel_wise(ucharweights, edge_weights_) | [] (const unsigned char &uw, weights_type ew) {
+	ew = 1.0 - 0.99 * ( static_cast<weights_type>(uw) / static_cast<weights_type>(std::numeric_limits<unsigned char>::max()) );	
+    };
+
+    #ifdef TV_DATA_DEBUG
+	output_weights(edge_weights_, "wedge.csv");
+    #endif
+}
+
+
 //TODO: static assert to avoid data that has not exactly 3 channels
 template < typename MANIFOLD >
 void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
@@ -80,11 +128,11 @@ void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
 	    vpp::pixel_wise(input_image, noise_img_) | [] (auto& i, auto& n) {
 	    value_type v = value_type::Zero();
 	    vpp::vuchar3 vu = i;
-	    // TODO: insert manifold scalar type, replace c-style casts
-	    v[0]=(double) vu[2]; //opencv saves as BGR
-	    v[1]=(double) vu[1];
-	    v[2]=(double) vu[0];
-	    n = v / (double) std::numeric_limits<unsigned char>::max();
+	    // TODO: insert manifold scalar type
+	    v[0]=static_cast<double>(vu[2]); //opencv saves as BGR
+	    v[1]=static_cast<double>(vu[1]);
+	    v[2]=static_cast<double>(vu[0]);
+	    n = v / static_cast<double>(std::numeric_limits<unsigned char>::max());
 	};
     //img_ = vpp::clone(noise_img_, vpp::_border = 1);
     img_ = vpp::clone(noise_img_);

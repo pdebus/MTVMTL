@@ -36,13 +36,16 @@ class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
     public:
 	// Manifold typedefs and constants
 	static const MANIFOLD_TYPE mf_type = MANIFOLD::MyType;
-	static const int value_dim = MANIFOLD::value_type::SizeAtCompileTime;
+	static const int value_dim = MANIFOLD::value_dim; 
+	static const int manifold_dim = MANIFOLD::manifold_dim; 
 	typedef typename MANIFOLD::scalar_type scalar_type;
 	typedef typename MANIFOLD::value_type value_type;
 	typedef typename MANIFOLD::ref_type ref_type;
 	typedef typename MANIFOLD::cref_type cref_type;
 	typedef typename MANIFOLD::deriv1_type deriv1_type;
 	typedef typename MANIFOLD::deriv2_type deriv2_type;
+	typedef typename MANIFOLD::restricted_deriv2_type restricted_deriv2_type;
+	typedef typename MANIFOLD::tm_base_type tm_base_type;
 
 	// Data typedef and constants
 	static const int img_dim = DATA::img_dim;
@@ -59,7 +62,12 @@ class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
 	// Functional parameters and return types
 	typedef double param_type;
 	typedef double result_type;
-	typedef Eigen::Matrix<scalar_type, Eigen::Dynamic,1> gradient_type;
+	
+	// Tangent space transformation matrix types
+	typedef vpp::imageNd<tm_base_type, img_dim> tm_base_mat_type; 
+	
+	// Gradient and Hessian types
+	typedef Eigen::Matrix<scalar_type, Eigen::Dynamic, 1> gradient_type;
 	typedef vpp::imageNd<deriv2_type, img_dim> hessian_type;
 	typedef Eigen::SparseMatrix<scalar_type> sparse_hessian_type;
 
@@ -71,8 +79,11 @@ class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
 	    eps2_=0.0;
     	}
 	
-	// Evaluation functions
 	void updateWeights();
+	void updateTMBase();
+	
+	
+	// Evaluation functions
 	result_type evaluateJ();
 	void  evaluateDJ();
 	void  evaluateHJ();
@@ -84,11 +95,13 @@ class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
 	inline param_type geteps2() const { return eps2_; }
 	inline const gradient_type& getDJ() const { return DJ_; }
 	inline const sparse_hessian_type& getHJ() const { return HJ_; }
+	inline const tm_base_mat_type& getT() const { return T_; }
 
     private:
 	param_type lambda_;
 	param_type eps2_;
 	DATA& data_;
+	tm_base_mat_type T_;
 	gradient_type DJ_;
 	sparse_hessian_type HJ_;
 };
@@ -134,6 +147,16 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateWeights(){
     #ifdef TV_FUNC_DEBUG 
 	data_.output_weights(data_.weights_,"IRLS_Weights.csv");
     #endif	
+}
+
+// Update the Tangent space ONB
+template < typename MANIFOLD, class DATA >
+void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateTMBase(){
+   
+   tm_base_mat_type T(data_.img_.domain());
+   vpp::pixel_wise(T, data_.img_) | [&] (tm_base_type& t, const value_type& i) { MANIFOLD::tangent_plane_base(i,t); };
+   T_=T;
+
 }
 
 
@@ -254,16 +277,19 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 
     //output_img(grad,"grad.csv");
 
-    // Flatten to single gradient vector
-	// TODO: Check if this can be also realized via Eigen::Map to the imageND data
-    DJ_ = gradient_type::Zero(nr*nc*value_dim); 
-
+    DJ_ = gradient_type::Zero(nr*nc*manifold_dim); 
+    
     // flatten rowwise
-	// TODO: Switch to rowise after Debug
     //vpp::pixel_wise(grad, grad.domain()) | [&] (value_type& p, vpp::vint2 coord) { DJ_.segment(3*(nc*coord[0]+coord[1]), value_dim) = p; };
     
-    // flatten colwise (as in Matlab code)
-    vpp::pixel_wise(grad, grad.domain()) | [&] (const value_type& p, const vpp::vint2 coord) { DJ_.segment(3*(coord[0]+nr*coord[1]), value_dim) = p; };
+    // Apply tangent space restriction and flatten colwise (as in Matlab code)
+    updateTMBase();
+    
+    auto insert2grad = [&] (const tm_base_type& t, const value_type& p, const vpp::vint2 coord) { 
+	DJ_.segment(3*(coord[0]+nr*coord[1]), manifold_dim) = t.transpose()*p; 
+    };
+
+    vpp::pixel_wise(T_, grad, grad.domain()) | insert2grad; 
 
     #ifdef TV_FUNC_DEBUG 
 	std::fstream f;
@@ -283,14 +309,13 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     hessian_type hessian(data_.img_.domain());
     int nr = data_.img_.nrows();
     int nc = data_.img_.ncols();
-    int sparsedim = nr*nc*value_dim;
+    int sparsedim = nr*nc*manifold_dim;
     
-   
         
     //HESSIAN OF FIDELITY TERM
 
     sparse_hessian_type HF(sparsedim,sparsedim);
-    HF.reserve(Eigen::VectorXi::Constant(nc,value_dim));
+    HF.reserve(Eigen::VectorXi::Constant(nc,manifold_dim));
 	
     if(data_.doInpaint()){
 	auto f = [] (deriv2_type& h, const value_type& i, const value_type& n, const bool inp ) { MANIFOLD::deriv2xx_dist_squared(i,n,h); h*=(1-inp); };
@@ -302,19 +327,20 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     }
     
    //TODO: Check whether all 2nd-derivative matrices are symmetric s.t. only half the matrix need to be traversed. e.g. local_col=local_row instead of 0
-    auto local2globalInsert = [&](deriv2_type& h, vpp::vint2 coord) { 
+    auto local2globalInsert = [&](const tm_base_type& t, const deriv2_type& h, const vpp::vint2 coord) { 
 	int pos = 3*(coord[0]+nr*coord[1]); // columnwise flattening
-	for(int local_row=0; local_row<h.rows(); local_row++)
-	    for(int local_col=0; local_col<h.cols(); local_col++)
-		if(h(local_row, local_col)!=0)
-		    HF.insert(pos+local_row, pos+local_col) = h(local_row, local_col);
+	restricted_deriv2_type ht=t.transpose()*h*t;
+	for(int local_row=0; local_row<ht.rows(); local_row++)
+	    for(int local_col=0; local_col<ht.cols(); local_col++)
+		if(ht(local_row, local_col)!=0)
+		    HF.insert(pos+local_row, pos+local_col) = ht(local_row, local_col);
     };
 
-    vpp::pixel_wise(hessian, hessian.domain())(/*vpp::_no_threads*/) | local2globalInsert;
+    vpp::pixel_wise(T_, hessian, hessian.domain())(/*vpp::_no_threads*/) | local2globalInsert;
                    
     //HESSIAN OF TV TERM
     sparse_hessian_type HTV(sparsedim,sparsedim);
-    HTV.reserve(Eigen::VectorXi::Constant(nc,value_dim));
+    HTV.reserve(Eigen::VectorXi::Constant(nc,3*manifold_dim));
 	
     // Neighbourhood box
     nbh_type N = nbh_type(data_.img_);
@@ -390,14 +416,15 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     // --> additional parameters sparse_mat, offset
     int row_offset=0;
     int col_offset=0;
-    auto local2globalInsertHTV = [&](const deriv2_type& h, const vpp::vint2 coord) { 
+    auto local2globalInsertHTV = [&](const tm_base_type& t,const deriv2_type& h, const vpp::vint2 coord) { 
 	int pos = 3*(coord[0]+nr*coord[1]); // columnwise flattening
-	for(int local_row=0; local_row<h.rows(); local_row++)
-	    for(int local_col=0; local_col<h.cols(); local_col++)
-		if(h(local_row, local_col)!=0)
-		    HTV.insert(pos + row_offset + local_row, pos + col_offset + local_col) = h(local_row, local_col);
+	restricted_deriv2_type ht = t.transpose()*h*t;
+	for(int local_row=0; local_row<ht.rows(); local_row++)
+	    for(int local_col=0; local_col<ht.cols(); local_col++)
+		if(ht(local_row, local_col)!=0)
+		    HTV.insert(pos + row_offset + local_row, pos + col_offset + local_col) = ht(local_row, local_col);
     };
-    vpp::pixel_wise(hessian, hessian.domain())(/*vpp::_no_threads*/) | local2globalInsertHTV;
+    vpp::pixel_wise(T_, hessian, hessian.domain())(/*vpp::_no_threads*/) | local2globalInsertHTV;
                    
     // Horizontal Second Derivatives and weighting
     // ... w.r.t. first and second arguments 
@@ -411,8 +438,8 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 
 	// Offsets for upper nyth subdiagonal
 	row_offset=0;
-	col_offset=value_dim*nr;
-	vpp::pixel_wise(XD12, XD12.domain())(/*vpp::_no_threads*/) | local2globalInsertHTV;
+	col_offset=manifold_dim*nr;
+	vpp::pixel_wise(T_ | without_first_col, XD12, XD12.domain())(/*vpp::_no_threads*/) | local2globalInsertHTV;
     }
     // Vertical Second Derivatives and weighting
     //... w.r.t. second arguments
@@ -424,16 +451,22 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 	    output_img(YD12,"YD12.csv");
         #endif
 	//Set last row to zero
+	/*
 	deriv2_type *lastrow = &YD12(nr-1,0);
 	for(int c=0; c< nc; c++) 
 	    lastrow[c]=deriv2_type::Zero();
-    
+	*/
+
 	// Offsets for first upper subdiagonal
 	row_offset=0;
-	col_offset=value_dim;
-	vpp::pixel_wise(YD12 | without_last_row, without_last_row)(/*vpp_no_threads*/) | local2globalInsertHTV;
+	col_offset=manifold_dim;
+	vpp::pixel_wise(T_ | without_first_row, YD12 | without_last_row, without_last_row)(/*vpp_no_threads*/) | local2globalInsertHTV;
+	/*
+	//Manually insert last row
+	tm_base_type *firstrow = &T_(0,0);
 	for(int c=0; c<nc-1; c++) 
-	    local2globalInsertHTV(lastrow[c], vpp::vint2(nr-1,c));
+	    local2globalInsertHTV(firstrow[c], lastrow[c], vpp::vint2(nr-1,c));
+	*/
     }
         HJ_= HF + lambda_*HTV;
     

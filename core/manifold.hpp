@@ -18,6 +18,8 @@ struct Manifold< EUCLIDIAN, N > {
     
     public:
 	static const MANIFOLD_TYPE MyType;
+	static const int manifold_dim ;
+	static const int value_dim; // TODO: maybe rename to embedding_dim 
 
 	// Scalar type of manifold
 	//typedef double scalar_type;
@@ -28,10 +30,14 @@ struct Manifold< EUCLIDIAN, N > {
 	typedef Eigen::Matrix< scalar_type, N, 1>   value_type;
 	typedef value_type&			    ref_type;
 	typedef const value_type&		    cref_type;
-
 	//TODO: Does Ref<> variant also work?
 	//typedef Eigen::Ref< value_type >	    ref_type;
 	//typedef const Eigen::Ref< const value_type > cref_type;
+
+	
+	// Tangent space typedefs
+	typedef Eigen::Matrix < scalar_type, N, N> tm_base_type;
+	typedef tm_base_type& tm_base_ref_type;
 
 	// Derivative Typedefs
 	typedef value_type			     deriv1_type;
@@ -40,6 +46,7 @@ struct Manifold< EUCLIDIAN, N > {
 	//typedef Eigen::Ref<deriv1_type>	     deriv1_ref_type;
 	typedef Eigen::Matrix<scalar_type, N, N>     deriv2_type;
 	typedef deriv2_type&			     deriv2_ref_type;
+	typedef	Eigen::Matrix<scalar_type, N, N>     restricted_deriv2_type;
 	//typedef Eigen::Ref<deriv2_type>	     deriv2_ref_type;
 
 
@@ -55,6 +62,9 @@ struct Manifold< EUCLIDIAN, N > {
 	// Manifold exponentials und logarithms ( for Proximal point)
 	inline static void exp(cref_type x, cref_type y, ref_type result);
 	inline static void log(cref_type x, cref_type y, ref_type result);
+
+	// Basis transformation for restriction to tangent space
+	inline static void tangent_plane_base(cref_type x, tm_base_ref_type result);
 };
 
 
@@ -79,8 +89,19 @@ struct Manifold< SO, N> {
 
 
 /*-----IMPLEMENTATION EUCLIDIAN----------*/
+
+// Static constants, Outside definition to avoid linker error
+
 template <int N>
-const MANIFOLD_TYPE Manifold < EUCLIDIAN, N>::MyType = EUCLIDIAN; // Outside definition to avoid linker error
+const MANIFOLD_TYPE Manifold < EUCLIDIAN, N>::MyType = EUCLIDIAN; 
+
+template <int N>
+const int Manifold < EUCLIDIAN, N>::manifold_dim = N; 
+
+template <int N>
+const int Manifold < EUCLIDIAN, N>::value_dim = N; 
+
+
 
 // Squared Euclidian distance function
 template <int N>
@@ -134,6 +155,11 @@ inline void Manifold <EUCLIDIAN, N>::log(cref_type x, cref_type y, ref_type resu
     result = y-x;
 }
 
+// Tangent Plane restriction
+template <int N>
+inline void Manifold <EUCLIDIAN, N>::tangent_plane_base(cref_type x, tm_base_ref_type result){
+    result = tm_base_type::Identity();
+}
 
 } // end namespace tvmtl
 

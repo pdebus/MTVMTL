@@ -3,11 +3,11 @@
 
 #include <opencv2/highgui/highgui.hpp>
 
-#include "../core/data.hpp"
-
 #include <vpp/vpp.hh>
 #include <vpp/utils/opencv_bridge.hh>
 
+#define TV_DATA_DEBUG
+#include "../core/data.hpp"
 int main(int argc, const char *argv[])
 {
 	using namespace tvmtl;
@@ -26,8 +26,8 @@ int main(int argc, const char *argv[])
 	data_t myData=data_t();
 	
 	myData.rgb_imread(argv[1]);
-
-	cv::namedWindow( "Display window", cv::WINDOW_NORMAL ); 
+	myData.makeEdgeWeights();
+	cv::namedWindow( "Input Picture", cv::WINDOW_NORMAL ); 
 
 	// Convert Picture of double to uchar
 	vpp::image2d<vpp::vuchar3> img(myData.img_.domain());
@@ -40,7 +40,7 @@ int main(int argc, const char *argv[])
 	    i = vu;
 	};
 	
-	cv::imshow( "Display window", vpp::to_opencv(img));
+	cv::imshow( "Input Picture", vpp::to_opencv(img));
 	//cv::imshow( "Display window", vpp::to_opencv(myData.noise_img_));
 
 	cv::waitKey(0);

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <opencv2/highgui/highgui.hpp>
 
 #include "../core/algo_traits.hpp"
@@ -48,7 +49,10 @@ int main(int argc, const char *argv[])
 	    i = vu;
 	};
 	
-	cv::imwrite("denoised.jpg", to_opencv(img));
+	std::string denoised_fname(argv[1]);
+	denoised_fname = "denoised_" + denoised_fname;
+
+	cv::imwrite(denoised_fname, to_opencv(img));
 	cv::imshow( "Display window", vpp::to_opencv(img));
 	//cv::imshow( "Display window", vpp::to_opencv(myData.noise_img_));
 

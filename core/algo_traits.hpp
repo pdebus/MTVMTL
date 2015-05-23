@@ -18,9 +18,9 @@ struct algo_traits {
 template<>
 struct algo_traits<IRLS> {
 	    
-    static const int max_runtime = 100;
+    static const int max_runtime = 1000;
     static const int max_irls_steps = 5;
-    static const int max_newtons_steps = 3;
+    static const int max_newtons_steps = 1;
     static constexpr double tolerance = 1e-4;
 
     static const bool use_preconditioner = false;

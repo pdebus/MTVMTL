@@ -27,10 +27,12 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 	public:
 	    // Manifold typedefs
 	    typedef typename MANIFOLD::value_type value_type;
+	    typedef typename MANIFOLD::tm_base_type tm_base_type;
 
 	    // Functional typedefs
 	    typedef typename FUNCTIONAL::gradient_type gradient_type;
 	    typedef typename FUNCTIONAL::sparse_hessian_type hessian_type;
+	    typedef typename FUNCTIONAL::tm_base_mat_type tm_base_mat_type;
 	    typedef typename Eigen::SparseSelfAdjointView<hessian_type, Eigen::Upper> sa_hessian_type;
 
 
@@ -118,6 +120,7 @@ typename TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::newton_error_type 
     int nr = data_.img_.nrows();
     int nc = data_.img_.ncols();
     int value_dim = FUNCTIONAL::value_dim;
+    int manifold_dim = FUNCTIONAL::manifold_dim;
 
     // Calculate the gradient and hessian 
     func_.evaluateDJ();
@@ -133,24 +136,19 @@ typename TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::newton_error_type 
 	sparse_pattern_analyzed_ =  true;	
     }
     
-    //TODO: Add optinal Preconditioning here
-    // if(AT::use_preconditioner){
-    //
-    // }
-
     // Solve the System
     solver_.factorize(A);
     x = solver_.solve(b);
     
-    //TODO: Apply tangent space backtransformation here
-    
-
     // Apply Newton correction to picture
     // TODO: 
     // - Generalize to all Manifold: Add functional call to MANIFOLD::exp(p,DJ_.segment(....)) instead of "-="
     // - This is also dimension-dependent 2D or 3D so try moving to functional class
-    vpp::pixel_wise(data_.img_, data_.img_.domain()) | [&] (value_type& p, vpp::vint2 coord) { p -= x.segment(3*(coord[0]+nr*coord[1]), value_dim); };
-
+    const tm_base_mat_type& T = func_.getT();
+    auto newton_correction = [&] (const tm_base_type& t, value_type& p, const vpp::vint2 coord) { 
+	p = p - t*x.segment(3*(coord[0]+nr*coord[1]), manifold_dim); 
+    };
+    vpp::pixel_wise(T, data_.img_, data_.img_.domain()) | newton_correction;
     // Compute the Error
     newton_error_type error = x.norm();
 
