@@ -41,10 +41,11 @@ class Data< MANIFOLD, 2>{
 	typedef vpp::image2d<value_type> storage_type;
 	typedef double weights_type;
 	typedef vpp::image2d<weights_type> weights_mat;
-	typedef vpp::image2d<short int> inp_mat;
+	typedef vpp::image2d<bool> inp_mat;
 
 	void rgb_imread(const char* filename); 
-	void makeEdgeWeights(); 
+	void findEdgeWeights(); 
+	void findInpWeights(const int channel=2);
 
 	inline bool doInpaint() const { return inpaint_; }
 
@@ -76,7 +77,7 @@ template < typename MANIFOLD >
 const int Data<MANIFOLD, 2>::img_dim = 2;
 
 template < typename MANIFOLD >
-void Data<MANIFOLD, 2>::makeEdgeWeights(){
+void Data<MANIFOLD, 2>::findEdgeWeights(){
    
     cv::Mat gray, edge;
     
@@ -117,6 +118,17 @@ void Data<MANIFOLD, 2>::makeEdgeWeights(){
     #endif
 }
 
+//TODO: static assert to avoid data that has not exactly 3 channels
+// static assert that channel is element {1,2,3}
+// make enum RGB out
+template < typename MANIFOLD >
+void Data<MANIFOLD, 2>::findInpWeights(const int channel){
+    vpp::pixel_wise(noise_img_, inp_) | [&] (const value_type& img, bool inp) { inp = (img[channel-1] > 0.95) ? true : false; };
+    #ifdef TV_DATA_DEBUG
+	//output_weights(edge_weights_, "wedge.csv");
+    #endif
+}
+
 
 //TODO: static assert to avoid data that has not exactly 3 channels
 template < typename MANIFOLD >
@@ -147,6 +159,7 @@ void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
     vpp::fill(edge_weights_, 1.0);
     inpaint_ = false;
 }
+
 
 template < typename MANIFOLD >
 void Data<MANIFOLD, 2>::output_weights(const weights_mat& weights, const char* filename) const{

@@ -26,7 +26,8 @@ int main(int argc, const char *argv[])
 	data_t myData=data_t();
 	
 	myData.rgb_imread(argv[1]);
-	myData.makeEdgeWeights();
+	myData.findEdgeWeights();
+	myData.findInpWeights(2);
 	cv::namedWindow( "Input Picture", cv::WINDOW_NORMAL ); 
 
 	// Convert Picture of double to uchar
