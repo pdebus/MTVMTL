@@ -6,6 +6,7 @@
 
 // Eigen includes
 #include <Eigen/Sparse>
+#include <Eigen/CholmodSupport>
 //#include <Eigen/PaStiXSupport>
 
 namespace tvmtl {
@@ -27,9 +28,9 @@ struct algo_traits<IRLS> {
     static const bool use_preconditioner = false;
     
     template <typename H>
+    using solver = Eigen::CholmodSupernodalLLT<H, Eigen::Upper>;
     //using solver = Eigen::PastixLLT<H, Eigen::Upper>;
-    using solver = Eigen::SimplicialLLT<H, Eigen::Upper>;
-
+    //using solver = Eigen::SimplicialLLT<H, Eigen::Upper>;
 };
 
 
