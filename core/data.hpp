@@ -39,10 +39,14 @@ class Data< MANIFOLD, 2>{
 
 	// Storage typedefs
 	typedef vpp::image2d<value_type> storage_type;
+	
 	typedef double weights_type;
 	typedef vpp::image2d<weights_type> weights_mat;
-	typedef vpp::image2d<bool> inp_mat;
+	
+	typedef bool inp_type;
+	typedef vpp::image2d<inp_type> inp_mat;
 
+	// Input functions
 	void rgb_imread(const char* filename); 
 	void findEdgeWeights(); 
 	void findInpWeights(const int channel=2);
@@ -78,7 +82,9 @@ const int Data<MANIFOLD, 2>::img_dim = 2;
 
 template < typename MANIFOLD >
 void Data<MANIFOLD, 2>::findEdgeWeights(){
-   
+    #ifdef TV_DATA_DEBUG
+	std::cout << "Find Edges..." << std::endl;
+    #endif
     cv::Mat gray, edge;
     
     { // Local Scope to save memory
@@ -109,8 +115,8 @@ void Data<MANIFOLD, 2>::findEdgeWeights(){
     #endif
 
     vpp::image2d<unsigned char> ucharweights = vpp::from_opencv<unsigned char>(edge);
-    vpp::pixel_wise(ucharweights, edge_weights_) | [] (const unsigned char &uw, weights_type ew) {
-	ew = 1.0 - 0.99 * ( static_cast<weights_type>(uw) / static_cast<weights_type>(std::numeric_limits<unsigned char>::max()) );	
+    vpp::pixel_wise(ucharweights, edge_weights_)() | [] (const unsigned char &uw, weights_type& ew) {
+	ew = 1.0 - 0.99 * ( static_cast<weights_type>(uw) / static_cast<weights_type>(std::numeric_limits<unsigned char>::max()) );
     };
 
     #ifdef TV_DATA_DEBUG
@@ -123,9 +129,28 @@ void Data<MANIFOLD, 2>::findEdgeWeights(){
 // make enum RGB out
 template < typename MANIFOLD >
 void Data<MANIFOLD, 2>::findInpWeights(const int channel){
-    vpp::pixel_wise(noise_img_, inp_) | [&] (const value_type& img, bool inp) { inp = (img[channel-1] > 0.95) ? true : false; };
     #ifdef TV_DATA_DEBUG
-	//output_weights(edge_weights_, "wedge.csv");
+	std::cout << "Find Inpainting Area..." << std::endl;
+    #endif
+    inp_ = inp_mat(noise_img_.domain());
+    vpp::pixel_wise(noise_img_, inp_) | [&] (const value_type& img, inp_type& inp) { inp = static_cast<inp_type>(img[channel-1] > 0.95); };
+    //vpp::pixel_wise(noise_img_, inp_) | [&] (const value_type& img, inp_type& inp) { inp = static_cast<inp_type>(img[channel-1] > 0.95); };
+    #ifdef TV_DATA_DEBUG
+	int nr = inp_.nrows();
+	int nc = inp_.ncols();
+
+	std::fstream f;
+	f.open("inp.csv", std::fstream::out);
+
+	for (int r=0; r<nr; r++){
+	    const inp_type* cur = &inp_(r,0);
+	    for (int c=0; c<nc; c++){
+		f << cur[c];
+		if(c != nc-1) f << ",";
+	    }
+	    f <<  std::endl;
+	}
+	f.close();
     #endif
 }
 

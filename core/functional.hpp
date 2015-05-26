@@ -91,8 +91,12 @@ class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
 	template <class IMG>
 	void output_img(const IMG& img, const char* filename) const;
 
+	// Getter and Setter 
 	inline param_type getlambda() const { return lambda_; }
+	inline void setlambda(param_type lam) { lambda_=lam; }
 	inline param_type geteps2() const { return eps2_; }
+	inline void seteps2(param_type eps) { eps2_=eps; }
+
 	inline const gradient_type& getDJ() const { return DJ_; }
 	inline const sparse_hessian_type& getHJ() const { return HJ_; }
 	inline const tm_base_mat_type& getT() const { return T_; }

@@ -3,10 +3,22 @@
 
 //System includes
 #include <iostream>
+#include <map>
+#include <vector>
 #include <chrono>
 
 //Eigen includes
 #include <Eigen/Sparse>
+#include <Eigen/Core>
+#include <unsupported/Eigen/Splines>
+
+//CGAL includes For linear Interpolation
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
+#include <CGAL/Delaunay_triangulation_2.h>
+#include <CGAL/Interpolation_traits_2.h>
+#include <CGAL/natural_neighbor_coordinates_2.h>
+#include <CGAL/interpolation_functions.h>
+
 
 //vpp includes
 #include <vpp/vpp.hh>
@@ -26,6 +38,7 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
     
 	public:
 	    // Manifold typedefs
+	    typedef typename MANIFOLD::scalar_type scalar_type;
 	    typedef typename MANIFOLD::value_type value_type;
 	    typedef typename MANIFOLD::tm_base_type tm_base_type;
 
@@ -77,6 +90,61 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 
 /*----- IMPLEMENTATION------*/
 
+//First Guess
+template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
+void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::first_guess(){
+
+    std::cout << "Starting interpolation of damaged Area" << std::endl;
+
+    typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
+    typedef CGAL::Delaunay_triangulation_2<K> Delaunay_triangulation;
+    typedef CGAL::Interpolation_traits_2<K> Traits;
+    typedef K::FT Coord_type;
+    typedef K::Point_2 Point;
+
+    typedef typename DATA::inp_type inp_type;
+    int value_dim = FUNCTIONAL::value_dim;
+    int value_rows = value_type::RowsAtCompileTime;
+    int value_cols = value_type::ColsAtCompileTime;
+    
+    for(int r=0; r<value_rows; r++)
+	for(int c=0; c<value_cols; c++){
+	    std::cout << "\t Channel " << value_cols*r+c << " of " << value_dim << "..." << std::endl;
+	    Delaunay_triangulation T;
+	    std::map<Point, Coord_type, K::Less_xy_2> function_values;
+	    typedef CGAL::Data_access< std::map<Point, Coord_type, K::Less_xy_2 > >  Value_access;
+	    #ifdef TVMTL_TVMIN_DEBUG
+		std::cout << "NZ-Entries in inpainting matrix:" << vpp::sum(data_.inp_) << std::endl;
+	    #endif
+
+	    int numnodes=0;
+	    // Add Interpolation nodes
+	    vpp::pixel_wise(data_.inp_, data_.img_, data_.img_.domain())(vpp::_no_threads)  | [&] (inp_type inp, const value_type& i, const vpp::vint2& coord) {
+		if(!inp){
+			Point p(coord[0], coord[1]);
+			T.insert(p);
+			function_values.insert(std::make_pair(p,i(r,c)));
+			numnodes++;
+		}
+	    };
+	    std::cout << "\t\tNumber of Nodes: " << numnodes << std::endl;
+
+	    int numdampix=0;
+	    // Interpolate missing nodes
+	    vpp::pixel_wise(data_.inp_, data_.img_, data_.img_.domain())(vpp::_no_threads) | [&] (inp_type inp, value_type& i, const vpp::vint2& coord) {
+		if(inp){
+		    Point p(coord[0], coord[1]);
+		    std::vector< std::pair< Point, Coord_type > > coords;
+                    Coord_type norm =  CGAL::natural_neighbor_coordinates_2(T, p,std::back_inserter(coords)).second;
+		    Coord_type res = CGAL::linear_interpolation(coords.begin(), coords.end(), norm,Value_access(function_values));
+		    i(r,c)=static_cast<scalar_type>(res);
+		    numdampix++;
+		}
+	    };
+	    std::cout << "\t\tNumber of interpolated Pixels: " << numdampix << std::endl;
+	}
+
+}
 
 //Smoothening
 template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
