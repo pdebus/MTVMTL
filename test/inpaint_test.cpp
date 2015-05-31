@@ -55,6 +55,7 @@ int main(int argc, const char *argv[])
 
 	data_t myData=data_t();
 	myData.rgb_imread(argv[1]);
+	myData.inpaint_=true;
 	
 	func_t myFunc(lam, myData);
 	myFunc.seteps2(1e-10);
@@ -63,12 +64,21 @@ int main(int argc, const char *argv[])
 
 	vpp::image2d<vpp::vuchar3> img;
 	
+	if(myData.doInpaint()){
+	    myData.findInpWeights(3);
+	    myTVMin.first_guess();
+	}
 	std::string fname(argv[1]);
 	
+	DisplayImage("First Guess", myData.img_, img);
+	cv::imwrite("firstguess_" + fname, to_opencv(img));
+
+	/*
 	std::cout << "Smoothen picture to obtain initial state for Newton iteration..." << std::endl;
 	myTVMin.smoothening(10);
 	DisplayImage("Smoothened", myData.img_, img);
 	cv::imwrite("smoothened_" + fname, to_opencv(img));
+	*/
 
 	std::cout << "Start TV minimization..." << std::endl;
 	myTVMin.minimize();

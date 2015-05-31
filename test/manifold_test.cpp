@@ -7,13 +7,13 @@ int main(int argc, const char *argv[])
 {
 	using namespace tvmtl;
 
-	typedef Manifold< EUCLIDIAN, 3 > mf_t;
+	typedef Manifold< SPHERE, 3 > mf_t;
 	typedef typename mf_t::value_type vec3d;
 
 	vec3d vec1, vec2;
 
-	vec1 = vec3d::Random(); 
-	vec2 = vec3d::Random();
+	vec1 = vec3d::Random().normalized(); 
+	vec2 = vec3d::Random().normalized();
 
 	std::cout << mf_t::MyType << std::endl;
 	
@@ -37,16 +37,18 @@ int main(int argc, const char *argv[])
 	std::cout << d1x << std::endl;
 	std::cout << d1y << std::endl;
 
-	/*
-	std::cout << "\nControl: " << std::endl;
-	std::cout << 2*(vec1-vec2) << std::endl;
-	std::cout << 2*(vec2-vec1) << std::endl;
-	*/
-
 	std::cout << "\nSecond Derivative:" << std::endl;
 	std::cout << d2xx << std::endl;
 	std::cout << d2xy << std::endl;
 	std::cout << d2yy << std::endl;
+
+
+	mf_t::tm_base_type t;
+	mf_t::tangent_plane_base(vec1, t);
+	std::cout << "\nTangen Base Restriction:" << std::endl;
+	std::cout << t << std::endl;
+
+
 
 	return 0;
 }

@@ -34,6 +34,10 @@ add_executable(data_test data_test.cpp)
 add_test(data_test data_test)
 target_link_libraries(data_test ${OpenCV_LIBS} gomp)
 
+add_executable(sphere_data_test sphere_data_test.cpp)
+add_test(sphere_data_test sphere_data_test)
+target_link_libraries(sphere_data_test ${OpenCV_LIBS} gomp)
+
 add_executable(functional_test functional_test.cpp)
 add_test(functional_test functional_test)
 target_link_libraries(functional_test ${OpenCV_LIBS} gomp)
@@ -41,4 +45,8 @@ target_link_libraries(functional_test ${OpenCV_LIBS} gomp)
 add_executable(tvmin_test tvmin_test.cpp)
 add_test(tvmin_test tvmin_test)
 target_link_libraries(tvmin_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+
+add_executable(inpaint_test inpaint_test.cpp)
+add_test(inpaint_test inpaint_test)
+target_link_libraries(inpaint_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 

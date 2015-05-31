@@ -48,6 +48,9 @@ class Data< MANIFOLD, 2>{
 
 	// Input functions
 	void rgb_imread(const char* filename); 
+	void rgb_readBrightness(const char* filename); 
+	void rgb_readChromaticity(const char* filename); 
+
 	void findEdgeWeights(); 
 	void findInpWeights(const int channel=2);
 
@@ -173,9 +176,6 @@ void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
 	};
     //img_ = vpp::clone(noise_img_, vpp::_border = 1);
     img_ = vpp::clone(noise_img_);
-    //Testnoise for Functional Debugging 
-    //vpp::pixel_wise(img_) | [] (auto & i) { i*=0.9999; };
-
 
     //TODO: Write separate input functions for weights and inpainting matrices
     weights_ = weights_mat(noise_img_.domain());
@@ -185,6 +185,61 @@ void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
     inpaint_ = false;
 }
 
+//TODO: static assert to avoid data that has not exactly 3 channels
+template < typename MANIFOLD >
+void Data<MANIFOLD, 2>::rgb_readBrightness(const char* filename){
+	vpp::image2d<vpp::vuchar3> input_image;
+	input_image = vpp::clone(vpp::from_opencv<vpp::vuchar3 >(cv::imread(filename)));
+	noise_img_ = storage_type(input_image.domain());
+	// Convert Picture of uchar to double 
+	    vpp::pixel_wise(input_image, noise_img_)(vpp::_no_threads) | [] (auto& i, auto& n) {
+	    vpp::vdouble3 v; 
+	    vpp::vuchar3 vu = i;
+	    // TODO: insert manifold scalar type
+	    v[0]=static_cast<double>(vu[2]); //opencv saves as BGR
+	    v[1]=static_cast<double>(vu[1]);
+	    v[2]=static_cast<double>(vu[0]);
+	    v = v / static_cast<double>(std::numeric_limits<unsigned char>::max());
+	    n.setConstant(v.norm());
+	};
+    //img_ = vpp::clone(noise_img_, vpp::_border = 1);
+    img_ = vpp::clone(noise_img_);
+
+    //TODO: Write separate input functions for weights and inpainting matrices
+    weights_ = weights_mat(noise_img_.domain());
+    vpp::fill(weights_, 1.0);
+    edge_weights_ = vpp::clone(weights_);
+    vpp::fill(edge_weights_, 1.0);
+    inpaint_ = false;
+}
+
+//TODO: static assert to avoid data that has not exactly 3 channels
+template < typename MANIFOLD >
+void Data<MANIFOLD, 2>::rgb_readChromaticity(const char* filename){
+	vpp::image2d<vpp::vuchar3> input_image;
+	input_image = vpp::clone(vpp::from_opencv<vpp::vuchar3 >(cv::imread(filename)));
+	noise_img_ = storage_type(input_image.domain());
+	// Convert Picture of uchar to double 
+	    vpp::pixel_wise(input_image, noise_img_) | [] (auto& i, auto& n) {
+	    value_type v; 
+	    vpp::vuchar3 vu = i;
+	    // TODO: insert manifold scalar type
+	    v[0]=static_cast<double>(vu[2]); //opencv saves as BGR
+	    v[1]=static_cast<double>(vu[1]);
+	    v[2]=static_cast<double>(vu[0]);
+	    v = v / static_cast<double>(std::numeric_limits<unsigned char>::max());
+	    n = v.normalized();
+	};
+    //img_ = vpp::clone(noise_img_, vpp::_border = 1);
+    img_ = vpp::clone(noise_img_);
+
+    //TODO: Write separate input functions for weights and inpainting matrices
+    weights_ = weights_mat(noise_img_.domain());
+    vpp::fill(weights_, 1.0);
+    edge_weights_ = vpp::clone(weights_);
+    vpp::fill(edge_weights_, 1.0);
+    inpaint_ = false;
+}
 
 template < typename MANIFOLD >
 void Data<MANIFOLD, 2>::output_weights(const weights_mat& weights, const char* filename) const{
