@@ -76,7 +76,7 @@ class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
 	    lambda_(lambda),
 	    data_(dat)
 	{
-	    eps2_=0.0;
+	    eps2_=1e-10;
     	}
 	
 	void updateWeights();
@@ -160,7 +160,10 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateTMBase(){
    tm_base_mat_type T(data_.img_.domain());
    vpp::pixel_wise(T, data_.img_) | [&] (tm_base_type& t, const value_type& i) { MANIFOLD::tangent_plane_base(i,t); };
    T_=T;
-
+    
+    #ifdef TV_FUNC_DEBUG 
+        output_img(T_,"T.csv");
+    #endif
 }
 
 
@@ -290,7 +293,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
     updateTMBase();
     
     auto insert2grad = [&] (const tm_base_type& t, const value_type& p, const vpp::vint2 coord) { 
-	DJ_.segment(3*(coord[0]+nr*coord[1]), manifold_dim) = t.transpose()*p; 
+	DJ_.segment(manifold_dim * (coord[0] + nr * coord[1]), manifold_dim) = t.transpose()*p; 
     };
 
     vpp::pixel_wise(T_, grad, grad.domain()) | insert2grad; 
@@ -332,19 +335,27 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     
    //TODO: Check whether all 2nd-derivative matrices are symmetric s.t. only half the matrix need to be traversed. e.g. local_col=local_row instead of 0
     auto local2globalInsert = [&](const tm_base_type& t, const deriv2_type& h, const vpp::vint2 coord) { 
-	int pos = 3*(coord[0]+nr*coord[1]); // columnwise flattening
+	int pos = manifold_dim*(coord[0]+nr*coord[1]); // columnwise flattening
 	restricted_deriv2_type ht=t.transpose()*h*t;
 	for(int local_row=0; local_row<ht.rows(); local_row++)
-	    for(int local_col=0; local_col<ht.cols(); local_col++)
-		if(ht(local_row, local_col)!=0)
-		    HF.insert(pos+local_row, pos+local_col) = ht(local_row, local_col);
+	    for(int local_col=0; local_col<ht.cols(); local_col++){
+		scalar_type e = ht(local_row, local_col);
+		if(e!=0){
+		    int global_row = pos+local_row;
+		    int global_col = pos+local_col;
+		    HF.insert(global_row, global_col) = e;
+		    if(global_row != global_col)
+			HF.insert(global_col, global_row) = e;
+		    }
+	    }
     };
 
     vpp::pixel_wise(T_, hessian, hessian.domain())(/*vpp::_no_threads*/) | local2globalInsert;
                    
     //HESSIAN OF TV TERM
     sparse_hessian_type HTV(sparsedim,sparsedim);
-    HTV.reserve(Eigen::VectorXi::Constant(nc,3*manifold_dim));
+    //HTV.reserve(Eigen::VectorXi::Constant(nc,3*manifold_dim));
+    HTV.reserve(Eigen::VectorXi::Constant(nc,5*manifold_dim));
 	
     // Neighbourhood box
     nbh_type N = nbh_type(data_.img_);
@@ -421,12 +432,19 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     int row_offset=0;
     int col_offset=0;
     auto local2globalInsertHTV = [&](const tm_base_type& t,const deriv2_type& h, const vpp::vint2 coord) { 
-	int pos = 3*(coord[0]+nr*coord[1]); // columnwise flattening
+	int pos = manifold_dim*(coord[0]+nr*coord[1]); // columnwise flattening
 	restricted_deriv2_type ht = t.transpose()*h*t;
 	for(int local_row=0; local_row<ht.rows(); local_row++)
-	    for(int local_col=0; local_col<ht.cols(); local_col++)
-		if(ht(local_row, local_col)!=0)
-		    HTV.insert(pos + row_offset + local_row, pos + col_offset + local_col) = ht(local_row, local_col);
+	    for(int local_col=0; local_col<ht.cols(); local_col++){
+		scalar_type e = ht(local_row, local_col);
+		if(e!=0){
+		    int global_row = pos + row_offset + local_row;
+		    int global_col = pos + col_offset + local_col;
+		    HTV.insert(global_row, global_col) = e;
+		    if(global_col != global_row)
+			HTV.insert(global_col, global_row)  = e;
+		}
+	    }
     };
     vpp::pixel_wise(T_, hessian, hessian.domain())(/*vpp::_no_threads*/) | local2globalInsertHTV;
                    

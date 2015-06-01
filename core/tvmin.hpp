@@ -213,7 +213,7 @@ typename TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::newton_error_type 
     // - This is also dimension-dependent 2D or 3D so try moving to functional class
     const tm_base_mat_type& T = func_.getT();
     auto newton_correction = [&] (const tm_base_type& t, value_type& i, const vpp::vint2 coord) { 
-	MANIFOLD::exp(i, -t*x.segment(3*(coord[0]+nr*coord[1]), manifold_dim), i);
+	MANIFOLD::exp(i, -t*x.segment(manifold_dim*(coord[0]+nr*coord[1]), manifold_dim), i);
 	//i = i - t*x.segment(3*(coord[0]+nr*coord[1]), manifold_dim); 
     };
     vpp::pixel_wise(T, data_.img_, data_.img_.domain()) | newton_correction;

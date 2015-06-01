@@ -35,11 +35,14 @@ int main(int argc, const char *argv[])
 	
 	std::cout << "\nFirst Derivative:" << std::endl;
 	std::cout << d1x << std::endl;
+	std::cout << std::endl;
 	std::cout << d1y << std::endl;
 
 	std::cout << "\nSecond Derivative:" << std::endl;
 	std::cout << d2xx << std::endl;
+	std::cout << std::endl;
 	std::cout << d2xy << std::endl;
+	std::cout << std::endl;
 	std::cout << d2yy << std::endl;
 
 

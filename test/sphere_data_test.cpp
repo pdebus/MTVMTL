@@ -22,7 +22,7 @@ int main(int argc, const char *argv[])
 	typedef Manifold< SPHERE, 3 > spheremf_t;
 	typedef Manifold< EUCLIDIAN, 1 > eucmf_t;
 	typedef typename spheremf_t::value_type vec3d;
-	typedef typename spheremf_t::value_type pxbrightness;
+	typedef typename eucmf_t::value_type pxbrightness;
 
 	typedef Data< spheremf_t, 2> chroma_t;	
 	typedef Data< eucmf_t, 2> bright_t;	

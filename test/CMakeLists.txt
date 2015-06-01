@@ -42,6 +42,14 @@ add_executable(functional_test functional_test.cpp)
 add_test(functional_test functional_test)
 target_link_libraries(functional_test ${OpenCV_LIBS} gomp)
 
+add_executable(brightness_functional_test brightness_functional_test.cpp)
+add_test(brightness_functional_test brightness_functional_test)
+target_link_libraries(brightness_functional_test ${OpenCV_LIBS} gomp)
+
+add_executable(chromaticity_functional_test chromaticity_functional_test.cpp)
+add_test(chromaticity_functional_test chromaticity_functional_test)
+target_link_libraries(chromaticity_functional_test ${OpenCV_LIBS} gomp)
+
 add_executable(tvmin_test tvmin_test.cpp)
 add_test(tvmin_test tvmin_test)
 target_link_libraries(tvmin_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
@@ -49,4 +57,9 @@ target_link_libraries(tvmin_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${HW
 add_executable(inpaint_test inpaint_test.cpp)
 add_test(inpaint_test inpaint_test)
 target_link_libraries(inpaint_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+
+add_executable(sphere_tvmin_test sphere_tvmin_test.cpp)
+add_test(sphere_tvmin_test sphere_tvmin_test)
+target_link_libraries(sphere_tvmin_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+
 
