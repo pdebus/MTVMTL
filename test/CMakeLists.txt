@@ -7,6 +7,7 @@ find_package(CGAL REQUIRED)
 include(${CGAL_USE_FILE})
 
 find_package(Cholmod REQUIRED)
+find_package(SuperLU REQUIRED)
 
 #find_package(MPI REQUIRED)
 #find_package(hwloc REQUIRED)
@@ -18,7 +19,7 @@ find_package(Cholmod REQUIRED)
 
 enable_testing()
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/.. /usr/include/eigen3 $ENV{HOME}/projects/iod)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/.. /usr/include/superlu /usr/include/eigen3 $ENV{HOME}/projects/iod)
 add_definitions(-std=c++14 -g -fopenmp)
 add_definitions(-Ofast -march=native)
 add_definitions(-DNDEBUG)
@@ -26,6 +27,10 @@ add_definitions(-DNDEBUG)
 add_executable(spline_test spline_test.cpp)
 add_test(spline_test spline_test )
 target_link_libraries(spline_test ${CGAL_LIBRARIES} ${CGAL_3RD_PARTY_LIBRARIES})
+
+add_executable(autodiff_test autodiff_test.cpp)
+add_test(autodiff_test autodiff_test )
+target_link_libraries(autodiff_test )
 
 add_executable(manifold_test manifold_test.cpp)
 add_test(manifold_test manifold_test)
@@ -60,6 +65,6 @@ target_link_libraries(inpaint_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${
 
 add_executable(sphere_tvmin_test sphere_tvmin_test.cpp)
 add_test(sphere_tvmin_test sphere_tvmin_test)
-target_link_libraries(sphere_tvmin_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+target_link_libraries(sphere_tvmin_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 
 

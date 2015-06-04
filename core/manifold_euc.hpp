@@ -62,6 +62,9 @@ struct Manifold< EUCLIDIAN, N > {
 
 	// Basis transformation for restriction to tangent space
 	inline static void tangent_plane_base(cref_type x, tm_base_ref_type result);
+
+	// Projection to manifold
+	inline static void projector(ref_type x);	
 };
 
 /*-----IMPLEMENTATION EUCLIDIAN----------*/
@@ -138,6 +141,10 @@ inline void Manifold <EUCLIDIAN, N>::tangent_plane_base(cref_type x, tm_base_ref
     result = tm_base_type::Identity();
 }
 
+// Projector (not necessary for Euclidian)
+template <int N>
+inline void Manifold <EUCLIDIAN, N>::projector(ref_type x){
+}
 
 } // end namespace tvmtl
 

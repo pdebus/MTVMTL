@@ -28,7 +28,8 @@ typedef TV_Minimizer< IRLS, bfunc_t, eucmf_t, bright_t, OMP > btvmin_t;
 
 int main(int argc, const char *argv[])
 {
-
+	Eigen::initParallel();
+	
 	if (argc < 2){
 	    std::cerr << "Usage : " << argv[0] << " image [lambda]" << std::endl;
 	    return 1;
@@ -57,7 +58,7 @@ int main(int argc, const char *argv[])
 	btvmin_t bTVMin(bFunc, myBright);
 	
 	std::cout << "\n\n--==Brightness PART==--" << std::endl;
-	std::cout << "Smoothen picture to obtain initial state for Newton iteration..." << std::endl;
+	std::cout << "Smooth picture to obtain initial state for Newton iteration..." << std::endl;
 	bTVMin.smoothening(10);
 	
 	std::cout << "Start TV minimization..." << std::endl;
@@ -65,7 +66,7 @@ int main(int argc, const char *argv[])
 		
 	std::cout << "\n\n--==CHROMATICITY PART==--" << std::endl;
 
-	std::cout << "Smoothen picture to obtain initial state for Newton iteration..." << std::endl;
+	std::cout << "Smooth picture to obtain initial state for Newton iteration..." << std::endl;
 	cTVMin.smoothening(10);
 	
 	std::cout << "Start TV minimization..." << std::endl;

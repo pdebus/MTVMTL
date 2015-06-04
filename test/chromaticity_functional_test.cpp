@@ -2,6 +2,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #define TV_FUNC_DEBUG
+#define TV_FUNC_DEBUG_VERBOSE
 #include "../core/data.hpp"
 #include "../core/functional.hpp"
 
@@ -12,6 +13,8 @@
 int main(int argc, const char *argv[])
 {
 	using namespace tvmtl;
+
+	Eigen::initParallel();
 
 	if (argc != 2){
 	    std::cerr << "Usage : " << argv[0] << " image" << std::endl;
@@ -29,7 +32,7 @@ int main(int argc, const char *argv[])
 	myData.rgb_readChromaticity(argv[1]);
 	
 	typedef Functional<FIRSTORDER, ISO, mf_t, data_t> func_t;
-	func_t myFunc(3.0, myData);
+	func_t myFunc(0.1, myData);
 
 	func_t::result_type result = 0.0;
 	

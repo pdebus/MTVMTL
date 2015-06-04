@@ -2,6 +2,9 @@
 #define TVMTL_MANIFOLD_SPHERE_HPP
 
 #include <cmath>
+#include <complex>
+#include <iostream>
+
 #include <Eigen/Core>
 #include <Eigen/Geometry>
 
@@ -22,7 +25,8 @@ struct Manifold< SPHERE, N> {
 	//typedef double scalar_type;
 	typedef double scalar_type;
 	typedef double dist_type;
-	
+	typedef std::complex<double> complex_type;
+
 	// Value Typedef
 	typedef Eigen::Matrix< scalar_type, N, 1>   value_type;
 	typedef value_type&			    ref_type;
@@ -64,6 +68,8 @@ struct Manifold< SPHERE, N> {
 	// Basis transformation for restriction to tangent space
 	inline static void tangent_plane_base(cref_type x, tm_base_ref_type result);
 
+	// Projection
+	inline static void projector(ref_type x);
 };
 
 
@@ -85,7 +91,10 @@ const int Manifold < SPHERE, N>::value_dim = N;
 // Squared Sphere distance function
 template <int N>
 inline typename Manifold < SPHERE, N>::dist_type Manifold < SPHERE, N>::dist_squared( cref_type x, cref_type y ){
-    dist_type d = std::acos(x.dot(y));
+    scalar_type xdoty = x.dot(y);
+    if (xdoty < - 1.0) xdoty = -1.0;
+    if (xdoty >  1.0) xdoty = 1.0;
+    dist_type d = std::acos(xdoty);
     return d*d;
 }
 
@@ -95,13 +104,19 @@ inline typename Manifold < SPHERE, N>::dist_type Manifold < SPHERE, N>::dist_squ
 template <int N>
 inline void Manifold < SPHERE, N>::deriv1x_dist_squared( cref_type x, cref_type y, deriv1_ref_type result){
     scalar_type xdoty = x.dot(y);
-    result =  -2 * std::acos(xdoty)/std::sqrt(1-xdoty*xdoty)*y;
+    if (xdoty < - 1.0) xdoty = -1.0;
+    if (xdoty >  1.0) xdoty = 1.0;
+    scalar_type acos = std::acos(xdoty);
+    result =  -2 * acos / std::sqrt(1 - xdoty * xdoty) * y;
 }
 // Derivative of Squared Sphere distance w.r.t. second argument
 template <int N>
 inline void Manifold < SPHERE, N>::deriv1y_dist_squared( cref_type x, cref_type y, deriv1_ref_type result){
     scalar_type xdoty = x.dot(y);
-    result =  -2 * std::acos(xdoty)/std::sqrt(1-xdoty*xdoty)*x;
+    if (xdoty < - 1.0) xdoty = -1.0;
+    if (xdoty >  1.0) xdoty = 1.0;
+    scalar_type acos = std::acos(xdoty);
+    result =  -2 * acos / std::sqrt(1 - xdoty * xdoty) * x;
 }
 
 
@@ -112,7 +127,10 @@ template <int N>
 inline void Manifold < SPHERE, N>::deriv2xx_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
     scalar_type xdoty = x.dot(y);
     scalar_type onemx2 = 1 - xdoty * xdoty;
-    scalar_type da =  -2 * std::acos(xdoty) / std::sqrt(onemx2);
+    if (xdoty < - 1.0) xdoty = -1.0;
+    if (xdoty >  1.0) xdoty = 1.0;
+    scalar_type acos = std::acos(xdoty);
+    scalar_type da =  -2 * acos / std::sqrt(onemx2);
     result = (2 + da * xdoty) / onemx2 * y * y.transpose(); 
 }
 // Second Derivative of Squared Sphere distance w.r.t first and second argument
@@ -120,7 +138,10 @@ template <int N>
 inline void Manifold < SPHERE, N>::deriv2xy_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
     scalar_type xdoty = x.dot(y);
     scalar_type onemx2 = 1 - xdoty * xdoty;
-    scalar_type da =  -2 * std::acos(xdoty) / std::sqrt(onemx2);
+    if (xdoty < - 1.0) xdoty = -1.0;
+    if (xdoty >  1.0) xdoty = 1.0;
+     scalar_type acos = std::acos(xdoty);
+    scalar_type da =  -2 * acos / std::sqrt(onemx2);
     result = (2 + da * xdoty) / onemx2 * y * x.transpose() + da * deriv2_type::Identity(); 
 }
 // Second Derivative of Squared Sphere distance w.r.t second argument
@@ -128,7 +149,10 @@ template <int N>
 inline void Manifold < SPHERE, N>::deriv2yy_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
     scalar_type xdoty = x.dot(y);
     scalar_type onemx2 = 1 - xdoty * xdoty;
-    scalar_type da =  -2 * std::acos(xdoty) / std::sqrt(onemx2);
+    if (xdoty < - 1.0) xdoty = -1.0;
+    if (xdoty >  1.0) xdoty = 1.0;
+    scalar_type acos = std::acos(xdoty);
+    scalar_type da =  -2 * acos / std::sqrt(onemx2);
     result = (2 + da * xdoty) / onemx2 * x * x.transpose(); 
 }
 
@@ -138,9 +162,9 @@ inline void Manifold < SPHERE, N>::deriv2yy_dist_squared( cref_type x, cref_type
 template <int N>
 template <typename DerivedX, typename DerivedY>
 inline void Manifold <SPHERE, N>::exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedX>& result){
-    //result=(x+y).normalized();
-    scalar_type n = y.norm();
-    result = std::cos(n) * x + std::sin(n) * y.normalized();
+    result=(x+y).normalized();
+    //scalar_type n = y.norm();
+    //result = std::cos(n) * x + std::sin(n) * y.normalized();
 }
 
 template <int N>
@@ -163,6 +187,13 @@ inline void Manifold <SPHERE, 3>::tangent_plane_base(cref_type x, tm_base_ref_ty
     result.col(0).normalize();
     result.col(1) = x.cross(result.col(0)).normalized();
 }
+
+template <int N>
+inline void Manifold <SPHERE, N>::projector(ref_type x){
+    x.normalize();
+}
+
+
 
 } // end namespace tvmtl
 

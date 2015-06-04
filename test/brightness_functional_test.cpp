@@ -2,6 +2,7 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #define TV_FUNC_DEBUG
+#define TV_FUNC_DEBUG_VERBOSE
 #include "../core/data.hpp"
 #include "../core/functional.hpp"
 
@@ -12,6 +13,8 @@
 int main(int argc, const char *argv[])
 {
 	using namespace tvmtl;
+	
+	Eigen::initParallel();
 
 	if (argc != 2){
 	    std::cerr << "Usage : " << argv[0] << " image" << std::endl;

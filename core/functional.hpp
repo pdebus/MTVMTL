@@ -118,6 +118,10 @@ class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
 template < typename MANIFOLD, class DATA >
 void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateWeights(){
 
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t Update Weights..." << std::endl;
+    #endif
+
     // Neighbourhood box
     nbh_type N = nbh_type(data_.img_); 
     int nr = data_.img_.nrows();
@@ -127,6 +131,10 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateWeights(){
     X = weights_mat(data_.img_.domain());
     Y = weights_mat(data_.img_.domain());
 
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...Horizontal neighbours " << std::endl;
+    #endif
+
     // TODO: Try to replace omp loops e.g. by box2d (nr-1,0) (nr-1,nc-1) or Iterator
     // Horizontal Neighbours
     vpp::pixel_wise(X, N) | [&] (weights_type& x, const auto& nbh) { x = MANIFOLD::dist_squared(nbh(0,0),nbh(0,1)); };
@@ -134,6 +142,10 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateWeights(){
     for(int r=0; r< nr; r++) 
 	X(r,nc-1)=0.0;
     
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...Vertical neighbours" << std::endl;
+    #endif
+
     // Vertical Neighbours
     vpp::pixel_wise(Y, N) | [&] (weights_type& y, const auto& nbh) { y = MANIFOLD::dist_squared(nbh(0,0),nbh(1,0)); };
     weights_type *lastrow = &Y(nr-1,0);
@@ -145,6 +157,11 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateWeights(){
 	data_.output_weights(Y,"YWeights.csv");
     #endif	
     
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...Reweighting" << std::endl;
+    #endif
+
+
     auto g =  [&] (weights_type& w, const weights_type& ew, const weights_type& x, const weights_type& y) { w = ew / std::sqrt(x+y+eps2_); };
     vpp::pixel_wise(data_.weights_, data_.edge_weights_, X, Y) | g ;
     
@@ -156,7 +173,12 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateWeights(){
 // Update the Tangent space ONB
 template < typename MANIFOLD, class DATA >
 void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateTMBase(){
-   
+    
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\tUpdate tangent space basis..." << std::endl;
+    #endif
+
+
    tm_base_mat_type T(data_.img_.domain());
    vpp::pixel_wise(T, data_.img_) | [&] (tm_base_type& t, const value_type& i) { MANIFOLD::tangent_plane_base(i,t); };
    T_=T;
@@ -174,6 +196,12 @@ typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::result_type Functional< 
     // sum d^2(img, img_noise)
     result_type J1, J2;
     J1 = J2 = 0.0;
+    
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\tFunctional evaluation..." << std::endl;
+	std::cout << "\t\t...Fidelity part" << std::endl;
+    #endif
+
 
     if(data_.doInpaint()){
 	auto f = [] (const value_type& i, const value_type& n, const bool inp ) { return MANIFOLD::dist_squared(i,n)*(1-inp); };
@@ -185,11 +213,16 @@ typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::result_type Functional< 
     }
 
     updateWeights();
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...TV part." << std::endl;
+    #endif
 
     J2 = vpp::sum( vpp::pixel_wise(data_.weights_) | [&] (const weights_type& w) {return 1.0/w;} );
-
-	//std::cout << "J1: " << J1 << std::endl;
-	//std::cout << "J2: " << J2 << std::endl;
+    
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "J1: " << J1 << std::endl;
+	std::cout << "J2: " << J2 << std::endl;
+    #endif
 
     return 0.5 * J1 + lambda_* J2;
 }
@@ -207,6 +240,10 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
     int nr = data_.img_.nrows();
     int nc = data_.img_.ncols();
     
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\tGradient evaluation..." << std::endl;
+	std::cout << "\t\t...Fidelity part" << std::endl;
+    #endif
     //GRADIENT OF FIDELITY TERM
     if(data_.doInpaint()){
 	auto f = [] (value_type& g, const value_type& i, const value_type& n, const bool inp ) { MANIFOLD::deriv1x_dist_squared(i,n,g); g*=(1-inp); };
@@ -227,7 +264,12 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
     vpp::box2d without_first_col(vpp::vint2(0,1), vpp::vint2(nr-1, nc-1)); // subdomain without first column
     vpp::box2d without_last_row(vpp::vint2(0,0), vpp::vint2(nr-2, nc-1)); // subdomain without last row
     vpp::box2d without_first_row(vpp::vint2(1,0), vpp::vint2(nr-1, nc-1)); // subdomain without first row
-
+    
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\tGradient evaluation..." << std::endl;
+	std::cout << "\t\t...TV part" << std::endl;
+	std::cout << "\t\t...-> XD1" << std::endl;
+    #endif
     // Horizontal derivatives and weighting
     // ... w.r.t. to first argument
     { // Temporary image XD1 is deallocated after this scope 
@@ -241,6 +283,9 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 	auto deriv_subX1 = XD1 | without_last_col;
 	vpp::pixel_wise(grad_subX1, deriv_subX1) | [&] (value_type& g, const value_type& d) { g+=d*lambda_; };
     } 
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...-> XD2" << std::endl;
+    #endif
     // ... w.r.t. second argument
     {
 	img_type XD2 = img_type(data_.img_.domain());
@@ -254,7 +299,9 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 	vpp::pixel_wise(grad_subX2, deriv_subX2) | [&] (value_type& g, const value_type& d) { g+=d*lambda_; };
     }
 
-
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...-> YD1" << std::endl;
+    #endif
     // Vertical derivatives and weighting
     // ... w.r.t. first argument
     {
@@ -268,7 +315,10 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 	auto deriv_subY1 = YD1 | without_last_row;
 	vpp::pixel_wise(grad_subY1, deriv_subY1) | [&] (value_type& g, const value_type& d) { g+=d*lambda_; };
     }
-
+    
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...-> YD2" << std::endl;
+    #endif
     // ... w.r.t second argument
     {
 	img_type YD2 = img_type(data_.img_.domain());
@@ -292,6 +342,9 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
     // Apply tangent space restriction and flatten colwise (as in Matlab code)
     updateTMBase();
     
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...Local to global insert" << std::endl;
+    #endif
     auto insert2grad = [&] (const tm_base_type& t, const value_type& p, const vpp::vint2 coord) { 
 	DJ_.segment(manifold_dim * (coord[0] + nr * coord[1]), manifold_dim) = t.transpose()*p; 
     };
@@ -320,6 +373,10 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     
         
     //HESSIAN OF FIDELITY TERM
+     #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\tHessian evaluation..." << std::endl;
+	std::cout << "\t\t...Fidelity part" << std::endl;
+    #endif
 
     sparse_hessian_type HF(sparsedim,sparsedim);
     HF.reserve(Eigen::VectorXi::Constant(nc,manifold_dim));
@@ -332,7 +389,9 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 	auto f = [] (deriv2_type& h, const value_type& i, const value_type& n) { MANIFOLD::deriv2xx_dist_squared(i,n,h); };
 	vpp::pixel_wise(hessian, data_.img_, data_.noise_img_) | f;
     }
-    
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...Local to global insert" << std::endl;
+    #endif
    //TODO: Check whether all 2nd-derivative matrices are symmetric s.t. only half the matrix need to be traversed. e.g. local_col=local_row instead of 0
     auto local2globalInsert = [&](const tm_base_type& t, const deriv2_type& h, const vpp::vint2 coord) { 
 	int pos = manifold_dim*(coord[0]+nr*coord[1]); // columnwise flattening
@@ -350,9 +409,14 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 	    }
     };
 
-    vpp::pixel_wise(T_, hessian, hessian.domain())(/*vpp::_no_threads*/) | local2globalInsert;
+    vpp::pixel_wise(T_, hessian, hessian.domain())(vpp::_no_threads) | local2globalInsert;
                    
     //HESSIAN OF TV TERM
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\tHessian evaluation..." << std::endl;
+	std::cout << "\t\t...TV part" << std::endl;
+    #endif
+
     sparse_hessian_type HTV(sparsedim,sparsedim);
     //HTV.reserve(Eigen::VectorXi::Constant(nc,3*manifold_dim));
     HTV.reserve(Eigen::VectorXi::Constant(nc,5*manifold_dim));
@@ -366,7 +430,10 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     vpp::box2d without_first_col(vpp::vint2(0,1), vpp::vint2(nr-1, nc-1)); // subdomain without first column
     vpp::box2d without_last_row(vpp::vint2(0,0), vpp::vint2(nr-2, nc-1)); // subdomain without last row
     vpp::box2d without_first_row(vpp::vint2(1,0), vpp::vint2(nr-1, nc-1)); // subdomain without first row
-
+    
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...->XD11" << std::endl;
+    #endif
     // Horizontal Second Derivatives and weighting
     // ... w.r.t. first arguments
     { // Temporary image XD11 is deallocated after this scope
@@ -383,7 +450,10 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 	#pragma omp parallel for
 	for(int r=0; r< nr; r++) 
 	    hessian(r,nc-1)=deriv2_type::Zero(); // set last column to zero
-    
+
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...->XD22" << std::endl;
+    #endif
     //... w.r.t. second arguments
     {
 	hessian_type XD22(data_.img_.domain());
@@ -396,6 +466,10 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 	auto deriv_subX22 = XD22 | without_last_col;
 	vpp::pixel_wise(hess_subX22, deriv_subX22) | [&] (deriv2_type& h, const deriv2_type& d) { h+=d; };
     }
+
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...->YD11" << std::endl;
+    #endif
     // Vertical Second Derivatives weighting
     //... w.r.t. first arguments
     {
@@ -409,6 +483,10 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 	auto deriv_subY11 = YD11 | without_last_row;
 	vpp::pixel_wise(hess_subY11, deriv_subY11) | [&] (deriv2_type& h, const deriv2_type& d) { h+=d; };
     }
+
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...->YD22" << std::endl;
+    #endif
     //... w.r.t. second arguments
     {
 	hessian_type YD22(data_.img_.domain());
@@ -425,7 +503,9 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     #ifdef TV_FUNC_DEBUG
 	output_img(hessian, "NonMixedHessian.csv");
     #endif
-
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...Local to global insert" << std::endl;
+    #endif
     // Insert elementwise into sparse Hessian
     // NOTE: Eventually make single version for both cases, including an offset
     // --> additional parameters sparse_mat, offset
@@ -446,8 +526,11 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 		}
 	    }
     };
-    vpp::pixel_wise(T_, hessian, hessian.domain())(/*vpp::_no_threads*/) | local2globalInsertHTV;
-                   
+    vpp::pixel_wise(T_, hessian, hessian.domain())(vpp::_no_threads) | local2globalInsertHTV;
+    
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...->XD12" << std::endl;
+    #endif              
     // Horizontal Second Derivatives and weighting
     // ... w.r.t. first and second arguments 
     {
@@ -457,12 +540,18 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 	#ifdef TV_FUNC_DEBUG 
 	    output_img(XD12,"XD12.csv");
 	#endif
-
+	#ifdef TV_FUNC_DEBUG_VERBOSE
+		std::cout << "\t\t...Local to global insert:" << std::endl;
+	#endif
 	// Offsets for upper nyth subdiagonal
 	row_offset=0;
 	col_offset=manifold_dim*nr;
-	vpp::pixel_wise(T_ | without_first_col, XD12, XD12.domain())(/*vpp::_no_threads*/) | local2globalInsertHTV;
+	vpp::pixel_wise(T_ | without_first_col, XD12, XD12.domain())(vpp::_no_threads) | local2globalInsertHTV;
     }
+    
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...->YD12" << std::endl;
+    #endif
     // Vertical Second Derivatives and weighting
     //... w.r.t. second arguments
     {
@@ -478,11 +567,13 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 	for(int c=0; c< nc; c++) 
 	    lastrow[c]=deriv2_type::Zero();
 	*/
-
+	#ifdef TV_FUNC_DEBUG_VERBOSE
+		std::cout << "\t\t...Local to global insert:" << std::endl;
+	#endif
 	// Offsets for first upper subdiagonal
 	row_offset=0;
 	col_offset=manifold_dim;
-	vpp::pixel_wise(T_ | without_first_row, YD12 | without_last_row, without_last_row)(/*vpp_no_threads*/) | local2globalInsertHTV;
+	vpp::pixel_wise(T_ | without_first_row, YD12 | without_last_row, without_last_row)(vpp::_no_threads) | local2globalInsertHTV;
 	/*
 	//Manually insert last row
 	tm_base_type *firstrow = &T_(0,0);
@@ -490,13 +581,29 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 	    local2globalInsertHTV(firstrow[c], lastrow[c], vpp::vint2(nr-1,c));
 	*/
     }
-        HJ_= HF + lambda_*HTV;
-    
+       	
+	#ifdef TV_FUNC_DEBUG_VERBOSE
+		std::cout << "\t\t...Combine Fidelity and TV parts:" << std::endl;
+	#endif 
+	
+	HJ_= HF + lambda_*HTV;
+	
+	#ifdef TV_FUNC_DEBUG_VERBOSE
+		std::cout << "\t\t...Output Hessian (stats):" << std::endl;
+	#endif
     #ifdef TV_FUNC_DEBUG
 	if (sparsedim<70){
 	    std::cout << "\nFidelity\n" << HF << std::endl; 
 	    std::cout << "\nTV\n" << HTV << std::endl; 
 	    std::cout << "\nHessian\n" << HJ_ << std::endl; 
+	    
+	    std::fstream f;
+	    f.open("H.csv",std::fstream::out);
+	    Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "", "");
+	    //f << HJ_.format(CommaInitFmt).;
+	    f << HJ_;
+	    f.close();
+
 	}
 	else{
 	    std::cout << "\nFidelity Non-Zeros: " << HJ_.nonZeros() << std::endl; 
@@ -504,6 +611,9 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 	    std::cout << "\nHessian Non-Zeros: " << HJ_.nonZeros() << std::endl; 
 	}
     // Test Solver:
+	#ifdef TV_FUNC_DEBUG_VERBOSE
+		std::cout << "\t\t...Test Solve" << std::endl;
+	#endif
 	gradient_type x;
     
 	Eigen::SimplicialLDLT<sparse_hessian_type, Eigen::Upper> solver;

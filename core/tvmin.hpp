@@ -50,7 +50,7 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 
 
 	    // Parameters from traits class
-	    typedef algo_traits< IRLS > AT;
+	    typedef algo_traits< MANIFOLD::MyType > AT;
 	    static const int runtime = AT::max_runtime;
     
 	    typedef double newton_error_type;
@@ -76,8 +76,7 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 	    FUNCTIONAL& func_;
 	    DATA& data_;
 	 
-	    //AT::solver< sa_hessian_type > solver_;
-	    AT::solver< hessian_type > solver_;
+	    typename AT::template solver< hessian_type > solver_;
 	    bool sparse_pattern_analyzed_;
 
 	    int irls_step_;
@@ -144,6 +143,8 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::first_guess(){
 	    std::cout << "\t\tNumber of interpolated Pixels: " << numdampix << std::endl;
 	}
 
+	vpp::pixel_wise(data_.img_) | [&] (value_type& i) { MANIFOLD::projector(i); };
+
 }
 
 //Smoothening
@@ -171,14 +172,16 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::smoothening(int smooth
 	//	1      
 	auto boxfilter = [&] (value_type& i, const auto& nbh) { 
 	    i = (4 * nbh(0,0) + nbh(1,0) + nbh(0,1) + nbh(-1,0) + nbh(0,-1))/8.0; 
+	    MANIFOLD::projector(i);
 	};
+
 	vpp::pixel_wise(data_.img_, N)(/*vpp::_no_threads*/) | boxfilter;
 	vpp::copy(data_.img_, temp_img);
 	Jnew = func_.evaluateJ();
 	step++;
     }
 
-    std::cout << "Smoothening completed.\n\n" << std::endl;
+    std::cout << "Smoothening completed with J=" << Jnew << "\n\n" << std::endl;
 
 }
 
