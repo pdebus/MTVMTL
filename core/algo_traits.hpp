@@ -45,9 +45,8 @@ struct algo_traits<SPHERE> {
     static const bool use_preconditioner = false;
     
     template <typename H>
-    using solver = Eigen::SimplicialLLT<H, Eigen::Upper>;
+    using solver = Eigen::SuperLU<H>;
     //using solver = Eigen::SparseLU<H>;
-    //using solver = Eigen::SuperLU<H>;
 };
 
 }// end namespace tvmtl

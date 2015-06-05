@@ -176,10 +176,11 @@ inline void Manifold < SPHERE, N>::deriv2xx_dist_squared( cref_type x, cref_type
 	scalar_type onemx2 = 1.0 - xdoty * xdoty;
 	scalar_type acos = std::acos(xdoty);
 	scalar_type da =  -2.0 * acos / std::sqrt(onemx2);
-	result = (2.0 + da * xdoty) / onemx2 * y * y.transpose(); 
+	result = (2.0 + da * xdoty) / onemx2 * y * y.transpose() - da * xdoty * deriv2_type::Identity();
     }
     else
-	result = 2.0/3.0 * y * y.transpose();
+	result = 2.0/3.0 * y * y.transpose() + 2.0 * xdoty * deriv2_type::Identity();
+
 }
 // Second Derivative of Squared Sphere distance w.r.t first and second argument
 template <int N>
@@ -212,10 +213,12 @@ inline void Manifold < SPHERE, N>::deriv2yy_dist_squared( cref_type x, cref_type
 	scalar_type onemx2 = 1.0 - xdoty * xdoty;
 	scalar_type acos = std::acos(xdoty);
 	scalar_type da =  -2.0 * acos / std::sqrt(onemx2);
-	result = (2.0 + da * xdoty) / onemx2 * x * x.transpose(); 
+	result = (2.0 + da * xdoty) / onemx2 * x * x.transpose() - da * xdoty * deriv2_type::Identity();
+
     }
     else
-	result = 2.0/3.0 * x * x.transpose();
+	result = 2.0/3.0 * x * x.transpose() + 2.0 * xdoty * deriv2_type::Identity();
+
 }
 
 
@@ -225,8 +228,11 @@ template <int N>
 template <typename DerivedX, typename DerivedY>
 inline void Manifold <SPHERE, N>::exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedX>& result){
     result=(x+y).normalized();
-    //scalar_type n = y.norm();
-    //result = std::cos(n) * x + std::sin(n) * y.normalized();
+    /*scalar_type n = y.norm();
+    if(n!=0)
+	result = std::cos(n) * x + std::sin(n) * y.normalized();
+    else
+	result = x;*/
 }
 
 template <int N>
