@@ -1,19 +1,16 @@
 #include <iostream>
 
+#define TVMTL_MANIFOLD_DEBUG
 #include "../core/manifold.hpp"
 
+using namespace tvmtl;
 
-int main(int argc, const char *argv[])
-{
-	using namespace tvmtl;
+typedef Manifold< SPHERE, 3 > mf_t;
+typedef typename mf_t::value_type vec3d;
 
-	typedef Manifold< SPHERE, 3 > mf_t;
-	typedef typename mf_t::value_type vec3d;
 
-	vec3d vec1, vec2;
-
-	vec1 = vec3d::Random().normalized(); 
-	vec2 = vec3d::Random().normalized();
+template <class T>
+void test(T& vec1, T& vec2){
 
 	std::cout << mf_t::MyType << std::endl;
 	
@@ -48,9 +45,38 @@ int main(int argc, const char *argv[])
 
 	mf_t::tm_base_type t;
 	mf_t::tangent_plane_base(vec1, t);
-	std::cout << "\nTangen Base Restriction:" << std::endl;
+	std::cout << "\nTangent Base Restriction:" << std::endl;
 	std::cout << t << std::endl;
 
+
+}
+
+int main(int argc, const char *argv[])
+{
+ 
+	std::cout << "\n\nNAN TEST" << std::endl;
+	std::cout << std::boolalpha << "isfinite(NaN) = " << std::isfinite(NAN) << '\n'
+		             << "isfinite(Inf) = " << std::isfinite(INFINITY) << '\n'
+			     << "isfinite(0.0) = " << std::isfinite(0.0) << '\n'
+			     << "isfinite(0.0/0.0) = " << std::isfinite(0.0/0.0) << '\n'
+			     << "isfinite(1.0/0.0) = " << std::isfinite(1.0/0.0) << '\n'
+			     << "isfinite(exp(800)) = " << std::isfinite(std::exp(800)) << '\n';
+
+
+	vec3d vec1, vec2;
+	vec1 = vec3d::Random().normalized(); 
+	vec2 = vec3d::Random().normalized();
+
+	std::cout << "\n\nRANDOM VECTORS" << std::endl;
+	test(vec1,vec2);
+
+	std::cout << "\n\nSAME VECTORS" << std::endl;
+	vec2 = vec1;
+	test(vec1, vec2);
+
+	std::cout << "\n\nANTIPODAL VECTORS" << std::endl;
+	vec2 *= -1;
+	test(vec1, vec2);
 
 
 	return 0;

@@ -3,6 +3,7 @@
 
 // system includes
 #include <limits>
+#include <cmath>
 #include <iostream>
 #include <fstream>
 
@@ -57,7 +58,9 @@ class Data< MANIFOLD, 2>{
 	inline bool doInpaint() const { return inpaint_; }
 
 	void output_weights(const weights_mat& mat, const char* filename) const;
-
+	
+	void output_img(const char* filename) const;
+	void output_nimg(const char* filename) const;
 //    private:
 	// Data members
 	// TODO Don't forget to initialize with 1px border
@@ -222,13 +225,25 @@ void Data<MANIFOLD, 2>::rgb_readChromaticity(const char* filename){
 	// Convert Picture of uchar to double 
 	    vpp::pixel_wise(input_image, noise_img_) | [] (auto& i, auto& n) {
 	    value_type v; 
-	    vpp::vuchar3 vu = i;
 	    // TODO: insert manifold scalar type
-	    v[0]=static_cast<double>(vu[2]); //opencv saves as BGR
-	    v[1]=static_cast<double>(vu[1]);
-	    v[2]=static_cast<double>(vu[0]);
+	    v[0]=static_cast<double>(i[2]); //opencv saves as BGR
+	    v[1]=static_cast<double>(i[1]);
+	    v[2]=static_cast<double>(i[0]);
 	    v = v / static_cast<double>(std::numeric_limits<unsigned char>::max());
-	    n = v.normalized();
+	    
+	    double norm = v.norm();
+	    if(norm!=0)
+		n = v.normalized();
+	    else 
+		n = v;
+
+	    #ifdef TV_DATA_DEBUG
+		if(!std::isfinite(n(0))){
+		    std::cout << "\nvuchar pixel " << i << std::endl;
+		    std::cout << "double pixel " << v << std::endl; 
+		    std::cout << "normalized pixel " << n << std::endl; 
+		}
+	    #endif
 	};
     //img_ = vpp::clone(noise_img_, vpp::_border = 1);
     img_ = vpp::clone(noise_img_);
@@ -253,6 +268,44 @@ void Data<MANIFOLD, 2>::output_weights(const weights_mat& weights, const char* f
 	const typename Data<MANIFOLD,2>::weights_type* cur = &weights(r,0);
 	for (int c=0; c<nc; c++){
 	    f << cur[c];
+	    if(c != nc-1) f << ",";
+	}
+	f <<  std::endl;
+    }
+    f.close();
+}
+
+template < typename MANIFOLD >
+void Data<MANIFOLD, 2>::output_img(const char* filename) const{
+    int nr = img_.nrows();
+    int nc = img_.ncols();
+
+    std::fstream f;
+    f.open(filename, std::fstream::out);
+    Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "", "");
+    for (int r=0; r<nr; r++){
+	const auto* cur = &img_(r,0);
+	for (int c=0; c<nc; c++){
+	    f << cur[c].format(CommaInitFmt);
+	    if(c != nc-1) f << ",";
+	}
+	f <<  std::endl;
+    }
+    f.close();
+}
+
+template < typename MANIFOLD >
+void Data<MANIFOLD, 2>::output_nimg(const char* filename) const{
+    int nr = noise_img_.nrows();
+    int nc = noise_img_.ncols();
+
+    std::fstream f;
+    f.open(filename, std::fstream::out);
+    Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "", "");
+    for (int r=0; r<nr; r++){
+	const auto* cur = &noise_img_(r,0);
+	for (int c=0; c<nc; c++){
+	    f << cur[c].format(CommaInitFmt);
 	    if(c != nc-1) f << ",";
 	}
 	f <<  std::endl;

@@ -194,19 +194,40 @@ typename TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::newton_error_type 
     int manifold_dim = FUNCTIONAL::manifold_dim;
 
     // Calculate the gradient and hessian 
+    #ifdef TVMTL_TVMIN_DEBUG_VERBOSE
+	std::cout << "\n\t\t...Calculate Gradient" << std::endl;
+    #endif    
     func_.evaluateDJ();
+   
+
+    #ifdef TVMTL_TVMIN_DEBUG_VERBOSE
+	std::cout << "\t\t...Calculate Hessian" << std::endl;
+    #endif
     func_.evaluateHJ();
-    
+
+ 
+
     // Set up the sparse Linear system
     gradient_type x;
     const gradient_type& b = func_.getDJ();
     const hessian_type& A = func_.getHJ();//.template selfadjointView<Eigen::Upper>();
 
+    #ifdef TVMTL_TVMIN_DEBUG_VERBOSE
+	std::cout << "\t\t\t...Gradient Size: " << b.size() << std::endl; 
+	std::cout << "\t\t\t...Hessian Non-Zeros: " << A.nonZeros() << std::endl; 
+	std::cout << "\t\t\t...Hessian Rows: " << A.rows() << std::endl; 
+	std::cout << "\t\t\t...Hessian Cols: " << A.cols() << std::endl; 
+	std::cout << "\n\t\t...Analyze Sparse Pattern" << std::endl;
+    #endif
     if (!sparse_pattern_analyzed_){
 	solver_.analyzePattern(A);
 	sparse_pattern_analyzed_ =  true;	
     }
     
+    #ifdef TVMTL_TVMIN_DEBUG_VERBOSE
+	std::cout << "\t\t...Solve System" << std::endl;
+    #endif
+
     // Solve the System
     solver_.factorize(A);
     x = solver_.solve(b);
@@ -214,6 +235,9 @@ typename TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::newton_error_type 
     // Apply Newton correction to picture
     // TODO: 
     // - This is also dimension-dependent 2D or 3D so try moving to functional class
+    #ifdef TVMTL_TVMIN_DEBUG_VERBOSE
+	std::cout << "\t\t...Apply Newton Correction" << std::endl;
+    #endif
     const tm_base_mat_type& T = func_.getT();
     auto newton_correction = [&] (const tm_base_type& t, value_type& i, const vpp::vint2 coord) { 
 	MANIFOLD::exp(i, -t*x.segment(manifold_dim*(coord[0]+nr*coord[1]), manifold_dim), i);
@@ -221,6 +245,9 @@ typename TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::newton_error_type 
     };
     vpp::pixel_wise(T, data_.img_, data_.img_.domain()) | newton_correction;
     // Compute the Error
+     #ifdef TVMTL_TVMIN_DEBUG_VERBOSE
+	std::cout << "\t\t...Compute Newton error" << std::endl;
+    #endif
     newton_error_type error = x.norm();
 
     return error;
@@ -265,6 +292,7 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::minimize(){
 	
 	end = std::chrono::system_clock::now();
 	t = end - start; 
+	std::cout << "\t Elapsed time: " << t.count() << " seconds." << std::endl;
 	irls_step_++;
 	Ts_.push_back(t);
     }

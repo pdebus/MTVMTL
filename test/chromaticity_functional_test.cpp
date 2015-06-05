@@ -3,6 +3,7 @@
 
 #define TV_FUNC_DEBUG
 #define TV_FUNC_DEBUG_VERBOSE
+#define TVMTL_MANIFOLD_DEBUG
 #include "../core/data.hpp"
 #include "../core/functional.hpp"
 

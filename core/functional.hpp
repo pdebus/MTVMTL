@@ -12,6 +12,7 @@
 #include <cmath>
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 // own includes 
 #include "enumerators.hpp"
@@ -180,7 +181,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateTMBase(){
 
 
    tm_base_mat_type T(data_.img_.domain());
-   vpp::pixel_wise(T, data_.img_) | [&] (tm_base_type& t, const value_type& i) { MANIFOLD::tangent_plane_base(i,t); };
+   vpp::pixel_wise(T, data_.img_)(/*vpp::_no_threads*/) | [&] (tm_base_type& t, const value_type& i) { MANIFOLD::tangent_plane_base(i,t); };
    T_=T;
     
     #ifdef TV_FUNC_DEBUG 
@@ -251,7 +252,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
     }
     else{
 	auto f = [] (value_type& g, const value_type& i, const value_type& n) { MANIFOLD::deriv1x_dist_squared(i,n,g); };
-	vpp::pixel_wise(grad, data_.img_, data_.noise_img_) | f;
+	vpp::pixel_wise(grad, data_.img_, data_.noise_img_)(/*vpp::_no_threads*/) | f;
     }
     
     //GRADIENT OF TV TERM
@@ -332,7 +333,10 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
         vpp::pixel_wise(grad_subY2, deriv_subY2) | [&] (value_type& g, const value_type& d) { g+=d*lambda_; };
     }
 
-    //output_img(grad,"grad.csv");
+    
+    #ifdef TV_FUNC_DEBUG 
+	output_img(grad,"grad.csv");
+    #endif
 
     DJ_ = gradient_type::Zero(nr*nc*manifold_dim); 
     
@@ -379,7 +383,11 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     #endif
 
     sparse_hessian_type HF(sparsedim,sparsedim);
-    HF.reserve(Eigen::VectorXi::Constant(nc,manifold_dim));
+
+    //HF.reserve(Eigen::VectorXi::Constant(nc,manifold_dim));
+    typedef Eigen::Triplet<double> Trip;
+    std::vector<Trip> triplist;
+    triplist.reserve(sparsedim*manifold_dim);
 	
     if(data_.doInpaint()){
 	auto f = [] (deriv2_type& h, const value_type& i, const value_type& n, const bool inp ) { MANIFOLD::deriv2xx_dist_squared(i,n,h); h*=(1-inp); };
@@ -402,15 +410,22 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 		if(e!=0){
 		    int global_row = pos+local_row;
 		    int global_col = pos+local_col;
-		    HF.insert(global_row, global_col) = e;
-		    if(global_row != global_col)
-			HF.insert(global_col, global_row) = e;
+		    triplist.push_back(Trip(global_row,global_col,e));
+		    triplist.push_back(Trip(global_col,global_row,e));
+		    //HF.insert(global_row, global_col) = e;
+		    //if(global_row != global_col)
+		    //	HF.insert(global_col, global_row) = e;
 		    }
 	    }
     };
 
     vpp::pixel_wise(T_, hessian, hessian.domain())(vpp::_no_threads) | local2globalInsert;
-                   
+     #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...Triplet list created" << std::endl;
+    #endif
+    HF.setFromTriplets(triplist.begin(),triplist.end());              
+    HF.makeCompressed();
+
     //HESSIAN OF TV TERM
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\tHessian evaluation..." << std::endl;
@@ -418,9 +433,11 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     #endif
 
     sparse_hessian_type HTV(sparsedim,sparsedim);
-    //HTV.reserve(Eigen::VectorXi::Constant(nc,3*manifold_dim));
-    HTV.reserve(Eigen::VectorXi::Constant(nc,5*manifold_dim));
-	
+    
+    //HTV.reserve(Eigen::VectorXi::Constant(nc,5*manifold_dim));
+    triplist.clear();
+    triplist.reserve(3*sparsedim*manifold_dim);
+
     // Neighbourhood box
     nbh_type N = nbh_type(data_.img_);
     
@@ -520,9 +537,11 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 		if(e!=0){
 		    int global_row = pos + row_offset + local_row;
 		    int global_col = pos + col_offset + local_col;
-		    HTV.insert(global_row, global_col) = e;
-		    if(global_col != global_row)
-			HTV.insert(global_col, global_row)  = e;
+		    triplist.push_back(Trip(global_row,global_col,e));
+		    triplist.push_back(Trip(global_col,global_row,e));
+		    //HTV.insert(global_row, global_col) = e;
+		    //if(global_col != global_row)
+		    //	HTV.insert(global_col, global_row)  = e;
 		}
 	    }
     };
@@ -580,6 +599,9 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 	for(int c=0; c<nc-1; c++) 
 	    local2globalInsertHTV(firstrow[c], lastrow[c], vpp::vint2(nr-1,c));
 	*/
+	HTV.setFromTriplets(triplist.begin(),triplist.end());              
+	HTV.makeCompressed();
+	triplist.clear();
     }
        	
 	#ifdef TV_FUNC_DEBUG_VERBOSE

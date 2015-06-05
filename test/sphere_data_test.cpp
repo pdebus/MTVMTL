@@ -32,6 +32,7 @@ int main(int argc, const char *argv[])
 	
 	myChroma.rgb_readChromaticity(argv[1]);
 	myBright.rgb_readBrightness(argv[1]);
+	myChroma.output_img("ChromaticityPic.csv");
 
 	// Convert Brightness Picture of double to uchar
 	vpp::image2d<vpp::vuchar1> bimg(myBright.img_.domain());

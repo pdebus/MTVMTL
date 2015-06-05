@@ -95,28 +95,69 @@ inline typename Manifold < SPHERE, N>::dist_type Manifold < SPHERE, N>::dist_squ
     if (xdoty < - 1.0) xdoty = -1.0;
     if (xdoty >  1.0) xdoty = 1.0;
     dist_type d = std::acos(xdoty);
+    #ifdef TVMTL_MANIFOLD_DEBUG
+	    if(!std::isfinite(d)){
+	    std::cout << "\nDX Non-Series: " << std::endl;
+	    std::cout << "x "<< x  << std::endl;
+	    std::cout << "y "<< y << std::endl;
+	    std::cout << "x^Ty "<< x.dot(y) << std::endl;
+	    std::cout << "xdoty "<< xdoty << std::endl;
+	    std::cout << "result" << d << std::endl;
+	    }
+	#endif
     return d*d;
 }
 
 
 // Derivative of Squared Sphere distance w.r.t. first argument
-// TODO: Add NaN test for both first derivatives for potentially unstable 1-x^2 term
+// TODO: Extende implementation of series to 1.0-eps
 template <int N>
 inline void Manifold < SPHERE, N>::deriv1x_dist_squared( cref_type x, cref_type y, deriv1_ref_type result){
     scalar_type xdoty = x.dot(y);
+    bool useSeries = false;
+
     if (xdoty < - 1.0) xdoty = -1.0;
-    if (xdoty >  1.0) xdoty = 1.0;
-    scalar_type acos = std::acos(xdoty);
-    result =  -2 * acos / std::sqrt(1 - xdoty * xdoty) * y;
+    if (xdoty >= 1.0) { xdoty = 1.0; useSeries = true; }
+    
+    if(!useSeries){
+	scalar_type acos = std::acos(xdoty);
+	result =  -2.0 * acos / std::sqrt(1.0 - xdoty * xdoty) * y;
+	#ifdef TVMTL_MANIFOLD_DEBUG
+	    if(!std::isfinite(result(0))){
+	    std::cout << "\nDX Non-Series: " << std::endl;
+	    std::cout << "x "<< x  << std::endl;
+	    std::cout << "y "<< y << std::endl;
+	    std::cout << "x^Ty "<< x.dot(y) << std::endl;
+	    std::cout << "xdoty "<< xdoty << std::endl;
+	    std::cout << "acos(x) " << acos << std::endl;
+	    std::cout << "sqrt(1-x^2)" << std::sqrt(1.0 - xdoty * xdoty) << std::endl;
+	    std::cout << "result" << result << std::endl;
+	    }
+	#endif
+    }
+    else{
+	result = -2.0 * y;
+	#ifdef TVMTL_MANIFOLD_DEBUG
+	    if(!std::isfinite(result(0)))
+		std::cout << "DX Series:" << result << std::endl;
+	#endif
+    }
 }
 // Derivative of Squared Sphere distance w.r.t. second argument
 template <int N>
 inline void Manifold < SPHERE, N>::deriv1y_dist_squared( cref_type x, cref_type y, deriv1_ref_type result){
     scalar_type xdoty = x.dot(y);
+    bool useSeries = false;
+
     if (xdoty < - 1.0) xdoty = -1.0;
-    if (xdoty >  1.0) xdoty = 1.0;
-    scalar_type acos = std::acos(xdoty);
-    result =  -2 * acos / std::sqrt(1 - xdoty * xdoty) * x;
+    if (xdoty >=  1.0) { xdoty = 1.0; useSeries = true; }
+    
+    if(!useSeries){
+	scalar_type acos = std::acos(xdoty);
+	result =  -2.0 * acos / std::sqrt(1.0 - xdoty * xdoty) * x;
+    }
+    else
+	result = -2.0 * x;
 }
 
 
@@ -126,34 +167,55 @@ inline void Manifold < SPHERE, N>::deriv1y_dist_squared( cref_type x, cref_type 
 template <int N>
 inline void Manifold < SPHERE, N>::deriv2xx_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
     scalar_type xdoty = x.dot(y);
-    scalar_type onemx2 = 1 - xdoty * xdoty;
+    bool useSeries = false;
+
     if (xdoty < - 1.0) xdoty = -1.0;
-    if (xdoty >  1.0) xdoty = 1.0;
-    scalar_type acos = std::acos(xdoty);
-    scalar_type da =  -2 * acos / std::sqrt(onemx2);
-    result = (2 + da * xdoty) / onemx2 * y * y.transpose(); 
+    if (xdoty >=  1.0) { xdoty = 1.0; useSeries = true; }
+    
+    if(!useSeries){
+	scalar_type onemx2 = 1.0 - xdoty * xdoty;
+	scalar_type acos = std::acos(xdoty);
+	scalar_type da =  -2.0 * acos / std::sqrt(onemx2);
+	result = (2.0 + da * xdoty) / onemx2 * y * y.transpose(); 
+    }
+    else
+	result = 2.0/3.0 * y * y.transpose();
 }
 // Second Derivative of Squared Sphere distance w.r.t first and second argument
 template <int N>
 inline void Manifold < SPHERE, N>::deriv2xy_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
     scalar_type xdoty = x.dot(y);
-    scalar_type onemx2 = 1 - xdoty * xdoty;
+    bool useSeries = false;
+
     if (xdoty < - 1.0) xdoty = -1.0;
-    if (xdoty >  1.0) xdoty = 1.0;
-     scalar_type acos = std::acos(xdoty);
-    scalar_type da =  -2 * acos / std::sqrt(onemx2);
-    result = (2 + da * xdoty) / onemx2 * y * x.transpose() + da * deriv2_type::Identity(); 
+    if (xdoty >=  1.0) { xdoty = 1.0; useSeries = true; }
+    
+    if(!useSeries){
+	scalar_type onemx2 = 1.0 - xdoty * xdoty;
+	scalar_type acos = std::acos(xdoty);
+	scalar_type da =  -2.0 * acos / std::sqrt(onemx2);
+	result = (2.0 + da * xdoty) / onemx2 * y * x.transpose() + da * deriv2_type::Identity(); 
+    }
+    else
+	result = 2.0/3.0 * y * x.transpose() - 2.0 * deriv2_type::Identity();
 }
 // Second Derivative of Squared Sphere distance w.r.t second argument
 template <int N>
 inline void Manifold < SPHERE, N>::deriv2yy_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
     scalar_type xdoty = x.dot(y);
-    scalar_type onemx2 = 1 - xdoty * xdoty;
+    bool useSeries = false;
+
     if (xdoty < - 1.0) xdoty = -1.0;
-    if (xdoty >  1.0) xdoty = 1.0;
-    scalar_type acos = std::acos(xdoty);
-    scalar_type da =  -2 * acos / std::sqrt(onemx2);
-    result = (2 + da * xdoty) / onemx2 * x * x.transpose(); 
+    if (xdoty >=  1.0) { xdoty = 1.0; useSeries = true; }
+    
+    if(!useSeries){
+	scalar_type onemx2 = 1.0 - xdoty * xdoty;
+	scalar_type acos = std::acos(xdoty);
+	scalar_type da =  -2.0 * acos / std::sqrt(onemx2);
+	result = (2.0 + da * xdoty) / onemx2 * x * x.transpose(); 
+    }
+    else
+	result = 2.0/3.0 * x * x.transpose();
 }
 
 
@@ -182,10 +244,24 @@ inline void Manifold <SPHERE, N>::tangent_plane_base(cref_type x, tm_base_ref_ty
 template <> // Special Version for S^2 utilizing the cross product
 inline void Manifold <SPHERE, 3>::tangent_plane_base(cref_type x, tm_base_ref_type result){
     //int c = static_cast<int>(std::abs(x.coeff(0)) > 0.5);
-    int c = static_cast<int>(std::abs(x.coeff(3)) > 0.5 || std::abs(x.coeff(2)) > 0.5);
+    int c = static_cast<int>(std::abs(x.coeff(2)) > 0.5 || std::abs(x.coeff(1)) > 0.5);
     result.col(0) = value_type(0, x.coeff(2), -x.coeff(1)) * c + value_type(x.coeff(2), 0, -x.coeff(0)) * (1-c);
     result.col(0).normalize();
     result.col(1) = x.cross(result.col(0)).normalized();
+
+    if(x.norm()==0)
+	result = tm_base_type::Zero();
+
+    #ifdef TVMTL_MANIFOLD_DEBUG
+	    if(!std::isfinite(result(0,0))){
+	    std::cout << "\n\nx "<< x  << std::endl;
+	    std::cout << "col0 V1 "<<  value_type(0, x.coeff(2), -x.coeff(1)) << std::endl;
+	    std::cout << "col0 V2 "<<  value_type(x.coeff(2), 0, -x.coeff(0)) << std::endl;
+	    std::cout << "col0 norm " << result.col(0) << std::endl;
+	    std::cout << "cross prod" << x.cross(result.col(0)) << std::endl;
+	    std::cout << "cross prod norm" << result.col(1) << std::endl;
+	    }
+    #endif
 }
 
 template <int N>
