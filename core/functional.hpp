@@ -633,12 +633,12 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 	    std::cout << "\nHessian Non-Zeros: " << HJ_.nonZeros() << std::endl; 
 	}
     // Test Solver:
-	#ifdef TV_FUNC_DEBUG_VERBOSE
+/*	#ifdef TV_FUNC_DEBUG_VERBOSE
 		std::cout << "\t\t...Test Solve" << std::endl;
 	#endif
 	gradient_type x;
     
-	Eigen::SimplicialLDLT<sparse_hessian_type, Eigen::Upper> solver;
+	Eigen::SparseLU<sparse_hessian_type> solver;
 	solver.analyzePattern(HJ_);
 	solver.factorize(HJ_);
 	x = solver.solve(DJ_);
@@ -646,7 +646,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 	std::fstream f;
 	f.open("Sol.csv",std::fstream::out);
 	f << x;
-	f.close();
+	f.close();*/
     #endif
 
 }

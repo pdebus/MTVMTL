@@ -6,6 +6,7 @@
 #include <cmath>
 #include <iostream>
 #include <fstream>
+#include <random>
 
 // OpenCV includes
 #include <opencv2/core/core.hpp>
@@ -52,11 +53,17 @@ class Data< MANIFOLD, 2>{
 	void rgb_readBrightness(const char* filename); 
 	void rgb_readChromaticity(const char* filename); 
 
-	void findEdgeWeights(); 
+	// EdgeFunctions
+	void findEdgeWeights();
+	void setEdgeWeights(const weights_mat&);
+
+	// Inpainting Functions
 	void findInpWeights(const int channel=2);
+	void createRandInpWeights(const double threshold);
 
 	inline bool doInpaint() const { return inpaint_; }
 
+	// OutputFunctions
 	void output_weights(const weights_mat& mat, const char* filename) const;
 	
 	void output_img(const char* filename) const;
@@ -86,6 +93,12 @@ class Data<MANIFOLD, 3>{
 template < typename MANIFOLD >
 const int Data<MANIFOLD, 2>::img_dim = 2;
 
+template < typename MANIFOLD >
+void Data<MANIFOLD, 2>::setEdgeWeights(const weights_mat& w){
+    edge_weights_= vpp::clone(w);
+}
+
+// FIXME: This is problematic for greyscale pictures since vuchar3 and vu[i] is hardcoded, works only due to range check of Eigen for []
 template < typename MANIFOLD >
 void Data<MANIFOLD, 2>::findEdgeWeights(){
     #ifdef TV_DATA_DEBUG
@@ -160,6 +173,41 @@ void Data<MANIFOLD, 2>::findInpWeights(const int channel){
     #endif
 }
 
+//TODO: static assert to avoid data that has not exactly 3 channels
+// static assert that channel is element {1,2,3}
+// make enum RGB out
+template < typename MANIFOLD >
+void Data<MANIFOLD, 2>::createRandInpWeights(const double threshold){
+    
+    #ifdef TV_DATA_DEBUG
+	std::cout << "Create Random Inp Weights..." << std::endl;
+    #endif
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_real_distribution<> rand(0.0, 1.0);
+ 
+    inp_ = inp_mat(noise_img_.domain());
+    vpp::pixel_wise(noise_img_, inp_) | [&] (const value_type& img, inp_type& inp) { inp = static_cast<inp_type>(rand(gen) > threshold); };
+    
+    #ifdef TV_DATA_DEBUG
+	int nr = inp_.nrows();
+	int nc = inp_.ncols();
+
+	std::fstream f;
+	f.open("inp.csv", std::fstream::out);
+
+	for (int r=0; r<nr; r++){
+	    const inp_type* cur = &inp_(r,0);
+	    for (int c=0; c<nc; c++){
+		f << cur[c];
+		if(c != nc-1) f << ",";
+	    }
+	    f <<  std::endl;
+	}
+	f.close();
+    #endif
+}
 
 //TODO: static assert to avoid data that has not exactly 3 channels
 template < typename MANIFOLD >
@@ -203,7 +251,7 @@ void Data<MANIFOLD, 2>::rgb_readBrightness(const char* filename){
 	    v[1]=static_cast<double>(vu[1]);
 	    v[2]=static_cast<double>(vu[0]);
 	    v = v / static_cast<double>(std::numeric_limits<unsigned char>::max());
-	    n.setConstant(v.norm());
+	    n.setConstant(v.norm()/std::sqrt(3));
 	};
     //img_ = vpp::clone(noise_img_, vpp::_border = 1);
     img_ = vpp::clone(noise_img_);
@@ -226,14 +274,14 @@ void Data<MANIFOLD, 2>::rgb_readChromaticity(const char* filename){
 	    vpp::pixel_wise(input_image, noise_img_) | [] (auto& i, auto& n) {
 	    value_type v; 
 	    // TODO: insert manifold scalar type
-	    v[0]=static_cast<double>(i[2]); //opencv saves as BGR
-	    v[1]=static_cast<double>(i[1]);
-	    v[2]=static_cast<double>(i[0]);
-	    v = v / static_cast<double>(std::numeric_limits<unsigned char>::max());
+	    v[0]=static_cast<double>(i[2])+1.0; //opencv saves as BGR
+	    v[1]=static_cast<double>(i[1])+1.0;
+	    v[2]=static_cast<double>(i[0])+1.0;
+	    v = v / (static_cast<double>(std::numeric_limits<unsigned char>::max())+1.0);
 	    
 	    double norm = v.norm();
 	    if(norm!=0)
-		n = v.normalized();
+		n = v / norm;
 	    else 
 		n = v;
 

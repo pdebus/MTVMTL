@@ -77,7 +77,7 @@ int main(int argc, const char *argv[])
     	// Recombine Brightness and Chromaticity parts
 	vpp::image2d<vpp::vuchar3> img(myChroma.img_.domain());
 	vpp::pixel_wise(img, myChroma.img_, myBright.img_ ) | [] (auto& i, auto& c, auto& b) {
-	    vpp::vdouble3 v = c * b[0] * (double) std::numeric_limits<unsigned char>::max();
+	    vpp::vdouble3 v = c * b[0] * std::sqrt(3) * (double) std::numeric_limits<unsigned char>::max();
 	    vpp::vuchar3 vu = vpp::vuchar3::Zero();
 	    vu[0]=(unsigned char) v[2];
 	    vu[1]=(unsigned char) v[1];

@@ -108,7 +108,7 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::first_guess(){
     
     for(int r=0; r<value_rows; r++)
 	for(int c=0; c<value_cols; c++){
-	    std::cout << "\t Channel " << value_cols*r+c << " of " << value_dim << "..." << std::endl;
+	    std::cout << "\t Channel " << value_cols*r+c+1 << " of " << value_dim << "..." << std::endl;
 	    Delaunay_triangulation T;
 	    std::map<Point, Coord_type, K::Less_xy_2> function_values;
 	    typedef CGAL::Data_access< std::map<Point, Coord_type, K::Less_xy_2 > >  Value_access;

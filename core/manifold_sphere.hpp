@@ -272,7 +272,18 @@ inline void Manifold <SPHERE, 3>::tangent_plane_base(cref_type x, tm_base_ref_ty
 
 template <int N>
 inline void Manifold <SPHERE, N>::projector(ref_type x){
-    x.normalize();
+    
+    #ifdef TVMTL_MANIFOLD_DEBUG
+	if(!std::isfinite(x(0))) std::cout << "Projector recieved nan" << std::endl;
+    #endif
+
+    scalar_type norm = x.norm();
+    if(norm!=0.0) x.normalize();
+    else x.setConstant(1.0 / 256.0).normalize();
+
+    #ifdef TVMTL_MANIFOLD_DEBUG
+	if(!std::isfinite(x(0))) std::cout << "Projector returns nan" << std::endl;
+    #endif
 }
 
 
