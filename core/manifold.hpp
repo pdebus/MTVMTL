@@ -4,5 +4,6 @@
 #include "manifold_primary.hpp"
 #include "manifold_euc.hpp"
 #include "manifold_sphere.hpp"
+#include "manifold_son.hpp"
 
 #endif

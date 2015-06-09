@@ -225,8 +225,8 @@ void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
 	    v[2]=static_cast<double>(vu[0]);
 	    n = v / static_cast<double>(std::numeric_limits<unsigned char>::max());
 	};
-    //img_ = vpp::clone(noise_img_, vpp::_border = 1);
-    img_ = vpp::clone(noise_img_);
+    img_ = vpp::clone(noise_img_, vpp::_border = 1);
+    //img_ = vpp::clone(noise_img_);
 
     //TODO: Write separate input functions for weights and inpainting matrices
     weights_ = weights_mat(noise_img_.domain());
@@ -253,8 +253,8 @@ void Data<MANIFOLD, 2>::rgb_readBrightness(const char* filename){
 	    v = v / static_cast<double>(std::numeric_limits<unsigned char>::max());
 	    n.setConstant(v.norm()/std::sqrt(3));
 	};
-    //img_ = vpp::clone(noise_img_, vpp::_border = 1);
-    img_ = vpp::clone(noise_img_);
+    img_ = vpp::clone(noise_img_, vpp::_border = 1);
+    //img_ = vpp::clone(noise_img_);
 
     //TODO: Write separate input functions for weights and inpainting matrices
     weights_ = weights_mat(noise_img_.domain());
@@ -293,8 +293,8 @@ void Data<MANIFOLD, 2>::rgb_readChromaticity(const char* filename){
 		}
 	    #endif
 	};
-    //img_ = vpp::clone(noise_img_, vpp::_border = 1);
-    img_ = vpp::clone(noise_img_);
+    img_ = vpp::clone(noise_img_, vpp::_border = 1);
+    //img_ = vpp::clone(noise_img_);
 
     //TODO: Write separate input functions for weights and inpainting matrices
     weights_ = weights_mat(noise_img_.domain());

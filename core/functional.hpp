@@ -142,7 +142,11 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateWeights(){
     #pragma omp parallel for
     for(int r=0; r< nr; r++) 
 	X(r,nc-1)=0.0;
-    
+
+    #ifdef TV_FUNC_DEBUG 
+	data_.output_weights(Y,"YWeights.csv");
+    #endif	
+
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Vertical neighbours" << std::endl;
     #endif
@@ -154,7 +158,6 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateWeights(){
 	lastrow[c]=0.0;
 	
     #ifdef TV_FUNC_DEBUG 
-	data_.output_weights(X,"XWeights.csv");
 	data_.output_weights(Y,"YWeights.csv");
     #endif	
     

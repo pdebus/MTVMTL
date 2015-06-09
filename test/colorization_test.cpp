@@ -28,25 +28,51 @@ typedef TV_Minimizer< IRLS, cfunc_t, spheremf_t, chroma_t, OMP > ctvmin_t;
 typedef TV_Minimizer< IRLS, bfunc_t, eucmf_t, bright_t, OMP > btvmin_t;
 
 
-void removeColor(chroma_t& C, const bright_t& B){
-    vpp::pixel_wise(C.noise_img_, B.noise_img_, C.inp_) | [&] (auto& c, const auto& b, const bool& i){	
+void removeColor(chroma_t& C,const bright_t& B){
+    vpp::pixel_wise(C.img_, B.img_, C.inp_) | [&] (auto& c, const auto& b, const bool& i){	
 	if(i){ 
 	    c.setConstant(b[0]);
+
 	    if(b[0]!=0)	c.normalize();
+	    else c.setConstant(1.0/256.0);
 	}
 	if(!std::isfinite(c(0))){
 	    std::cout << "NaN in RemoveColor" << std::endl;
 	    std::cout << b << std::endl;
 	}
     };
-    C.img_ = vpp::clone(C.noise_img_);
+}
+
+void DisplayImage(const char* wname, const chroma_t& C){
+	cv::namedWindow( wname, cv::WINDOW_NORMAL ); 
+
+	// Convert Picture of double to uchar
+	vpp::image2d<vpp::vuchar3> vucharimg(C.img_.domain());
+	vpp::pixel_wise(vucharimg, C.img_) | [] (auto& i, auto& n) {
+	    spheremf_t::value_type v = n * (double) std::numeric_limits<unsigned char>::max();
+	    vpp::vuchar3 vu = vpp::vuchar3::Zero();
+	    vu[0]=(unsigned char) v[2];
+	    vu[1]=(unsigned char) v[1];
+	    vu[2]=(unsigned char) v[0];
+	    i = vu;
+	};
+
+	cv::imshow( wname, vpp::to_opencv(vucharimg));
+	cv::waitKey(0);
 }
 
 void recombineAndShow(const chroma_t& C, const bright_t B, std::string fname, std::string wname){
 	
 	vpp::image2d<vpp::vuchar3> img(C.img_.domain());
 	vpp::pixel_wise(img, C.img_, B.img_ ) | [] (auto& i, const auto& c, const auto& b) {
-	    vpp::vdouble3 v = c * b[0] * std::sqrt(3) * (double) std::numeric_limits<unsigned char>::max();
+	    vpp::vdouble3 v = c * b[0] * std::sqrt(3);
+	    
+	    double max = v.maxCoeff();
+	    if(max > 1.0) v /= max;
+	    
+	    v *= (double) std::numeric_limits<unsigned char>::max();
+	    
+	    
 	    vpp::vuchar3 vu = vpp::vuchar3::Zero();
 	    vu[0]=(unsigned char) v[2];
 	    vu[1]=(unsigned char) v[1];
@@ -98,6 +124,7 @@ int main(int argc, const char *argv[])
 	ctvmin_t cTVMin(cFunc, myChroma);
 	cTVMin.first_guess();
 	recombineAndShow(myChroma, myBright, "recolored_fg_"+fname, "Recolor First Guess");
+	DisplayImage("Chromaticity First Guess", myChroma);
 	
 	std::cout << "\n\n--==CHROMATICITY PART==--" << std::endl;
 

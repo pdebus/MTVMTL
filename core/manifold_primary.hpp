@@ -10,13 +10,6 @@ namespace tvmtl {
 template < enum MANIFOLD_TYPE MF, int N >
 struct Manifold { };
 
-
-// Specialization SO(N)
-template < int N>
-struct Manifold< SO, N> {
-
-};
-
 // Specialization SPD
 template < int N >
 struct Manifold< SPD, N > {

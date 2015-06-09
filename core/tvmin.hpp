@@ -173,6 +173,7 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::smoothening(int smooth
 	auto boxfilter = [&] (value_type& i, const auto& nbh) { 
 	    i = (4 * nbh(0,0) + nbh(1,0) + nbh(0,1) + nbh(-1,0) + nbh(0,-1))/8.0; 
 	    MANIFOLD::projector(i);
+	//    if (i[0]>1e300) std::cout << i << ", (1,0) " << nbh(1,0) << ", (0,1) " << nbh(0,1) << ", (-1,0)" << nbh(-1,0) << ", (0,-1)" << nbh(0,-1) << std::endl;
 	};
 
 	vpp::pixel_wise(data_.img_, N)(/*vpp::_no_threads*/) | boxfilter;
