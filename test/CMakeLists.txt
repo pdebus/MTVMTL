@@ -33,8 +33,16 @@ add_executable(autodiff_test autodiff_test.cpp)
 add_test(autodiff_test autodiff_test )
 target_link_libraries(autodiff_test )
 
+add_executable(mat_util_test mat_util_test.cpp)
+add_test(mat_util_test mat_util_test )
+target_link_libraries(mat_util_test )
+
+add_executable(manifold_son_test manifold_son_test.cpp)
+add_test(manifold_son_test manifold_son_test)
+
 add_executable(manifold_test manifold_test.cpp)
 add_test(manifold_test manifold_test)
+
 
 add_executable(data_test data_test.cpp)
 add_test(data_test data_test)

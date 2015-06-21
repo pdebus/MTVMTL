@@ -5,7 +5,8 @@
 
 using namespace tvmtl;
 
-typedef Manifold< SO, 3 > mf_t;
+typedef Manifold<SO, 3> mf_t;
+
 typedef typename mf_t::value_type son_mat;
 
 
@@ -22,10 +23,10 @@ void test(T& vec1, T& vec2){
 
 	typedef typename mf_t::deriv2_type mat9x9;
 
-	vec3d d1x,d1y;
+	son_mat d1x,d1y;
 	mf_t::deriv1x_dist_squared(vec1, vec2, d1x);
 	mf_t::deriv1y_dist_squared(vec1, vec2, d1y);
-	mat3x3 d2xx, d2xy, d2yy; 
+	mat9x9 d2xx, d2xy, d2yy; 
 	mf_t::deriv2xx_dist_squared(vec1, vec2, d2xx);
 	mf_t::deriv2xy_dist_squared(vec1, vec2, d2xy);
 	mf_t::deriv2yy_dist_squared(vec1, vec2, d2yy);
@@ -51,24 +52,24 @@ void test(T& vec1, T& vec2){
 
 }
 
+
+
 int main(int argc, const char *argv[])
 {
  
-	std::cout << "\n\nNAN TEST" << std::endl;
-	std::cout << std::boolalpha << "isfinite(NaN) = " << std::isfinite(NAN) << '\n'
-		             << "isfinite(Inf) = " << std::isfinite(INFINITY) << '\n'
-			     << "isfinite(0.0) = " << std::isfinite(0.0) << '\n'
-			     << "isfinite(0.0/0.0) = " << std::isfinite(0.0/0.0) << '\n'
-			     << "isfinite(1.0/0.0) = " << std::isfinite(1.0/0.0) << '\n'
-			     << "isfinite(exp(800)) = " << std::isfinite(std::exp(800)) << '\n';
-
-
 	son_mat s1, s2;
-	s1 = son_mat::Random(); // add projection
-	s22 = son_mat::Random(); // add projection
+	s1 = son_mat::Random();
+	mf_t::projector(s1);
+	s2 = son_mat::Random();
+	mf_t::projector(s2);
+	
+	std::cout << "\n\nOrthogonality test" << std::endl;
+	std::cout << s1*s1.transpose() << std::endl;
+	std::cout << s2*s2.transpose() << std::endl;
+
 
 	std::cout << "\n\nRANDOM Matrices" << std::endl;
-	test(vec1,vec2);
+	test(s1,s2);
 
 
 

@@ -11,37 +11,60 @@
        y = x(0)*x(0)*x(0)*x(1) + x(0)*x(0)*x(1)*x(1)*x(1)*x(1); // f(x) = x[0]^3 * x[1]  + x[0]^2 * x[1]^4
        return y;
     }
-/*
+
     template <typename T>
 	T dist(Eigen::Matrix<T,Eigen::Dynamic,1> const &x, Eigen::Matrix<T,Eigen::Dynamic,1> const &y){
-	T y;
-	y = std::acos(x.dot(y));
-	return y;
+	T r;
+	r =x.dot(y);
+	return r;
     }
-*/
+
 
     int main(){
        //normal use of fun
        {
-          typedef double scalar_t;
+        
+	  typedef double scalar_t;
           typedef Eigen::Matrix<scalar_t,Eigen::Dynamic,1> input_t;
           input_t x(2);
           x.setConstant(1);
           scalar_t y = fun(x);
-          std::cout << y << std::endl;
+	  std::cout << "Normal use of function" << std::endl;
+	  std::cout << y << std::endl;
        }
 	std::cout << std::endl;
        //autodiff use of dist
        {
-       
-       
-	typedef typename Eigen::Matrix<double,Eigen::Dynamic,1> vec;
+	typedef Eigen::Matrix<double,Eigen::Dynamic,1> vec;
+	typedef Eigen::AutoDiffScalar<vec> AD;
+	typedef Eigen::Matrix<AD,Eigen::Dynamic,1> ADvec;
+
 	vec vec1, vec2;
 	vec1 = vec::Random(3).normalized(); 
 	vec2 = vec::Random(3).normalized();
 
-       
-       
+	int s1 = vec1.size();
+	int s2 = vec2.size();
+
+	ADvec ax(s1);
+	ADvec ay(s2);
+	ax = vec1.cast<AD>();
+	ay = vec2.cast<AD>();
+
+	ax.setZero(s1);
+	ay.setZero(s2);
+
+	for(int i=0; i<s1; i++){
+	    ax(i).derivatives().resize(s1);
+	    ax(i).derivatives()(i)=1;
+	    ay(i).derivatives().resize(s2);
+	    ay(i).derivatives()(i)=1;
+	}
+
+	AD res = dist(ax,ay);
+	std::cout << "\n Autodiff Dist function value: \n" << res.value() << std::endl;
+        std::cout << "\n x-Derivatives\n " << res.derivatives() << std::endl;
+//        std::cout << "\n y-Derivatives\n " << res.derivatives()(1) << std::endl;
        }
 
 
@@ -61,8 +84,9 @@
           x(1).derivatives()(1)=1;
 
           scalar_t y = fun(x);
-          std::cout << y.value() << std::endl;
-          std::cout << y.derivatives() << std::endl;
+	  std::cout << "Autodiff use of function" << std::endl;
+          std::cout << "\nFunction:\n " << y.value() << std::endl;
+          std::cout << "\nDerivatives\n " << y.derivatives() << std::endl;
        }
 	std::cout << std::endl;
        //autodiff second derivative of fun
@@ -93,11 +117,11 @@
           }
 
           scalar_t y = fun(x);
-          std::cout << y.value().value() << std::endl;
-          std::cout << y.value().derivatives() << std::endl;
-          std::cout << y.derivatives()(0).value() << std::endl;
+          //std::cout << y.value().value() << std::endl;
+          //std::cout << y.value().derivatives() << std::endl;
+          //std::cout << y.derivatives()(0).value() << std::endl;
           std::cout << y.derivatives()(0).derivatives() << std::endl;
-          std::cout << y.derivatives()(1).value() << std::endl;
+         // std::cout << y.derivatives()(1).value() << std::endl;
           std::cout << y.derivatives()(1).derivatives() << std::endl;
        }
     }
