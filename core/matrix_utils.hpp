@@ -118,6 +118,30 @@ void MatrixLogarithmFrechetDerivative(const Eigen::MatrixBase<DerivedX>& X, cons
 }
 
 
+template <typename DerivedX, typename DerivedY>
+void KroneckerDLog(const Eigen::MatrixBase<DerivedX>& X, Eigen::MatrixBase<DerivedY>& Result){
+    
+    typedef Eigen::internal::traits<DerivedX> Traits;
+    typedef typename Traits::Scalar Scalar;
+    static const int Rows = Traits::RowsAtCompileTime;
+
+    DerivedX E, PartialDiff; 
+    DerivedY R;
+
+    for (int i = 0; i < Rows; i++) {
+    	for (int j = 0; j < Rows; j++) {
+	    E = DerivedX::Zero();
+	    E(i,j) = 1.0;
+	    MatrixLogarithmFrechetDerivative(X, E, PartialDiff);
+	    PartialDiff.transposeInPlace();
+	    R.row(i*Rows+j) = Eigen::Map<Eigen::VectorXd>(PartialDiff.data(), PartialDiff.size());
+    	}
+    }
+    Result = R;
+}
+
+
+
 
 } // end namespace tvmtl
 

@@ -6,11 +6,13 @@
 #include <iostream>
 
 #include <Eigen/Core>
+#include <Eigen/Sparse>
 #include <Eigen/SVD>
-#include <unsupported/Eigen/KroneckerProduct>
 #include <unsupported/Eigen/MatrixFunctions>
+#include <unsupported/Eigen/KroneckerProduct>
 
 #include "enumerators.hpp"
+#include "matrix_utils.hpp"
 
 namespace tvmtl {
 
@@ -46,6 +48,10 @@ struct Manifold< SO, N> {
 	typedef deriv2_type&							deriv2_ref_type;
 	typedef	Eigen::Matrix<scalar_type, N * (N - 1) / 2, N * (N - 1) / 2>	restricted_deriv2_type;
 
+	// Helper Types
+	typedef Eigen::PermutationMatrix<N*N, N*N, int> perm_type;
+
+	inline static perm_type ConstructPermutationMatrix();
 
 	// Manifold distance functions (for IRLS)
 	inline static dist_type dist_squared(cref_type x, cref_type y);
@@ -55,7 +61,7 @@ struct Manifold< SO, N> {
 	inline static void deriv2xx_dist_squared(cref_type x, cref_type y, deriv2_ref_type result);
 	inline static void deriv2xy_dist_squared(cref_type x, cref_type y, deriv2_ref_type result);
 	inline static void deriv2yy_dist_squared(cref_type x, cref_type y, deriv2_ref_type result);
-	inline static const deriv2_type permutation_matrix;
+	static const perm_type permutation_matrix;
 
 
 	// Manifold exponentials und logarithms ( for Proximal point)
@@ -86,8 +92,22 @@ const int Manifold < SO, N>::manifold_dim = N * (N - 1) / 2;
 template <int N>
 const int Manifold < SO, N>::value_dim = N; 
 
+// PermutationMatrix
 template <int N>
-const deriv2_type Manifold<SO, N>::permutation_matrix = deriv2_type::Identity(); // Change 
+typename Manifold < SO, N>::perm_type Manifold<SO, N>::ConstructPermutationMatrix(){
+    perm_type P;
+    P.setIdentity();
+    for(int i=0; i<3; i++)
+	for(int j=0; j<i; j++)
+	    P.applyTranspositionOnTheRight(j*3+i, i*3+j);
+    return P;
+}
+
+template <int N>
+const typename Manifold < SO, N>::perm_type Manifold<SO, N>::permutation_matrix = ConstructPermutationMatrix(); 
+
+
+
 
 // Squared SO distance function
 template <int N>
@@ -99,12 +119,12 @@ inline typename Manifold < SO, N>::dist_type Manifold < SO, N>::dist_squared( cr
 // Derivative of Squared SO distance w.r.t. first argument
 template <int N>
 inline void Manifold < SO, N>::deriv1x_dist_squared( cref_type x, cref_type y, deriv1_ref_type result){
-    result = -2 * x * (x.transpose() * y).log();
+    result = -2.0 * x * (x.transpose() * y).log();
 }
 // Derivative of Squared SO distance w.r.t. second argument
 template <int N>
 inline void Manifold < SO, N>::deriv1y_dist_squared( cref_type x, cref_type y, deriv1_ref_type result){
-    result =  -2 * y * (y.transpose() * x).log();
+    result =  -2.0 * y * (y.transpose() * x).log();
 }
 
 
@@ -113,20 +133,31 @@ inline void Manifold < SO, N>::deriv1y_dist_squared( cref_type x, cref_type y, d
 // Second Derivative of Squared SO distance w.r.t first argument
 template <int N>
 inline void Manifold < SO, N>::deriv2xx_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
-    XtY = x.transpose()*y;
-    deriv2_type dir = kroneckerProduct(y.transpose(),value_type::Identity());
-    deriv2_type dlog = dlog(XtY, dir);
-    result = -2.0 * (Eigen::kroneckerProduct(XtY.log(), value_type::Identity()) + kroneckerProduct(value_type::Identity(), x) * dlog * permutation_matrix );
+    value_type XtY = x.transpose()*y;
+
+    deriv2_type logXtY_kron_I ,I_kron_x, Yt_kron_I, dlog; 
+    Eigen::kroneckerProduct(XtY.log().eval(),value_type::Identity(),logXtY_kron_I);
+    Eigen::kroneckerProduct(value_type::Identity(),x,I_kron_x);
+    Eigen::kroneckerProduct(y.transpose(),value_type::Identity(),Yt_kron_I);
+    KroneckerDLog(XtY, dlog);
+
+    result = -2.0 * (logXtY_kron_I.transpose() + I_kron_x * dlog * Yt_kron_I * permutation_matrix );
 }
 // Second Derivative of Squared SO distance w.r.t first and second argument
 template <int N>
 inline void Manifold < SO, N>::deriv2xy_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
-   result = deriv2_type::Identity(); 
+    value_type XtY = x.transpose()*y;
+
+    deriv2_type I_kron_x, dlog; 
+    Eigen::kroneckerProduct(value_type::Identity(),x,I_kron_x);
+    KroneckerDLog(XtY, dlog);
+
+    result = -2.0 * I_kron_x * dlog * I_kron_x.transpose();
 }
 // Second Derivative of Squared SO distance w.r.t second argument
 template <int N>
 inline void Manifold < SO, N>::deriv2yy_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
-   result = deriv2_type::Identity(); 
+    deriv2xx_dist_squared(y, x, result);
 }
 
 

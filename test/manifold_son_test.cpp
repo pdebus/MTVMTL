@@ -62,7 +62,11 @@ int main(int argc, const char *argv[])
 	mf_t::projector(s1);
 	s2 = son_mat::Random();
 	mf_t::projector(s2);
+	s2*=-1.0;
 	
+	//s1 = son_mat::Identity();
+	//s2 << 0, -1, 0, 1, 0, 0, 0, 0, 1;
+
 	std::cout << "\n\nOrthogonality test" << std::endl;
 	std::cout << s1*s1.transpose() << std::endl;
 	std::cout << s2*s2.transpose() << std::endl;

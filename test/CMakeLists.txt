@@ -39,6 +39,7 @@ target_link_libraries(mat_util_test )
 
 add_executable(manifold_son_test manifold_son_test.cpp)
 add_test(manifold_son_test manifold_son_test)
+target_link_libraries(manifold_son_test gomp)
 
 add_executable(manifold_test manifold_test.cpp)
 add_test(manifold_test manifold_test)
