@@ -236,13 +236,15 @@ typename TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::newton_error_type 
     // Apply Newton correction to picture
     // TODO: 
     // - This is also dimension-dependent 2D or 3D so try moving to functional class
+    // - Change VectorXd to something parametrized with scalar_type
     #ifdef TVMTL_TVMIN_DEBUG_VERBOSE
 	std::cout << "\t\t...Apply Newton Correction" << std::endl;
     #endif
     const tm_base_mat_type& T = func_.getT();
     auto newton_correction = [&] (const tm_base_type& t, value_type& i, const vpp::vint2 coord) { 
-	MANIFOLD::exp(i, -t*x.segment(manifold_dim*(coord[0]+nr*coord[1]), manifold_dim), i);
-	//i = i - t*x.segment(3*(coord[0]+nr*coord[1]), manifold_dim); 
+	Eigen::VectorXd v = -t*x.segment(manifold_dim*(coord[0]+nr*coord[1]), manifold_dim);
+	MANIFOLD::exp(i, Eigen::Map<value_type>(v.data()), i);
+	//MANIFOLD::exp(i, -t*x.segment(manifold_dim*(coord[0]+nr*coord[1]), manifold_dim), i);
     };
     vpp::pixel_wise(T, data_.img_, data_.img_.domain()) | newton_correction;
     // Compute the Error

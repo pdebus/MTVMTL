@@ -90,7 +90,7 @@ template <int N>
 const int Manifold < SO, N>::manifold_dim = N * (N - 1) / 2; 
 
 template <int N>
-const int Manifold < SO, N>::value_dim = N; 
+const int Manifold < SO, N>::value_dim = N * N; 
 
 // PermutationMatrix
 template <int N>
@@ -177,7 +177,21 @@ inline void Manifold <SO, N>::log(cref_type x, cref_type y, ref_type result){
 // Tangent Plane restriction
 template <int N>
 inline void Manifold <SO, N>::tangent_plane_base(cref_type x, tm_base_ref_type result){
-    result.setConstant(1.0); //TODO Placeholder! Change!
+    int d = value_type::RowsAtCompileTime;
+    int k = 0;
+    
+    value_type T;
+
+    for(int i=0; i<d-1; i++)
+	for(int j=i+1; j<d; j++){
+	    T.setZero();
+	    scalar_type sqrt = 1.0/std::sqrt(2);
+	    T.col(i) = -sqrt * x.col(j);
+	    T.col(j) =  sqrt * x.col(i);
+
+	    result.col(k) = Eigen::Map<Eigen::VectorXd>(T.data(), T.size());
+	    k++;
+	}
 }
 
 

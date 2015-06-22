@@ -353,7 +353,8 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 	std::cout << "\t\t...Local to global insert" << std::endl;
     #endif
     auto insert2grad = [&] (const tm_base_type& t, const value_type& p, const vpp::vint2 coord) { 
-	DJ_.segment(manifold_dim * (coord[0] + nr * coord[1]), manifold_dim) = t.transpose()*p; 
+	DJ_.segment(manifold_dim * (coord[0] + nr * coord[1]), manifold_dim) = t.transpose() * Eigen::Map<const Eigen::VectorXd>(p.data(), p.size()); 
+	//DJ_.segment(manifold_dim * (coord[0] + nr * coord[1]), manifold_dim) = t.transpose()*p; //remove: does not work for matrix valued pixel
     };
 
     vpp::pixel_wise(T_, grad, grad.domain()) | insert2grad; 
