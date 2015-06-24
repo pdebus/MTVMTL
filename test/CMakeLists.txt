@@ -2,6 +2,10 @@ cmake_minimum_required(VERSION 2.8)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
+find_package(OpenGL REQUIRED)
+find_package(GLUT REQUIRED)
+include_directories( ${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS} )
+
 find_package(OpenCV REQUIRED)
 find_package(CGAL REQUIRED)
 include(${CGAL_USE_FILE})
@@ -36,6 +40,14 @@ target_link_libraries(autodiff_test )
 add_executable(mat_util_test mat_util_test.cpp)
 add_test(mat_util_test mat_util_test )
 target_link_libraries(mat_util_test )
+
+add_executable(opengl_cube_test opengl_cube_test.cpp)
+add_test(opengl_cube_test opengl_cube_test )
+target_link_libraries(opengl_cube_test ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+
+add_executable(opengl_ellipsoid_test opengl_ellipsoid_test.cpp)
+add_test(opengl_ellipsoid_test opengl_ellipsoid_test )
+target_link_libraries(opengl_ellipsoid_test ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
 
 add_executable(manifold_son_test manifold_son_test.cpp)
 add_test(manifold_son_test manifold_son_test)
