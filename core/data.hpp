@@ -2,11 +2,15 @@
 #define TVTML_DATA_HPP
 
 // system includes
+#include <cassert>
 #include <limits>
 #include <cmath>
-#include <iostream>
-#include <fstream>
 #include <random>
+
+#include <string>
+#include <iostream>
+#include <sstream>
+#include <fstream>
 
 // OpenCV includes
 #include <opencv2/core/core.hpp>
@@ -14,6 +18,10 @@
 #ifdef TV_DATA_DEBUG
     #include <opencv2/highgui/highgui.hpp>
 #endif
+
+//Eigen includes
+#include <Eigen/Core>
+#include <Eigen/Geometry>
 
 // video++ includes
 #include <vpp/vpp.hh>
@@ -52,6 +60,12 @@ class Data< MANIFOLD, 2>{
 	void rgb_imread(const char* filename); 
 	void rgb_readBrightness(const char* filename); 
 	void rgb_readChromaticity(const char* filename); 
+	
+	void readMatrixDataFromCSV(const char* filename, const int nx, const int ny);
+	
+	// Random Input functions
+	// TODO: Paramaterize for manifold type
+	void create_nonsmooth_son(const int ny, const int nx);
 
 	// EdgeFunctions
 	void findEdgeWeights();
@@ -209,9 +223,9 @@ void Data<MANIFOLD, 2>::createRandInpWeights(const double threshold){
     #endif
 }
 
-//TODO: static assert to avoid data that has not exactly 3 channels
 template < typename MANIFOLD >
 void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
+	static_assert(MANIFOLD::value_dim == 3,"ERROR: RGB Input requires a Manifold with embedding dimension N=3!");
 	vpp::image2d<vpp::vuchar3> input_image;
 	input_image = vpp::clone(vpp::from_opencv<vpp::vuchar3 >(cv::imread(filename)));
 	noise_img_ = storage_type(input_image.domain());
@@ -236,9 +250,9 @@ void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
     inpaint_ = false;
 }
 
-//TODO: static assert to avoid data that has not exactly 3 channels
 template < typename MANIFOLD >
 void Data<MANIFOLD, 2>::rgb_readBrightness(const char* filename){
+	static_assert(MANIFOLD::value_dim == 1,"ERROR: Brightness Input requires a Manifold with embedding dimension N=3!");
 	vpp::image2d<vpp::vuchar3> input_image;
 	input_image = vpp::clone(vpp::from_opencv<vpp::vuchar3 >(cv::imread(filename)));
 	noise_img_ = storage_type(input_image.domain());
@@ -264,9 +278,9 @@ void Data<MANIFOLD, 2>::rgb_readBrightness(const char* filename){
     inpaint_ = false;
 }
 
-//TODO: static assert to avoid data that has not exactly 3 channels
 template < typename MANIFOLD >
 void Data<MANIFOLD, 2>::rgb_readChromaticity(const char* filename){
+	static_assert(MANIFOLD::value_dim == 3,"ERROR: Chromaticity Input requires a Manifold with embedding dimension N=3!");
 	vpp::image2d<vpp::vuchar3> input_image;
 	input_image = vpp::clone(vpp::from_opencv<vpp::vuchar3 >(cv::imread(filename)));
 	noise_img_ = storage_type(input_image.domain());
@@ -295,6 +309,103 @@ void Data<MANIFOLD, 2>::rgb_readChromaticity(const char* filename){
 	};
     img_ = vpp::clone(noise_img_, vpp::_border = 1);
     //img_ = vpp::clone(noise_img_);
+
+    //TODO: Write separate input functions for weights and inpainting matrices
+    weights_ = weights_mat(noise_img_.domain());
+    vpp::fill(weights_, 1.0);
+    edge_weights_ = vpp::clone(weights_);
+    vpp::fill(edge_weights_, 1.0);
+    inpaint_ = false;
+}
+
+
+template <typename MANIFOLD>
+void Data<MANIFOLD, 2>::readMatrixDataFromCSV(const char* filename, const int nx, const int ny){
+    noise_img_ = storage_type(ny, nx);
+    vpp::fill(noise_img_, MANIFOLD::value_type::Zero());
+
+    const int N = MANIFOLD::value_type::RowsAtCompileTime; 
+    const int N2 = MANIFOLD::value_dim;
+    int cols, rows = 0;
+
+    std::ifstream infile(filename, std::ifstream::in);
+    
+    std::string line = "";
+    while (std::getline(infile, line)){
+	std::stringstream strstr(line);
+	std::string word = "";
+	
+	if(cols == 0)
+	    while (std::getline(strstr, word, ','))
+		cols++;
+	
+	rows++;
+    }
+
+    assert(N2==cols);
+    assert(nx*ny==rows);
+    
+    infile.clear();
+    infile.seekg(0, std::ios_base::beg);
+    
+    int i=0;
+    Eigen::Matrix<typename MANIFOLD::scalar_type, N2, 1> vectorizedMat;
+    vectorizedMat.setZero();
+
+    while (std::getline(infile, line)){
+	std::stringstream strstr(line);
+	std::string word = "";
+	int j=0;
+	while (std::getline(strstr, word,',')){
+	    typename MANIFOLD::scalar_type entry= static_cast<typename MANIFOLD::scalar_type>(std::stod(word));
+	    vectorizedMat(j) = entry;
+	    ++j;
+	}
+	noise_img_(i / nx, i % nx) = Eigen::Map<typename MANIFOLD::value_type>(vectorizedMat.data());
+	++i;
+    }
+    img_ = vpp::clone(noise_img_, vpp::_border = 1);
+
+    //TODO: Write separate input functions for weights and inpainting matrices
+    weights_ = weights_mat(noise_img_.domain());
+    vpp::fill(weights_, 1.0);
+    edge_weights_ = vpp::clone(weights_);
+    vpp::fill(edge_weights_, 1.0);
+    inpaint_ = false;
+}
+
+// TODO: Generalize to general N
+template <typename MANIFOLD>
+void Data<MANIFOLD, 2>::create_nonsmooth_son(const int nx,const int ny){
+    const int N = MANIFOLD::value_type::RowsAtCompileTime; 
+
+    static_assert(MANIFOLD::MyType==SO, "ERROR: Only possible for SO(N) manifolds");
+    static_assert(N==3, "ERROR: Only possible for SO(N) manifolds");
+    
+    noise_img_ = storage_type(ny, nx);
+
+    auto son_inserter = [&] (typename MANIFOLD::value_type& v, const vpp::vint2& coord){
+
+	typename MANIFOLD::scalar_type x = (coord(1)-1.0) / nx;
+	typename MANIFOLD::scalar_type y = (coord(0)-1.0) / ny;
+	Eigen::Matrix<typename MANIFOLD::scalar_type, N, 1> rotation_axis;
+	if(x > 0.5)
+	    rotation_axis << 2.0 * x, y, 0.0;
+	else
+	    rotation_axis << 0.0, 2.0 * x, 0.5;
+	
+	typename MANIFOLD::scalar_type alpha;
+	if(x > y)
+	    alpha = x + y;
+	else
+	    alpha = M_PI * 0.5 + x - y;
+	
+	//v = MANIFOLD::value_type::Identity();
+	v = Eigen::AngleAxis<typename MANIFOLD::scalar_type>(alpha, rotation_axis.normalized());
+    };
+
+    vpp::pixel_wise(noise_img_, noise_img_.domain()) | son_inserter;
+    img_ = vpp::clone(noise_img_, vpp::_border = 1);
 
     //TODO: Write separate input functions for weights and inpainting matrices
     weights_ = weights_mat(noise_img_.domain());

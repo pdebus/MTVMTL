@@ -49,13 +49,16 @@ add_executable(opengl_ellipsoid_test opengl_ellipsoid_test.cpp)
 add_test(opengl_ellipsoid_test opengl_ellipsoid_test )
 target_link_libraries(opengl_ellipsoid_test ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
 
+add_executable(opengl_pyramid_test opengl_pyramid_test.cpp)
+add_test(opengl_pyramid_test opengl_pyramid_test )
+target_link_libraries(opengl_pyramid_test ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+
 add_executable(manifold_son_test manifold_son_test.cpp)
 add_test(manifold_son_test manifold_son_test)
 target_link_libraries(manifold_son_test gomp)
 
 add_executable(manifold_test manifold_test.cpp)
 add_test(manifold_test manifold_test)
-
 
 add_executable(data_test data_test.cpp)
 add_test(data_test data_test)
@@ -64,6 +67,10 @@ target_link_libraries(data_test ${OpenCV_LIBS} gomp)
 add_executable(sphere_data_test sphere_data_test.cpp)
 add_test(sphere_data_test sphere_data_test)
 target_link_libraries(sphere_data_test ${OpenCV_LIBS} gomp)
+
+add_executable(son_data_test son_data_test.cpp)
+add_test(son_data_test son_data_test )
+target_link_libraries(son_data_test ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp)
 
 add_executable(functional_test functional_test.cpp)
 add_test(functional_test functional_test)
