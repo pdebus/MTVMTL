@@ -1,4 +1,5 @@
 #include <GL/glut.h>
+#include <iostream>
 
  GLfloat xRotated, yRotated, zRotated;
 void init(void)
@@ -18,24 +19,30 @@ void DrawCube(void)
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS); 
 
-    int nx=35;
-    int ny=30;
+    int nx=5;
+    int ny=6;
     
     int max =  nx ^ ((nx ^ ny) & -(nx < ny));
 
     float scaling = 2.0 / (3.0 * max);
     float spacing = 4.0 * scaling;
     float z_distance= -3.0;
-    
+  std::cout << "ny: " << ny << " nx: " << nx << std::endl;
+  std::cout << "Maximum: " << max << " Scaling " << scaling << std::endl;
+  
     glLoadIdentity();
     //glTranslatef(-nx * 0.5 * spacing + 1.0, ny*0.5*spacing - 1.0, z_distance);
     glTranslatef(-1.1, 1.1, z_distance);
 
-    for (int i=0; i<nx; i++)
-	for(int j=0; j<ny; j++){
+    for (int i=0; i<ny; i++)
+	for(int j=0; j<nx; j++){
 	    
 	    glPushMatrix();
-	    glTranslatef(i*spacing, -j*spacing, 0.0);
+	    glTranslatef(j*spacing, -i*spacing, 0.0);
+	
+		std::cout << "\ncoord0: " << i << " coord1 " << j << std::endl;
+		std::cout << "translateX: " << j*spacing << " translateY: " << -i*spacing << std::endl;
+	    
 	    glRotatef(xRotated,1.0,0.0,0.0);
 	    // rotation about Y axis
 	    glRotatef(yRotated*0.2*i,0.0,1.0,0.0);

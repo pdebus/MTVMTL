@@ -26,7 +26,7 @@ std::function<Ret(Params...)> Callback<Ret(Params...)>::func;
 // Helper Function for the most common case of void(void) functions
 typedef void (*callback_t)();
 template<typename T>
-callback_t getCFunctionPointer(void (T::*member_function), T* object_pointer){
+callback_t getCFunctionPointer(void (T::*member_function)(), T* object_pointer){
     Callback<void()>::func = std::bind(member_function, object_pointer);
     callback_t func = static_cast<callback_t>(Callback<void()>::callback);
     return func;

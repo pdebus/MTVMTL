@@ -41,7 +41,7 @@ class Visualization< SO, 3, DATA>{
 	static void reshape(int x, int y);
 
 	// Class members GL Intergace
-	void GLInit(void);
+	void GLInit(const char* filename);
 	void draw(void);
 
     private:
@@ -64,23 +64,38 @@ void Visualization<SO, 3, DATA>::draw(void)
     int ny=data_.img_.nrows();
     
     int max =  nx ^ ((nx ^ ny) & -(nx < ny));
-
+   
     float scaling = 2.0 / (3.0 * max);
     float spacing = 4.0 * scaling;
     float z_distance= -3.0;
     
+    #ifdef TV_VISUAL_DEBUG
+	std::cout << "ny: " << ny << " nx: " << nx << std::endl;
+	std::cout << "Maximum: " << max << " Scaling " << scaling << std::endl;
+    #endif
+ 
     glLoadIdentity();
     //glTranslatef(-nx * 0.5 * spacing + 1.0, ny*0.5*spacing - 1.0, z_distance);
     glTranslatef(-1.1, 1.1, z_distance);
 
     auto cube_drawer = [&](const typename mf_t::value_type& v, const vpp::vint2& coords, const typename DATA::inp_type& i){
-	if(i){
+	if(!i){
 	    glPushMatrix();
 	    glTranslatef(coords(1) * spacing, -coords(0) * spacing, 0.0);
 	    
+	    #ifdef TV_VISUAL_DEBUG
+		std::cout << "\ncoord0: " << coords(0) << " coord1 " << coords(1) << std::endl;
+		std::cout << "translateX: " << coords(1)*spacing << " translateY: " << -coords(0)*spacing << std::endl;
+	    #endif
+    
 	    Eigen::Affine3f t = Eigen::Affine3f::Identity();
 	    t.linear() = v.cast<float>();
-	    glLoadMatrixf(t.data());
+
+	     #ifdef TV_VISUAL_DEBUG
+		std::cout << "Transformation matrix:\n" << t.matrix() << std::endl;
+	    #endif
+
+	    glMultMatrixf(t.data());
 
 	    glScalef(scaling, scaling, scaling);
 	    
@@ -120,7 +135,7 @@ void Visualization<SO, 3, DATA>::draw(void)
 	}	
     };
 
-    vpp::pixel_wise(data_.img_, data_.img_.domain(), data_.inp_mat)(vpp::_no_threads)| cube_drawer;
+    vpp::pixel_wise(data_.img_, data_.img_.domain(), data_.inp_)(vpp::_no_threads)| cube_drawer;
 
     glFlush();
 }
@@ -139,8 +154,9 @@ void Visualization<SO, 3, DATA>::reshape(int x, int y)
 template <class DATA>
 void Visualization<SO, 3, DATA>::GLInit(const char* window_name){
 
-    argc = 1;
-    glutInit(&argc, window_name);
+    int argc = 1;
+    char** argv=0;
+    glutInit(&argc, argv);
 
     //we initialilze the glut. functions
     glutInitDisplayMode(GLUT_SINGLE| GLUT_RGB| GLUT_DEPTH);

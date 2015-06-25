@@ -81,6 +81,7 @@ class Data< MANIFOLD, 2>{
 	void output_weights(const weights_mat& mat, const char* filename) const;
 	
 	void output_img(const char* filename) const;
+	void output_matval_img(const char* filename) const;
 	void output_nimg(const char* filename) const;
 //    private:
 	// Data members
@@ -247,6 +248,8 @@ void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
     vpp::fill(weights_, 1.0);
     edge_weights_ = vpp::clone(weights_);
     vpp::fill(edge_weights_, 1.0);
+    inp_ = inp_mat(noise_img_.domain());
+    vpp::fill(inp_, false);
     inpaint_ = false;
 }
 
@@ -275,6 +278,8 @@ void Data<MANIFOLD, 2>::rgb_readBrightness(const char* filename){
     vpp::fill(weights_, 1.0);
     edge_weights_ = vpp::clone(weights_);
     vpp::fill(edge_weights_, 1.0);
+    inp_ = inp_mat(noise_img_.domain());
+    vpp::fill(inp_, false);
     inpaint_ = false;
 }
 
@@ -315,12 +320,17 @@ void Data<MANIFOLD, 2>::rgb_readChromaticity(const char* filename){
     vpp::fill(weights_, 1.0);
     edge_weights_ = vpp::clone(weights_);
     vpp::fill(edge_weights_, 1.0);
-    inpaint_ = false;
+    inp_ = inp_mat(noise_img_.domain());
+    vpp::fill(inp_, false);
+     inpaint_ = false;
 }
 
 
 template <typename MANIFOLD>
 void Data<MANIFOLD, 2>::readMatrixDataFromCSV(const char* filename, const int nx, const int ny){
+    #ifdef TV_DATA_DEBUG
+	std::cout << "ReadMatrixData from CSV File..." << std::endl;
+    #endif
     noise_img_ = storage_type(ny, nx);
     vpp::fill(noise_img_, MANIFOLD::value_type::Zero());
 
@@ -371,12 +381,18 @@ void Data<MANIFOLD, 2>::readMatrixDataFromCSV(const char* filename, const int nx
     vpp::fill(weights_, 1.0);
     edge_weights_ = vpp::clone(weights_);
     vpp::fill(edge_weights_, 1.0);
+    inp_ = inp_mat(noise_img_.domain());
+    vpp::fill(inp_, false);
     inpaint_ = false;
 }
 
 // TODO: Generalize to general N
 template <typename MANIFOLD>
-void Data<MANIFOLD, 2>::create_nonsmooth_son(const int nx,const int ny){
+void Data<MANIFOLD, 2>::create_nonsmooth_son(const int ny,const int nx){
+    #ifdef TV_DATA_DEBUG
+	std::cout << "Create Nonsmooth SO(3) Picture..." << std::endl;
+    #endif
+
     const int N = MANIFOLD::value_type::RowsAtCompileTime; 
 
     static_assert(MANIFOLD::MyType==SO, "ERROR: Only possible for SO(N) manifolds");
@@ -412,6 +428,8 @@ void Data<MANIFOLD, 2>::create_nonsmooth_son(const int nx,const int ny){
     vpp::fill(weights_, 1.0);
     edge_weights_ = vpp::clone(weights_);
     vpp::fill(edge_weights_, 1.0);
+    inp_ = inp_mat(noise_img_.domain());
+    vpp::fill(inp_, false);
     inpaint_ = false;
 }
 
@@ -434,6 +452,21 @@ void Data<MANIFOLD, 2>::output_weights(const weights_mat& weights, const char* f
     f.close();
 }
 
+template < typename MANIFOLD >
+void Data<MANIFOLD, 2>::output_matval_img(const char* filename) const{
+    int nr = img_.nrows();
+    int nc = img_.ncols();
+
+    std::fstream f;
+    f.open(filename, std::fstream::out);
+    Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "", "\n");
+    for (int r=0; r<nr; r++){
+	const auto* cur = &img_(r,0);
+	for (int c=0; c<nc; c++)
+	    f << cur[c].format(CommaInitFmt);
+    }
+    f.close();
+}
 template < typename MANIFOLD >
 void Data<MANIFOLD, 2>::output_img(const char* filename) const{
     int nr = img_.nrows();
