@@ -7,7 +7,7 @@
 
 namespace tvmtl{
 
-// Small Helper Class to provide an member function interface to the OpenGL C-API
+// Small Helper Class to provide a member function interface to the OpenGL C-API
 template <typename T>
 struct Callback;
 

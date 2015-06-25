@@ -112,6 +112,9 @@ const typename Manifold < SO, N>::perm_type Manifold<SO, N>::permutation_matrix 
 // Squared SO distance function
 template <int N>
 inline typename Manifold < SO, N>::dist_type Manifold < SO, N>::dist_squared( cref_type x, cref_type y ){
+    #ifdef TV_SON_DEBUG
+	std::cout << "\nDist2 function with x=\n" << x << "\nand y=\n" << y << std::endl;
+    #endif 
     return (x.transpose() * y).log().squaredNorm();
 }
 
@@ -197,8 +200,19 @@ inline void Manifold <SO, N>::tangent_plane_base(cref_type x, tm_base_ref_type r
 
 template <int N>
 inline void Manifold <SO, N>::projector(ref_type x){
+    
+    #ifdef TV_SON_DEBUG
+	std::cout << "\n\nProjector with initial x=\n" << x << std::endl;
+    #endif     
+    
     Eigen::JacobiSVD<value_type> svd(x, Eigen::ComputeThinU | Eigen::ComputeThinV);
     x = svd.matrixU() * svd.matrixV().transpose();
+    //if(x.determinant() < 0)
+    //	x.row(1)*=-1.0;
+
+    #ifdef TV_SON_DEBUG
+	std::cout << "\nProjector with final x=\n" << x << std::endl;
+    #endif
 }
 
 

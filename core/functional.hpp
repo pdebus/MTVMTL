@@ -138,7 +138,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateWeights(){
 
     // TODO: Try to replace omp loops e.g. by box2d (nr-1,0) (nr-1,nc-1) or Iterator
     // Horizontal Neighbours
-    vpp::pixel_wise(X, N) | [&] (weights_type& x, const auto& nbh) { x = MANIFOLD::dist_squared(nbh(0,0),nbh(0,1)); };
+    vpp::pixel_wise(X, N)(/*vpp::_no_threads*/)| [&] (weights_type& x, const auto& nbh) { x = MANIFOLD::dist_squared(nbh(0,0),nbh(0,1)); };
     #pragma omp parallel for
     for(int r=0; r< nr; r++) 
 	X(r,nc-1)=0.0;
@@ -213,7 +213,7 @@ typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::result_type Functional< 
     }
     else{
 	auto f = [] (const value_type& i, const value_type& n) { return MANIFOLD::dist_squared(i,n); };
-	J1 = vpp::sum(vpp::pixel_wise(data_.img_, data_.noise_img_) | f);
+	J1 = vpp::sum(vpp::pixel_wise(data_.img_, data_.noise_img_)(/*vpp::_no_threads*/)| f);
     }
 
     updateWeights();

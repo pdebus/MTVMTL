@@ -375,7 +375,7 @@ void Data<MANIFOLD, 2>::readMatrixDataFromCSV(const char* filename, const int nx
 	++i;
     }
     img_ = vpp::clone(noise_img_, vpp::_border = 1);
-
+    fill_border_closest(img_);
     //TODO: Write separate input functions for weights and inpainting matrices
     weights_ = weights_mat(noise_img_.domain());
     vpp::fill(weights_, 1.0);
@@ -422,6 +422,7 @@ void Data<MANIFOLD, 2>::create_nonsmooth_son(const int ny,const int nx){
 
     vpp::pixel_wise(noise_img_, noise_img_.domain()) | son_inserter;
     img_ = vpp::clone(noise_img_, vpp::_border = 1);
+    fill_border_closest(img_);
 
     //TODO: Write separate input functions for weights and inpainting matrices
     weights_ = weights_mat(noise_img_.domain());

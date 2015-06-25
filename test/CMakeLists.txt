@@ -96,6 +96,14 @@ add_executable(sphere_tvmin_test sphere_tvmin_test.cpp)
 add_test(sphere_tvmin_test sphere_tvmin_test)
 target_link_libraries(sphere_tvmin_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 
+add_executable(son_functional_test son_functional_test.cpp)
+add_test(son_functional_test son_functional_test)
+target_link_libraries(son_functional_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+
+add_executable(son_tvmin_test son_tvmin_test.cpp)
+add_test(son_tvmin_test son_tvmin_test)
+target_link_libraries(son_tvmin_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+
 add_executable(colorization_test colorization_test.cpp)
 add_test(colorization_test colorization_test)
 target_link_libraries(colorization_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
