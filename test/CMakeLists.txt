@@ -104,6 +104,11 @@ add_executable(son_tvmin_test son_tvmin_test.cpp)
 add_test(son_tvmin_test son_tvmin_test)
 target_link_libraries(son_tvmin_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 
+add_executable(son_inpainting_test son_inpainting_test.cpp)
+add_test(son_inpainting_test son_inpainting_test)
+target_link_libraries(son_inpainting_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+
+
 add_executable(colorization_test colorization_test.cpp)
 add_test(colorization_test colorization_test)
 target_link_libraries(colorization_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})

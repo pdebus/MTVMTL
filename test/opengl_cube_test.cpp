@@ -1,7 +1,10 @@
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 #include <iostream>
+#include <cstdlib>
 
  GLfloat xRotated, yRotated, zRotated;
+ int ny,nx; 
+
 void init(void)
 {
 glClearColor(1.0,1.0,1.0,0);
@@ -19,9 +22,6 @@ void DrawCube(void)
     // Accept fragment if it closer to the camera than the former one
     glDepthFunc(GL_LESS); 
 
-    int nx=5;
-    int ny=6;
-    
     int max =  nx ^ ((nx ^ ny) & -(nx < ny));
 
     float scaling = 2.0 / (3.0 * max);
@@ -39,9 +39,6 @@ void DrawCube(void)
 	    
 	    glPushMatrix();
 	    glTranslatef(j*spacing, -i*spacing, 0.0);
-	
-		std::cout << "\ncoord0: " << i << " coord1 " << j << std::endl;
-		std::cout << "translateX: " << j*spacing << " translateY: " << -i*spacing << std::endl;
 	    
 	    glRotatef(xRotated,1.0,0.0,0.0);
 	    // rotation about Y axis
@@ -96,6 +93,14 @@ void animation(void)
     DrawCube();
 }
 
+/* Callback handler for normal-key event */
+void keyboard(unsigned char key, int x, int y) {
+   switch (key) {
+         case 27:     // ESC key
+	    glutLeaveMainLoop();
+            break;
+      }
+}
 
 void reshape(int x, int y)
 {
@@ -116,19 +121,29 @@ void reshape(int x, int y)
 }
 
 int main(int argc, char** argv){
+    nx = 30;
+    ny = 30;
+
+    if(argc==3){
+	ny=atoi(argv[1]);
+	nx=atoi(argv[2]);
+    }
 
     glutInit(&argc, argv);
     //we initizlilze the glut. functions
+    glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
     glutInitDisplayMode(GLUT_SINGLE| GLUT_RGB| GLUT_DEPTH);
     glutInitWindowPosition(100, 100);
     glutCreateWindow(argv[0]);
     init();
     glutDisplayFunc(DrawCube);
     glutReshapeFunc(reshape);
-
+    glutKeyboardFunc(keyboard);
     //Set the function for the animation.
     //glutIdleFunc(animation);
     glutMainLoop();
+
+    std::cout << "After MainLoop\n";
 return 0;
 } 
 

@@ -177,7 +177,7 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::smoothening(int smooth
 	};
 
 	vpp::pixel_wise(data_.img_, N)(/*vpp::_no_threads*/) | boxfilter;
-	data_.output_matval_img("son_img2.csv");
+	//data_.output_matval_img("son_img2.csv");
 	vpp::copy(data_.img_, temp_img);
 	Jnew = func_.evaluateJ();
 	step++;

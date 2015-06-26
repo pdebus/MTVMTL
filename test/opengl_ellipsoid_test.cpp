@@ -45,41 +45,6 @@ void initLighting()
 
 }
 
-
-template <typename T>
-struct Callback;
-
-template <typename Ret, typename... Params>
-struct Callback<Ret(Params...)> {
-   template <typename... Args> 
-   static Ret callback(Args... args) {                    
-         func(args...);  
-      }
-   static std::function<Ret(Params...)> func; 
-};
-
-template <typename Ret, typename... Params>
-std::function<Ret(Params...)> Callback<Ret(Params...)>::func;
-
-
-
-struct foo {
-    void foofunc();
-    void bar();
-};
-
-void foo::foofunc(){
-    typedef void (*callback_t)();
-    Callback<void()>::func = std::bind(&foo::bar,this);
-    callback_t func = static_cast<callback_t>(Callback<void()>::callback);
-    glutDisplayFunc(func);
-}
-
-void foo::bar(){
-    
-    }
-
-
 int main (int argc, char **argv)
 {   //foo f;
     glutInit(&argc, argv); 

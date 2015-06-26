@@ -8,7 +8,7 @@
 #include <Eigen/Geometry>
 
 //OpenGL includes
-#include <GL/glut.h>
+#include <GL/freeglut.h>
 
 // video++ includes
 #include <vpp/vpp.hh>
@@ -35,18 +35,23 @@ class Visualization< SO, 3, DATA>{
 	typedef Visualization<SO,3, DATA> myType;
 
 	// Constructor
-	Visualization(DATA& dat): data_(dat) {}
+	Visualization(DATA& dat): data_(dat), paint_inpainted_pixel_(false) {}
 
 	// Static members GL Interface
 	static void reshape(int x, int y);
-
+	static void keyboard(unsigned char key, int x, int y);
 	// Class members GL Intergace
 	void GLInit(const char* filename);
 	void draw(void);
 
+	//Acces methods
+	void paint_inpainted_pixel(bool setFlag) {paint_inpainted_pixel_ = setFlag; }
+
     private:
 	DATA& data_;
+	bool paint_inpainted_pixel_;
 };
+
 
 template <class DATA>
 void Visualization<SO, 3, DATA>::draw(void)
@@ -79,7 +84,7 @@ void Visualization<SO, 3, DATA>::draw(void)
     glTranslatef(-1.1, 1.1, z_distance);
 
     auto cube_drawer = [&](const typename mf_t::value_type& v, const vpp::vint2& coords, const typename DATA::inp_type& i){
-	if(!i){
+	if(paint_inpainted_pixel_ || !i){
 	    glPushMatrix();
 	    glTranslatef(coords(1) * spacing, -coords(0) * spacing, 0.0);
 	    
@@ -152,6 +157,17 @@ void Visualization<SO, 3, DATA>::reshape(int x, int y)
 }
 
 template <class DATA>
+/* Callback handler for normal-key event */
+void Visualization<SO, 3, DATA>::keyboard(unsigned char key, int x, int y) {
+   switch (key) {
+         case 27:     // ESC key
+	    glutLeaveMainLoop();
+            break;
+      }
+}
+
+
+template <class DATA>
 void Visualization<SO, 3, DATA>::GLInit(const char* window_name){
 
     int argc = 1;
@@ -159,6 +175,7 @@ void Visualization<SO, 3, DATA>::GLInit(const char* window_name){
     glutInit(&argc, argv);
 
     //we initialilze the glut. functions
+    glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
     glutInitDisplayMode(GLUT_SINGLE| GLUT_RGB| GLUT_DEPTH);
     glutInitWindowPosition(100, 100);
     glutCreateWindow(window_name);
@@ -167,6 +184,8 @@ void Visualization<SO, 3, DATA>::GLInit(const char* window_name){
     
     glutDisplayFunc(getCFunctionPointer(&myType::draw,this));
     glutReshapeFunc(reshape);
+
+    glutKeyboardFunc(keyboard);
 
     glutMainLoop();
 } 
