@@ -56,6 +56,39 @@ template <typename MatrixType>
 result = X;
 }
 
+template <typename DerivedX, typename DerivedY, typename DerivedZ>
+void MatrixRootFrechetDerivative(const Eigen::MatrixBase<DerivedX>& X, const Eigen::MatrixBase<DerivedY>& E, Eigen::MatrixBase<DerivedZ>& result){
+
+    // Matrix Parameters
+    typedef Eigen::internal::traits<DerivedX> Traits;
+    typedef typename Traits::Scalar Scalar;
+    static const int Rows = Traits::RowsAtCompileTime, Cols = Traits::ColsAtCompileTime;
+    static const int Options = DerivedX::Options;
+    static const int MaxRows = Traits::MaxRowsAtCompileTime, MaxCols = Traits::MaxColsAtCompileTime;
+ 
+    // Switch to complex arithmetic
+    typedef std::complex<Scalar> ComplexScalar;
+    typedef Eigen::Matrix<ComplexScalar, Rows, Cols, Options, MaxRows, MaxCols> ComplexMatrix;
+
+    ComplexMatrix CX = X.template cast<ComplexScalar>();
+    ComplexMatrix CE = E.template cast<ComplexScalar>();
+    ComplexMatrix CResult;
+
+    // Complex Schur Decomposition
+    const Eigen::ComplexSchur<ComplexMatrix> SchurOfX(CX);
+    ComplexMatrix T = SchurOfX.matrixT();
+    ComplexMatrix U = SchurOfX.matrixU();    
+
+    ComplexMatrix sqrtT;
+    CE = U.adjoint()*CE*U;
+
+    Eigen::MatrixSquareRootTriangular<ComplexMatrix>(T).compute(sqrtT);
+    SolveTriangularSylvester(sqrtT, sqrtT, CE, CResult);
+
+    CResult = U * CResult * U.adjoint();
+
+    result = CResult.real();
+}
 
 template <typename DerivedX, typename DerivedY, typename DerivedZ>
 void MatrixLogarithmFrechetDerivative(const Eigen::MatrixBase<DerivedX>& X, const Eigen::MatrixBase<DerivedY>& E, Eigen::MatrixBase<DerivedZ>& result){
@@ -78,6 +111,7 @@ void MatrixLogarithmFrechetDerivative(const Eigen::MatrixBase<DerivedX>& X, cons
     // Number of Square roots
     const int s = 4;
     // Order of the Pade approximant
+    // If this is changed, we also need new weights and nodes
     const int m = 7;
 
     // Complex Schur Decomposition
@@ -140,7 +174,27 @@ void KroneckerDLog(const Eigen::MatrixBase<DerivedX>& X, Eigen::MatrixBase<Deriv
     Result = R;
 }
 
+template <typename DerivedX, typename DerivedY>
+void KroneckerDSqrt(const Eigen::MatrixBase<DerivedX>& X, Eigen::MatrixBase<DerivedY>& Result){
+    
+    typedef Eigen::internal::traits<DerivedX> Traits;
+    typedef typename Traits::Scalar Scalar;
+    static const int Rows = Traits::RowsAtCompileTime;
 
+    DerivedX E, PartialDiff; 
+    DerivedY R;
+
+    for (int i = 0; i < Rows; i++) {
+    	for (int j = 0; j < Rows; j++) {
+	    E = DerivedX::Zero();
+	    E(i,j) = 1.0;
+	    MatrixRootFrechetDerivative(X, E, PartialDiff);
+	    PartialDiff.transposeInPlace();
+	    R.row(i*Rows+j) = Eigen::Map<Eigen::VectorXd>(PartialDiff.data(), PartialDiff.size());
+    	}
+    }
+    Result = R;
+}
 
 
 } // end namespace tvmtl

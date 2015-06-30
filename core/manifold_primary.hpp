@@ -10,13 +10,6 @@ namespace tvmtl {
 template < enum MANIFOLD_TYPE MF, int N >
 struct Manifold { };
 
-// Specialization SPD
-template < int N >
-struct Manifold< SPD, N > {
-    public:
-	static const MANIFOLD_TYPE MyType = SPD;
-};
-
 } // end namespace tvmtl
 
 
