@@ -186,8 +186,8 @@ inline void Manifold <SPD, N>::tangent_plane_base(cref_type x, tm_base_ref_type 
 
     for(int i=0; i<d; i++){
 	T.setZero();
-	T.col(i)=S.col(i);
-	T = T*S;
+	T.col(i) = S.col(i);
+	T = T * S;
 
 	result.col(k) = Eigen::Map<Eigen::VectorXd>(T.data(), T.size());
 	++k;
@@ -198,10 +198,10 @@ inline void Manifold <SPD, N>::tangent_plane_base(cref_type x, tm_base_ref_type 
 	    T.setZero();
 	    T.col(i) = S.col(j);
 	    T.col(j) = S.col(i);
-	    T=T*S;
+	    T = T * S;
 
 	    result.col(k) = Eigen::Map<Eigen::VectorXd>(T.data(), T.size());
-	    k++;
+	    ++k;
 	}
 }
 
