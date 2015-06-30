@@ -56,6 +56,13 @@ class Data< MANIFOLD, 2>{
 	typedef bool inp_type;
 	typedef vpp::image2d<inp_type> inp_mat;
 
+	inline bool doInpaint() const { return inpaint_; }
+	    
+	// Data Init functions
+	inline void initWeights();
+	inline void initEdgeWeights();
+	inline void initInp();
+
 	// Input functions
 	void rgb_imread(const char* filename); 
 	void rgb_readBrightness(const char* filename); 
@@ -75,7 +82,6 @@ class Data< MANIFOLD, 2>{
 	void findInpWeights(const int channel=2);
 	void createRandInpWeights(const double threshold);
 
-	inline bool doInpaint() const { return inpaint_; }
 
 	// OutputFunctions
 	void output_weights(const weights_mat& mat, const char* filename) const;
@@ -112,6 +118,26 @@ template < typename MANIFOLD >
 void Data<MANIFOLD, 2>::setEdgeWeights(const weights_mat& w){
     edge_weights_= vpp::clone(w);
 }
+
+template < typename MANIFOLD >
+void Data<MANIFOLD, 2>::initWeights(){
+    weights_ = weights_mat(noise_img_.domain());
+    vpp::fill(weights_, 1.0);
+}
+
+template < typename MANIFOLD >
+void Data<MANIFOLD, 2>::initInp(){
+    inp_ = inp_mat(noise_img_.domain());
+    vpp::fill(inp_, false);
+    inpaint_ = false;
+}
+
+template < typename MANIFOLD >
+void Data<MANIFOLD, 2>::initEdgeWeights(){
+    edge_weights_ = weights_mat(noise_img_.domain());
+    vpp::fill(edge_weights_, 1.0);
+}
+
 
 // FIXME: This is problematic for greyscale pictures since vuchar3 and vu[i] is hardcoded, works only due to range check of Eigen for []
 template < typename MANIFOLD >

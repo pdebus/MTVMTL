@@ -98,16 +98,19 @@ target_link_libraries(sphere_tvmin_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}
 
 add_executable(son_functional_test son_functional_test.cpp)
 add_test(son_functional_test son_functional_test)
-target_link_libraries(son_functional_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+target_link_libraries(son_functional_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 
 add_executable(son_tvmin_test son_tvmin_test.cpp)
 add_test(son_tvmin_test son_tvmin_test)
-target_link_libraries(son_tvmin_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+target_link_libraries(son_tvmin_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 
 add_executable(son_inpainting_test son_inpainting_test.cpp)
 add_test(son_inpainting_test son_inpainting_test)
-target_link_libraries(son_inpainting_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+target_link_libraries(son_inpainting_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 
+add_executable(son_fingerprint_test son_fingerprint_test.cpp)
+add_test(son_fingerprint_test son_fingerprint_test)
+target_link_libraries(son_fingerprint_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 
 add_executable(colorization_test colorization_test.cpp)
 add_test(colorization_test colorization_test)
