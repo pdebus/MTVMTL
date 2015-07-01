@@ -24,6 +24,8 @@ int main(int argc, const char *argv[])
 	typedef Visualization<SPD, 3, data_t> visual_t;
 
 	visual_t myVisual(myData);
+	myVisual.saveImage("spd_25x25.png");
+
 	std::cout << "Starting OpenGL-Renderer..." << std::endl;
 	myVisual.GLInit("SPD(N) Ellipsoid Visualization 25x25 ");
 	std::cout << "Rendering finished." << std::endl;

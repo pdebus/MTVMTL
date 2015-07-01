@@ -7,9 +7,6 @@
 //Eigen includes
 #include <Eigen/Geometry>
 
-//OpenCV includes
-#include <opencv2/opencv.hpp>
-
 //OpenGL includes
 #include <GL/freeglut.h>
 
@@ -41,24 +38,20 @@ class Visualization< SO, 3, DATA>{
 	Visualization(DATA& dat): data_(dat), paint_inpainted_pixel_(false) {}
 
 	// Static members GL Interface
+	static void reshape(int x, int y);
+	static void keyboard(unsigned char key, int x, int y);
 	
 	// Class members GL Intergace
 	void GLInit(const char* filename);
-	void reshape(int x, int y);
 	void draw(void);
-	void saveImage(char* filename);
-	void keyboard(unsigned char key, int x, int y);
-	//
+	void saveImage(const char* filename);
+	
 	//Acces methods
 	void paint_inpainted_pixel(bool setFlag) {paint_inpainted_pixel_ = setFlag; }
 
     private:
-	void storeImage(char* filename);
-
 	DATA& data_;
 	bool paint_inpainted_pixel_;
-	char* filename_;
-	int width_, height_;
 };
 
 // Specialization SPD(3) 
@@ -72,25 +65,23 @@ class Visualization< SPD, 3, DATA>{
 	Visualization(DATA& dat): data_(dat), filename_(0), paint_inpainted_pixel_(false) {}
 
 	// Static members GL Interface
+	static void reshape(int x, int y);
 	static void initLighting();
 
 	// Class members GL Interface
 	void GLInit(const char* windowname);
-	void reshape(int x, int y);
-	void draw(void);
-	void saveImage(char* filename);
 	void keyboard(unsigned char key, int x, int y);
+	void saveImage(const char* filename);
+	void draw(void);
 
 	//Acces methods
 	void paint_inpainted_pixel(bool setFlag) {paint_inpainted_pixel_ = setFlag; }
 
     private:
-	void storeImage(char* filename);
 
 	DATA& data_;
 	bool paint_inpainted_pixel_;
 	char* filename_;
-	int width_, height_;
 };
 
 
@@ -194,10 +185,6 @@ template <class DATA>
 void Visualization<SO, 3, DATA>::reshape(int x, int y)
 {
     if (y == 0 || x == 0) return;  //Nothing is visible then, so return
-
-    width_ = x;
-    height_ = y;
-
     glMatrixMode(GL_PROJECTION);  
     glLoadIdentity();
     gluPerspective(45.0,(GLdouble)x/(GLdouble)y,0.1,100.0);
@@ -210,20 +197,22 @@ void Visualization<SO, 3, DATA>::keyboard(unsigned char key, int x, int y) {
    switch (key) {
          case 27:     // ESC key
 	 case 113:	// q ley  
-	    if(filename_!=0) storeImage(filename_);
 	    glutLeaveMainLoop();
             break;
       }
 }
 
 template <class DATA>
-void Visualization<SO, 3, DATA>::saveImage(char* filename){
-    filename_ = filename;
-}
+void Visualization<SO, 3, DATA>::saveImage(const char* filename)
+{
+    GLint viewport[4]; //current viewport  
+        
+    //get current viewport  
+    glGetIntegerv(GL_VIEWPORT, viewport);  
+    int w = viewport[2];  
+    int h = viewport[3];  
 
-template <class DATA>
-void Visualization<SO, 3, DATA>::storeImage(char* filename){
-    cv::Mat img(width_, height_, CV_8UC3);
+    cv::Mat img(w, h, CV_8UC3);
     glPixelStorei(GL_PACK_ALIGNMENT, (img.step & 3)?1:4);
     glPixelStorei(GL_PACK_ROW_LENGTH, img.step/img.elemSize());
     glReadPixels(0, 0, img.cols, img.rows, GL_BGR_EXT, GL_UNSIGNED_BYTE, img.data);
@@ -248,21 +237,14 @@ void Visualization<SO, 3, DATA>::GLInit(const char* window_name){
     glClearColor(1.0,1.0,1.0,0);
     
     glutDisplayFunc(getCFunctionPointer(&myType::draw,this));
-    
-	typedef void (*reshape_mptr)(int, int);
-	Callback<void(int, int)>::func = std::bind(&myType::reshape, this, std::placeholders::_1, std::placeholders::_2);
-	reshape_mptr reshape_ptr = static_cast<reshape_mptr>(Callback<void(int, int)>::callback);
-    glutReshapeFunc(reshape_ptr);
+    glutReshapeFunc(reshape);
 
-	typedef void (*keyboard_mptr)(unsigned char, int, int);
-	Callback<void(unsigned char, int, int)>::func = std::bind(&myType::keyboard, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
-	keyboard_mptr keyboard_ptr = static_cast<keyboard_mptr>(Callback<void(unsigned char, int, int)>::callback);
-    glutKeyboardFunc(keyboard_ptr);
+    glutKeyboardFunc(keyboard);
 
     glutMainLoop();
 } 
 
-// IMPLEMENTATION SPD
+// Implementation SPD
 
 template <class DATA>
 void Visualization<SPD, 3, DATA>::initLighting()
@@ -371,10 +353,6 @@ template <class DATA>
 void Visualization<SPD, 3, DATA>::reshape(int x, int y)
 {
     if (y == 0 || x == 0) return;  //Nothing is visible then, so return
-    
-    width_ = x;
-    height_ = y;
-    
     glMatrixMode(GL_PROJECTION);  
     glLoadIdentity();
     gluPerspective(45.0,(GLdouble)x/(GLdouble)y,0.1,100.0);
@@ -387,22 +365,23 @@ void Visualization<SPD, 3, DATA>::keyboard(unsigned char key, int x, int y) {
    switch (key) {
          case 27:	// ESC key
 	 case 113:	// q ley
-	    if(filename_!=0) storeImage(filename_);
+	    if(filename_!=0) saveImage(filename_);
 	    glutLeaveMainLoop();
             break;
       }
 }
 
 template <class DATA>
-void Visualization<SPD, 3, DATA>::saveImage(char* filename){
-    filename_ = filename;
-}
-
-template <class DATA>
-void Visualization<SPD, 3, DATA>::storeImage(char* filename)
+void Visualization<SPD, 3, DATA>::saveImage(const char* filename)
 {
-    std::cout << "Saving image...\n Width: " << width_ << "\n Height: " << height_ << "\n Filename: " << filename << std::endl;
-    cv::Mat img(width_, height_, CV_8UC3);
+    GLint viewport[4]; //current viewport  
+        
+    //get current viewport  
+    glGetIntegerv(GL_VIEWPORT, viewport);  
+    int w = viewport[2];  
+    int h = viewport[3];  
+
+    cv::Mat img(w, h, CV_8UC3);
     glPixelStorei(GL_PACK_ALIGNMENT, (img.step & 3)?1:4);
     glPixelStorei(GL_PACK_ROW_LENGTH, img.step/img.elemSize());
     glReadPixels(0, 0, img.cols, img.rows, GL_BGR_EXT, GL_UNSIGNED_BYTE, img.data);
@@ -429,14 +408,10 @@ void Visualization<SPD, 3, DATA>::GLInit(const char* window_name){
     glClearColor(1.0,1.0,1.0,0);
     
     glutDisplayFunc(getCFunctionPointer(&myType::draw,this));
-
-	typedef void (*reshape_mptr)(int, int);
-	Callback<void(int, int)>::func = std::bind(&myType::reshape, this, std::placeholders::_1, std::placeholders::_2);
-	reshape_mptr reshape_ptr = static_cast<reshape_mptr>(Callback<void(int, int)>::callback);
-    glutReshapeFunc(reshape_ptr);
+    glutReshapeFunc(reshape);
     
     typedef void (*keyboard_mptr)(unsigned char, int, int);
-    Callback<void(unsigned char, int, int)>::func = std::bind(&myType::keyboard, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3);
+    Callback<void(unsigned char, int, int)>::func = std::bind(&myType::keyboard, this);
     keyboard_mptr keyboard_ptr = static_cast<keyboard_mptr>(Callback<void(unsigned char, int, int)>::callback);
 	    glutKeyboardFunc(keyboard_ptr);
 

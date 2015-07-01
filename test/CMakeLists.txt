@@ -78,7 +78,7 @@ target_link_libraries(son_data_test ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp)
 
 add_executable(spd_data_test spd_data_test.cpp)
 add_test(spd_data_test spd_data_test )
-target_link_libraries(spd_data_test ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp)
+target_link_libraries(spd_data_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp)
 
 add_executable(functional_test functional_test.cpp)
 add_test(functional_test functional_test)
