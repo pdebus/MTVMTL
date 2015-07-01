@@ -122,13 +122,14 @@ void Visualization<SO, 3, DATA>::draw(void)
     #endif
  
     glLoadIdentity();
-    //glTranslatef(-nx * 0.5 * spacing + 1.0, ny*0.5*spacing - 1.0, z_distance);
-    glTranslatef(-1.1, 1.1, z_distance);
+    //glTranslatef(-1.1, 1.1, z_distance); // Left->Right, Top->Bottom
+    glTranslatef(-1.1, -1.1, z_distance); // Left->Right, Bottom->Top
 
     auto cube_drawer = [&](const typename mf_t::value_type& v, const vpp::vint2& coords, const typename DATA::inp_type& i){
 	if(paint_inpainted_pixel_ || !i){
 	    glPushMatrix();
-	    glTranslatef(coords(1) * spacing, -coords(0) * spacing, 0.0);
+	    //glTranslatef(coords(1) * spacing, -coords(0) * spacing, 0.0); //Left->Right, Top->Bottom
+	    glTranslatef(coords(1) * spacing, coords(0) * spacing, 0.0); //Left->Right, Bottom->Top
 	    
 	    #ifdef TV_VISUAL_DEBUG
 		std::cout << "\ncoord0: " << coords(0) << " coord1 " << coords(1) << std::endl;
@@ -223,7 +224,7 @@ void Visualization<SO, 3, DATA>::saveImage(char* filename){
 
 template <class DATA>
 void Visualization<SO, 3, DATA>::storeImage(char* filename){
-    cv::Mat img(width_, height_, CV_8UC3);
+    cv::Mat img(height_, width_, CV_8UC3);
     glPixelStorei(GL_PACK_ALIGNMENT, (img.step & 3)?1:4);
     glPixelStorei(GL_PACK_ROW_LENGTH, img.step/img.elemSize());
     glReadPixels(0, 0, img.cols, img.rows, GL_BGR_EXT, GL_UNSIGNED_BYTE, img.data);
@@ -329,19 +330,23 @@ void Visualization<SPD, 3, DATA>::draw(void)
     #endif
  
     glLoadIdentity();
-    //glTranslatef(-nx * 0.5 * spacing + 1.0, ny*0.5*spacing - 1.0, z_distance);
-    glTranslatef(-1.2, 1.2, z_distance);
+    
+    //glTranslatef(-1.2, 1.2, z_distance); // Left->Right, Top->Bottom
+    glTranslatef(-1.2, -1.2, z_distance); // Left->Right, Bottom->Top
 
     auto ellipsoid_drawer = [&](const typename mf_t::value_type& v, const vpp::vint2& coords, const typename DATA::inp_type& i){
 	if(paint_inpainted_pixel_ || !i){
 	    glPushMatrix();
-	    glTranslatef(coords(1) * spacing, -coords(0) * spacing, 0.0);
+
+	    //glTranslatef(coords(1) * spacing, -coords(0) * spacing, 0.0); //Left->Right, Top->Bottom
+	    glTranslatef(coords(1) * spacing, coords(0) * spacing, 0.0); //Left->Right, Bottom->Top
+	    
 	    
 	    Eigen::Affine3f t = Eigen::Affine3f::Identity();
 	    Eigen::SelfAdjointEigenSolver<typename mf_t::value_type> es(v);
 	    
 	    // anisotropic scaling transfomation and rotation
-	    t.linear() = (es.eigenvalues().asDiagonal() * es.eigenvectors()).cast<float>();
+	    t.linear() = (es.eigenvectors() * es.eigenvalues().asDiagonal() ).cast<float>();
 	    //t.linear() = es.eigenvalues().cast<float>().asDiagonal(); 
 	    glMultMatrixf(t.data());
 	   
@@ -402,7 +407,7 @@ template <class DATA>
 void Visualization<SPD, 3, DATA>::storeImage(char* filename)
 {
     std::cout << "Saving image...\n Width: " << width_ << "\n Height: " << height_ << "\n Filename: " << filename << std::endl;
-    cv::Mat img(width_, height_, CV_8UC3);
+    cv::Mat img(height_, width_, CV_8UC3);
     glPixelStorei(GL_PACK_ALIGNMENT, (img.step & 3)?1:4);
     glPixelStorei(GL_PACK_ROW_LENGTH, img.step/img.elemSize());
     glReadPixels(0, 0, img.cols, img.rows, GL_BGR_EXT, GL_UNSIGNED_BYTE, img.data);

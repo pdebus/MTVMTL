@@ -429,8 +429,8 @@ void Data<MANIFOLD, 2>::create_nonsmooth_son(const int ny,const int nx){
 
     auto son_inserter = [&] (typename MANIFOLD::value_type& v, const vpp::vint2& coord){
 
-	typename MANIFOLD::scalar_type x = (coord(1)-1.0) / nx;
-	typename MANIFOLD::scalar_type y = (coord(0)-1.0) / ny;
+	typename MANIFOLD::scalar_type x = coord(1)*1.0 / nx;
+	typename MANIFOLD::scalar_type y = coord(0)*1.0 / ny;
 	Eigen::Matrix<typename MANIFOLD::scalar_type, N, 1> rotation_axis;
 	if(x > 0.5)
 	    rotation_axis << 2.0 * x, y, 0.0;
