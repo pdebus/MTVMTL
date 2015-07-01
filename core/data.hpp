@@ -73,6 +73,7 @@ class Data< MANIFOLD, 2>{
 	// Random Input functions
 	// TODO: Paramaterize for manifold type
 	void create_nonsmooth_son(const int ny, const int nx);
+	void create_nonsmooth_spd(const int ny, const int nx);
 
 	// EdgeFunctions
 	void findEdgeWeights();
@@ -459,6 +460,59 @@ void Data<MANIFOLD, 2>::create_nonsmooth_son(const int ny,const int nx){
     vpp::fill(inp_, false);
     inpaint_ = false;
 }
+
+// TODO: Generalize to general N
+template <typename MANIFOLD>
+void Data<MANIFOLD, 2>::create_nonsmooth_spd(const int ny,const int nx){
+    #ifdef TV_DATA_DEBUG
+	std::cout << "Create Nonsmooth SPD(3) Picture..." << std::endl;
+    #endif
+
+    const int N = MANIFOLD::value_type::RowsAtCompileTime; 
+
+    static_assert(MANIFOLD::MyType==SPD, "ERROR: Only possible for SPD(N) manifolds");
+    static_assert(N==3, "ERROR: Only possible for SPD(3) manifolds");
+    
+    noise_img_ = storage_type(ny, nx);
+
+    auto spd_inserter = [&] (typename MANIFOLD::value_type& v, const vpp::vint2& coord){
+
+	typename MANIFOLD::scalar_type x = (coord(1)-1.0) / nx;
+	typename MANIFOLD::scalar_type y = (coord(0)-1.0) / ny;
+	
+	Eigen::Matrix<typename MANIFOLD::scalar_type, N, N> R;
+	Eigen::DiagonalMatrix< typename MANIFOLD::scalar_type, N> D(N);
+	Eigen::Matrix<typename MANIFOLD::scalar_type, N, 1> rotation_axis;
+	typename MANIFOLD::scalar_type alpha;
+
+	if(x + y < 1.0){
+	    rotation_axis << x, y, 2.0;
+	    alpha = x + 2.0 * y;
+	}
+	else{
+	    rotation_axis << y, -x, 1.0;
+	    alpha = y + 2.0 * x;
+	}
+	
+	D.diagonal() << x + 0.2, y + 0.2, 0.5;
+	R  = Eigen::AngleAxis<typename MANIFOLD::scalar_type>(alpha, rotation_axis.normalized());
+	v = R.transpose() * D * R;
+    };
+
+    vpp::pixel_wise(noise_img_, noise_img_.domain()) | spd_inserter;
+    img_ = vpp::clone(noise_img_, vpp::_border = 1);
+    fill_border_closest(img_);
+
+    //TODO: Write separate input functions for weights and inpainting matrices
+    weights_ = weights_mat(noise_img_.domain());
+    vpp::fill(weights_, 1.0);
+    edge_weights_ = vpp::clone(weights_);
+    vpp::fill(edge_weights_, 1.0);
+    inp_ = inp_mat(noise_img_.domain());
+    vpp::fill(inp_, false);
+    inpaint_ = false;
+}
+
 
 template < typename MANIFOLD >
 void Data<MANIFOLD, 2>::output_weights(const weights_mat& weights, const char* filename) const{

@@ -52,7 +52,34 @@ class Visualization< SO, 3, DATA>{
 	bool paint_inpainted_pixel_;
 };
 
+// Specialization SPD(3) 
+template <class DATA>
+class Visualization< SPD, 3, DATA>{
+    public:
+        typedef Manifold<SPD,3> mf_t;
+	typedef Visualization<SPD,3, DATA> myType;
 
+	// Constructor
+	Visualization(DATA& dat): data_(dat), paint_inpainted_pixel_(false) {}
+
+	// Static members GL Interface
+	static void reshape(int x, int y);
+	static void keyboard(unsigned char key, int x, int y);
+	static void initLighting();
+	// Class members GL Intergace
+	void GLInit(const char* filename);
+	void draw(void);
+
+	//Acces methods
+	void paint_inpainted_pixel(bool setFlag) {paint_inpainted_pixel_ = setFlag; }
+
+    private:
+	DATA& data_;
+	bool paint_inpainted_pixel_;
+};
+
+
+// Implementation SO(3)
 template <class DATA>
 void Visualization<SO, 3, DATA>::draw(void)
 {
@@ -146,6 +173,8 @@ void Visualization<SO, 3, DATA>::draw(void)
 }
 
 
+
+
 template <class DATA>
 void Visualization<SO, 3, DATA>::reshape(int x, int y)
 {
@@ -190,10 +219,155 @@ void Visualization<SO, 3, DATA>::GLInit(const char* window_name){
     glutMainLoop();
 } 
 
+// Implementation SPD
+
+template <class DATA>
+void Visualization<SPD, 3, DATA>::initLighting()
+{
+
+    // Set lighting intensity and color
+    GLfloat light_ambient[]  = { 0.0f, 0.0f, 0.0f, 1.0f };
+    GLfloat light_diffuse[]  = { 1.0f, 1.0f, 1.0f, 1.0f };
+    GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    // Light source position
+    GLfloat light_position[] = { 2.0f, 5.0f, 5.0f, 0.0f };  
+    
+    // Enable lighting
+    glEnable(GL_LIGHT0);
+    glEnable(GL_NORMALIZE);
+    glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHTING);
+
+     // Set lighting intensity and color
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+    
+    // Set the light position
+     glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+
+}
+
+template <class DATA>
+void Visualization<SPD, 3, DATA>::draw(void)
+{
+    // Color Definitions
+    GLfloat mat_ambient[]    = { 0.7f, 0.7f, 0.7f, 1.0f };
+    GLfloat mat_diffuse[]    = { 0.8f, 0.8f, 0.8f, 1.0f };
+    GLfloat mat_specular[]   = { 1.0f, 1.0f, 1.0f, 1.0f };
+    GLfloat high_shininess =  100.0f; 
+
+    glMatrixMode(GL_MODELVIEW);
+    // clear the drawing buffer.
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    // Enable depth test
+    glEnable(GL_DEPTH_TEST);
+    // Accept fragment if it closer to the camera than the former one
+    glDepthFunc(GL_LESS); 
+
+    // Set material properties
+    glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    glMaterialf(GL_FRONT, GL_SHININESS, high_shininess);
+
+    int nx=data_.img_.ncols();
+    int ny=data_.img_.nrows();
+    
+    int max =  nx ^ ((nx ^ ny) & -(nx < ny));
+   
+    float scaling = 2.0 / (3.0 * max);
+    float spacing = 4.0 * scaling;
+    float z_distance= -3.0;
+    
+    #ifdef TV_VISUAL_DEBUG
+	std::cout << "ny: " << ny << " nx: " << nx << std::endl;
+	std::cout << "Maximum: " << max << " Scaling " << scaling << std::endl;
+    #endif
+ 
+    glLoadIdentity();
+    //glTranslatef(-nx * 0.5 * spacing + 1.0, ny*0.5*spacing - 1.0, z_distance);
+    glTranslatef(-1.1, 1.1, z_distance);
+
+    auto ellipsoid_drawer = [&](const typename mf_t::value_type& v, const vpp::vint2& coords, const typename DATA::inp_type& i){
+	if(paint_inpainted_pixel_ || !i){
+	    glPushMatrix();
+	    glTranslatef(coords(1) * spacing, -coords(0) * spacing, 0.0);
+	    
+	    Eigen::Affine3f t = Eigen::Affine3f::Identity();
+	    Eigen::SelfAdjointEigenSolver<typename mf_t::value_type> es(v);
+	    
+	    // anisotropic scaling transfomation and rotation
+	    t.linear() = (es.eigenvalues().asDiagonal() * es.eigenvectors()).cast<float>();
+	    //t.linear() = es.eigenvalues().cast<float>().asDiagonal(); 
+	    glMultMatrixf(t.data());
+	   
+	    #ifdef TV_VISUAL_DEBUG
+		std::cout << "Transformation matrix:\n" << t.matrix() << std::endl;
+	    #endif
+	
+	    // isotropic scaling transformation
+	    glScalef(4.0 * scaling, 4.0 * scaling, 4.0 * scaling);
+	    
+	    // built-in (glut library) function , draw you a sphere.
+	    glColor3d(1.0, 0.0, 0.0);
+	    glutSolidSphere(0.5, 35, 35);
+	    
+	    
+	    // scaling to correct global size
+	    glPopMatrix();
+	}	
+    };
+
+    vpp::pixel_wise(data_.img_, data_.img_.domain(), data_.inp_)(vpp::_no_threads)| ellipsoid_drawer;
+
+    glFlush();
+}
+
+template <class DATA>
+void Visualization<SPD, 3, DATA>::reshape(int x, int y)
+{
+    if (y == 0 || x == 0) return;  //Nothing is visible then, so return
+    glMatrixMode(GL_PROJECTION);  
+    glLoadIdentity();
+    gluPerspective(45.0,(GLdouble)x/(GLdouble)y,0.1,100.0);
+    glViewport(0.0, 0.0 , x, y);  //Use the whole window for rendering
+}
+
+template <class DATA>
+/* Callback handler for normal-key event */
+void Visualization<SPD, 3, DATA>::keyboard(unsigned char key, int x, int y) {
+   switch (key) {
+         case 27:     // ESC key
+	    glutLeaveMainLoop();
+            break;
+      }
+}
 
 
+template <class DATA>
+void Visualization<SPD, 3, DATA>::GLInit(const char* window_name){
 
+    int argc = 1;
+    char** argv=0;
+    glutInit(&argc, argv);
 
+    //we initialilze the glut. functions
+    glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
+    glutInitDisplayMode(GLUT_SINGLE| GLUT_RGB| GLUT_DEPTH);
+    glutInitWindowPosition(100, 100);
+    glutCreateWindow(window_name);
+    initLighting(); 
+    
+    glClearColor(1.0,1.0,1.0,0);
+    
+    glutDisplayFunc(getCFunctionPointer(&myType::draw,this));
+    glutReshapeFunc(reshape);
+
+    glutKeyboardFunc(keyboard);
+
+    glutMainLoop();
+}
 
 } // end namespace tvmtl
 #endif  
