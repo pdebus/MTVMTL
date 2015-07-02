@@ -76,7 +76,7 @@ class Data< MANIFOLD, 2>{
 
 	// EdgeFunctions
 	void findEdgeWeights();
-	void setEdgeweights(const weights_mat&);
+	void setEdgeWeights(const weights_mat&);
 
 	// Inpainting Functions
 	void findInpWeights(const int channel=2);
@@ -114,7 +114,7 @@ template < typename MANIFOLD >
 const int Data<MANIFOLD, 2>::img_dim = 2;
 
 template < typename MANIFOLD >
-void Data<MANIFOLD, 2>::setEdgeweights(const weights_mat& w){
+void Data<MANIFOLD, 2>::setEdgeWeights(const weights_mat& w){
     edge_weights_= vpp::clone(w);
 }
 

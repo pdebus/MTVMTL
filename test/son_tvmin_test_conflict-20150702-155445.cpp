@@ -24,7 +24,7 @@ int main(int argc, const char *argv[])
 */
 	typedef Manifold< SO, 3 > mf_t;
 	typedef Data< mf_t, 2> data_t;	
-	typedef Functional<FIRSTORDER, ISO, mf_t, data_t> func_t;
+	typedef Functional<FIRSTORDER, ANISO, mf_t, data_t> func_t;
 	typedef TV_Minimizer< IRLS, func_t, mf_t, data_t, OMP > tvmin_t;
 	typedef Visualization<SO, 3, data_t> visual_t;
 
