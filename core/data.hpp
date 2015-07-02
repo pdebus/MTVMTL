@@ -59,8 +59,7 @@ class Data< MANIFOLD, 2>{
 	inline bool doInpaint() const { return inpaint_; }
 	    
 	// Data Init functions
-	inline void initWeights();
-	inline void initEdgeWeights();
+	inline void initEdgeweights();
 	inline void initInp();
 
 	// Input functions
@@ -77,7 +76,7 @@ class Data< MANIFOLD, 2>{
 
 	// EdgeFunctions
 	void findEdgeWeights();
-	void setEdgeWeights(const weights_mat&);
+	void setEdgeweights(const weights_mat&);
 
 	// Inpainting Functions
 	void findInpWeights(const int channel=2);
@@ -96,7 +95,6 @@ class Data< MANIFOLD, 2>{
 	// alignment defaults to 16byte for SSE/SSE2, 32 Byte for AVX
 	storage_type img_;
 	storage_type noise_img_;
-	weights_mat weights_;
 	weights_mat edge_weights_;
 
 	bool inpaint_;
@@ -116,14 +114,8 @@ template < typename MANIFOLD >
 const int Data<MANIFOLD, 2>::img_dim = 2;
 
 template < typename MANIFOLD >
-void Data<MANIFOLD, 2>::setEdgeWeights(const weights_mat& w){
+void Data<MANIFOLD, 2>::setEdgeweights(const weights_mat& w){
     edge_weights_= vpp::clone(w);
-}
-
-template < typename MANIFOLD >
-void Data<MANIFOLD, 2>::initWeights(){
-    weights_ = weights_mat(noise_img_.domain());
-    vpp::fill(weights_, 1.0);
 }
 
 template < typename MANIFOLD >
@@ -134,7 +126,7 @@ void Data<MANIFOLD, 2>::initInp(){
 }
 
 template < typename MANIFOLD >
-void Data<MANIFOLD, 2>::initEdgeWeights(){
+void Data<MANIFOLD, 2>::initEdgeweights(){
     edge_weights_ = weights_mat(noise_img_.domain());
     vpp::fill(edge_weights_, 1.0);
 }
@@ -268,21 +260,14 @@ void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
 	    n = v / static_cast<double>(std::numeric_limits<unsigned char>::max());
 	};
     img_ = vpp::clone(noise_img_, vpp::_border = 1);
-    //img_ = vpp::clone(noise_img_);
 
-    //TODO: Write separate input functions for weights and inpainting matrices
-    weights_ = weights_mat(noise_img_.domain());
-    vpp::fill(weights_, 1.0);
-    edge_weights_ = vpp::clone(weights_);
-    vpp::fill(edge_weights_, 1.0);
-    inp_ = inp_mat(noise_img_.domain());
-    vpp::fill(inp_, false);
-    inpaint_ = false;
+    initInp();
+    initEdgeweights();
 }
 
 template < typename MANIFOLD >
 void Data<MANIFOLD, 2>::rgb_readBrightness(const char* filename){
-	static_assert(MANIFOLD::value_dim == 1,"ERROR: Brightness Input requires a Manifold with embedding dimension N=3!");
+	static_assert(MANIFOLD::value_dim == 1,"ERROR: Brightness Input requires a Manifold with embedding dimension N=1!");
 	vpp::image2d<vpp::vuchar3> input_image;
 	input_image = vpp::clone(vpp::from_opencv<vpp::vuchar3 >(cv::imread(filename)));
 	noise_img_ = storage_type(input_image.domain());
@@ -298,16 +283,9 @@ void Data<MANIFOLD, 2>::rgb_readBrightness(const char* filename){
 	    n.setConstant(v.norm()/std::sqrt(3));
 	};
     img_ = vpp::clone(noise_img_, vpp::_border = 1);
-    //img_ = vpp::clone(noise_img_);
 
-    //TODO: Write separate input functions for weights and inpainting matrices
-    weights_ = weights_mat(noise_img_.domain());
-    vpp::fill(weights_, 1.0);
-    edge_weights_ = vpp::clone(weights_);
-    vpp::fill(edge_weights_, 1.0);
-    inp_ = inp_mat(noise_img_.domain());
-    vpp::fill(inp_, false);
-    inpaint_ = false;
+    initInp();
+    initEdgeweights();
 }
 
 template < typename MANIFOLD >
@@ -340,16 +318,9 @@ void Data<MANIFOLD, 2>::rgb_readChromaticity(const char* filename){
 	    #endif
 	};
     img_ = vpp::clone(noise_img_, vpp::_border = 1);
-    //img_ = vpp::clone(noise_img_);
-
-    //TODO: Write separate input functions for weights and inpainting matrices
-    weights_ = weights_mat(noise_img_.domain());
-    vpp::fill(weights_, 1.0);
-    edge_weights_ = vpp::clone(weights_);
-    vpp::fill(edge_weights_, 1.0);
-    inp_ = inp_mat(noise_img_.domain());
-    vpp::fill(inp_, false);
-     inpaint_ = false;
+    
+    initInp();
+    initEdgeweights();
 }
 
 
@@ -403,14 +374,9 @@ void Data<MANIFOLD, 2>::readMatrixDataFromCSV(const char* filename, const int nx
     }
     img_ = vpp::clone(noise_img_, vpp::_border = 1);
     fill_border_closest(img_);
-    //TODO: Write separate input functions for weights and inpainting matrices
-    weights_ = weights_mat(noise_img_.domain());
-    vpp::fill(weights_, 1.0);
-    edge_weights_ = vpp::clone(weights_);
-    vpp::fill(edge_weights_, 1.0);
-    inp_ = inp_mat(noise_img_.domain());
-    vpp::fill(inp_, false);
-    inpaint_ = false;
+
+    initInp();
+    initEdgeweights();
 }
 
 // TODO: Generalize to general N
@@ -423,7 +389,7 @@ void Data<MANIFOLD, 2>::create_nonsmooth_son(const int ny,const int nx){
     const int N = MANIFOLD::value_type::RowsAtCompileTime; 
 
     static_assert(MANIFOLD::MyType==SO, "ERROR: Only possible for SO(N) manifolds");
-    static_assert(N==3, "ERROR: Only possible for SO(N) manifolds");
+    static_assert(N==3, "ERROR: Only possible for SO(3) manifolds");
     
     noise_img_ = storage_type(ny, nx);
 
@@ -451,14 +417,8 @@ void Data<MANIFOLD, 2>::create_nonsmooth_son(const int ny,const int nx){
     img_ = vpp::clone(noise_img_, vpp::_border = 1);
     fill_border_closest(img_);
 
-    //TODO: Write separate input functions for weights and inpainting matrices
-    weights_ = weights_mat(noise_img_.domain());
-    vpp::fill(weights_, 1.0);
-    edge_weights_ = vpp::clone(weights_);
-    vpp::fill(edge_weights_, 1.0);
-    inp_ = inp_mat(noise_img_.domain());
-    vpp::fill(inp_, false);
-    inpaint_ = false;
+    initInp();
+    initEdgeweights();
 }
 
 // TODO: Generalize to general N
@@ -503,14 +463,8 @@ void Data<MANIFOLD, 2>::create_nonsmooth_spd(const int ny,const int nx){
     img_ = vpp::clone(noise_img_, vpp::_border = 1);
     fill_border_closest(img_);
 
-    //TODO: Write separate input functions for weights and inpainting matrices
-    weights_ = weights_mat(noise_img_.domain());
-    vpp::fill(weights_, 1.0);
-    edge_weights_ = vpp::clone(weights_);
-    vpp::fill(edge_weights_, 1.0);
-    inp_ = inp_mat(noise_img_.domain());
-    vpp::fill(inp_, false);
-    inpaint_ = false;
+    initInp();
+    initEdgeweights();
 }
 
 

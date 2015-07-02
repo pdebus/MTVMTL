@@ -108,7 +108,7 @@ int main(int argc, const char *argv[])
 	cv::imwrite("input_" + fname, original);
 	cv::waitKey(0);
 
-	double lam=0.1;
+	double lam=0.01;
 	func_t myFunc(lam, myData);
 	myFunc.seteps2(1e-10);
 

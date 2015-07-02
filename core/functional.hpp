@@ -31,8 +31,8 @@ class Functional {
 };
 
 
-template < typename MANIFOLD, class DATA >
-class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
+template <enum FUNCTIONAL_DISC disc, typename MANIFOLD, class DATA >
+class Functional<FIRSTORDER, disc, MANIFOLD, DATA >{
 
     public:
 	// Manifold typedefs and constants
@@ -103,21 +103,22 @@ class Functional< FIRSTORDER, ISO, MANIFOLD, DATA >{
 	inline const tm_base_mat_type& getT() const { return T_; }
 
     private:
-	param_type lambda_;
-	param_type eps2_;
 	DATA& data_;
+
+	param_type lambda_, eps2_;
+	weights_mat weightsX_, weightsY_;//, weightsZ_;
+
 	tm_base_mat_type T_;
 	gradient_type DJ_;
 	sparse_hessian_type HJ_;
 };
 
 
-//--------Implementation FIRSTORDER, ISO-----/
-
+//--------Implementation FIRSTORDER-----/
 
 // Update the Weights
-template < typename MANIFOLD, class DATA >
-void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateWeights(){
+template <enum FUNCTIONAL_DISC disc, typename MANIFOLD, class DATA >
+void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::updateWeights(){
 
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t Update Weights..." << std::endl;
@@ -128,9 +129,8 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateWeights(){
     int nr = data_.img_.nrows();
     int nc = data_.img_.ncols();
 
-    weights_mat X,Y;
-    X = weights_mat(data_.img_.domain());
-    Y = weights_mat(data_.img_.domain());
+    weightsX_ = weights_mat(data_.img_.domain());
+    weightsY_ = weights_mat(data_.img_.domain());
 
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Horizontal neighbours " << std::endl;
@@ -138,13 +138,13 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateWeights(){
 
     // TODO: Try to replace omp loops e.g. by box2d (nr-1,0) (nr-1,nc-1) or Iterator
     // Horizontal Neighbours
-    vpp::pixel_wise(X, N)(/*vpp::_no_threads*/)| [&] (weights_type& x, const auto& nbh) { x = MANIFOLD::dist_squared(nbh(0,0),nbh(0,1)); };
+    vpp::pixel_wise(weightsX_, N)(/*vpp::_no_threads*/)| [&] (weights_type& x, const auto& nbh) { x = MANIFOLD::dist_squared(nbh(0,0),nbh(0,1)); };
     #pragma omp parallel for
     for(int r=0; r< nr; r++) 
-	X(r,nc-1)=0.0;
+	weightsX_(r,nc-1)=0.0;
 
     #ifdef TV_FUNC_DEBUG 
-	data_.output_weights(Y,"YWeights.csv");
+	data_.output_weights(weightsX_,"XWeights.csv");
     #endif	
 
     #ifdef TV_FUNC_DEBUG_VERBOSE
@@ -152,31 +152,35 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateWeights(){
     #endif
 
     // Vertical Neighbours
-    vpp::pixel_wise(Y, N) | [&] (weights_type& y, const auto& nbh) { y = MANIFOLD::dist_squared(nbh(0,0),nbh(1,0)); };
-    weights_type *lastrow = &Y(nr-1,0);
+    vpp::pixel_wise(weightsY_, N) | [&] (weights_type& y, const auto& nbh) { y = MANIFOLD::dist_squared(nbh(0,0),nbh(1,0)); };
+    weights_type *lastrow = &weightsY_(nr-1,0);
     for(int c=0; c< nc; c++) 
 	lastrow[c]=0.0;
 	
     #ifdef TV_FUNC_DEBUG 
-	data_.output_weights(Y,"YWeights.csv");
+	data_.output_weights(weightsY_,"YWeights.csv");
     #endif	
     
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Reweighting" << std::endl;
     #endif
 
-
-    auto g =  [&] (weights_type& w, const weights_type& ew, const weights_type& x, const weights_type& y) { w = ew / std::sqrt(x+y+eps2_); };
-    vpp::pixel_wise(data_.weights_, data_.edge_weights_, X, Y) | g ;
+    if(disc==ISO){
+	auto g =  [&] (const weights_type& ew, weights_type& x, weights_type& y) { x = ew / std::sqrt(x+y+eps2_); y = x; };
+	vpp::pixel_wise(data_.edge_weights_, weightsX_, weightsY_) | g ;
+    }
+    else{
+	auto g =  [&] (const weights_type& ew, weights_type& x) { x = ew / std::sqrt(x+eps2_); };
+	vpp::pixel_wise(data_.edge_weights_, weightsX_) | g ;
     
-    #ifdef TV_FUNC_DEBUG 
-	data_.output_weights(data_.weights_,"IRLS_Weights.csv");
-    #endif	
+	auto h =  [&] (const weights_type& ew, weights_type& y) { y = ew / std::sqrt(y+eps2_);  };
+	vpp::pixel_wise(data_.edge_weights_, weightsY_) | h ;
+    }
 }
 
 // Update the Tangent space ONB
-template < typename MANIFOLD, class DATA >
-void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateTMBase(){
+template <enum FUNCTIONAL_DISC disc, typename MANIFOLD, class DATA >
+void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::updateTMBase(){
     
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\tUpdate tangent space basis..." << std::endl;
@@ -194,8 +198,8 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::updateTMBase(){
 
 
 // Evaluation of J
-template < typename MANIFOLD, class DATA >
-typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::result_type Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateJ(){
+template <enum FUNCTIONAL_DISC disc, typename MANIFOLD, class DATA >
+typename Functional<FIRSTORDER, disc, MANIFOLD, DATA >::result_type Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateJ(){
 
     // sum d^2(img, img_noise)
     result_type J1, J2;
@@ -221,7 +225,10 @@ typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::result_type Functional< 
 	std::cout << "\t\t...TV part." << std::endl;
     #endif
 
-    J2 = vpp::sum( vpp::pixel_wise(data_.weights_) | [&] (const weights_type& w) {return 1.0/w;} );
+    if(disc==ISO)
+	J2 = vpp::sum( vpp::pixel_wise(weightsX_) | [&] (const weights_type& w) {return 1.0/w;} );
+    else
+	J2 = vpp::sum( vpp::pixel_wise(weightsX_, weightsY_) | [&] (const weights_type& wx, const weights_type& wy) {return 1.0/wx +1.0/wy;} );
     
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "J1: " << J1 << std::endl;
@@ -232,12 +239,13 @@ typename Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::result_type Functional< 
 }
 
 // Evaluation of J'
-template < typename MANIFOLD, class DATA >
-void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
+template <enum FUNCTIONAL_DISC disc, typename MANIFOLD, class DATA >
+void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateDJ(){
 
     #ifdef TV_FUNC_WONES_DEBUG 
 	output_img(data_.img_,"img.csv");
-	vpp::fill(data_.weights_, 1.0); // Reset for Debugging
+	vpp::fill(weightsX_, 1.0); // Reset for Debugging
+	vpp::fill(weightsY_, 1.0); // Reset for Debugging
     #endif
 
     img_type grad = img_type(data_.img_.domain());
@@ -278,7 +286,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
     // ... w.r.t. to first argument
     { // Temporary image XD1 is deallocated after this scope 
 	img_type XD1 = img_type(data_.img_.domain());
-	vpp::pixel_wise(XD1, data_.weights_, N) | [&] (value_type& x, const weights_type& w, const auto& nbh) { 
+	vpp::pixel_wise(XD1, weightsX_, N) | [&] (value_type& x, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv1x_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
 	#ifdef TV_FUNC_DEBUG 
 	    output_img(XD1,"XD1.csv");
@@ -293,7 +301,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
     // ... w.r.t. second argument
     {
 	img_type XD2 = img_type(data_.img_.domain());
-	vpp::pixel_wise(XD2, data_.weights_, N) | [&] (value_type& x, const weights_type& w ,const auto& nbh) { 
+	vpp::pixel_wise(XD2, weightsX_, N) | [&] (value_type& x, const weights_type& w ,const auto& nbh) { 
 	   MANIFOLD::deriv1y_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
 	#ifdef TV_FUNC_DEBUG 
 	    output_img(XD2,"XD2.csv");
@@ -310,7 +318,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
     // ... w.r.t. first argument
     {
 	img_type YD1 = img_type(data_.img_.domain());
-	vpp::pixel_wise(YD1, data_.weights_, N) | [&] (value_type& y, const weights_type& w, const auto& nbh) { 
+	vpp::pixel_wise(YD1, weightsY_, N) | [&] (value_type& y, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv1x_dist_squared(nbh(0,0), nbh(1,0), y); y*=w; };
 	#ifdef TV_FUNC_DEBUG 
 	    output_img(YD1,"YD1.csv");
@@ -326,7 +334,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
     // ... w.r.t second argument
     {
 	img_type YD2 = img_type(data_.img_.domain());
-	vpp::pixel_wise(YD2, data_.weights_, N) | [&] (value_type& y, const weights_type& w, const auto& nbh) { 
+	vpp::pixel_wise(YD2, weightsY_, N) | [&] (value_type& y, const weights_type& w, const auto& nbh) { 
 		MANIFOLD::deriv1y_dist_squared(nbh(0,0), nbh(1,0), y); y*=w; };
 	#ifdef TV_FUNC_DEBUG 
 	    output_img(YD2,"YD2.csv");
@@ -368,10 +376,11 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateDJ(){
 }
 
 // Evaluation of Hessian J
-template < typename MANIFOLD, class DATA >
-void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
+template <enum FUNCTIONAL_DISC disc, typename MANIFOLD, class DATA >
+void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
     #ifdef TV_FUNC_WONES_DEBUG 
-	vpp::fill(data_.weights_, 1.0); // Reset for Debugging
+	vpp::fill(weightsX_, 1.0); // Reset for Debugging
+	vpp::fill(weightsY_, 1.0); // Reset for Debugging
     #endif
 
     hessian_type hessian(data_.img_.domain());
@@ -459,7 +468,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     // ... w.r.t. first arguments
     { // Temporary image XD11 is deallocated after this scope
 	hessian_type XD11(data_.img_.domain());
-        vpp::pixel_wise(XD11, data_.weights_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
+        vpp::pixel_wise(XD11, weightsX_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
     	    MANIFOLD::deriv2xx_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
         #ifdef TV_FUNC_DEBUG 
 		output_img(XD11,"XD11.csv");
@@ -478,7 +487,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     //... w.r.t. second arguments
     {
 	hessian_type XD22(data_.img_.domain());
-	vpp::pixel_wise(XD22, data_.weights_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
+	vpp::pixel_wise(XD22, weightsX_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv2yy_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
 	#ifdef TV_FUNC_DEBUG 
 	    output_img(XD22,"XD22.csv");
@@ -495,7 +504,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     //... w.r.t. first arguments
     {
 	hessian_type YD11(data_.img_.domain());
-	vpp::pixel_wise(YD11, data_.weights_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
+	vpp::pixel_wise(YD11, weightsY_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv2xx_dist_squared(nbh(0,0), nbh(1,0), x); x*=w; };
 	#ifdef TV_FUNC_DEBUG 
 	    output_img(YD11,"YD11.csv");
@@ -511,7 +520,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     //... w.r.t. second arguments
     {
 	hessian_type YD22(data_.img_.domain());
-	vpp::pixel_wise(YD22, data_.weights_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
+	vpp::pixel_wise(YD22, weightsY_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
 	        MANIFOLD::deriv2yy_dist_squared(nbh(0,0), nbh(1,0), x); x*=w; };
 	#ifdef TV_FUNC_DEBUG 
 	    output_img(YD22,"YD22.csv");
@@ -558,7 +567,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     // ... w.r.t. first and second arguments 
     {
 	hessian_type XD12(without_last_col);
-	vpp::pixel_wise(XD12, data_.weights_ | without_last_col, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
+	vpp::pixel_wise(XD12, weightsX_ | without_last_col, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv2xy_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
 	#ifdef TV_FUNC_DEBUG 
 	    output_img(XD12,"XD12.csv");
@@ -579,7 +588,7 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
     //... w.r.t. second arguments
     {
 	hessian_type YD12(data_.img_.domain());
-	vpp::pixel_wise(YD12, data_.weights_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
+	vpp::pixel_wise(YD12, weightsY_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv2xy_dist_squared(nbh(0,0), nbh(1,0), x); x*=w; };
 	#ifdef TV_FUNC_DEBUG 
 	    output_img(YD12,"YD12.csv");
@@ -656,9 +665,9 @@ void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::evaluateHJ(){
 }
 
 
-template < typename MANIFOLD, class DATA >
+template <enum FUNCTIONAL_DISC disc, typename MANIFOLD, class DATA >
 template < class IMG >
-void Functional< FIRSTORDER, ISO, MANIFOLD, DATA >::output_img(const IMG& img, const char* filename) const{
+void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::output_img(const IMG& img, const char* filename) const{
     int nr = img.nrows();
     int nc = img.ncols();
 
