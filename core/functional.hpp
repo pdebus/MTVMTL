@@ -217,7 +217,7 @@ typename Functional<FIRSTORDER, disc, MANIFOLD, DATA >::result_type Functional<F
     }
     else{
 	auto f = [] (const value_type& i, const value_type& n) { return MANIFOLD::dist_squared(i,n); };
-	J1 = vpp::sum(vpp::pixel_wise(data_.img_, data_.noise_img_)(/*vpp::_no_threads*/)| f);
+	J1 = vpp::sum(vpp::pixel_wise(data_.img_, data_.noise_img_)(vpp::_no_threads)| f);
     }
 
     updateWeights();

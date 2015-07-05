@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 
 
 //#define TV_SPD_DEBUG
@@ -24,17 +25,14 @@ int main(int argc, const char *argv[])
 	typedef Visualization<SPD, 3, data_t> visual_t;
 
 	data_t myData = data_t();
+	myData.readMatrixDataFromCSV(argv[1], std::atoi(argv[2]), std::atoi(argv[3]));
 
-	myData.create_nonsmooth_spd(30,30);
-	myData.output_matval_img("orignal_spd_img1.csv");
-	myData.add_gaussian_noise(0.1);
-	myData.output_matval_img("noisy_spd_img1.csv");
 
 	visual_t myVisual(myData);
-	myVisual.saveImage("noisy_spd30x30.png");
+	myVisual.saveImage("noisy_dti32x32.png");
 
 	std::cout << "Starting OpenGL-Renderer..." << std::endl;
-	myVisual.GLInit("SPD(3) Ellipsoid Visualization 30x30 ");
+	myVisual.GLInit("SPD(3) Ellipsoid Visualization 32x32 ");
 	std::cout << "Rendering finished." << std::endl;
 	
 	double lam=0.3;
@@ -44,16 +42,16 @@ int main(int argc, const char *argv[])
 	tvmin_t myTVMin(myFunc, myData);
 
 	std::cout << "Smoothen picture to obtain initial state for Newton iteration..." << std::endl;
-	myTVMin.smoothening(1);
+	myTVMin.smoothening(5);
 
 	std::cout << "Start TV minimization..." << std::endl;
 	myTVMin.minimize();
 
 
-	myVisual.saveImage("denoised_spd30x30.png");
+	myVisual.saveImage("denoised_spd32x32.png");
 
 	std::cout << "Starting OpenGL-Renderer..." << std::endl;
-	myVisual.GLInit("SPD(3) Ellipsoid Visualization 30x30 ");
+	myVisual.GLInit("SPD(3) Ellipsoid Visualization 32x32 ");
 	std::cout << "Rendering finished." << std::endl;
 
 	return 0;

@@ -45,6 +45,7 @@ class Data< MANIFOLD, 2>{
 	static const int img_dim;
 	// Manifold typedefs
 	typedef typename MANIFOLD::value_type value_type;
+	typedef typename MANIFOLD::scalar_type scalar_type;
 	
 
 	// Storage typedefs
@@ -69,8 +70,13 @@ class Data< MANIFOLD, 2>{
 	
 	void readMatrixDataFromCSV(const char* filename, const int nx, const int ny);
 	
+	// Noise functions
+	void add_gaussian_noise(double stdev);
+	//void add_gaussian_noise_spd(double stdev);
+
 	// Random Input functions
-	// TODO: Paramaterize for manifold type
+	// TODO: - Paramaterize for manifold type
+	//       - Use user-defined functor as parameter
 	void create_nonsmooth_son(const int ny, const int nx);
 	void create_nonsmooth_spd(const int ny, const int nx);
 
@@ -378,6 +384,61 @@ void Data<MANIFOLD, 2>::readMatrixDataFromCSV(const char* filename, const int nx
     initInp();
     initEdgeweights();
 }
+
+
+template <typename MANIFOLD>
+void Data<MANIFOLD, 2>::add_gaussian_noise(double stdev){
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::normal_distribution<typename MANIFOLD::scalar_type> rand(0.0, stdev);
+
+    auto generate = [&] (typename MANIFOLD::scalar_type entry){
+	return entry + rand(gen);
+    };
+    
+	if(MANIFOLD::non_isometric_embedding)
+	    vpp::pixel_wise(noise_img_) | [&] (value_type& i){ MANIFOLD::interpolation_preprocessing(i); };
+
+    vpp::pixel_wise(noise_img_) | [&] (value_type& i) { i = i.unaryExpr(generate); }; 
+
+	if(MANIFOLD::non_isometric_embedding)
+	    vpp::pixel_wise(noise_img_) | [&] (value_type& i){ MANIFOLD::interpolation_postprocessing(i); };
+
+    vpp::pixel_wise(noise_img_) | [&] (value_type& i) { MANIFOLD::projector(i); };
+
+    img_ = vpp::clone(noise_img_, vpp::_border = 1);
+    fill_border_closest(img_);
+}
+
+/*
+//TODO: Generalize implementation to be compatible with add_gaussian_noise
+template <typename MANIFOLD>
+void Data<MANIFOLD, 2>::add_gaussian_noise_spd(double stdev){
+
+    static_assert(MANIFOLD::MyType==SPD,"add_gaussian_noise_spd is implemented only for SPD(N)!");
+    
+    vpp::pixel_wise(noise_img_) | [&] (value_type& i){ MANIFOLD::interpolation_preprocessing(i); };
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::normal_distribution<scalar_type> rand(0.0, stdev);
+
+    auto generate = [&] (scalar_type entry){
+	return rand(gen);
+    };
+
+    vpp::pixel_wise(noise_img_) | [&] (value_type& i) { 
+	value_type r = value_type::Zero().unaryExpr(generate);
+	i = i + (r + r.transpose()) * 0.5; 
+    }; 
+
+    vpp::pixel_wise(noise_img_) | [&] (value_type& i){ MANIFOLD::interpolation_postprocessing(i); };
+
+    img_ = vpp::clone(noise_img_, vpp::_border = 1);
+}
+*/
+
 
 // TODO: Generalize to general N
 template <typename MANIFOLD>

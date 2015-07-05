@@ -105,7 +105,10 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::first_guess(){
     int value_dim = FUNCTIONAL::value_dim;
     int value_rows = value_type::RowsAtCompileTime;
     int value_cols = value_type::ColsAtCompileTime;
-    
+
+    if(MANIFOLD::non_isometric_embedding)
+	vpp::pixel_wise(data_.img_) | [&] (value_type& i){ MANIFOLD::interpolation_preprocessing(i); };
+     
     for(int r=0; r<value_rows; r++)
 	for(int c=0; c<value_cols; c++){
 	    std::cout << "\t Channel " << value_cols*r+c+1 << " of " << value_dim << "..." << std::endl;
@@ -143,7 +146,10 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::first_guess(){
 	    std::cout << "\t\tNumber of interpolated Pixels: " << numdampix << std::endl;
 	}
 
-	vpp::pixel_wise(data_.img_) | [&] (value_type& i) { MANIFOLD::projector(i); };
+	if(MANIFOLD::non_isometric_embedding)
+	    vpp::pixel_wise(data_.img_) | [&] (value_type& i){ MANIFOLD::interpolation_postprocessing(i); };
+
+    	vpp::pixel_wise(data_.img_) | [&] (value_type& i) { MANIFOLD::projector(i); };
 
 }
 
@@ -159,11 +165,24 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::smoothening(int smooth
     int step = 0;
 
     typename FUNCTIONAL::img_type temp_img(data_.img_.domain(), vpp::_border=1);
-    vpp::copy(data_.img_, temp_img);
     typename FUNCTIONAL::nbh_type N(temp_img);
 
+    std::cout << "Initial functional value J=" << Jnew << "\n\n" << std::endl;
+
     while(Jnew<Jold && step < smooth_steps){
-	std::cout << "\tSmoothening step #" << step+1 << std::endl;
+	#ifdef TVMTL_TVMIN_DEBUG
+	   data_.output_matval_img("presmoothend_spd_img.csv");
+	#endif
+	if(MANIFOLD::non_isometric_embedding)
+	    vpp::pixel_wise(data_.img_) | [&] (value_type& i){ MANIFOLD::interpolation_preprocessing(i); };
+	
+	#ifdef TVMTL_TVMIN_DEBUG
+	   data_.output_matval_img("preprocessedsmoothend_spd_img.csv");
+	#endif
+	vpp::copy(data_.img_, temp_img);
+	vpp::fill_border_closest(temp_img);
+
+	std::cout << "\tSmoothen step #" << step+1 << std::endl;
 	std::cout << "\t Value of Functional J: " << Jnew << std::endl;
 	Jold = Jnew;
 	// Standard smoothening stencil 
@@ -176,12 +195,22 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::smoothening(int smooth
 	};
 
 	vpp::pixel_wise(data_.img_, N)(/*vpp::_no_threads*/) | boxfilter;
-	//data_.output_matval_img("son_img2.csv");
-	vpp::copy(data_.img_, temp_img);
+
+	#ifdef TVMTL_TVMIN_DEBUG
+	   data_.output_matval_img("boxfiltersmoothend_spd_img.csv");
+	#endif
+	
+	if(MANIFOLD::non_isometric_embedding)
+	    vpp::pixel_wise(data_.img_) | [&] (value_type& i){ MANIFOLD::interpolation_postprocessing(i); };
+	
+        #ifdef TVMTL_TVMIN_DEBUG
+	   data_.output_matval_img("postsmoothend_spd_img.csv");
+	#endif
+
 	Jnew = func_.evaluateJ();
 	step++;
     }
-
+    
     std::cout << "Smoothening completed with J=" << Jnew << "\n\n" << std::endl;
 
 }

@@ -21,6 +21,8 @@ struct Manifold< SPHERE, N> {
 	static const int manifold_dim ;
 	static const int value_dim; // TODO: maybe rename to embedding_dim 
 
+	static const bool non_isometric_embedding;
+
 	// Scalar type of manifold
 	//typedef double scalar_type;
 	typedef double scalar_type;
@@ -86,6 +88,8 @@ const int Manifold < SPHERE, N>::manifold_dim = N-1;
 template <int N>
 const int Manifold < SPHERE, N>::value_dim = N; 
 
+template <int N>
+const bool Manifold < SPHERE, N>::non_isometric_embedding = false; 
 
 
 // Squared Sphere distance function

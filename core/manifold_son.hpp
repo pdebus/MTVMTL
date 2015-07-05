@@ -25,6 +25,8 @@ struct Manifold< SO, N> {
 	static const int manifold_dim ;
 	static const int value_dim; // TODO: maybe rename to embedding_dim 
 
+	static const bool non_isometric_embedding;
+
 	// Scalar type of manifold
 	//typedef double scalar_type;
 	typedef double scalar_type;
@@ -91,6 +93,9 @@ const int Manifold < SO, N>::manifold_dim = N * (N - 1) / 2;
 
 template <int N>
 const int Manifold < SO, N>::value_dim = N * N; 
+
+template <int N>
+const bool Manifold < SO, N>::non_isometric_embedding = false; 
 
 // PermutationMatrix
 template <int N>

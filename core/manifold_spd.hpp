@@ -26,6 +26,8 @@ struct Manifold< SPD, N> {
 	static const int manifold_dim ;
 	static const int value_dim; // TODO: maybe rename to embedding_dim 
 
+	static const bool non_isometric_embedding;
+	
 	// Scalar type of manifold
 	//typedef double scalar_type;
 	typedef double scalar_type;
@@ -71,6 +73,9 @@ struct Manifold< SPD, N> {
 	// Projection
 	inline static void projector(ref_type x);
 
+	// Interpolation pre- and postprocessing
+	inline static void interpolation_preprocessing(ref_type x);
+	inline static void interpolation_postprocessing(ref_type x);
 
 };
 
@@ -87,6 +92,10 @@ const int Manifold < SPD, N>::manifold_dim = N * (N + 1) / 2;
 
 template <int N>
 const int Manifold < SPD, N>::value_dim = N * N; 
+
+template <int N>
+const bool Manifold < SPD, N>::non_isometric_embedding = true; 
+
 
 // Squared SPD distance function
 template <int N>
@@ -208,17 +217,24 @@ inline void Manifold <SPD, N>::tangent_plane_base(cref_type x, tm_base_ref_type 
 
 template <int N>
 inline void Manifold <SPD, N>::projector(ref_type x){
-    
-    #ifdef TV_SPD_DEBUG
-	std::cout << "\n\nProjector with initial x=\n" << x << std::endl;
-    #endif     
-    
-    
-
-    #ifdef TV_SPD_DEBUG
-	std::cout << "\nProjector with final x=\n" << x << std::endl;
-    #endif
+    // does not exist since SPD is an open set
+    // TODO: Eventually implement projection to semi positive definite matrices
 }
+
+
+template <int N>
+inline void Manifold<SPD, N>::interpolation_preprocessing(ref_type x){
+    value_type t = x.log();
+    x = t;
+}
+
+template <int N>
+inline void Manifold<SPD, N>::interpolation_postprocessing(ref_type x){
+    value_type t = ( 0.5 * (x + x.transpose()) ).exp();
+    x = t;
+}
+
+
 } // end namespace tvmtl
 
 

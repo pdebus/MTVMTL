@@ -3,6 +3,7 @@
 
 //System includes
 #include <iostream>
+#include <cmath>
 
 //Eigen includes
 #include <Eigen/Geometry>
@@ -357,8 +358,14 @@ void Visualization<SPD, 3, DATA>::draw(void)
 	    // isotropic scaling transformation
 	    glScalef(5.0 * scaling, 5.0 * scaling, 5.0 * scaling);
 	    
-	    // built-in (glut library) function , draw you a sphere.
-	    glColor3d(1.0, 0.0, 0.0);
+	    int argmax;
+	    es.eigenvalues().maxCoeff(&argmax);
+	    Eigen::Vector3d principal_direction = es.eigenvectors().col(argmax);
+	    //principal_direction /= principal_direction.maxCoeff();	    
+	    principal_direction.normalize();
+
+	    glColor3d(std::abs(principal_direction(0)), std::abs(principal_direction(1)),std::abs(principal_direction(2)));
+	    // draw sphere
 	    glutSolidSphere(0.5, 35, 35);
 	    
 	    

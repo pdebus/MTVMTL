@@ -17,6 +17,8 @@ struct Manifold< EUCLIDIAN, N > {
 	static const int manifold_dim ;
 	static const int value_dim; // TODO: maybe rename to embedding_dim 
 
+	static const bool non_isometric_embedding;
+
 	// Scalar type of manifold
 	//typedef double scalar_type;
 	typedef double scalar_type;
@@ -79,6 +81,9 @@ const int Manifold < EUCLIDIAN, N>::manifold_dim = N;
 
 template <int N>
 const int Manifold < EUCLIDIAN, N>::value_dim = N; 
+
+template <int N>
+const bool Manifold < EUCLIDIAN, N>::non_isometric_embedding = false; 
 
 
 
