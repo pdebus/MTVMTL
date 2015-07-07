@@ -103,12 +103,15 @@ inline typename Manifold < SPD, N>::dist_type Manifold < SPD, N>::dist_squared( 
     #ifdef TV_SPD_DEBUG
 	std::cout << "\nDist2 function with x=\n" << x << "\nand y=\n" << y << std::endl;
     #endif
-    value_type sqrtX = x.sqrt();
+// NOTE: If x is not strictly spd, using LDLT completely halts the algorithm
+/*    value_type sqrtX = x.sqrt();
     Eigen::LDLT<value_type> ldlt;
     ldlt.compute(sqrtX);
 
     value_type Z = ldlt.solve(y).transpose();	
-    return ldlt.solve(Z).transpose().log().squaredNorm();	
+    return ldlt.solve(Z).transpose().log().squaredNorm();	*/
+    value_type invsqrt = x.sqrt().inverse();
+    return (invsqrt * y * invsqrt).log().squaredNorm();
 }
 
 

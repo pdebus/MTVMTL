@@ -108,8 +108,8 @@ void MatrixLogarithmFrechetDerivative(const Eigen::MatrixBase<DerivedX>& X, cons
     ComplexMatrix CE = E.template cast<ComplexScalar>();
     ComplexMatrix CResult;
 
-    // Number of Square roots
-    const int s = 4;
+
+
     // Order of the Pade approximant
     // If this is changed, we also need new weights and nodes
     const int m = 7;
@@ -118,6 +118,36 @@ void MatrixLogarithmFrechetDerivative(const Eigen::MatrixBase<DerivedX>& X, cons
     const Eigen::ComplexSchur<ComplexMatrix> SchurOfX(CX);
     ComplexMatrix T = SchurOfX.matrixT();
     ComplexMatrix U = SchurOfX.matrixU();    
+    
+    //Compute the number of square roots
+    int s = 0;
+    const int smax = 20;
+    const double theta7 = 2.88e-1;
+    double rho = theta7 + 1.0;
+
+    Eigen::Matrix<ComplexScalar, Rows, 1> D;
+    D = T.diagonal();
+
+    #ifdef TVMTL_MATRIX_UTILS_DEBUG_VERBOSE
+	std::cout << "Diagonal of Schur Decomposition: \n" << D << std::endl;
+    #endif
+ 
+    while(rho > theta7 && s < smax){
+	D=D.cwiseSqrt();
+	#ifdef TVMTL_MATRIX_UTILS_DEBUG_VERBOSE
+	    std::cout << "D: " << D << std::endl;
+	#endif
+	++s;
+	rho = (D - Eigen::Matrix<ComplexScalar, Rows, 1>::Constant(1)).cwiseAbs().maxCoeff();
+	 #ifdef TVMTL_MATRIX_UTILS_DEBUG_VERBOSE
+	    std::cout << "rho: " << rho << std::endl;
+	 #endif
+    }
+ 
+    #ifdef TVMTL_MATRIX_UTILS_DEBUG
+	std::cout << "Number of square roots  for dlog estimation: " << s << std::endl;
+    #endif
+
 
     ComplexMatrix sqrtT;
     CE = U.adjoint()*CE*U;

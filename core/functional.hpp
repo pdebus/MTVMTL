@@ -91,6 +91,8 @@ class Functional<FIRSTORDER, disc, MANIFOLD, DATA >{
 	
 	template <class IMG>
 	void output_img(const IMG& img, const char* filename) const;
+	template <class IMG>
+	void output_matval_img(const IMG& img, const char* filename) const;
 
 	// Getter and Setter 
 	inline param_type getlambda() const { return lambda_; }
@@ -471,7 +473,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
         vpp::pixel_wise(XD11, weightsX_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
     	    MANIFOLD::deriv2xx_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
         #ifdef TV_FUNC_DEBUG 
-		output_img(XD11,"XD11.csv");
+		output_matval_img(XD11,"XD11.csv");
         #endif
 	auto hess_subX11  = hessian | without_last_col;
 	auto deriv_subX11 = XD11 | without_last_col;
@@ -490,7 +492,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
 	vpp::pixel_wise(XD22, weightsX_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv2yy_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
 	#ifdef TV_FUNC_DEBUG 
-	    output_img(XD22,"XD22.csv");
+	    output_matval_img(XD22,"XD22.csv");
 	#endif
 	auto hess_subX22  = hessian | without_first_col;
 	auto deriv_subX22 = XD22 | without_last_col;
@@ -507,7 +509,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
 	vpp::pixel_wise(YD11, weightsY_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv2xx_dist_squared(nbh(0,0), nbh(1,0), x); x*=w; };
 	#ifdef TV_FUNC_DEBUG 
-	    output_img(YD11,"YD11.csv");
+	    output_matval_img(YD11,"YD11.csv");
 	#endif
 	auto hess_subY11  = hessian | without_last_row;
 	auto deriv_subY11 = YD11 | without_last_row;
@@ -523,7 +525,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
 	vpp::pixel_wise(YD22, weightsY_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
 	        MANIFOLD::deriv2yy_dist_squared(nbh(0,0), nbh(1,0), x); x*=w; };
 	#ifdef TV_FUNC_DEBUG 
-	    output_img(YD22,"YD22.csv");
+	    output_matval_img(YD22,"YD22.csv");
 	#endif
 	auto hess_subY22  = hessian | without_first_row;
 	auto deriv_subY22 = YD22 | without_last_row;
@@ -531,7 +533,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
     }
     
     #ifdef TV_FUNC_DEBUG
-	output_img(hessian, "NonMixedHessian.csv");
+	output_matval_img(hessian, "NonMixedHessian.csv");
     #endif
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Local to global insert" << std::endl;
@@ -570,7 +572,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
 	vpp::pixel_wise(XD12, weightsX_ | without_last_col, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv2xy_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
 	#ifdef TV_FUNC_DEBUG 
-	    output_img(XD12,"XD12.csv");
+	    output_matval_img(XD12,"XD12.csv");
 	#endif
 	#ifdef TV_FUNC_DEBUG_VERBOSE
 		std::cout << "\t\t...Local to global insert:" << std::endl;
@@ -591,7 +593,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
 	vpp::pixel_wise(YD12, weightsY_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
 	    MANIFOLD::deriv2xy_dist_squared(nbh(0,0), nbh(1,0), x); x*=w; };
 	#ifdef TV_FUNC_DEBUG 
-	    output_img(YD12,"YD12.csv");
+	    output_matval_img(YD12,"YD12.csv");
         #endif
 	//Set last row to zero
 	/*
@@ -627,11 +629,13 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
 		std::cout << "\t\t...Output Hessian (stats):" << std::endl;
 	#endif
     #ifdef TV_FUNC_DEBUG
-	if (sparsedim<70){
-	    std::cout << "\nFidelity\n" << HF << std::endl; 
-	    std::cout << "\nTV\n" << HTV << std::endl; 
-	    std::cout << "\nHessian\n" << HJ_ << std::endl; 
-	    
+	if (sparsedim<200){
+	    if(sparsedim<70){
+		std::cout << "\nFidelity\n" << HF << std::endl; 
+		std::cout << "\nTV\n" << HTV << std::endl; 
+		std::cout << "\nHessian\n" << HJ_ << std::endl; 
+	    }
+
 	    std::fstream f;
 	    f.open("H.csv",std::fstream::out);
 	    Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "", "");
@@ -685,6 +689,22 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::output_img(const IMG& img, c
     f.close();
 }
 
+template <enum FUNCTIONAL_DISC disc, typename MANIFOLD, class DATA >
+template < class IMG >
+void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::output_matval_img(const IMG& img, const char* filename) const{
+    int nr = img.nrows();
+    int nc = img.ncols();
+
+    std::fstream f;
+    f.open(filename, std::fstream::out);
+    Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "", "\n");
+    for (int r=0; r<nr; r++){
+	const auto* cur = &img(r,0);
+	for (int c=0; c<nc; c++)
+	    f << cur[c].format(CommaInitFmt);
+    }
+    f.close();
+}
 
 }// end namespace tvtml
 

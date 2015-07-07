@@ -7,6 +7,10 @@
 #include <vector>
 #include <chrono>
 
+#ifdef TVMTL_TVMIN_DEBUG
+    #include <string>
+#endif
+
 //Eigen includes
 #include <Eigen/Sparse>
 #include <Eigen/Core>
@@ -170,13 +174,13 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::smoothening(int smooth
     std::cout << "Initial functional value J=" << Jnew << "\n\n" << std::endl;
 
     while(Jnew<Jold && step < smooth_steps){
-	#ifdef TVMTL_TVMIN_DEBUG
+	#ifdef TVMTL_TVMIN_DEBUG_SPD
 	   data_.output_matval_img("presmoothend_spd_img.csv");
 	#endif
 	if(MANIFOLD::non_isometric_embedding)
 	    vpp::pixel_wise(data_.img_) | [&] (value_type& i){ MANIFOLD::interpolation_preprocessing(i); };
 	
-	#ifdef TVMTL_TVMIN_DEBUG
+	#ifdef TVMTL_TVMIN_DEBUG_SPD
 	   data_.output_matval_img("preprocessedsmoothend_spd_img.csv");
 	#endif
 	vpp::copy(data_.img_, temp_img);
@@ -196,14 +200,14 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::smoothening(int smooth
 
 	vpp::pixel_wise(data_.img_, N)(/*vpp::_no_threads*/) | boxfilter;
 
-	#ifdef TVMTL_TVMIN_DEBUG
+	#ifdef TVMTL_TVMIN_DEBUG_SPD
 	   data_.output_matval_img("boxfiltersmoothend_spd_img.csv");
 	#endif
 	
 	if(MANIFOLD::non_isometric_embedding)
 	    vpp::pixel_wise(data_.img_) | [&] (value_type& i){ MANIFOLD::interpolation_postprocessing(i); };
 	
-        #ifdef TVMTL_TVMIN_DEBUG
+        #ifdef TVMTL_TVMIN_DEBUG_SPD
 	   data_.output_matval_img("postsmoothend_spd_img.csv");
 	#endif
 
@@ -276,7 +280,8 @@ typename TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::newton_error_type 
 	//MANIFOLD::exp(i, -t*x.segment(manifold_dim*(coord[0]+nr*coord[1]), manifold_dim), i);
     };
     vpp::pixel_wise(T, data_.img_, data_.img_.domain()) | newton_correction;
-    // Compute the Error
+    
+       // Compute the Error
      #ifdef TVMTL_TVMIN_DEBUG_VERBOSE
 	std::cout << "\t\t...Compute Newton error" << std::endl;
     #endif
@@ -318,6 +323,12 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::minimize(){
 	while(AT::tolerance < error && t.count() < AT::max_runtime && newton_step_ < AT::max_newtons_steps){
 	    std::cout << "\t Newton step #" << newton_step_+1;
 	    error = newton_step();
+	    #ifdef TVMTL_TVMIN_DEBUG
+		    std::string fname("step_img.csv");
+		    fname = std::to_string(irls_step_) + "." + std::to_string(newton_step_) + fname;
+		    data_.output_matval_img(fname.c_str());
+	    #endif
+
 	    std::cout << "\t Error: " << error << std::endl;
 	    newton_step_++;
 	}

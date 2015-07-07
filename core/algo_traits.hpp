@@ -75,8 +75,8 @@ struct algo_traits<SPD> {
     static const bool use_preconditioner = false;
     
     template <typename H>
-    using solver = Eigen::CholmodSupernodalLLT<H, Eigen::Upper>;
-    //using solver = Eigen::SparseLU<H>;
+    using solver = Eigen::SuperLU<H>;
+    //using solver = Eigen::CholmodSupernodalLLT<H, Eigen::Lower>;
 };
 
 

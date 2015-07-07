@@ -4,6 +4,7 @@
 //System includes
 #include <iostream>
 #include <cmath>
+#include <string>
 
 //Eigen includes
 #include <Eigen/Geometry>
@@ -39,26 +40,26 @@ class Visualization< SO, 3, DATA>{
 	typedef Visualization<SO,3, DATA> myType;
 
 	// Constructor
-	Visualization(DATA& dat): data_(dat), paint_inpainted_pixel_(false) {}
+	Visualization(DATA& dat): data_(dat), filename_(""), paint_inpainted_pixel_(false) {}
 
 	// Static members GL Interface
 	
 	// Class members GL Intergace
-	void GLInit(const char* filename);
+	void GLInit(const char* windowname);
 	void reshape(int x, int y);
 	void draw(void);
-	void saveImage(char* filename);
+	void saveImage(std::string filename);
 	void keyboard(unsigned char key, int x, int y);
 	//
 	//Acces methods
 	void paint_inpainted_pixel(bool setFlag) {paint_inpainted_pixel_ = setFlag; }
 
     private:
-	void storeImage(char* filename);
+	void storeImage(std::string filename);
 
 	DATA& data_;
 	bool paint_inpainted_pixel_;
-	char* filename_;
+	std::string filename_;
 	int width_, height_;
 };
 
@@ -70,7 +71,7 @@ class Visualization< SPD, 3, DATA>{
 	typedef Visualization<SPD,3, DATA> myType;
 
 	// Constructor
-	Visualization(DATA& dat): data_(dat), filename_(0), paint_inpainted_pixel_(false) {}
+	Visualization(DATA& dat): data_(dat), filename_(""), paint_inpainted_pixel_(false) {}
 
 	// Static members GL Interface
 	static void initLighting();
@@ -79,18 +80,18 @@ class Visualization< SPD, 3, DATA>{
 	void GLInit(const char* windowname);
 	void reshape(int x, int y);
 	void draw(void);
-	void saveImage(char* filename);
+	void saveImage(std::string filename);
 	void keyboard(unsigned char key, int x, int y);
 
 	//Acces methods
 	void paint_inpainted_pixel(bool setFlag) {paint_inpainted_pixel_ = setFlag; }
 
     private:
-	void storeImage(char* filename);
+	void storeImage(std::string filename);
 
 	DATA& data_;
 	bool paint_inpainted_pixel_;
-	char* filename_;
+	std::string filename_;
 	int width_, height_;
 };
 
@@ -212,19 +213,19 @@ void Visualization<SO, 3, DATA>::keyboard(unsigned char key, int x, int y) {
    switch (key) {
          case 27:     // ESC key
 	 case 113:	// q ley  
-	    if(filename_!=0) storeImage(filename_);
+	    if(filename_ != "") storeImage(filename_);
 	    glutLeaveMainLoop();
             break;
       }
 }
 
 template <class DATA>
-void Visualization<SO, 3, DATA>::saveImage(char* filename){
+void Visualization<SO, 3, DATA>::saveImage(std::string filename){
     filename_ = filename;
 }
 
 template <class DATA>
-void Visualization<SO, 3, DATA>::storeImage(char* filename){
+void Visualization<SO, 3, DATA>::storeImage(std::string filename){
     cv::Mat img(height_, width_, CV_8UC3);
     glPixelStorei(GL_PACK_ALIGNMENT, (img.step & 3)?1:4);
     glPixelStorei(GL_PACK_ROW_LENGTH, img.step/img.elemSize());
@@ -323,7 +324,7 @@ void Visualization<SPD, 3, DATA>::draw(void)
    
     float scaling = 2.0 / (3.0 * max);
     float spacing = 4.0 * scaling;
-    float z_distance= -4.0;
+    float z_distance= -3.0;
     
     #ifdef TV_VISUAL_DEBUG
 	std::cout << "ny: " << ny << " nx: " << nx << std::endl;
@@ -345,9 +346,11 @@ void Visualization<SPD, 3, DATA>::draw(void)
 	    
 	    Eigen::Affine3f t = Eigen::Affine3f::Identity();
 	    Eigen::SelfAdjointEigenSolver<typename mf_t::value_type> es(v);
-	    
+	
+	    double mean_diffusity = es.eigenvalues().sum() / 3.0;
+
 	    // anisotropic scaling transfomation and rotation
-	    t.linear() = (es.eigenvectors() * es.eigenvalues().asDiagonal() ).cast<float>();
+	    t.linear() = (es.eigenvectors() * (es.eigenvalues() / mean_diffusity).asDiagonal()).cast<float>();
 	    //t.linear() = es.eigenvalues().cast<float>().asDiagonal(); 
 	    glMultMatrixf(t.data());
 	   
@@ -399,19 +402,19 @@ void Visualization<SPD, 3, DATA>::keyboard(unsigned char key, int x, int y) {
    switch (key) {
          case 27:	// ESC key
 	 case 113:	// q ley
-	    if(filename_!=0) storeImage(filename_);
+	    if(filename_ != "") storeImage(filename_);
 	    glutLeaveMainLoop();
             break;
       }
 }
 
 template <class DATA>
-void Visualization<SPD, 3, DATA>::saveImage(char* filename){
+void Visualization<SPD, 3, DATA>::saveImage(std::string filename){
     filename_ = filename;
 }
 
 template <class DATA>
-void Visualization<SPD, 3, DATA>::storeImage(char* filename)
+void Visualization<SPD, 3, DATA>::storeImage(std::string filename)
 {
     std::cout << "Saving image...\n Width: " << width_ << "\n Height: " << height_ << "\n Filename: " << filename << std::endl;
     cv::Mat img(height_, width_, CV_8UC3);

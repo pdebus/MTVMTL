@@ -6,6 +6,8 @@
     #include <iostream>
     #include <cmath>
 
+    #define TVMTL_MATRIX_UTILS_DEBUG
+
     #include "../core/matrix_utils.hpp"
 
     int main(){
@@ -59,6 +61,16 @@
 
     tvmtl::KroneckerDLog(m2, Result);
     std::cout << "\n\nFull Kronecker Representation of DLog:\n" << Result << std::endl; 
+
+
+    Matrix3d m3;
+    m3 << 4102350, -2446420, 2209640, -2446420,  1458920, -1317710, 2209640, -1317710, 1190180;
+
+    tvmtl::KroneckerDLog(m3, Result);
+    std::cout << "\n\nPathological Matrix test:\n" << Result << std::endl;
+    
+
+
 
     return 0;
     }
