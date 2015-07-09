@@ -76,7 +76,7 @@ struct algo_traits<SPD> {
     
     template <typename H>
     using solver = Eigen::SuperLU<H>;
-    //using solver = Eigen::CholmodSupernodalLLT<H, Eigen::Lower>;
+    //using solver = Eigen::CholmodSupernodalLLT<H, Eigen::Upper>;
 };
 
 

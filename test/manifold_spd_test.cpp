@@ -51,6 +51,16 @@ void test(T& vec1, T& vec2){
 	std::cout << "\nTangent Base Restriction:" << std::endl;
 	std::cout << t << std::endl;
 
+	mf_t::restricted_deriv2_type rd2xx, rd2xy, rd2yy;
+	rd2xx = t.transpose() * d2xx * t;
+	rd2xy = t.transpose() * d2xy * t;
+	rd2yy = t.transpose() * d2yy * t;
+	std::cout << "\nRestricted second Derivatives:" << std::endl;
+	std::cout << rd2xx << std::endl;
+	std::cout << std::endl;
+	std::cout << rd2xy << std::endl;
+	std::cout << std::endl;
+	std::cout << rd2yy << std::endl;
 
 }
 

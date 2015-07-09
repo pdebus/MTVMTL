@@ -120,6 +120,10 @@ add_executable(spd_tvmin_test spd_tvmin_test.cpp)
 add_test(spd_tvmin_test spd_tvmin_test)
 target_link_libraries(spd_tvmin_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 
+add_executable(dti_functional_test dti_functional_test.cpp)
+add_test(dti_functional_test dti_functional_test)
+target_link_libraries(dti_functional_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+
 add_executable(dti_tvmin_test dti_tvmin_test.cpp)
 add_test(dti_tvmin_test dti_tvmin_test)
 target_link_libraries(dti_tvmin_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
