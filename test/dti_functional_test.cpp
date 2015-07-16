@@ -7,6 +7,7 @@
 //#define TV_DATA_DEBUG
 #define TV_FUNC_DEBUG
 #define TV_FUNC_DEBUG_VERBOSE
+#define TV_FUNC_DEBUG_VERBOSE2
 
 #include "../core/algo_traits.hpp"
 #include "../core/data.hpp"

@@ -219,7 +219,7 @@ typename Functional<FIRSTORDER, disc, MANIFOLD, DATA >::result_type Functional<F
     }
     else{
 	auto f = [] (const value_type& i, const value_type& n) { return MANIFOLD::dist_squared(i,n); };
-	J1 = vpp::sum(vpp::pixel_wise(data_.img_, data_.noise_img_)(vpp::_no_threads)| f);
+	J1 = vpp::sum(vpp::pixel_wise(data_.img_, data_.noise_img_)(/*vpp::_no_threads*/)| f);
     }
 
     updateWeights();
@@ -412,21 +412,27 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
 	auto f = [] (deriv2_type& h, const value_type& i, const value_type& n) { MANIFOLD::deriv2xx_dist_squared(i,n,h); };
 	vpp::pixel_wise(hessian, data_.img_, data_.noise_img_) | f;
     }
+    
+    #ifdef TV_FUNC_DEBUG
+	output_matval_img(hessian,"HF0.csv");
+    #endif
+
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Local to global insert" << std::endl;
     #endif
    //TODO: Check whether all 2nd-derivative matrices are symmetric s.t. only half the matrix need to be traversed. e.g. local_col=local_row instead of 0
     auto local2globalInsert = [&](const tm_base_type& t, const deriv2_type& h, const vpp::vint2 coord) { 
-	int pos = manifold_dim*(coord[0]+nr*coord[1]); // columnwise flattening
+	int pos = manifold_dim * (coord[0] + nr * coord[1]); // columnwise flattening
 	restricted_deriv2_type ht=t.transpose()*h*t;
-	for(int local_row=0; local_row<ht.rows(); local_row++)
-	    for(int local_col=0; local_col<ht.cols(); local_col++){
+	for(int local_row = 0; local_row<ht.rows(); local_row++)
+	    for(int local_col = local_row; local_col < ht.cols(); local_col++){
 		scalar_type e = ht(local_row, local_col);
 		if(e!=0){
-		    int global_row = pos+local_row;
-		    int global_col = pos+local_col;
+		    int global_row = pos + local_row;
+		    int global_col = pos + local_col;
 		    triplist.push_back(Trip(global_row,global_col,e));
-		    triplist.push_back(Trip(global_col,global_row,e));
+		    if(global_row != global_col)
+			triplist.push_back(Trip(global_col,global_row,e));
 		    //HF.insert(global_row, global_col) = e;
 		    //if(global_row != global_col)
 		    //	HF.insert(global_col, global_row) = e;
@@ -533,6 +539,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
     }
     
     #ifdef TV_FUNC_DEBUG
+        output_matval_img(T_, "T.csv");
 	output_matval_img(hessian, "NonMixedHessian.csv");
     #endif
     #ifdef TV_FUNC_DEBUG_VERBOSE
@@ -543,9 +550,20 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
     // --> additional parameters sparse_mat, offset
     int row_offset=0;
     int col_offset=0;
-    auto local2globalInsertHTV = [&](const tm_base_type& t,const deriv2_type& h, const vpp::vint2 coord) { 
+    auto local2globalInsertHTV = [&](const tm_base_type& t1, const tm_base_type& t2, const deriv2_type& h, const vpp::vint2 coord) { 
 	int pos = manifold_dim*(coord[0]+nr*coord[1]); // columnwise flattening
-	restricted_deriv2_type ht = t.transpose()*h*t;
+	restricted_deriv2_type ht = t1.transpose()*h*t2;
+	     #ifdef TV_FUNC_DEBUG_VERBOSE2
+		std::cout << "\n\nPos: " << pos << " coord[0]=" << coord[0] << " coord[1]=" << coord[1] << std::endl;
+		std::cout << "\t\tT_left:" << std::endl;
+		std::cout << t1 << std::endl;
+		std::cout << "\t\tHbig:" << std::endl;
+		std::cout << h << std::endl;
+		std::cout << "\t\tT_right:" << std::endl;
+		std::cout << t2 << std::endl;
+		std::cout << "\t\tHsmall:" << std::endl;
+		std::cout << ht << std::endl;
+	    #endif
 	for(int local_row=0; local_row<ht.rows(); local_row++)
 	    for(int local_col=0; local_col<ht.cols(); local_col++){
 		scalar_type e = ht(local_row, local_col);
@@ -553,14 +571,15 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
 		    int global_row = pos + row_offset + local_row;
 		    int global_col = pos + col_offset + local_col;
 		    triplist.push_back(Trip(global_row,global_col,e));
-		    triplist.push_back(Trip(global_col,global_row,e));
+		    if(row_offset > 0 || col_offset > 0)
+			triplist.push_back(Trip(global_col,global_row,e));
 		    //HTV.insert(global_row, global_col) = e;
 		    //if(global_col != global_row)
 		    //	HTV.insert(global_col, global_row)  = e;
 		}
 	    }
     };
-    vpp::pixel_wise(T_, hessian, hessian.domain())(vpp::_no_threads) | local2globalInsertHTV;
+    vpp::pixel_wise(T_, T_, hessian, hessian.domain())(vpp::_no_threads) | local2globalInsertHTV;
     
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...->XD12" << std::endl;
@@ -580,7 +599,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
 	// Offsets for upper nyth subdiagonal
 	row_offset=0;
 	col_offset=manifold_dim*nr;
-	vpp::pixel_wise(T_ | without_first_col, XD12, XD12.domain())(vpp::_no_threads) | local2globalInsertHTV;
+	vpp::pixel_wise(T_ | without_last_col, T_ | without_first_col, XD12, XD12.domain())(vpp::_no_threads) | local2globalInsertHTV;
     }
     
     #ifdef TV_FUNC_DEBUG_VERBOSE
@@ -595,25 +614,25 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
 	#ifdef TV_FUNC_DEBUG 
 	    output_matval_img(YD12,"YD12.csv");
         #endif
+	
 	//Set last row to zero
-	/*
 	deriv2_type *lastrow = &YD12(nr-1,0);
 	for(int c=0; c< nc; c++) 
 	    lastrow[c]=deriv2_type::Zero();
-	*/
+
 	#ifdef TV_FUNC_DEBUG_VERBOSE
 		std::cout << "\t\t...Local to global insert:" << std::endl;
 	#endif
 	// Offsets for first upper subdiagonal
 	row_offset=0;
 	col_offset=manifold_dim;
-	vpp::pixel_wise(T_ | without_first_row, YD12 | without_last_row, without_last_row)(vpp::_no_threads) | local2globalInsertHTV;
-	/*
+	vpp::pixel_wise(T_ | without_last_row, T_ | without_first_row, YD12 | without_last_row, without_last_row)(vpp::_no_threads) | local2globalInsertHTV;
+	
 	//Manually insert last row
-	tm_base_type *firstrow = &T_(0,0);
 	for(int c=0; c<nc-1; c++) 
-	    local2globalInsertHTV(firstrow[c], lastrow[c], vpp::vint2(nr-1,c));
-	*/
+	    local2globalInsertHTV(T_(nr-1,c), T_(nr-1,c + 1), YD12(nr-1,c), vpp::vint2(nr-1, c));
+	    //local2globalInsertHTV(firstrow[c], lastrow[c], vpp::vint2(nr-1,c));
+	
 	HTV.setFromTriplets(triplist.begin(),triplist.end());              
 	HTV.makeCompressed();
 	triplist.clear();

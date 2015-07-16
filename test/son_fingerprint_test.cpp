@@ -69,9 +69,9 @@ int main(int argc, const char *argv[])
 
 	myData.img_ = vpp::clone(myData.noise_img_, vpp::_border = 1);
 	fill_border_closest(myData.img_);
-	myData.initWeights();
+
 	myData.initInp();
-	myData.initEdgeWeights();
+	myData.initEdgeweights();
 
 	myData.output_matval_img("son_img1.csv");
 
