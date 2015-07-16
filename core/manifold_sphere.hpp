@@ -72,6 +72,11 @@ struct Manifold< SPHERE, N> {
 
 	// Projection
 	inline static void projector(ref_type x);
+	
+	// Interpolation pre- and postprocessing
+	inline static void interpolation_preprocessing(ref_type x) {};
+	inline static void interpolation_postprocessing(ref_type x) {};
+
 };
 
 

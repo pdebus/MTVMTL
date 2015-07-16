@@ -77,6 +77,10 @@ struct Manifold< SO, N> {
 	// Projection
 	inline static void projector(ref_type x);
 
+	// Interpolation pre- and postprocessing
+	inline static void interpolation_preprocessing(ref_type x) {};
+	inline static void interpolation_postprocessing(ref_type x) {};
+
 
 };
 
@@ -144,9 +148,9 @@ inline void Manifold < SO, N>::deriv2xx_dist_squared( cref_type x, cref_type y, 
     value_type XtY = x.transpose()*y;
 
     deriv2_type logXtY_kron_I ,I_kron_x, Yt_kron_I, dlog; 
-    Eigen::kroneckerProduct(XtY.log().eval(),value_type::Identity(),logXtY_kron_I);
-    Eigen::kroneckerProduct(value_type::Identity(),x,I_kron_x);
-    Eigen::kroneckerProduct(y.transpose(),value_type::Identity(),Yt_kron_I);
+    logXtY_kron_I = Eigen::kroneckerProduct(XtY.log().eval(),value_type::Identity());
+    I_kron_x = Eigen::kroneckerProduct(value_type::Identity(),x);
+    Yt_kron_I = Eigen::kroneckerProduct(y.transpose(),value_type::Identity());
     KroneckerDLog(XtY, dlog);
 
     result = -2.0 * (logXtY_kron_I.transpose() + I_kron_x * dlog * Yt_kron_I * permutation_matrix );
@@ -157,7 +161,7 @@ inline void Manifold < SO, N>::deriv2xy_dist_squared( cref_type x, cref_type y, 
     value_type XtY = x.transpose()*y;
 
     deriv2_type I_kron_x, dlog; 
-    Eigen::kroneckerProduct(value_type::Identity(),x,I_kron_x);
+    I_kron_x = Eigen::kroneckerProduct(value_type::Identity(),x);
     KroneckerDLog(XtY, dlog);
 
     result = -2.0 * I_kron_x * dlog * I_kron_x.transpose();

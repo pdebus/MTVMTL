@@ -142,11 +142,11 @@ inline void Manifold < SPD, N>::deriv2xx_dist_squared( cref_type x, cref_type y,
     KroneckerDSqrt(x, dsqrt);
 
     deriv2_type T2T4tId, IdT2T4, T2T2, T2yId, IdT2y;
-    Eigen::kroneckerProduct(T2 * T4.transpose(), value_type::Identity(), T2T4tId);
-    Eigen::kroneckerProduct(value_type::Identity(), T2 * T4, IdT2T4);
-    Eigen::kroneckerProduct(T2, T2, T2T2);
-    Eigen::kroneckerProduct(T2 * y, value_type::Identity(), T2yId);
-    Eigen::kroneckerProduct( value_type::Identity(), T2 * y, IdT2y);
+    T2T4tId = Eigen::kroneckerProduct(T2 * T4.transpose(), value_type::Identity());
+    IdT2T4 = Eigen::kroneckerProduct(value_type::Identity(), T2 * T4);
+    T2T2 = Eigen::kroneckerProduct(T2, T2);
+    T2yId = Eigen::kroneckerProduct(T2 * y, value_type::Identity());
+    IdT2y = Eigen::kroneckerProduct(value_type::Identity(), T2 * y);
 
     result =  2 * (T2T4tId + IdT2T4 + T2T2 * dlog * (T2yId + IdT2y) ) * T2T2 * dsqrt;
 }
@@ -158,7 +158,7 @@ inline void Manifold < SPD, N>::deriv2xy_dist_squared( cref_type x, cref_type y,
     T1 = isqrtX * y * isqrtX;
 
     deriv2_type kp_isqrtX, dlog;
-    Eigen::kroneckerProduct(isqrtX, isqrtX, kp_isqrtX);
+    kp_isqrtX = Eigen::kroneckerProduct(isqrtX, isqrtX);
     KroneckerDLog(T1, dlog);
 
     result = -2 * kp_isqrtX * dlog * kp_isqrtX;
