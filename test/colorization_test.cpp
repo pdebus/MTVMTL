@@ -91,16 +91,19 @@ int main(int argc, const char *argv[])
 {
 	Eigen::initParallel();
 	
-	if (argc < 2){
-	    std::cerr << "Usage : " << argv[0] << " image [lambda]" << std::endl;
+	if (argc < 3){
+	    std::cerr << "Usage : " << argv[0] << " image [lambda] [threshold]" << std::endl;
 	    return 1;
 	}
 
 	double lam=0.01;
+	double threshold=0.01;
 
-	if(argc==3)
+	if(argc==4){
 	    lam=atof(argv[2]);
-	
+	    threshold=atof(argv[3]);
+	}
+
 	std::string fname(argv[1]);
 	
 	chroma_t myChroma=chroma_t();
@@ -112,7 +115,7 @@ int main(int argc, const char *argv[])
 	myChroma.rgb_readChromaticity(argv[1]);
 	myChroma.inpaint_=true;
 	myChroma.setEdgeWeights(myBright.edge_weights_);
-	myChroma.createRandInpWeights(0.01);
+	myChroma.createRandInpWeights(threshold);
 	removeColor(myChroma, myBright);
 	
 	// Recombine Brightness and Chromaticity parts to view Picture with colors removed
