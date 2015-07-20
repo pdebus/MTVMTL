@@ -40,17 +40,21 @@ struct Manifold< GRASSMANN, N, P> {
 	typedef const value_type&		    cref_type;
 	
 	// Tangent space typedefs
-	typedef Eigen::Matrix <scalar_type, N*N, N * (N + 1) / 2> tm_base_type;
+	typedef Eigen::Matrix <scalar_type, N * P, P * (N - P) > tm_base_type;
 	typedef tm_base_type& tm_base_ref_type;
 
 	// Derivative Typedefs
 	typedef value_type			     deriv1_type;
 	typedef deriv1_type&			     deriv1_ref_type;
 	
-	typedef Eigen::Matrix<scalar_type, N*N, N*N>				deriv2_type;
+	typedef Eigen::Matrix<scalar_type, N*P, N*P>				deriv2_type;
 	typedef deriv2_type&							deriv2_ref_type;
-	typedef	Eigen::Matrix<scalar_type, N * (N + 1) / 2, N * (N + 1) / 2>	restricted_deriv2_type;
+	typedef	Eigen::Matrix<scalar_type, P * (N - P), P * (N - P) >		restricted_deriv2_type;
 
+	// Helper Types
+	typedef Eigen::PermutationMatrix<N * P, N * P, int> perm_type;
+
+	inline static perm_type ConstructPermutationMatrix();
 
 	// Manifold distance functions (for IRLS)
 	inline static dist_type dist_squared(cref_type x, cref_type y);
@@ -74,167 +78,121 @@ struct Manifold< GRASSMANN, N, P> {
 	inline static void projector(ref_type x);
 
 	// Interpolation pre- and postprocessing
-	inline static void interpolation_preprocessing(ref_type x);
-	inline static void interpolation_postprocessing(ref_type x);
+	inline static void interpolation_preprocessing(ref_type x) {};
+	inline static void interpolation_postprocessing(ref_type x) {};
 
 };
 
 
-/*-----IMPLEMENTATION SPD----------*/
+/*-----IMPLEMENTATION GRASSMANN----------*/
 
 // Static constants, Outside definition to avoid linker error
 
-template <int N>
-const MANIFOLD_TYPE Manifold < SPD, N>::MyType = SPD; 
+template <int N, int P>
+const MANIFOLD_TYPE Manifold <GRASSMANN, N, P>::MyType = GRASSMANN; 
 
-template <int N>
-const int Manifold < SPD, N>::manifold_dim = N * (N + 1) / 2; 
+template <int N, int P>
+const int Manifold <GRASSMANN, N, P>::manifold_dim = (N - P) * P; 
 
-template <int N>
-const int Manifold < SPD, N>::value_dim = N * N; 
+template <int N, int P>
+const int Manifold <GRASSMANN, N, P>::value_dim = N * P; 
 
-template <int N>
-const bool Manifold < SPD, N>::non_isometric_embedding = true; 
+template <int N, int P>
+const bool Manifold <GRASSMANN, N, P>::non_isometric_embedding = false; 
+
+// PermutationMatrix
+template <int N, int P>
+typename Manifold < GRASSMANN, N, P>::perm_type Manifold<GRASSMANN, N, P>::ConstructPermutationMatrix(){
+    perm_type Perm;
+    Perm.setIdentity();
+    for(int i=0; i< N*P; i++)
+	for(int j=0; j<i; j++)
+	    Perm.applyTranspositionOnTheRight(j*3+i, i*3+j);
+    return Perm;
+}
+
+template <int N, P>
+const typename Manifold < GRASSMANN, N, P>::perm_type Manifold<GRASSMANN, N, P>::permutation_matrix = ConstructPermutationMatrix(); 
 
 
-// Squared SPD distance function
-template <int N>
-inline typename Manifold < SPD, N>::dist_type Manifold < SPD, N>::dist_squared( cref_type x, cref_type y ){
-    #ifdef TV_SPD_DEBUG
-	std::cout << "\nDist2 function with x=\n" << x << "\nand y=\n" << y << std::endl;
-    #endif
-// NOTE: If x is not strictly spd, using LDLT completely halts the algorithm
-/*    value_type sqrtX = x.sqrt();
-    Eigen::LDLT<value_type> ldlt;
-    ldlt.compute(sqrtX);
+// Squared GRASSMANN distance function
+template <int N, int P>
+inline typename Manifold <GRASSMANN, N, P>::dist_type Manifold <GRASSMANN, N, P>::dist_squared( cref_type x, cref_type y ){
+    
+    // Geodesic distance
+    /*
+    XtY = x.transpose()*Y;
+    Eigen::JacobiSVD<value_type> svd(XtY, Eigen::ComputeThinU | Eigen::ComputeThinV);
+    return svd.singularValues().squaredNorm();
+    */
 
-    value_type Z = ldlt.solve(y).transpose();	
-    return ldlt.solve(Z).transpose().log().squaredNorm();	*/
-    value_type invsqrt = x.sqrt().inverse();
-    return (invsqrt * y * invsqrt).log().squaredNorm();
+    // Projection F-distance;
+    return 0.5 * (x * x.transpose() - y * y.transpose()).squaredNorm();
 }
 
 
-// Derivative of Squared SPD distance w.r.t. first argument
-// TODO: Switch to solve() for N>4?
-template <int N>
-inline void Manifold < SPD, N>::deriv1x_dist_squared( cref_type x, cref_type y, deriv1_ref_type result){
-    value_type invsqrt = x.sqrt().inverse();
-    result = -2.0 * invsqrt * (invsqrt * y * invsqrt).log() * invsqrt;
+// Derivative of Squared GRASSMANN distance w.r.t. first argument
+template <int N, int P>
+inline void Manifold <GRASSMANN, N, P>::deriv1x_dist_squared( cref_type x, cref_type y, deriv1_ref_type result){
+    result = 2.0 * (x * x.transpose() - y * y.transpose()) * x;
 }
-// Derivative of Squared SPD distance w.r.t. second argument
-template <int N>
-inline void Manifold < SPD, N>::deriv1y_dist_squared( cref_type x, cref_type y, deriv1_ref_type result){
-    deriv1x_dist_squared(y, x, result);
+// Derivative of Squared GRASSMANN distance w.r.t. second argument
+template <int N, int P>
+inline void Manifold <GRASSMANN, N, P>::deriv1y_dist_squared( cref_type x, cref_type y, deriv1_ref_type result){
+    result = 2.0 * (y * y.transpose() - x * x.transpose()) * y;
 }
 
 
-// Second Derivative of Squared SPD distance w.r.t first argument
-template <int N>
-inline void Manifold < SPD, N>::deriv2xx_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
-    value_type T2, T3, T4;
-    T2 = x.sqrt().inverse();
-    T3 = T2 * y * T2;
-    T4 = T3.log();
-
-    deriv2_type dlog, dsqrt;
-    KroneckerDLog(T3, dlog);
-    KroneckerDSqrt(x, dsqrt);
-
-    deriv2_type T2T4tId, IdT2T4, T2T2, T2yId, IdT2y;
-    Eigen::kroneckerProduct(T2 * T4.transpose(), value_type::Identity(), T2T4tId);
-    Eigen::kroneckerProduct(value_type::Identity(), T2 * T4, IdT2T4);
-    Eigen::kroneckerProduct(T2, T2, T2T2);
-    Eigen::kroneckerProduct(T2 * y, value_type::Identity(), T2yId);
-    Eigen::kroneckerProduct( value_type::Identity(), T2 * y, IdT2y);
-
-    result =  2 * (T2T4tId + IdT2T4 + T2T2 * dlog * (T2yId + IdT2y) ) * T2T2 * dsqrt;
+// Second Derivative of Squared GRASSMANN distance w.r.t first argument
+template <int N, int P>
+inline void Manifold <GRASSMANN, N, P>::deriv2xx_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
+    deriv2_type XtXId, IdXXt, XtXP, IdYYt;
+    XtXId = Eigen::KroneckerProduct(x.transpose() * x, value_type::Identity());
+    IdXXt = Eigen::KroneckerProduct(value_type::Identity(), x * x.transpose());
+    XtXP = Eigen::KroneckerProduct(x.transpose(), x) * PermutationMatrix;
+    IdYYt = Eigen::KroneckerProduct(value_type::Identity(), y * y.transpose());
+    result = 2.0 * (XtXId + IdXXt + XtXId + IdYYt);
 }
-// Second Derivative of Squared SPD distance w.r.t first and second argument
-template <int N>
-inline void Manifold < SPD, N>::deriv2xy_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
-    value_type isqrtX, T1;
-    isqrtX = x.sqrt().eval().inverse();
-    T1 = isqrtX * y * isqrtX;
-
-    deriv2_type kp_isqrtX, dlog;
-    Eigen::kroneckerProduct(isqrtX, isqrtX, kp_isqrtX);
-    KroneckerDLog(T1, dlog);
-
-    result = -2 * kp_isqrtX * dlog * kp_isqrtX;
+// Second Derivative of Squared GRASSMANN distance w.r.t first and second argument
+template <int N, int P>
+inline void Manifold <GRASSMANN, N, P>::deriv2xy_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
+    result = -2.0 * (Eigen::KroneckerProduct(x.transpose() * y, value_type::Identity()) + Eigen::KroneckerProduct(x.transpose(), y) * PermutationMatrix);
 }
-// Second Derivative of Squared SPD distance w.r.t second argument
-template <int N>
-inline void Manifold < SPD, N>::deriv2yy_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
+// Second Derivative of Squared GRASSMANN distance w.r.t second argument
+template <int N, int P>
+inline void Manifold <GRASSMANN, N, P>::deriv2yy_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
     deriv2xx_dist_squared(y, x, result);
 }
 
 
 
 // Exponential and Logarithm Map
-template <int N>
+template <int N, int P>
 template <typename DerivedX, typename DerivedY>
-inline void Manifold <SPD, N>::exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedX>& result){
-    value_type sqrtX = x.sqrt();
-    value_type Z = sqrtX.ldlt().solve(y).transpose();	
-    result = sqrtX * sqrtX.transpose().ldlt().solve(Z).exp() * sqrtX;	
+inline void Manifold <GRASSMANN, N, P>::exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedX>& result){
+    Eigen::JacobiSVD<value_type> svd(y, Eigen::ComputeThinU | Eigen::ComputeThinV);
+    result = x * svd.matrixV() * svd.singularValues().array().cos().asDiagonal() * svd.matrixV().transpose() + svd.matrixU() * svd.singularValues().array().sin().asDiagonal() * svd.matrixV().transpose();
 }
 
-template <int N>
-inline void Manifold <SPD, N>::log(cref_type x, cref_type y, ref_type result){
-    value_type sqrtX = x.sqrt();
-    value_type Z = sqrtX.solve(y).transpose();	
-    result = sqrtX * sqrtX.transpose().ldlt().solve(Z).log() * sqrtX;	
+template <int N, int P>
+inline void Manifold <GRASSMANN, N, P>::log(cref_type x, cref_type y, ref_type result){
+    value_type XtY = x.transpose() * y;
+    Eigen::JacobiSVD<value_type> svd(XtY, Eigen::ComputeThinU | Eigen::ComputeThinV);
+    Eigen::VectorXd D = svd.singularValues().array().acos() / svd.singularValues().array().asin();
+
+    result = (-x * svd.matrixV() * svd.singularValues().asDiagonal() + y * svd.matrixV()) * D.asDiagonal() * svd.matrixU().transpose(); 
 }
 
 // Tangent Plane restriction
-template <int N>
-inline void Manifold <SPD, N>::tangent_plane_base(cref_type x, tm_base_ref_type result){
-    int d = value_type::RowsAtCompileTime;
-    int k = 0;
-    
-    value_type S, T;
-    S = x.sqrt();
+template <int N, int P>
+inline void Manifold <GRASSMANN, N, P>::tangent_plane_base(cref_type x, tm_base_ref_type result){
 
-    for(int i=0; i<d; i++){
-	T.setZero();
-	T.col(i) = S.col(i);
-	T = T * S;
-
-	result.col(k) = Eigen::Map<Eigen::VectorXd>(T.data(), T.size());
-	++k;
-    }
-
-    for(int i=0; i<d-1; i++)
-	for(int j=i+1; j<d; j++){
-	    T.setZero();
-	    T.col(i) = S.col(j);
-	    T.col(j) = S.col(i);
-	    T = T * S;
-
-	    result.col(k) = Eigen::Map<Eigen::VectorXd>(T.data(), T.size());
-	    ++k;
-	}
 }
 
 
-template <int N>
-inline void Manifold <SPD, N>::projector(ref_type x){
-    // does not exist since SPD is an open set
-    // TODO: Eventually implement projection to semi positive definite matrices
-}
+template <int N, int P>
+inline void Manifold <GRASSMANN, N, P>::projector(ref_type x){
 
-
-template <int N>
-inline void Manifold<SPD, N>::interpolation_preprocessing(ref_type x){
-    value_type t = x.log();
-    x = t;
-}
-
-template <int N>
-inline void Manifold<SPD, N>::interpolation_postprocessing(ref_type x){
-    value_type t = ( 0.5 * (x + x.transpose()) ).exp();
-    x = t;
 }
 
 

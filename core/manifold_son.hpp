@@ -106,7 +106,7 @@ template <int N>
 typename Manifold < SO, N>::perm_type Manifold<SO, N>::ConstructPermutationMatrix(){
     perm_type P;
     P.setIdentity();
-    for(int i=0; i<3; i++)
+    for(int i=0; i<N; i++)
 	for(int j=0; j<i; j++)
 	    P.applyTranspositionOnTheRight(j*3+i, i*3+j);
     return P;
