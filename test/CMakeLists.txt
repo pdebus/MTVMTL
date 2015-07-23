@@ -61,6 +61,10 @@ add_executable(manifold_spd_test manifold_spd_test.cpp)
 add_test(manifold_spd_test manifold_spd_test)
 target_link_libraries(manifold_spd_test gomp)
 
+add_executable(manifold_grassmann_test manifold_grassmann_test.cpp)
+add_test(manifold_grassmann_test manifold_grassmann_test)
+target_link_libraries(manifold_grassmann_test gomp)
+
 add_executable(manifold_test manifold_test.cpp)
 add_test(manifold_test manifold_test)
 

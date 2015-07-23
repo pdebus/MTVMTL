@@ -10,7 +10,8 @@ enum MANIFOLD_TYPE {
     EUCLIDIAN,
     SPHERE,
     SO,
-    SPD
+    SPD,
+    GRASSMANN
 };
 
 enum ALGORITHM {
@@ -46,6 +47,7 @@ inline std::ostream& operator<<( std::ostream& out, const MANIFOLD_TYPE& ret ){
         case SPHERE:        out << "SPHERE";        break;
 	case SO:            out << "SO";            break;
 	case SPD:           out << "SPD";           break;
+	case GRASSMANN:     out << "GRASSMANN";     break;
         default:            out << "Undefined";     break;
 	}
     return out;

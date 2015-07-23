@@ -8,6 +8,7 @@
 #include <Eigen/Core>
 #include <Eigen/Sparse>
 #include <Eigen/SVD>
+#include <Eigen/QR>
 #include <unsupported/Eigen/MatrixFunctions>
 #include <unsupported/Eigen/KroneckerProduct>
 
@@ -65,6 +66,7 @@ struct Manifold< GRASSMANN, N, P> {
 	inline static void deriv2xy_dist_squared(cref_type x, cref_type y, deriv2_ref_type result);
 	inline static void deriv2yy_dist_squared(cref_type x, cref_type y, deriv2_ref_type result);
 
+	static const perm_type permutation_matrix;
 
 	// Manifold exponentials und logarithms ( for Proximal point)
 	template <typename DerivedX, typename DerivedY>
@@ -105,13 +107,13 @@ template <int N, int P>
 typename Manifold < GRASSMANN, N, P>::perm_type Manifold<GRASSMANN, N, P>::ConstructPermutationMatrix(){
     perm_type Perm;
     Perm.setIdentity();
-    for(int i=0; i< N*P; i++)
+    for(int i=0; i< N * P; i++)
 	for(int j=0; j<i; j++)
-	    Perm.applyTranspositionOnTheRight(j*3+i, i*3+j);
+	    Perm.applyTranspositionOnTheRight(j * N * P + i, i * N * P + j);
     return Perm;
 }
 
-template <int N, P>
+template <int N, int P>
 const typename Manifold < GRASSMANN, N, P>::perm_type Manifold<GRASSMANN, N, P>::permutation_matrix = ConstructPermutationMatrix(); 
 
 
@@ -147,16 +149,16 @@ inline void Manifold <GRASSMANN, N, P>::deriv1y_dist_squared( cref_type x, cref_
 template <int N, int P>
 inline void Manifold <GRASSMANN, N, P>::deriv2xx_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
     deriv2_type XtXId, IdXXt, XtXP, IdYYt;
-    XtXId = Eigen::KroneckerProduct(x.transpose() * x, value_type::Identity());
-    IdXXt = Eigen::KroneckerProduct(value_type::Identity(), x * x.transpose());
-    XtXP = Eigen::KroneckerProduct(x.transpose(), x) * PermutationMatrix;
-    IdYYt = Eigen::KroneckerProduct(value_type::Identity(), y * y.transpose());
+    XtXId = Eigen::kroneckerProduct(x.transpose() * x, Eigen::Matrix<scalar_type, N, N>::Identity());
+    IdXXt = Eigen::kroneckerProduct(Eigen::Matrix<scalar_type, P, P>::Identity(), x * x.transpose());
+    XtXP = Eigen::kroneckerProduct(x.transpose(), x) * permutation_matrix;
+    IdYYt = Eigen::kroneckerProduct(Eigen::Matrix<scalar_type, P, P>::Identity(), y * y.transpose());
     result = 2.0 * (XtXId + IdXXt + XtXId + IdYYt);
 }
 // Second Derivative of Squared GRASSMANN distance w.r.t first and second argument
 template <int N, int P>
 inline void Manifold <GRASSMANN, N, P>::deriv2xy_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
-    result = -2.0 * (Eigen::KroneckerProduct(x.transpose() * y, value_type::Identity()) + Eigen::KroneckerProduct(x.transpose(), y) * PermutationMatrix);
+    result = -2.0 * (Eigen::kroneckerProduct(x.transpose() * y, Eigen::Matrix<scalar_type, N, N>::Identity()) + Eigen::kroneckerProduct(x.transpose(), y) * permutation_matrix);
 }
 // Second Derivative of Squared GRASSMANN distance w.r.t second argument
 template <int N, int P>
@@ -186,13 +188,36 @@ inline void Manifold <GRASSMANN, N, P>::log(cref_type x, cref_type y, ref_type r
 // Tangent Plane restriction
 template <int N, int P>
 inline void Manifold <GRASSMANN, N, P>::tangent_plane_base(cref_type x, tm_base_ref_type result){
+    value_type Hproj = (Eigen::Matrix<scalar_type, N, N>::Identity() - x * x.transpose()) * x;
+    Eigen::JacobiSVD<value_type> svd(Hproj);
+    Eigen::Matrix<scalar_type, N, N - P> xorth = svd.matrixU().rightCols(N-P);
+    
+    int k = 0;
+    for(int r = 0; r < N - P; r++)
+	for(int c = 0; c < P; c++ ){
+	    Eigen::Matrix<scalar_type, N, P> T = Eigen::Matrix<scalar_type, N, P>::Zero();
+	    T.col(c) = xorth.col(r);
+	    result.col(k) = Eigen::Map<Eigen::VectorXd>(T.data(), T.size());
+	    ++k;
+	}
 
 }
 
 
 template <int N, int P>
 inline void Manifold <GRASSMANN, N, P>::projector(ref_type x){
-
+    std::cout << "Projector with P=" << P << " and Argument\n" << x << std::endl;
+	if(P > 1){
+	    std::cout << "\nPerforming QR...\n";
+	    Eigen::HouseholderQR<value_type> qr(x);
+	    x = qr.householderQ();
+	}
+	else{
+	    std::cout << "\nNormalizing...\n";
+	    double norm = x.norm();
+	    if(norm != 0)
+		x = x / norm;
+	}
 }
 
 

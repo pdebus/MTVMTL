@@ -6,5 +6,6 @@
 #include "manifold_sphere.hpp"
 #include "manifold_son.hpp"
 #include "manifold_spd.hpp"
+#include "manifold_grassmann.hpp"
 
 #endif

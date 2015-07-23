@@ -7,7 +7,7 @@
 namespace tvmtl {
 
 // Primary Template
-template < enum MANIFOLD_TYPE MF, int N >
+template < enum MANIFOLD_TYPE MF, int N, int P=0 >
 struct Manifold { };
 
 } // end namespace tvmtl
