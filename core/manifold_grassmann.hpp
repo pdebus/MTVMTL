@@ -4,6 +4,7 @@
 #include <cmath>
 #include <complex>
 #include <iostream>
+#include <functional>
 
 #include <Eigen/Core>
 #include <Eigen/Sparse>
@@ -172,17 +173,34 @@ inline void Manifold <GRASSMANN, N, P>::deriv2yy_dist_squared( cref_type x, cref
 template <int N, int P>
 template <typename DerivedX, typename DerivedY>
 inline void Manifold <GRASSMANN, N, P>::exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedX>& result){
-    Eigen::JacobiSVD<value_type> svd(y, Eigen::ComputeThinU | Eigen::ComputeThinV);
-    result = x * svd.matrixV() * svd.singularValues().array().cos().asDiagonal() * svd.matrixV().transpose() + svd.matrixU() * svd.singularValues().array().sin().asDiagonal() * svd.matrixV().transpose();
+    Eigen::JacobiSVD<Eigen::Matrix<scalar_type, Eigen::Dynamic, Eigen::Dynamic> > svd(y, Eigen::ComputeThinU | Eigen::ComputeThinV);
+    result = x * svd.matrixV() * svd.singularValues().array().cos().matrix().asDiagonal() * svd.matrixV().transpose() + svd.matrixU() * svd.singularValues().array().sin().matrix().asDiagonal() * svd.matrixV().transpose();
 }
 
 template <int N, int P>
 inline void Manifold <GRASSMANN, N, P>::log(cref_type x, cref_type y, ref_type result){
-    value_type XtY = x.transpose() * y;
-    Eigen::JacobiSVD<value_type> svd(XtY, Eigen::ComputeThinU | Eigen::ComputeThinV);
-    Eigen::VectorXd D = svd.singularValues().array().acos() / svd.singularValues().array().asin();
+    /*
+    Eigen::Matrix<scalar_type, P, N> YtX = y.transpose() * x;
+    Eigen::JacobiSVD<value_type> svd(YtX, Eigen::ComputeThinU | Eigen::ComputeThinV);
+    Eigen::VectorXd D = (svd.singularValues().array().acos() / svd.singularValues().array().asin()).matrix();
 
     result = (-x * svd.matrixV() * svd.singularValues().asDiagonal() + y * svd.matrixV()) * D.asDiagonal() * svd.matrixU().transpose(); 
+    */
+    Eigen::Matrix<scalar_type, P, P> YtX = y.transpose() * x;
+    Eigen::Matrix<scalar_type, P, N> At = y.transpose() - YtX * x.transpose();
+
+    value_type B = YtX.householderQr().solve(At).transpose();
+
+    Eigen::JacobiSVD<Eigen::Matrix<scalar_type, Eigen::Dynamic, Eigen::Dynamic> > svd(B, Eigen::ComputeThinU | Eigen::ComputeThinV);
+    
+    #ifdef TVMTL_MANIFOLD_DEBUG_GRASSMANN
+        std::cout << "\n\nB\n" << B << std::endl;
+	std::cout << "U\n" << svd.matrixU() << std::endl;
+	std::cout << "S\n" << svd.singularValues() << std::endl;
+	std::cout << "Vt\n" << svd.matrixV().transpose() << std::endl;
+    #endif
+
+    result = x * svd.matrixU() * svd.singularValues().unaryExpr(std::function<scalar_type(scalar_type)>((scalar_type(*)(scalar_type))&std::atan)).asDiagonal() * svd.matrixV().transpose();
 }
 
 // Tangent Plane restriction

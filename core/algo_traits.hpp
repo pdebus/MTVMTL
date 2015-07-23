@@ -79,6 +79,20 @@ struct algo_traits<SPD> {
     //using solver = Eigen::SuperLU<H>;
 };
 
+template<>
+struct algo_traits<GRASSMANN> {
+	    
+    static const int max_runtime = 1000;
+    static const int max_irls_steps = 5;
+    static const int max_newtons_steps = 1;
+    static constexpr double tolerance = 1e-4;
+
+    static const bool use_preconditioner = false;
+    
+    template <typename H>
+    using solver = Eigen::SuperLU<H>;
+};
+
 
 }// end namespace tvmtl
 

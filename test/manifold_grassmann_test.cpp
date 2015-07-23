@@ -63,6 +63,14 @@ void test(T& vec1, T& vec2){
 	std::cout << std::endl;
 	std::cout << rd2yy << std::endl;
 
+	mf_t::value_type u, z, v;
+	mf_t::log(vec1, vec2, u);
+	mf_t::exp(vec1, u, z);
+	mf_t::log(vec1, z, v);
+	std::cout << "\nLogarithm map test:" << std::endl;
+	std::cout << "U = Log(s1,s2) = \n" << u << std::endl;
+	std::cout << "Z = Exp(s1, U) = \n"  << z << "\n and V = Log(s1, Z) =\n" << v << "\nshould have distance close to zero\n";
+	std::cout << "dist(Z,V) = " << mf_t::dist_squared(z,v) << std::endl;
 }
 
 
@@ -72,10 +80,10 @@ int main(int argc, const char *argv[])
  
 	mat s1, s2;
 	s1 = mat::Random();
-	mf_t::projector(s1);
+	//mf_t::projector(s1);
 
 	s2 = mat::Random();
-	mf_t::projector(s2);
+	//mf_t::projector(s2);
 
 	std::cout << "s1=\n" << s1 << std::endl;
 
