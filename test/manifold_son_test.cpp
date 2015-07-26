@@ -71,6 +71,9 @@ int main(int argc, const char *argv[])
 	std::cout << s1*s1.transpose() << std::endl;
 	std::cout << s2*s2.transpose() << std::endl;
 
+	std::cout << "\n\n Permutation matrix" << std::endl;
+	std::cout << mf_t::permutation_matrix.toDenseMatrix()  << std::endl;
+
 
 	std::cout << "\n\nRANDOM Matrices" << std::endl;
 	test(s1,s2);

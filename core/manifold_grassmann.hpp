@@ -106,12 +106,21 @@ const bool Manifold <GRASSMANN, N, P>::non_isometric_embedding = false;
 // PermutationMatrix
 template <int N, int P>
 typename Manifold < GRASSMANN, N, P>::perm_type Manifold<GRASSMANN, N, P>::ConstructPermutationMatrix(){
-    perm_type Perm;
-    Perm.setIdentity();
-    for(int i=0; i< N * P; i++)
-	for(int j=0; j<i; j++)
-	    Perm.applyTranspositionOnTheRight(j * N * P + i, i * N * P + j);
-    return Perm;
+    
+    Eigen::Matrix<int, N * P, 1> indices;
+    indices.setZero();
+
+    int inc = 0;
+    for(int i=1; i< indices.size(); ++i){
+	if(i % 2 == 0)
+	    inc = -P;
+	else
+	    inc = N;
+	indices(i) = indices(i-1) + inc;
+    }
+    
+    perm_type Perm(indices);
+    return Perm.transpose();
 }
 
 template <int N, int P>
@@ -123,11 +132,8 @@ template <int N, int P>
 inline typename Manifold <GRASSMANN, N, P>::dist_type Manifold <GRASSMANN, N, P>::dist_squared( cref_type x, cref_type y ){
     
     // Geodesic distance
-    /*
-    XtY = x.transpose()*Y;
-    Eigen::JacobiSVD<value_type> svd(XtY, Eigen::ComputeThinU | Eigen::ComputeThinV);
-    return svd.singularValues().squaredNorm();
-    */
+//    Eigen::JacobiSVD<Eigen::Matrix<scalar_type, Eigen::Dynamic, Eigen::Dynamic> > svd(x.transpose() * y, Eigen::ComputeThinU | Eigen::ComputeThinV);
+//    return svd.singularValues().array().acos().matrix().squaredNorm();
 
     // Projection F-distance;
     return 0.5 * (x * x.transpose() - y * y.transpose()).squaredNorm();
@@ -149,12 +155,11 @@ inline void Manifold <GRASSMANN, N, P>::deriv1y_dist_squared( cref_type x, cref_
 // Second Derivative of Squared GRASSMANN distance w.r.t first argument
 template <int N, int P>
 inline void Manifold <GRASSMANN, N, P>::deriv2xx_dist_squared( cref_type x, cref_type y, deriv2_ref_type result){
-    deriv2_type XtXId, IdXXt, XtXP, IdYYt;
+    deriv2_type XtXId, IdXXtmYYt, XtXP;
     XtXId = Eigen::kroneckerProduct(x.transpose() * x, Eigen::Matrix<scalar_type, N, N>::Identity());
-    IdXXt = Eigen::kroneckerProduct(Eigen::Matrix<scalar_type, P, P>::Identity(), x * x.transpose());
+    IdXXtmYYt = Eigen::kroneckerProduct(Eigen::Matrix<scalar_type, P, P>::Identity(), x * x.transpose() - y * y.transpose());
     XtXP = Eigen::kroneckerProduct(x.transpose(), x) * permutation_matrix;
-    IdYYt = Eigen::kroneckerProduct(Eigen::Matrix<scalar_type, P, P>::Identity(), y * y.transpose());
-    result = 2.0 * (XtXId + IdXXt + XtXId + IdYYt);
+    result = 2.0 * (XtXId + XtXId + IdXXtmYYt);
 }
 // Second Derivative of Squared GRASSMANN distance w.r.t first and second argument
 template <int N, int P>
@@ -174,18 +179,14 @@ template <int N, int P>
 template <typename DerivedX, typename DerivedY>
 inline void Manifold <GRASSMANN, N, P>::exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedX>& result){
     Eigen::JacobiSVD<Eigen::Matrix<scalar_type, Eigen::Dynamic, Eigen::Dynamic> > svd(y, Eigen::ComputeThinU | Eigen::ComputeThinV);
-    result = x * svd.matrixV() * svd.singularValues().array().cos().matrix().asDiagonal() * svd.matrixV().transpose() + svd.matrixU() * svd.singularValues().array().sin().matrix().asDiagonal() * svd.matrixV().transpose();
+    value_type temp_result = x * svd.matrixV() * svd.singularValues().array().cos().matrix().asDiagonal() * svd.matrixV().transpose() + svd.matrixU() * svd.singularValues().array().sin().matrix().asDiagonal() * svd.matrixV().transpose();
+    // Reorthonormalization
+    Eigen::HouseholderQR<value_type> qr(temp_result);
+    result = qr.householderQ();
 }
 
 template <int N, int P>
 inline void Manifold <GRASSMANN, N, P>::log(cref_type x, cref_type y, ref_type result){
-    /*
-    Eigen::Matrix<scalar_type, P, N> YtX = y.transpose() * x;
-    Eigen::JacobiSVD<value_type> svd(YtX, Eigen::ComputeThinU | Eigen::ComputeThinV);
-    Eigen::VectorXd D = (svd.singularValues().array().acos() / svd.singularValues().array().asin()).matrix();
-
-    result = (-x * svd.matrixV() * svd.singularValues().asDiagonal() + y * svd.matrixV()) * D.asDiagonal() * svd.matrixU().transpose(); 
-    */
     Eigen::Matrix<scalar_type, P, P> YtX = y.transpose() * x;
     Eigen::Matrix<scalar_type, P, N> At = y.transpose() - YtX * x.transpose();
 
@@ -200,7 +201,7 @@ inline void Manifold <GRASSMANN, N, P>::log(cref_type x, cref_type y, ref_type r
 	std::cout << "Vt\n" << svd.matrixV().transpose() << std::endl;
     #endif
 
-    result = x * svd.matrixU() * svd.singularValues().unaryExpr(std::function<scalar_type(scalar_type)>((scalar_type(*)(scalar_type))&std::atan)).asDiagonal() * svd.matrixV().transpose();
+    result = svd.matrixU() * svd.singularValues().unaryExpr(std::function<scalar_type(scalar_type)>((scalar_type(*)(scalar_type))&std::atan)).asDiagonal() * svd.matrixV().transpose();
 }
 
 // Tangent Plane restriction
@@ -224,18 +225,9 @@ inline void Manifold <GRASSMANN, N, P>::tangent_plane_base(cref_type x, tm_base_
 
 template <int N, int P>
 inline void Manifold <GRASSMANN, N, P>::projector(ref_type x){
-    std::cout << "Projector with P=" << P << " and Argument\n" << x << std::endl;
-	if(P > 1){
-	    std::cout << "\nPerforming QR...\n";
 	    Eigen::HouseholderQR<value_type> qr(x);
-	    x = qr.householderQ();
-	}
-	else{
-	    std::cout << "\nNormalizing...\n";
-	    double norm = x.norm();
-	    if(norm != 0)
-		x = x / norm;
-	}
+	    value_type q = qr.householderQ();
+	    x = q;
 }
 
 

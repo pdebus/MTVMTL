@@ -64,13 +64,58 @@ void test(T& vec1, T& vec2){
 	std::cout << rd2yy << std::endl;
 
 	mf_t::value_type u, z, v;
+	std::cout << "\n\nExponential map test:" << std::endl;
+	mf_t::exp(vec1, vec2, z);
+	std::cout << "Exp(s1,s2) = \n" << z << std::endl;
+
+
 	mf_t::log(vec1, vec2, u);
 	mf_t::exp(vec1, u, z);
 	mf_t::log(vec1, z, v);
-	std::cout << "\nLogarithm map test:" << std::endl;
-	std::cout << "U = Log(s1,s2) = \n" << u << std::endl;
-	std::cout << "Z = Exp(s1, U) = \n"  << z << "\n and V = Log(s1, Z) =\n" << v << "\nshould have distance close to zero\n";
-	std::cout << "dist(Z,V) = " << mf_t::dist_squared(z,v) << std::endl;
+	std::cout << "\n\nLogarithm map test:" << std::endl;
+	std::cout << "U = Log(s1, s2) = \n" << u << std::endl;
+	std::cout << "V = Log(s1, z) = \n" << v << std::endl;
+	std::cout << "Z = Exp(s1, U) = \n"  << z << "\n and s2  =\n" << vec2 << "\nshould have distance close to zero:\n";
+	std::cout << "dist(Z, vec2) = " << mf_t::dist_squared(z,v) << std::endl;
+
+	auto vec1t = vec1.transpose();
+	Eigen::VectorXd vecvec1 = Eigen::Map<Eigen::VectorXd>(vec1.data(), vec1.size());
+	Eigen::VectorXd vecvec1t = Eigen::Map<Eigen::VectorXd>(vec1t.data(), vec1t.size());
+
+	std::cout << "\n\nTest of the Permutation Matrix Knp:" <<std::endl;
+	std::cout << "s1:\n" << vec1 << std::endl;
+	std::cout << "s1^t:\n" << vec1t << std::endl;
+	std::cout << "\nVectorized s1:\n" << vecvec1 << std::endl;
+	std::cout << "\nVectorized s1^t:\n" << vecvec1t << std::endl;
+	std::cout << "\nPermutation Matrix:\n" << mf_t::permutation_matrix.toDenseMatrix() << std::endl;
+	std::cout << "\nPermutation Matrix Indices:\n" << mf_t::permutation_matrix.indices() << std::endl;
+	std::cout << "\nP * Vectorized s1:\n" << mf_t::permutation_matrix * vecvec1 << std::endl;
+
+	double h = 1e-4;
+	std::cout << "\n\nTaylor expansion Derivative Tests with perturbation O(" << h << ")" <<std::endl;
+	mf_t::value_type dx, dy;
+
+	Eigen::Matrix<mf_t::scalar_type, 3, 3> HXproj = Eigen::Matrix<mf_t::scalar_type, 3, 3>::Identity() - vec1 * vec1.transpose();
+
+	dx = mat::Random(); mf_t::projector(dx); dx *= h;// * HXproj * dx;
+	Eigen::VectorXd vecdx = Eigen::Map<Eigen::VectorXd>(dx.data(), dx.size());
+	
+	dy = mat::Random(); mf_t::projector(dy); dy *= h;
+	Eigen::VectorXd vecdy = Eigen::Map<Eigen::VectorXd>(dy.data(), dy.size());
+	
+	double exact = mf_t::dist_squared(vec1+dx, vec2);//+dy);
+	double taylor_order1 = mf_t::dist_squared(vec1, vec2) + d1x.cwiseProduct(dx).sum();// + d1y.cwiseProduct(dy).sum();
+	
+	Eigen::VectorXd vecd2xx_X = d2xx * vecdx;
+	mf_t::value_type d2xx_X = Eigen::Map<mf_t::value_type>(vecd2xx_X.data());
+
+	double taylor_order2 = taylor_order1 + 0.5 * d2xx.cwiseProduct(vecdx * vecdx.transpose()).sum();// + 0.5 * d2yy.cwiseProduct(vecdy * vecdy.transpose()).sum() + d2xy.cwiseProduct(vecdx * vecdy.transpose()).sum();
+
+	double taylor_order2b = taylor_order1 + dx.cwiseProduct(HXproj * d2xx_X - dx * vec1.transpose() * d1x).sum();
+
+	std::cout << "Error of first order Taylor " << std::abs(taylor_order1 - exact) << std::endl; 
+	std::cout << "Error of second order Taylor " << std::abs(taylor_order2 - exact) << std::endl; 
+	std::cout << "Error of second order Taylor b " << std::abs(taylor_order2b - exact) << std::endl; 
 }
 
 
@@ -80,10 +125,10 @@ int main(int argc, const char *argv[])
  
 	mat s1, s2;
 	s1 = mat::Random();
-	//mf_t::projector(s1);
+	mf_t::projector(s1);
 
 	s2 = mat::Random();
-	//mf_t::projector(s2);
+	mf_t::projector(s2);
 
 	std::cout << "s1=\n" << s1 << std::endl;
 

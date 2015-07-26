@@ -108,7 +108,7 @@ typename Manifold < SO, N>::perm_type Manifold<SO, N>::ConstructPermutationMatri
     P.setIdentity();
     for(int i=0; i<N; i++)
 	for(int j=0; j<i; j++)
-	    P.applyTranspositionOnTheRight(j*3+i, i*3+j);
+	    P.applyTranspositionOnTheRight(j*N + i, i*N + j);
     return P;
 }
 
