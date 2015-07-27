@@ -159,7 +159,7 @@ inline void Manifold <GRASSMANN, N, P>::deriv2xx_dist_squared( cref_type x, cref
     XtXId = Eigen::kroneckerProduct(x.transpose() * x, Eigen::Matrix<scalar_type, N, N>::Identity());
     IdXXtmYYt = Eigen::kroneckerProduct(Eigen::Matrix<scalar_type, P, P>::Identity(), x * x.transpose() - y * y.transpose());
     XtXP = Eigen::kroneckerProduct(x.transpose(), x) * permutation_matrix;
-    result = 2.0 * (XtXId + XtXId + IdXXtmYYt);
+    result = 2.0 * (XtXId + XtXP + IdXXtmYYt);
 }
 // Second Derivative of Squared GRASSMANN distance w.r.t first and second argument
 template <int N, int P>
@@ -182,7 +182,7 @@ inline void Manifold <GRASSMANN, N, P>::exp(const Eigen::MatrixBase<DerivedX>& x
     value_type temp_result = x * svd.matrixV() * svd.singularValues().array().cos().matrix().asDiagonal() * svd.matrixV().transpose() + svd.matrixU() * svd.singularValues().array().sin().matrix().asDiagonal() * svd.matrixV().transpose();
     // Reorthonormalization
     Eigen::HouseholderQR<value_type> qr(temp_result);
-    result = qr.householderQ();
+    result = qr.householderQ() * value_type::Identity();
 }
 
 template <int N, int P>
@@ -226,8 +226,8 @@ inline void Manifold <GRASSMANN, N, P>::tangent_plane_base(cref_type x, tm_base_
 template <int N, int P>
 inline void Manifold <GRASSMANN, N, P>::projector(ref_type x){
 	    Eigen::HouseholderQR<value_type> qr(x);
-	    value_type q = qr.householderQ();
-	    x = q;
+	    value_type thinQ = qr.householderQ() * value_type::Identity();
+	    x = thinQ;
 }
 
 

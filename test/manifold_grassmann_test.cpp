@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 
 #include <Eigen/QR>
 #include <unsupported/Eigen/MatrixFunctions>
@@ -92,37 +93,32 @@ void test(T& vec1, T& vec2){
 	std::cout << "\nP * Vectorized s1:\n" << mf_t::permutation_matrix * vecvec1 << std::endl;
 
 	double h = 1e-4;
-	std::cout << "\n\nTaylor expansion Derivative Tests with perturbation O(" << h << ")" <<std::endl;
+	std::cout << "\n\nTaylor expansion Derivative Tests with perturbation O(h) = O(" << h << ")" <<std::endl;
 	mf_t::value_type dx, dy;
 
 	Eigen::Matrix<mf_t::scalar_type, 3, 3> HXproj = Eigen::Matrix<mf_t::scalar_type, 3, 3>::Identity() - vec1 * vec1.transpose();
+	Eigen::Matrix<mf_t::scalar_type, 3, 3> HYproj = Eigen::Matrix<mf_t::scalar_type, 3, 3>::Identity() - vec2 * vec2.transpose();
 
-	dx = mat::Random(); mf_t::projector(dx); dx *= h;// * HXproj * dx;
+	dx = mat::Random(); mf_t::projector(dx); dx = h * HXproj * dx;
 	Eigen::VectorXd vecdx = Eigen::Map<Eigen::VectorXd>(dx.data(), dx.size());
 	
-	dy = mat::Random(); mf_t::projector(dy); dy *= h;
+	dy = mat::Random(); mf_t::projector(dy); dy = h * HYproj * dy;
 	Eigen::VectorXd vecdy = Eigen::Map<Eigen::VectorXd>(dy.data(), dy.size());
 	
-	double exact = mf_t::dist_squared(vec1+dx, vec2);//+dy);
-	double taylor_order1 = mf_t::dist_squared(vec1, vec2) + d1x.cwiseProduct(dx).sum();// + d1y.cwiseProduct(dy).sum();
-	
-	Eigen::VectorXd vecd2xx_X = d2xx * vecdx;
-	mf_t::value_type d2xx_X = Eigen::Map<mf_t::value_type>(vecd2xx_X.data());
+	double exact = mf_t::dist_squared(vec1+dx, vec2+dy);
+	double taylor_order1 = mf_t::dist_squared(vec1, vec2) + d1x.cwiseProduct(dx).sum() + d1y.cwiseProduct(dy).sum();
+	double taylor_order2 = taylor_order1 + 0.5 * d2xx.cwiseProduct(vecdx * vecdx.transpose()).sum() + 0.5 * d2yy.cwiseProduct(vecdy * vecdy.transpose()).sum() + d2xy.cwiseProduct(vecdx * vecdy.transpose()).sum();
 
-	double taylor_order2 = taylor_order1 + 0.5 * d2xx.cwiseProduct(vecdx * vecdx.transpose()).sum();// + 0.5 * d2yy.cwiseProduct(vecdy * vecdy.transpose()).sum() + d2xy.cwiseProduct(vecdx * vecdy.transpose()).sum();
-
-	double taylor_order2b = taylor_order1 + dx.cwiseProduct(HXproj * d2xx_X - dx * vec1.transpose() * d1x).sum();
-
-	std::cout << "Error of first order Taylor " << std::abs(taylor_order1 - exact) << std::endl; 
-	std::cout << "Error of second order Taylor " << std::abs(taylor_order2 - exact) << std::endl; 
-	std::cout << "Error of second order Taylor b " << std::abs(taylor_order2b - exact) << std::endl; 
+	std::cout << "Error of first order Taylor " << std::abs(taylor_order1 - exact) << " = O(h^"<< std::log10(std::abs(taylor_order1 - exact))/std::log10(h)  << ") " <<std::endl; 
+	std::cout << "Error of second order Taylor " << std::abs(taylor_order2 - exact) << " = O(h^"<< std::log10(std::abs(taylor_order2 - exact))/std::log10(h)  << ") " <<std::endl; 
 }
 
 
 
 int main(int argc, const char *argv[])
 {
- 
+	srand(42);
+
 	mat s1, s2;
 	s1 = mat::Random();
 	mf_t::projector(s1);
