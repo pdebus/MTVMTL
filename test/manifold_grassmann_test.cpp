@@ -9,7 +9,10 @@
 
 using namespace tvmtl;
 
-typedef Manifold<GRASSMANN, 3, 2> mf_t;
+const int N=3;
+const int P=2;
+
+typedef Manifold<GRASSMANN, N, P> mf_t;
 
 typedef typename mf_t::value_type mat;
 
@@ -48,10 +51,16 @@ void test(T& vec1, T& vec2){
 	std::cout << d2yy << std::endl;
 
 
-	mf_t::tm_base_type t;
+	mf_t::tm_base_type t, t2;
 	mf_t::tangent_plane_base(vec1, t);
 	std::cout << "\nTangent Base Restriction:" << std::endl;
 	std::cout << t << std::endl;
+	std::cout << "\nTangent Base Restriction alternative calculatiopn: " << std::endl;
+	Eigen::HouseholderQR<mf_t::value_type> qr(vec1);
+	Eigen::Matrix<mf_t::scalar_type, N, N> Q = qr.householderQ();
+	Eigen::Matrix<mf_t::scalar_type, N, N - P> vec1orth = Q.rightCols(N-P);
+	t2 = Eigen::kroneckerProduct(Eigen::Matrix<mf_t::scalar_type, P, P>::Identity(), vec1orth.transpose());
+	std::cout << t2 << std::endl;
 
 	mf_t::restricted_deriv2_type rd2xx, rd2xy, rd2yy;
 	rd2xx = t.transpose() * d2xx * t;
@@ -96,13 +105,13 @@ void test(T& vec1, T& vec2){
 	std::cout << "\n\nTaylor expansion Derivative Tests with perturbation O(h) = O(" << h << ")" <<std::endl;
 	mf_t::value_type dx, dy;
 
-	Eigen::Matrix<mf_t::scalar_type, 3, 3> HXproj = Eigen::Matrix<mf_t::scalar_type, 3, 3>::Identity() - vec1 * vec1.transpose();
-	Eigen::Matrix<mf_t::scalar_type, 3, 3> HYproj = Eigen::Matrix<mf_t::scalar_type, 3, 3>::Identity() - vec2 * vec2.transpose();
+	Eigen::Matrix<mf_t::scalar_type, N, N> HXproj = Eigen::Matrix<mf_t::scalar_type, N, N>::Identity() - vec1 * vec1.transpose();
+	Eigen::Matrix<mf_t::scalar_type, N, N> HYproj = Eigen::Matrix<mf_t::scalar_type, N, N>::Identity() - vec2 * vec2.transpose();
 
-	dx = mat::Random(); mf_t::projector(dx); dx = h * HXproj * dx;
+	dx = mat::Random(); mf_t::projector(dx); dx *= h;// * HXproj * dx;
 	Eigen::VectorXd vecdx = Eigen::Map<Eigen::VectorXd>(dx.data(), dx.size());
 	
-	dy = mat::Random(); mf_t::projector(dy); dy = h * HYproj * dy;
+	dy = mat::Random(); mf_t::projector(dy); dy *= h;// * HYproj * dy;
 	Eigen::VectorXd vecdy = Eigen::Map<Eigen::VectorXd>(dy.data(), dy.size());
 	
 	double exact = mf_t::dist_squared(vec1+dx, vec2+dy);

@@ -76,8 +76,9 @@ struct Manifold< GRASSMANN, N, P> {
 
 	// Basis transformation for restriction to tangent space
 	inline static void tangent_plane_base(cref_type x, tm_base_ref_type result);
-
-	// Projection
+	
+	// Projections
+	inline static void horizontal_space_projector(cref_type x, ref_type a);
 	inline static void projector(ref_type x);
 
 	// Interpolation pre- and postprocessing
@@ -207,10 +208,20 @@ inline void Manifold <GRASSMANN, N, P>::log(cref_type x, cref_type y, ref_type r
 // Tangent Plane restriction
 template <int N, int P>
 inline void Manifold <GRASSMANN, N, P>::tangent_plane_base(cref_type x, tm_base_ref_type result){
-    value_type Hproj = (Eigen::Matrix<scalar_type, N, N>::Identity() - x * x.transpose()) * x;
-    Eigen::JacobiSVD<value_type> svd(Hproj);
-    Eigen::Matrix<scalar_type, N, N - P> xorth = svd.matrixU().rightCols(N-P);
+    //value_type Hproj = (Eigen::Matrix<scalar_type, N, N>::Identity() - x * x.transpose()) * x; // x - xx^tx = x - x = 0 TODO: Check of that makes sense
+    //Eigen::JacobiSVD<value_type> svd(Hproj);
     
+    // Compute X_orth by SVD 
+    /*
+    Eigen::JacobiSVD<value_type> svd(x);
+    Eigen::Matrix<scalar_type, N, N - P> xorth = svd.matrixU().rightCols(N-P);
+    */
+
+    //Compute X_orth by QR
+    Eigen::HouseholderQR<value_type> qr(x);
+    Eigen::Matrix<scalar_type, N, N> Q = qr.householderQ();
+    Eigen::Matrix<scalar_type, N, N - P> xorth = Q.rightCols(N-P);
+
     int k = 0;
     for(int r = 0; r < N - P; r++)
 	for(int c = 0; c < P; c++ ){
@@ -222,6 +233,10 @@ inline void Manifold <GRASSMANN, N, P>::tangent_plane_base(cref_type x, tm_base_
 
 }
 
+template <int N, int P>
+inline void Manifold <GRASSMANN, N, P>::horizontal_space_projector(cref_type x, ref_type a){
+	    a = a - x * x.transpose() * a;
+}
 
 template <int N, int P>
 inline void Manifold <GRASSMANN, N, P>::projector(ref_type x){
