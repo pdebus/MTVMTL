@@ -13,7 +13,7 @@
 
 
 void arrowedLine(cv::Mat img, cv::Point pt1, cv::Point pt2, const cv::Scalar& color,
-	int thickness=1, int line_type=8, int shift=0, double tipLength=0.1)
+	int thickness=0, int line_type=CV_AA, int shift=0, double tipLength=0.3)
 {
     const double tipSize = norm(pt1-pt2)*tipLength; // Factor to normalize the size of the tip depending on the length of the arrow
     cv::line(img, pt1, pt2, color, thickness, line_type, shift);
@@ -54,8 +54,11 @@ int main(int argc, const char *argv[])
 	vpp::scharr(blur_img, gradient);	
     
 	vpp::image2d<double> angles(img.domain());
-	vpp::pixel_wise(gradient, angles) | [&] (const auto& g, double& a) {
-	  a = std::atan2(g(0),g(1));  
+	vpp::block_wise(vpp::vint2{5,5}, gradient, angles) | [&] (const auto G, auto A) {
+	    double local_block_orientationX = vpp::sum(vpp::pixel_wise(G) | [&] (const auto& g) { return 2.0 * g(1) * g(0); });
+	    double local_block_orientationY = vpp::sum(vpp::pixel_wise(G) | [&] (const auto& g) { return g(1) * g(1) - g(0) * g(0); });
+	    double a = 0.5 * std::atan2(local_block_orientationY, local_block_orientationX);  
+	    vpp::fill(A, a);
 	};
 
 	data_t myData = data_t();
@@ -79,29 +82,22 @@ int main(int argc, const char *argv[])
 	original = cv::imread(argv[1]);
 	copy = original.clone();
 
-	vpp::image2d<double> angle_with_border = vpp::clone(angles, vpp::_border=5);
-	auto BN = vpp::box_nbh2d<double, 5, 5>(angle_with_border);
-    
-	auto draw_vector =  [&] (const auto& d, const auto& n){
-	   int spacing = 12; 
-	    if(d(0) % spacing == 0 && d(1) % spacing == 0){
-		double avg = 0;
-		
-		for(int i=-2; i<=2; ++i)
-		    for(int j=-2; j<=2; ++j)
-			avg +=n(i,j);
-		avg/=25.0;
+	double length = 7.0;
+	int step = 10;
 	
-		double length = 7.0;
+	int ny = angles.nrows();
+	int nx = angles.ncols();
 
-		cv::Point source(d(1),d(0));
-		cv::Point target(d(1) + length * std::cos(avg), d(0) + length * std::sin(avg));
-		arrowedLine(original, source, target, cv::Scalar( 0, 255, 0 ), 1, 8, 0, 0.35 );
-	    }
-	};	
-	
-	
-	vpp::pixel_wise(angle_with_border.domain(), BN) | draw_vector;
+	for(int y = 0; y < ny; y += step)
+	    for(int x = 0; x < nx; x += step){
+		double a =  angles(y,x);
+		double cosa = std::cos(a);
+		double sina = std::sin(a);
+
+		cv::Point source(x, y);
+		cv::Point target(x + length * cosa, y + length * sina);
+		arrowedLine(original, source, target, cv::Scalar( 255, 0, 0 ));
+	}   
 
 	cv::namedWindow( "Input Picture", cv::WINDOW_NORMAL ); 
 	cv::imshow( "Input Picture", original);
@@ -114,22 +110,28 @@ int main(int argc, const char *argv[])
 
 	tvmin_t myTVMin(myFunc, myData);
 
-	std::cout << "Smoothen picture to obtain initial state for Newton iteration..." << std::endl;
-	myTVMin.smoothening(5);
+//	std::cout << "Smoothen picture to obtain initial state for Newton iteration..." << std::endl;
+//	myTVMin.smoothening(5);
 
 	std::cout << "Start TV minimization..." << std::endl;
 	myTVMin.minimize();
     
-	vpp::pixel_wise(myData.img_, angle_with_border) | [&] (const auto& i, auto& a) {
-	    a = std::acos(i(0,0));
-	};
  
-	original = copy.clone();
-	vpp::pixel_wise(angle_with_border.domain(), BN) | draw_vector;
+	for(int y = 0; y < ny; y += step)
+	    for(int x = 0; x < nx; x += step){
+		double cosa = myData.img_(y,x)(0,0);
+		double cosa2 = cosa*cosa;
+		if(cosa2 > 1.0) cosa2 = 1.0;
+		double sina = std::sqrt(1.0 - cosa2);
+
+		cv::Point source(x, y);
+		cv::Point target(x + length * cosa, y + length * sina);
+		arrowedLine(copy, source, target, cv::Scalar( 0, 255, 0 ));
+	}
 
 	cv::namedWindow( "Denoised Picture", cv::WINDOW_NORMAL ); 
-	cv::imshow( "Denoised Picture", original);
-	cv::imwrite("denoised_" + fname, original);
+	cv::imshow( "Denoised Picture", copy);
+	cv::imwrite("denoised_" + fname, copy);
 	cv::waitKey(0);
 
 
