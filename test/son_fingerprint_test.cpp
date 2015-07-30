@@ -57,7 +57,7 @@ int main(int argc, const char *argv[])
 	vpp::block_wise(vpp::vint2{5,5}, gradient, angles) | [&] (const auto G, auto A) {
 	    double local_block_orientationX = vpp::sum(vpp::pixel_wise(G) | [&] (const auto& g) { return 2.0 * g(1) * g(0); });
 	    double local_block_orientationY = vpp::sum(vpp::pixel_wise(G) | [&] (const auto& g) { return g(1) * g(1) - g(0) * g(0); });
-	    double a = 0.5 * std::atan2(local_block_orientationY, local_block_orientationX);  
+	    double a = 0.5 * std::atan2(local_block_orientationX, local_block_orientationY);  
 	    vpp::fill(A, a);
 	};
 

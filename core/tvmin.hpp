@@ -91,6 +91,39 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 
     };
 
+template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
+    class TV_Minimizer< PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR > {
+    
+	public:
+	    // Manifold typedefs
+	    typedef typename MANIFOLD::scalar_type scalar_type;
+	    typedef typename MANIFOLD::value_type value_type;
+	    typedef typename MANIFOLD::tm_base_type tm_base_type;
+
+	    // Constructor
+	    TV_Minimizer(FUNCTIONAL& func, DATA& dat):
+		func_(func),
+		data_(dat)
+	    {
+	    }
+
+	    void first_guess();
+	    void smoothening(int smooth_steps);
+	    
+	    void minimize();
+	    void output() { std::cout << "OUTPUT TEST" << std::endl; }
+	
+
+	private:
+	    FUNCTIONAL& func_;
+	    DATA& data_;
+	 
+	    int irls_step_;
+
+	    std::vector< std::chrono::duration<double> > Ts_;
+	    std::vector< typename FUNCTIONAL::result_type > Js_;
+    };
+
 /*----- IMPLEMENTATION------*/
 
 //First Guess

@@ -108,13 +108,17 @@ void test(T& vec1, T& vec2){
 	Eigen::Matrix<mf_t::scalar_type, N, N> HXproj = Eigen::Matrix<mf_t::scalar_type, N, N>::Identity() - vec1 * vec1.transpose();
 	Eigen::Matrix<mf_t::scalar_type, N, N> HYproj = Eigen::Matrix<mf_t::scalar_type, N, N>::Identity() - vec2 * vec2.transpose();
 
-	dx = mat::Random(); mf_t::projector(dx); dx *= h;// * HXproj * dx;
+	mat Xpdx, Ypdy;
+	dx = mat::Random(); mf_t::projector(dx); dx = h * HXproj * dx;
+	mf_t::exp(vec1, dx, Xpdx);
 	Eigen::VectorXd vecdx = Eigen::Map<Eigen::VectorXd>(dx.data(), dx.size());
 	
-	dy = mat::Random(); mf_t::projector(dy); dy *= h;// * HYproj * dy;
+	dy = mat::Random(); mf_t::projector(dy); dy = h * HYproj * dy;
+	mf_t::exp(vec2, dy, Ypdy);
 	Eigen::VectorXd vecdy = Eigen::Map<Eigen::VectorXd>(dy.data(), dy.size());
 	
-	double exact = mf_t::dist_squared(vec1+dx, vec2+dy);
+	double exact = mf_t::dist_squared(Xpdx, Ypdy);
+	double exact2 = mf_t::dist_squared(vec1 + dx, vec2 + dy);
 	double taylor_order1 = mf_t::dist_squared(vec1, vec2) + d1x.cwiseProduct(dx).sum() + d1y.cwiseProduct(dy).sum();
 	double taylor_order2 = taylor_order1 + 0.5 * d2xx.cwiseProduct(vecdx * vecdx.transpose()).sum() + 0.5 * d2yy.cwiseProduct(vecdy * vecdy.transpose()).sum() + d2xy.cwiseProduct(vecdx * vecdy.transpose()).sum();
 
