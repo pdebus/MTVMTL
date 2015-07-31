@@ -100,6 +100,9 @@ class Functional<FIRSTORDER, disc, MANIFOLD, DATA >{
 	inline param_type geteps2() const { return eps2_; }
 	inline void seteps2(param_type eps) { eps2_=eps; }
 
+	inline const weights_mat& getweightsX() const { return weightsX_; }
+	inline const weights_mat& getweightsY() const { return weightsY_; }
+
 	inline const gradient_type& getDJ() const { return DJ_; }
 	inline const sparse_hessian_type& getHJ() const { return HJ_; }
 	inline const tm_base_mat_type& getT() const { return T_; }

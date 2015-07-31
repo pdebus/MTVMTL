@@ -98,8 +98,14 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 	    // Manifold typedefs
 	    typedef typename MANIFOLD::scalar_type scalar_type;
 	    typedef typename MANIFOLD::value_type value_type;
-	    typedef typename MANIFOLD::tm_base_type tm_base_type;
 
+	    // Functional typedefs
+	    typedef typename FUNCTIONAL::weights_mat weights_mat;
+
+	    // Data acccess typedefs
+	    typedef vpp::box_nbh2d<value_type,3,3> nbh_type;
+	    
+	    
 	    // Constructor
 	    TV_Minimizer(FUNCTIONAL& func, DATA& dat):
 		func_(func),
@@ -118,13 +124,13 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 	    FUNCTIONAL& func_;
 	    DATA& data_;
 	 
-	    int irls_step_;
+	    int prpt_step_;
 
 	    std::vector< std::chrono::duration<double> > Ts_;
 	    std::vector< typename FUNCTIONAL::result_type > Js_;
     };
 
-/*----- IMPLEMENTATION------*/
+/*----- IMPLEMENTATION IRLS------*/
 
 //First Guess
 template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
@@ -370,6 +376,94 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::minimize(){
 	t = end - start; 
 	std::cout << "\t Elapsed time: " << t.count() << " seconds." << std::endl;
 	irls_step_++;
+	Ts_.push_back(t);
+    }
+
+    std::cout << "Minimization in " << t.count() << " seconds." << std::endl;
+}
+
+/*----- IMPLEMENTATION PRPT------*/
+template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
+void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::updateFidelity(double muk){
+    double tau = muk / (muk + 1.0);
+    
+    auto proximal_mapF = [&] (value_type& p, const value_type& i, const value_type& n, const bool inp ) { 
+	value_type l, e;
+	MANIFOLD::log(i, n, l);
+	MANIFOLD::exp(i, l*tau, e);
+	return e * (1-inp) + i * inp; 
+    };
+
+    vpp::pixel_wise(proximal_mappings[0], data_.img_, data_.noise_img_, data_.inp_) | proximal_mapF; 
+}
+
+template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
+void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::updateTV(int dim, double muk, const weights_mat& W){
+    
+    double lmuk = muk * func_.getlambda();
+    weights_mat tau = vpp::pixel_wise(W) | [&] (const weights_type& w) {return std::min(lmuk * w, 0.5); }; 
+
+    int nr = data_.img_.nrows();
+    int nc = data_.img_.ncols();
+
+    // Dimensions of Slice Pair
+    //vpp::vint3 b(nz, ny, nx);
+    vpp::vint2 b(nr, nc);
+    b(dim) = 2; // y-dim = 0, x-dim = 1
+
+    // Relative neighbor coordinates
+    vpp::vint2 n(0,0);
+    n(dim) = 1;
+
+    vpp::block_wise(b, data_.img_, proximal_mappings[1+dim]) | [&] (const auto& I, auto& P) {
+	
+    };
+    
+}
+
+template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
+void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::prpt_step(double muk){
+    weights_mat X = func_.getweightsX();
+    weights_mat Y = func_.getweightsY();
+
+    double lmuk = func_.getlambda() * muk;
+    updateFidelity(lmuk);
+    
+    updateTV(muk, 1 );
+
+    mean();
+}
+
+template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
+void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::minimize(){
+    std::cout << "Starting Proximal Point Algorithm with..." << std::endl;
+    std::cout << "\t Lambda = \t" << func_.getlambda() << std::endl;
+    std::cout << "\t Tolerance = \t" <<  AT::tolerance << std::endl;
+    std::cout << "\t Max Steps = \t" << AT::max_prpt_steps << std::endl;
+    
+    
+    prpt_step_ = 0;
+
+    std::chrono::time_point<std::chrono::system_clock> start, end;
+    std::chrono::duration<double> t = std::chrono::duration<double>::zero();
+    start = std::chrono::system_clock::now();
+    
+    // IRLS Iteration Loop
+    while(prpt_step_ < AT::max_prpt_steps && t.count() < AT::max_runtime){
+	
+	std::cout << "PRPT Step #" << irls_step_+1 << std::endl;
+	typename FUNCTIONAL::result_type J = func_.evaluateJ();
+	Js_.push_back(J);
+	std::cout << "\t Value of Functional J: " << J << std::endl;
+	
+	double muk = 3.0 * std::pow(static_cast<double>(k),-0.95);
+	
+	prpt_step(muk);
+	
+	end = std::chrono::system_clock::now();
+	t = end - start; 
+	std::cout << "\t Elapsed time: " << t.count() << " seconds." << std::endl;
+	prpt_step_++;
 	Ts_.push_back(t);
     }
 

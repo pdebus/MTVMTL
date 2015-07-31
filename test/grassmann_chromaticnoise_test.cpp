@@ -66,7 +66,7 @@ int main(int argc, const char *argv[])
 		
 	std::cout << "\n\n--==CHROMATICITY PART==--" << std::endl;
 
-	std::cout << "Smooth picture to obtain initial state for Newton iteration..." << std::endl;
+	//std::cout << "Smooth picture to obtain initial state for Newton iteration..." << std::endl;
 	cTVMin.smoothening(10);
 	
 	std::cout << "Start TV minimization..." << std::endl;

@@ -117,13 +117,14 @@ void test(T& vec1, T& vec2){
 	mf_t::exp(vec2, dy, Ypdy);
 	Eigen::VectorXd vecdy = Eigen::Map<Eigen::VectorXd>(dy.data(), dy.size());
 	
-	double exact = mf_t::dist_squared(Xpdx, Ypdy);
-	double exact2 = mf_t::dist_squared(vec1 + dx, vec2 + dy);
+	double exact = mf_t::dist_squared(vec1 + dx, vec2 + dy);
+	double exact2 = mf_t::dist_squared(Xpdx, Ypdy);
 	double taylor_order1 = mf_t::dist_squared(vec1, vec2) + d1x.cwiseProduct(dx).sum() + d1y.cwiseProduct(dy).sum();
 	double taylor_order2 = taylor_order1 + 0.5 * d2xx.cwiseProduct(vecdx * vecdx.transpose()).sum() + 0.5 * d2yy.cwiseProduct(vecdy * vecdy.transpose()).sum() + d2xy.cwiseProduct(vecdx * vecdy.transpose()).sum();
 
 	std::cout << "Error of first order Taylor " << std::abs(taylor_order1 - exact) << " = O(h^"<< std::log10(std::abs(taylor_order1 - exact))/std::log10(h)  << ") " <<std::endl; 
 	std::cout << "Error of second order Taylor " << std::abs(taylor_order2 - exact) << " = O(h^"<< std::log10(std::abs(taylor_order2 - exact))/std::log10(h)  << ") " <<std::endl; 
+	std::cout << "Error of second order Taylor " << std::abs(taylor_order2 - exact2) << " = O(h^"<< std::log10(std::abs(taylor_order2 - exact))/std::log10(h)  << ") " <<std::endl; 
 }
 
 
