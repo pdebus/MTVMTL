@@ -398,7 +398,7 @@ void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::updateFidelity(double 
 }
 
 template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
-void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::updateTV(int dim, double muk, const weights_mat& W){
+void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::updateTV(double muk, int dim, const weights_mat& W){
     
     double lmuk = muk * func_.getlambda();
     weights_mat tau = vpp::pixel_wise(W) | [&] (const weights_type& w) {return std::min(lmuk * w, 0.5); }; 
@@ -408,18 +408,88 @@ void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::updateTV(int dim, doub
 
     // Dimensions of Slice Pair
     //vpp::vint3 b(nz, ny, nx);
-    vpp::vint2 b(nr, nc);
+    vpp::vint2 b(nr, nc), bl(nr, nc);
     b(dim) = 2; // y-dim = 0, x-dim = 1
+    
+
+    // Case: preceding neighbors
+    if(nr % 2 != 0)
+	bl(0) = nr - 1;
+    if(nc % 2 != 0)
+	bl(1) = nc - 1;
+
+    bl(dim) = 1;
 
     // Relative neighbor coordinates
     vpp::vint2 n(0,0);
-    n(dim) = 1;
-
-    vpp::block_wise(b, data_.img_, proximal_mappings[1+dim]) | [&] (const auto& I, auto& P) {
-	
+    n(dim) = 1; 
+    proximal_mappings[1 + 2 * dim] = vpp::clone(data_.img_);
+    vpp::block_wise(b, data_.img_, tau, proximal_mappings[1 + 2 * dim]) | [&] (const auto& I, const auto& T, auto& P) {
+	for(int r = 0; r < bl(0); ++r ){
+	    for(int c = 0; c < bl(1); ++c){
+		MANIFOLD::value_type l;
+		MANIFOLD::log(I(r,c), I(vpp::vint2(r,c) + n), l);
+		MANIFOLD::exp(I(r,c), l * T(r,c), P(r,c));
+		MANIFOLD::exp(I(r,c), l - l * T(r,c), P(vpp::vint2(r,c) + n));
+	    }
+	}
     };
-    
+    // Case postceding neighbors
+    if(nr % 2 == 0)
+	bl(0) = nr - 1;
+    if(nc % 2 == 0)
+	bl(1) = nc - 1;
+
+    bl(dim) = 1;
+
+    proximal_mappings[2 + 2 * dim] = vpp::clone(data_.img_);
+    vpp::block_wise(b, data_.img_, tau, proximal_mappings[2 + 2 * dim]) | [&] (const auto& I, const auto& T, auto& P) {
+	for(int r = n(0); r < bl(0); ++r ){
+	    for(int c = n(1); c < bl(1); ++c){
+		MANIFOLD::value_type l;
+		MANIFOLD::log(I(vpp::vint2(r,c) + n), I(r,c), l);
+		MANIFOLD::exp(l * T(r,c), I(r,c), P(r,c));
+		MANIFOLD::exp(l - l * T(r,c), I(r,c), P(vpp::vint2(r,c) + n));
+	    }
+	}
+    };
+ 
 }
+
+template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
+void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::geod_mean(){
+    typedef MANIFOLD::value_type& vtr;
+    typedef const vt& cvtr;
+    
+    // First estimate
+    auto euclidian_mean = [&] (vtr i, cvtr p0, cvtr p1, cvtr p2, cvtr p3, cvtr4) {
+	i = (p0 + p1 + p2 + p3 + p4) / 5.0;
+    };
+
+    vpp::pixel_wise(data_.img_, proximal_mappings_[0], proximal_mappings_[1], proximal_mappings_[2], proximal_mappings_[3], proximal_mappings[4]) | euclidian_mean;
+    auto karcher_mean = [&] (vtr i, cvtr p0, cvtr p1, cvtr p2, cvtr p3, cvtr4) {
+	MANIFOLD::value_type l0, l1, l2, l3, l4;
+	MANIFOLD::log(i, p0, l0);
+	MANIFOLD::log(i, p1, l1);
+	MANIFOLD::log(i, p2, l2);
+	MANIFOLD::log(i, p3, l3);
+	MANIFOLD::log(i, p4, l4);
+	MANIFOLD::exp(i, (l0 + l1 + l2 + l3 + l4) / 5.0, i);
+    };
+
+    weights_mat diff(data_.img_.domain());
+
+    //TODO: Put in Algo traits
+    double tol = 1e-11;
+    double error = 1.0;
+
+    while(error > tol){	
+	vpp::pixel_wise(data_.img_, diff) | [&] (const value_type& i, weights_type& w) { w = i.sum(); };
+	vpp::pixel_wise(data_.img_, proximal_mappings_[0], proximal_mappings_[1], proximal_mappings_[2], proximal_mappings_[3], proximal_mappings[4]) | karcher_mean;
+	vpp::pixel_wise(data_.img_, diff)(vpp::_no_threads) | [&] (const value_type& i, const weights_type& w) { error = std::max(error, std::abs(w - i.sum())); };
+    }
+}
+
 
 template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
 void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::prpt_step(double muk){
@@ -429,9 +499,10 @@ void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::prpt_step(double muk){
     double lmuk = func_.getlambda() * muk;
     updateFidelity(lmuk);
     
-    updateTV(muk, 1 );
+    updateTV(muk, 0, Y);
+    updateTV(muk, 1, X);
 
-    mean();
+    geod_mean();
 }
 
 template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
