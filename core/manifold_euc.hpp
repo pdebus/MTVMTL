@@ -58,8 +58,8 @@ struct Manifold< EUCLIDIAN, N > {
 	inline static void deriv2yy_dist_squared(cref_type x, cref_type y, deriv2_ref_type result);
 
 	// Manifold exponentials und logarithms ( for Proximal point)
-	template <typename DerivedX, typename DerivedY>
-	inline static void exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedX>& result);
+	template <typename DerivedX, typename DerivedY, typename DerivedZ>
+	inline static void exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedZ>& result);
 	inline static void log(cref_type x, cref_type y, ref_type result);
 
 	// Basis transformation for restriction to tangent space
@@ -135,8 +135,8 @@ inline void Manifold < EUCLIDIAN, N>::deriv2yy_dist_squared( cref_type x, cref_t
 
 // Exponential and Logarithm Map
 template <int N>
-template <typename DerivedX, typename DerivedY>
-inline void Manifold <EUCLIDIAN, N>::exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedX>& result){
+template <typename DerivedX, typename DerivedY, typename DerivedZ>
+inline void Manifold <EUCLIDIAN, N>::exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedZ>& result){
     result=x+y;
 }
 
