@@ -3,8 +3,8 @@
 #include <opencv2/highgui/highgui.hpp>
 
 
-#define TVMTL_TVMIN_DEBUG
-#define TV_DATA_DEBUG
+//#define TVMTL_TVMIN_DEBUG
+//#define TV_DATA_DEBUG
 
 
 #include "../core/algo_traits.hpp"
@@ -19,7 +19,7 @@ using namespace tvmtl;
 
 typedef Manifold< EUCLIDIAN, 3 > mf_t;
 typedef Data< mf_t, 2> data_t;	
-typedef Functional<FIRSTORDER, ISO, mf_t, data_t> func_t;
+typedef Functional<FIRSTORDER, ANISO, mf_t, data_t> func_t;
 typedef TV_Minimizer< PRPT, func_t, mf_t, data_t, OMP > tvmin_t;
 
 
@@ -62,7 +62,7 @@ int main(int argc, const char *argv[])
 	myData.rgb_imread(argv[1]);
 
 	func_t myFunc(lam, myData);
-	myFunc.seteps2(1e-10);
+	myFunc.seteps2(0.0);
 
 	tvmin_t myTVMin(myFunc, myData);
 

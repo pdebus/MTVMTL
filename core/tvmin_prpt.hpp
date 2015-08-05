@@ -54,6 +54,8 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 		func_(func),
 		data_(dat)
 	    {
+		//TODO: ANISO testing static assert
+
 		for(int i = 0; i < 5; i++){
 		    proximal_mappings_[i] = img_type(data_.img_.domain());
 		   // proximal_mappings_[i] = vpp::clone(data_.img_);
@@ -72,8 +74,6 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 
 	    void prpt_step(double muk);
 	    void minimize();
-
-	    void output() { std::cout << "OUTPUT TEST" << std::endl; }
 	
 
 	private:
@@ -157,11 +157,11 @@ void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::updateTV(double muk, i
 
 
     #ifdef TVMTL_TVMIN_DEBUG
-	    std::cout << "\t\t...next neighbors..., dims = (" << dims(0) << "," << dims(1) << "), n = (" << n(0) << "," << n(1) << ")" <<std::endl;
+	    std::cout << "\t\t...Odd Pairs..., dims = (" << dims(0) << "," << dims(1) << "), n = (" << n(0) << "," << n(1) << ")" <<std::endl;
 	    int num_blocks = 0;
     #endif 
-    proximal_mappings_[1 + 2 * dim] = vpp::clone(data_.img_);
-    vpp::block_wise(dims, data_.img_ | subimage, tau | subimage, proximal_mappings_[1 + 2 * dim] | subimage) | [&] (const auto I, const auto T, auto P) {
+    
+    auto blockwise_proximal_map = [&] (const auto I, const auto T, auto P) {
 	for(int r = 0; r < loopdims(0); ++r ){
 	    for(int c = 0; c < loopdims(1); ++c){
 	    #ifdef TVMTL_TVMIN_DEBUG_VERBOSE
@@ -178,6 +178,8 @@ void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::updateTV(double muk, i
     #endif
     };
 
+    proximal_mappings_[1 + 2 * dim] = vpp::clone(data_.img_);
+    vpp::block_wise(dims, data_.img_ | subimage, tau | subimage, proximal_mappings_[1 + 2 * dim] | subimage) | blockwise_proximal_map;
     #ifdef TVMTL_TVMIN_DEBUG
 	std::cout << "\t\tBlock processed: " << num_blocks << std::endl;
     #endif
@@ -196,25 +198,14 @@ void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::updateTV(double muk, i
 	    subimage = vpp::box2d(vpp::vint2(0,1), vpp::vint2(nr-1, nc-1)); // subdomain without first column
 
     #ifdef TVMTL_TVMIN_DEBUG
-	    std::cout << "\t\t...previous neighbors..." << std::endl;
+	    std::cout << "\t\t...Even Pairs..." << std::endl;
 	    num_blocks = 0;
     #endif 
     proximal_mappings_[2 + 2 * dim] = vpp::clone(data_.img_);
-    vpp::block_wise(dims, data_.img_ | subimage, tau | subimage, proximal_mappings_[2 + 2 * dim] | subimage) | [&] (const auto I, const auto T, auto P) {
-	for(int r = 0; r < loopdims(0); ++r ){
-	    for(int c = 0; c < loopdims(1); ++c){
-		value_type l;
-		MANIFOLD::log(I(vpp::vint2(r,c) + n), I(r,c), l);
-		MANIFOLD::exp(l * T(r,c), I(r,c), P(r,c));
-		MANIFOLD::exp(l - l * T(r,c), I(r,c), P(vpp::vint2(r,c) + n));
-	    }
-	}
+    vpp::block_wise(dims, data_.img_ | subimage, tau | subimage, proximal_mappings_[2 + 2 * dim] | subimage) | blockwise_proximal_map;
+	
     #ifdef TVMTL_TVMIN_DEBUG
-	num_blocks++;
-    #endif
-};
-    #ifdef TVMTL_TVMIN_DEBUG
-	std::cout << "\t\tBlock processed: " << num_blocks << std::endl;
+	std::cout << "\t\tBlocks processed: " << num_blocks << std::endl;
     #endif
  
 }
@@ -240,34 +231,41 @@ void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::geod_mean(){
     #endif 
 
 auto karcher_mean = [&] (vtr i, cvtr p0, cvtr p1, cvtr p2, cvtr p3, cvtr p4) {
-	value_type l0, l1, l2, l3, l4;
+//	value_type L, l0, l1, l2, l3, l4, e;
+	value_type l0, l1, l2, l3, l4, e;
 	MANIFOLD::log(i, p0, l0);
 	MANIFOLD::log(i, p1, l1);
 	MANIFOLD::log(i, p2, l2);
 	MANIFOLD::log(i, p3, l3);
 	MANIFOLD::log(i, p4, l4);
-	MANIFOLD::exp(i, (l0 + l1 + l2 + l3 + l4) / 5.0, i);
+//	L = l0 + l1 + l2 + l3 + l4; 
+//	MANIFOLD::exp(i, 0.1 * (L + L.transpose())  , e); // also resymmetrize
+	MANIFOLD::exp(i, 0.2 * (l0 + l1 + l2 + l3 + l4)  , e); 
+	i = e;
     };
 
     weights_mat diff(data_.img_.domain());
 
     //TODO: Put in Algo traits
-    double tol = 1e-11;
-    double error = 0.0;
+    double tol = 1e-10;
+    double max_karcher_iterations = 15;
 
     #ifdef TVMTL_TVMIN_DEBUG
 	    std::cout << "\t\t...Errror estimation: "<< std::endl;
-	    int iteration = 0;
     #endif 
+    
+    int k = 0;
+    double error;
 
-    do{	
+    do{
+	error = 0.0;
 	vpp::pixel_wise(data_.img_, diff) | [&] (const value_type& i, weights_type& w) { w = i.sum(); };
 	vpp::pixel_wise(data_.img_, proximal_mappings_[0], proximal_mappings_[1], proximal_mappings_[2], proximal_mappings_[3], proximal_mappings_[4]) | karcher_mean;
 	vpp::pixel_wise(data_.img_, diff)(vpp::_no_threads) | [&] (const value_type& i, const weights_type& w) { error = std::max(error, std::abs(w - i.sum())); };
     #ifdef TVMTL_TVMIN_DEBUG
-	    std::cout << "\t\tError =  "<< error << ", Iterations = " << ++iteration << std::endl;
+	    std::cout << "\t\tError =  "<< error << ", Iterations = " << ++k << std::endl;
     #endif 
-    }while(error > tol);
+    }while(error > tol && k < max_karcher_iterations);
 
 }
 
@@ -292,7 +290,6 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::minimize(){
     std::cout << "Starting Proximal Point Algorithm with..." << std::endl;
     std::cout << "\t Lambda = \t" << func_.getlambda() << std::endl;
-    std::cout << "\t Tolerance = \t" <<  tolerance_ << std::endl;
     std::cout << "\t Max Steps = \t" << max_prpt_steps_ << std::endl;
     
     

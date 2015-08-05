@@ -100,7 +100,7 @@ const bool Manifold < SPD, N>::non_isometric_embedding = true;
 // Squared SPD distance function
 template <int N>
 inline typename Manifold < SPD, N>::dist_type Manifold < SPD, N>::dist_squared( cref_type x, cref_type y ){
-    #ifdef TV_SPD_DEBUG
+    #ifdef TV_SPD_DIST_DEBUG
 	std::cout << "\nDist2 function with x=\n" << x << "\nand y=\n" << y << std::endl;
     #endif
 // NOTE: If x is not strictly spd, using LDLT completely halts the algorithm
@@ -175,6 +175,9 @@ inline void Manifold < SPD, N>::deriv2yy_dist_squared( cref_type x, cref_type y,
 template <int N>
 template <typename DerivedX, typename DerivedY>
 inline void Manifold <SPD, N>::exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedX>& result){
+    #ifdef TV_SPD_EXP_DEBUG
+	std::cout << "\nEXP function with x=\n" << x << "\nand y=\n" << y << std::endl;
+    #endif
     value_type sqrtX = x.sqrt();
     value_type Z = sqrtX.ldlt().solve(y).transpose();	
     result = sqrtX * sqrtX.transpose().ldlt().solve(Z).exp() * sqrtX;	
@@ -182,8 +185,11 @@ inline void Manifold <SPD, N>::exp(const Eigen::MatrixBase<DerivedX>& x, const E
 
 template <int N>
 inline void Manifold <SPD, N>::log(cref_type x, cref_type y, ref_type result){
+    #ifdef TV_SPD_LOG_DEBUG
+	std::cout << "\nLOG function with x=\n" << x << "\nand y=\n" << y << std::endl;
+    #endif
     value_type sqrtX = x.sqrt();
-    value_type Z = sqrtX.solve(y).transpose();	
+    value_type Z = sqrtX.ldlt().solve(y).transpose();	
     result = sqrtX * sqrtX.transpose().ldlt().solve(Z).log() * sqrtX;	
 }
 
