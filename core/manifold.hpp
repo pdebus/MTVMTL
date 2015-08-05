@@ -1,6 +1,9 @@
 #ifndef TVMTL_MANIFOLD_HPP
 #define TVMTL_MANIFOLD_HPP
 
+//Eigen includes
+#include <Eigen/StdVector>
+
 //own includes
 
 #include "enumerators.hpp"

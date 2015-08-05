@@ -37,6 +37,7 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 	    // Manifold typedefs
 	    typedef typename MANIFOLD::scalar_type scalar_type;
 	    typedef typename MANIFOLD::value_type value_type;
+	    typedef typename MANIFOLD::value_list value_list;
 
 	    // Functional typedefs
 	    typedef typename FUNCTIONAL::weights_mat weights_mat;
@@ -46,8 +47,8 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 	    typedef vpp::box_nbh2d<value_type,3,3> nbh_type;
 	    typedef typename DATA::storage_type img_type;
 
-	    //typedef vpp::boxNd<DATA::img_dim + 1> box_type;
-	    //typedef vpp::imageNd<value_type, DATA::img_dim + 1> proxmap_type;
+	    typedef vpp::boxNd<DATA::img_dim> box_type;
+	    typedef vpp::imageNd<value_list, DATA::img_dim> proxmap_type;
 
 	    // Constructor
 	    TV_Minimizer(FUNCTIONAL& func, DATA& dat):
@@ -58,7 +59,6 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 
 		for(int i = 0; i < 5; i++){
 		    proximal_mappings_[i] = img_type(data_.img_.domain());
-		   // proximal_mappings_[i] = vpp::clone(data_.img_);
 		}
 
 		max_prpt_steps_ = 50;
@@ -80,7 +80,6 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 	    FUNCTIONAL& func_;
 	    DATA& data_;
 	
-	    //std::vector<img_type> proximal_mappings_;
 	    img_type proximal_mappings_[5];
 
 	    int prpt_step_;
@@ -231,17 +230,13 @@ void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::geod_mean(){
     #endif 
 
 auto karcher_mean = [&] (vtr i, cvtr p0, cvtr p1, cvtr p2, cvtr p3, cvtr p4) {
-//	value_type L, l0, l1, l2, l3, l4, e;
-	value_type l0, l1, l2, l3, l4, e;
-	MANIFOLD::log(i, p0, l0);
-	MANIFOLD::log(i, p1, l1);
-	MANIFOLD::log(i, p2, l2);
-	MANIFOLD::log(i, p3, l3);
-	MANIFOLD::log(i, p4, l4);
-//	L = l0 + l1 + l2 + l3 + l4; 
-//	MANIFOLD::exp(i, 0.1 * (L + L.transpose())  , e); // also resymmetrize
-	MANIFOLD::exp(i, 0.2 * (l0 + l1 + l2 + l3 + l4)  , e); 
-	i = e;
+    typename MANIFOLD::value_list v;
+    v.push_back(p0);
+    v.push_back(p1);
+    v.push_back(p2);
+    v.push_back(p3);
+    v.push_back(p4);
+    MANIFOLD::karcher_mean_gradient(v, i);
     };
 
     weights_mat diff(data_.img_.domain());

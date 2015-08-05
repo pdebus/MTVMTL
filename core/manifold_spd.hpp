@@ -35,13 +35,15 @@ struct Manifold< SPD, N> {
 	typedef std::complex<double> complex_type;
 
 	// Value Typedef
-	typedef Eigen::Matrix< scalar_type, N, N>   value_type;
-	typedef value_type&			    ref_type;
-	typedef const value_type&		    cref_type;
-	
+	typedef Eigen::Matrix< scalar_type, N, N>				value_type;
+	typedef value_type&							ref_type;
+	typedef const value_type&						cref_type;
+	typedef std::vector<value_type, Eigen::aligned_allocator<value_type> >	value_list; 
+
+
 	// Tangent space typedefs
-	typedef Eigen::Matrix <scalar_type, N*N, N * (N + 1) / 2> tm_base_type;
-	typedef tm_base_type& tm_base_ref_type;
+	typedef Eigen::Matrix <scalar_type, N*N, N * (N + 1) / 2>   tm_base_type;
+	typedef tm_base_type&					    tm_base_ref_type;
 
 	// Derivative Typedefs
 	typedef value_type			     deriv1_type;
@@ -66,6 +68,9 @@ struct Manifold< SPD, N> {
 	template <typename DerivedX, typename DerivedY>
 	inline static void exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedX>& result);
 	inline static void log(cref_type x, cref_type y, ref_type result);
+
+	inline static void convex_combination(cref_type x, cref_type y, double t, ref_type result);
+	inline static void karcher_mean_gradient(const value_list& v, ref_type x);
 
 	// Basis transformation for restriction to tangent space
 	inline static void tangent_plane_base(cref_type x, tm_base_ref_type result);
@@ -223,13 +228,32 @@ inline void Manifold <SPD, N>::tangent_plane_base(cref_type x, tm_base_ref_type 
 	}
 }
 
-
 template <int N>
 inline void Manifold <SPD, N>::projector(ref_type x){
     // does not exist since SPD is an open set
     // TODO: Eventually implement projection to semi positive definite matrices
 }
 
+
+template <int N>
+inline void Manifold <SPD, N>::convex_combination(cref_type x, cref_type y, double t, ref_type result){
+    value_type l;
+    log(x, y, l);
+    exp(x, l * t, result);
+}
+
+template <int N>
+inline void Manifold <SPD, N>::karcher_mean_gradient(const value_list& v, ref_type x){
+    value_type L, temp;
+    L = value_type::Zero();
+    for(int i = 0; i < v.size(); ++i){
+	log(x, v[i], temp);
+	L += temp;
+    }
+    
+    exp(x, 0.5 / v.size() * (L + L.transpose()), temp);
+    x = temp;
+}
 
 template <int N>
 inline void Manifold<SPD, N>::interpolation_preprocessing(ref_type x){

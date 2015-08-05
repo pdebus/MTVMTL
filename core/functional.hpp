@@ -57,6 +57,7 @@ class Functional<FIRSTORDER, disc, MANIFOLD, DATA >{
 
 	// FIXME: Check for box_nbhNd
 	// typedef box_nbhNd<value_type, vint<N> >
+	// Check if this can be formulated with subimages instead of neighbors
 	typedef vpp::box_nbh2d<value_type,3,3> nbh_type;
 
 

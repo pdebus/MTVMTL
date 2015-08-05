@@ -28,9 +28,7 @@ struct Manifold< EUCLIDIAN, N > {
 	typedef Eigen::Matrix< scalar_type, N, 1>   value_type;
 	typedef value_type&			    ref_type;
 	typedef const value_type&		    cref_type;
-	//TODO: Does Ref<> variant also work?
-	//typedef Eigen::Ref< value_type >	    ref_type;
-	//typedef const Eigen::Ref< const value_type > cref_type;
+	typedef std::vector<value_type, Eigen::aligned_allocator<value_type> >	value_list; 
 
 	
 	// Tangent space typedefs
@@ -41,11 +39,9 @@ struct Manifold< EUCLIDIAN, N > {
 	typedef value_type			     deriv1_type;
 	typedef deriv1_type&			     deriv1_ref_type;
 	
-	//typedef Eigen::Ref<deriv1_type>	     deriv1_ref_type;
 	typedef Eigen::Matrix<scalar_type, N, N>     deriv2_type;
 	typedef deriv2_type&			     deriv2_ref_type;
 	typedef	Eigen::Matrix<scalar_type, N, N>     restricted_deriv2_type;
-	//typedef Eigen::Ref<deriv2_type>	     deriv2_ref_type;
 
 
 	// Manifold distance functions (for IRLS)
@@ -61,6 +57,9 @@ struct Manifold< EUCLIDIAN, N > {
 	template <typename DerivedX, typename DerivedY, typename DerivedZ>
 	inline static void exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedZ>& result);
 	inline static void log(cref_type x, cref_type y, ref_type result);
+	
+	inline static void convex_combination(cref_type x, cref_type y, double t, ref_type result);
+	inline static void karcher_mean_gradient(const value_list& v, ref_type x);
 
 	// Basis transformation for restriction to tangent space
 	inline static void tangent_plane_base(cref_type x, tm_base_ref_type result);
@@ -151,10 +150,27 @@ inline void Manifold <EUCLIDIAN, N>::tangent_plane_base(cref_type x, tm_base_ref
     result = tm_base_type::Identity();
 }
 
-// Projector (not necessary for Euclidian)
+// Projector (not necessary for Euclidian), calls will be optimized out by compiler
 template <int N>
 inline void Manifold <EUCLIDIAN, N>::projector(ref_type x){
 }
+
+// Convex combination along geodesic
+template <int N>
+inline void Manifold <EUCLIDIAN, N>::convex_combination(cref_type x, cref_type y, double t, ref_type result){
+    result = x + t * (y-x);
+}
+
+template <int N>
+inline void Manifold <EUCLIDIAN, N>::karcher_mean_gradient(const value_list& v, ref_type x){
+    value_type L = value_type::Zero();
+    for(int i = 0; i < v.size(); ++i)
+	L += v[i];
+    x = L / v.size();
+}
+
+
+
 
 } // end namespace tvmtl
 
