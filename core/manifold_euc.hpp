@@ -19,11 +19,13 @@ struct Manifold< EUCLIDIAN, N > {
 
 	static const bool non_isometric_embedding;
 
+
 	// Scalar type of manifold
 	//typedef double scalar_type;
 	typedef double scalar_type;
 	typedef double dist_type;
 	
+
 	// Value Typedef
 	typedef Eigen::Matrix< scalar_type, N, 1>   value_type;
 	typedef value_type&			    ref_type;
@@ -34,6 +36,7 @@ struct Manifold< EUCLIDIAN, N > {
 	// Tangent space typedefs
 	typedef Eigen::Matrix < scalar_type, N, N> tm_base_type;
 	typedef tm_base_type& tm_base_ref_type;
+
 
 	// Derivative Typedefs
 	typedef value_type			     deriv1_type;
@@ -53,19 +56,34 @@ struct Manifold< EUCLIDIAN, N > {
 	inline static void deriv2xy_dist_squared(cref_type x, cref_type y, deriv2_ref_type result);
 	inline static void deriv2yy_dist_squared(cref_type x, cref_type y, deriv2_ref_type result);
 
+
 	// Manifold exponentials und logarithms ( for Proximal point)
 	template <typename DerivedX, typename DerivedY, typename DerivedZ>
 	inline static void exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedZ>& result);
 	inline static void log(cref_type x, cref_type y, ref_type result);
 	
 	inline static void convex_combination(cref_type x, cref_type y, double t, ref_type result);
-	inline static void karcher_mean_gradient(const value_list& v, ref_type x);
+	
+
+	// Implementation of the Karcher mean
+	// Slow list version
+	inline static void karcher_mean_gradient(ref_type x, const value_list& v);
+	// Variadic templated version
+	template <typename V, class... Args>
+	inline static void karcher_mean_gradient(V& x, const Args&... args);
+	template <typename V>
+	inline static void variadic_karcher_mean_gradient(V& x, const V& y);
+	template <typename V, class... Args>
+	inline static void variadic_karcher_mean_gradient(V& x, const V& y1, const Args&... args);
+
 
 	// Basis transformation for restriction to tangent space
 	inline static void tangent_plane_base(cref_type x, tm_base_ref_type result);
 
+
 	// Projection to manifold
 	inline static void projector(ref_type x);	
+
 
 	// Interpolation pre- and postprocessing
 	inline static void interpolation_preprocessing(ref_type x) {};
@@ -161,16 +179,36 @@ inline void Manifold <EUCLIDIAN, N>::convex_combination(cref_type x, cref_type y
     result = x + t * (y-x);
 }
 
+// Karcher mean implementations
 template <int N>
-inline void Manifold <EUCLIDIAN, N>::karcher_mean_gradient(const value_list& v, ref_type x){
+inline void Manifold <EUCLIDIAN, N>::karcher_mean_gradient(ref_type x, const value_list& v){
     value_type L = value_type::Zero();
     for(int i = 0; i < v.size(); ++i)
 	L += v[i];
     x = L / v.size();
 }
 
+template <int N>
+template <typename V, class... Args>
+inline void Manifold<EUCLIDIAN, N>::karcher_mean_gradient(V& x, const Args&... args){
+    int numArgs = sizeof...(args);
+    variadic_karcher_mean_gradient(x, args...);
+    x /= numArgs;
+}
 
+template <int N>
+template <typename V>
+inline void Manifold<EUCLIDIAN, N>::variadic_karcher_mean_gradient(V& x, const V& y){
+    x = y;
+}
 
+template <int N>
+template <typename V, class... Args>
+inline void Manifold<EUCLIDIAN, N>::variadic_karcher_mean_gradient(V& x, const V& y1, const Args& ... args){
+    V temp = x;
+    variadic_karcher_mean_gradient(temp, args...);
+    x = y1 + temp;
+}
 
 } // end namespace tvmtl
 

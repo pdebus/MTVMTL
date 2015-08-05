@@ -42,7 +42,7 @@ struct Manifold< SPD, N> {
 
 
 	// Tangent space typedefs
-	typedef Eigen::Matrix <scalar_type, N*N, N * (N + 1) / 2>   tm_base_type;
+	typedef Eigen::Matrix <scalar_type, N * N, N * (N + 1) / 2>   tm_base_type;
 	typedef tm_base_type&					    tm_base_ref_type;
 
 	// Derivative Typedefs
@@ -70,8 +70,18 @@ struct Manifold< SPD, N> {
 	inline static void log(cref_type x, cref_type y, ref_type result);
 
 	inline static void convex_combination(cref_type x, cref_type y, double t, ref_type result);
-	inline static void karcher_mean_gradient(const value_list& v, ref_type x);
 
+	// Implementation of the Karcher mean
+	// Slow list version
+	inline static void karcher_mean_gradient(ref_type x, const value_list& v);
+	// Variadic templated version
+	template <typename V, class... Args>
+	inline static void karcher_mean_gradient(V& x, const Args&... args);
+	template <typename V>
+	inline static void variadic_karcher_mean_gradient(V& x, const V& y);
+	template <typename V, class... Args>
+	inline static void variadic_karcher_mean_gradient(V& x, const V& y1, const Args&... args);
+	
 	// Basis transformation for restriction to tangent space
 	inline static void tangent_plane_base(cref_type x, tm_base_ref_type result);
 
@@ -234,7 +244,7 @@ inline void Manifold <SPD, N>::projector(ref_type x){
     // TODO: Eventually implement projection to semi positive definite matrices
 }
 
-
+// Convex geodesic combinations
 template <int N>
 inline void Manifold <SPD, N>::convex_combination(cref_type x, cref_type y, double t, ref_type result){
     value_type l;
@@ -242,8 +252,9 @@ inline void Manifold <SPD, N>::convex_combination(cref_type x, cref_type y, doub
     exp(x, l * t, result);
 }
 
+// Karcher mean implementations
 template <int N>
-inline void Manifold <SPD, N>::karcher_mean_gradient(const value_list& v, ref_type x){
+inline void Manifold <SPD, N>::karcher_mean_gradient(ref_type x, const value_list& v){
     value_type L, temp;
     L = value_type::Zero();
     for(int i = 0; i < v.size(); ++i){
@@ -254,6 +265,41 @@ inline void Manifold <SPD, N>::karcher_mean_gradient(const value_list& v, ref_ty
     exp(x, 0.5 / v.size() * (L + L.transpose()), temp);
     x = temp;
 }
+
+template <int N>
+template <typename V, class... Args>
+inline void Manifold<SPD, N>::karcher_mean_gradient(V& x, const Args&... args){
+    int numArgs = sizeof...(args);
+
+    V temp, sum;
+    sum = x;
+
+    variadic_karcher_mean_gradient(sum, args...);
+    exp(x, 0.5 / numArgs * (sum + sum.transpose()), temp);
+    x = temp;
+}
+
+template <int N>
+template <typename V>
+inline void Manifold<SPD, N>::variadic_karcher_mean_gradient(V& x, const V& y){
+    V temp;
+    log(x, y, temp);
+    x = temp;
+}
+
+template <int N>
+template <typename V, class... Args>
+inline void Manifold<SPD, N>::variadic_karcher_mean_gradient(V& x, const V& y1, const Args& ... args){
+    V temp1, temp2;
+    temp2 = x;
+    
+    log(x, y1, temp1);
+
+    variadic_karcher_mean_gradient(temp2, args...);
+    temp1 += temp2;
+    x = temp1;
+}
+
 
 template <int N>
 inline void Manifold<SPD, N>::interpolation_preprocessing(ref_type x){

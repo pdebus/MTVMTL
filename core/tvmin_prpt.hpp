@@ -37,7 +37,7 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 	    // Manifold typedefs
 	    typedef typename MANIFOLD::scalar_type scalar_type;
 	    typedef typename MANIFOLD::value_type value_type;
-	    typedef typename MANIFOLD::value_list value_list;
+//	    typedef typename MANIFOLD::value_list value_list;
 
 	    // Functional typedefs
 	    typedef typename FUNCTIONAL::weights_mat weights_mat;
@@ -47,8 +47,8 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 	    typedef vpp::box_nbh2d<value_type,3,3> nbh_type;
 	    typedef typename DATA::storage_type img_type;
 
-	    typedef vpp::boxNd<DATA::img_dim> box_type;
-	    typedef vpp::imageNd<value_list, DATA::img_dim> proxmap_type;
+//	    typedef vpp::boxNd<DATA::img_dim> box_type;
+//	    typedef vpp::imageNd<value_list, DATA::img_dim> proxmap_type;
 
 	    // Constructor
 	    TV_Minimizer(FUNCTIONAL& func, DATA& dat):
@@ -230,13 +230,16 @@ void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::geod_mean(){
     #endif 
 
 auto karcher_mean = [&] (vtr i, cvtr p0, cvtr p1, cvtr p2, cvtr p3, cvtr p4) {
-    typename MANIFOLD::value_list v;
+    
+    /* Slow version, - needs to copy p_i for insertion in value_list
+     typename MANIFOLD::value_list v;
     v.push_back(p0);
     v.push_back(p1);
     v.push_back(p2);
     v.push_back(p3);
     v.push_back(p4);
-    MANIFOLD::karcher_mean_gradient(v, i);
+    MANIFOLD::karcher_mean_gradient(i, v); */
+    MANIFOLD::karcher_mean_gradient(i, p0, p1, p2, p3, p4);
     };
 
     weights_mat diff(data_.img_.domain());
