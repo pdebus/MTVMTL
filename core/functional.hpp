@@ -231,47 +231,43 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::updateWeights3D(){
     weightsY_ = weights_mat(data_.img_.domain());
     weightsZ_ = weights_mat(data_.img_.domain());
 
+    auto calc_dist = [&] (weights_type& w, const value_type i, const value_type n) {
+	i = MANIFOLD::dist_squared(i, n);
+    };
+
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...X neighbours " << std::endl;
     #endif
     
     // X Neighbours
     vpp::fill(weightsX_, 0.0);
-    vpp::pixel_wise(weightsX_ | without_last_x, data_.img_ | without_last_x, data_.img_ | without_first_x )(/*vpp::_no_threads*/)| [&] (weights_type& x, const value_type i, const value_type n) { 
-	x = MANIFOLD::dist_squared(i,n); 
-    };
+    vpp::pixel_wise(weightsX_ | without_last_x, data_.img_ | without_last_x, data_.img_ | without_first_x )(/*vpp::_no_threads*/) | calc_dist; 
 
     #ifdef TV_FUNC_DEBUG 
 	data_.output_weights(weightsX_,"XWeights.csv");
     #endif	
-
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Y neighbours" << std::endl;
     #endif
 
     // Y Neighbours
     vpp::fill(weightsY_, 0.0);
-    vpp::pixel_wise(weightsY_ | without_last_y, data_.img_ | without_last_y, data_.img_ | without_first_y )(/*vpp::_no_threads*/)| [&] (weights_type& y, const value_type i, const value_type n) { 
-	y = MANIFOLD::dist_squared(i,n); 
-    };	
+    vpp::pixel_wise(weightsY_ | without_last_y, data_.img_ | without_last_y, data_.img_ | without_first_y )(/*vpp::_no_threads*/) | calc_dist;
 
     #ifdef TV_FUNC_DEBUG 
 	data_.output_weights(weightsY_,"YWeights.csv");
     #endif	
-    
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Reweighting" << std::endl;
     #endif
 
     #ifdef TV_FUNC_DEBUG_VERBOSE
-	std::cout << "\t\t...Vertical neighbours" << std::endl;
+	std::cout << "\t\t...Z neighbours" << std::endl;
     #endif
 
     // Z Neighbours
     vpp::fill(weightsZ_, 0.0);
-    vpp::pixel_wise(weightsZ_ | without_last_z, data_.img_ | without_last_z, data_.img_ | without_first_z )(/*vpp::_no_threads*/)| [&] (weights_type& z, const value_type i, const value_type n) { 
-	z = MANIFOLD::dist_squared(i,n); 
-    };	
+    vpp::pixel_wise(weightsZ_ | without_last_z, data_.img_ | without_last_z, data_.img_ | without_first_z )(/*vpp::_no_threads*/) | calc_dist;
 
     #ifdef TV_FUNC_DEBUG 
 	data_.output_weights(weightsZ_,"ZWeights.csv");
@@ -336,6 +332,7 @@ typename Functional<FIRSTORDER, disc, MANIFOLD, DATA >::result_type Functional<F
     }
 
     updateWeights();
+
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...TV part." << std::endl;
     #endif
@@ -344,7 +341,6 @@ typename Functional<FIRSTORDER, disc, MANIFOLD, DATA >::result_type Functional<F
 	J2 = vpp::sum( vpp::pixel_wise(weightsX_) | [&] (const weights_type& w) {return 1.0/w;} );
     else
 	J2 = vpp::sum( vpp::pixel_wise(weightsX_, weightsY_) | [&] (const weights_type& wx, const weights_type& wy) {return 1.0/wx +1.0/wy;} );
-    
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "J1: " << J1 << std::endl;
 	std::cout << "J2: " << J2 << std::endl;
