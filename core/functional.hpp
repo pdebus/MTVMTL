@@ -83,6 +83,7 @@ class Functional<FIRSTORDER, disc, MANIFOLD, DATA >{
     	}
 	
 	void updateWeights();
+	void updateWeights3D();
 	void updateTMBase();
 	
 	
@@ -113,7 +114,7 @@ class Functional<FIRSTORDER, disc, MANIFOLD, DATA >{
 	DATA& data_;
 
 	param_type lambda_, eps2_;
-	weights_mat weightsX_, weightsY_;//, weightsZ_;
+	weights_mat weightsX_, weightsY_, weightsZ_;
 
 	tm_base_mat_type T_;
 	gradient_type DJ_;
@@ -138,6 +139,12 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::updateWeights(){
     nbh_type N = nbh_type(data_.img_); 
     int nr = data_.img_.nrows();
     int nc = data_.img_.ncols();
+    
+    // Subimage boxes
+    vpp::box2d without_last_col(vpp::vint2(0,0), vpp::vint2(nr-1, nc-2)); // subdomain without last column
+    vpp::box2d without_first_col(vpp::vint2(0,1), vpp::vint2(nr-1, nc-1)); // subdomain without first column
+    vpp::box2d without_last_row(vpp::vint2(0,0), vpp::vint2(nr-2, nc-1)); // subdomain without last row
+    vpp::box2d without_first_row(vpp::vint2(1,0), vpp::vint2(nr-1, nc-1)); // subdomain without first row
 
     weightsX_ = weights_mat(data_.img_.domain());
     weightsY_ = weights_mat(data_.img_.domain());
@@ -146,12 +153,18 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::updateWeights(){
 	std::cout << "\t\t...Horizontal neighbours " << std::endl;
     #endif
 
-    // TODO: Try to replace omp loops e.g. by box2d (nr-1,0) (nr-1,nc-1) or Iterator
     // Horizontal Neighbours
-    vpp::pixel_wise(weightsX_, N)(/*vpp::_no_threads*/)| [&] (weights_type& x, const auto& nbh) { x = MANIFOLD::dist_squared(nbh(0,0),nbh(0,1)); };
-    #pragma omp parallel for
-    for(int r=0; r< nr; r++) 
-	weightsX_(r,nc-1)=0.0;
+    
+    //vpp::pixel_wise(weightsX_, N)(/*vpp::_no_threads*/)| [&] (weights_type& x, const auto& nbh) { x = MANIFOLD::dist_squared(nbh(0,0),nbh(0,1)); };
+    //#pragma omp parallel for
+    //for(int r=0; r< nr; r++) 
+    //	weightsX_(r,nc-1)=0.0;
+    	
+    // ALTERNATIVE IMPLEMENTATION
+    vpp::fill(weightsX_, 0.0);
+    vpp::pixel_wise(weightsX_ | without_last_col, data_.img_ | without_last_col, data_.img_ | without_first_col )(/*vpp::_no_threads*/)| [&] (weights_type& x, const value_type i, const value_type n) { 
+	x = MANIFOLD::dist_squared(i,n); 
+    };
 
     #ifdef TV_FUNC_DEBUG 
 	data_.output_weights(weightsX_,"XWeights.csv");
@@ -162,11 +175,17 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::updateWeights(){
     #endif
 
     // Vertical Neighbours
-    vpp::pixel_wise(weightsY_, N) | [&] (weights_type& y, const auto& nbh) { y = MANIFOLD::dist_squared(nbh(0,0),nbh(1,0)); };
-    weights_type *lastrow = &weightsY_(nr-1,0);
-    for(int c=0; c< nc; c++) 
-	lastrow[c]=0.0;
-	
+    
+    //vpp::pixel_wise(weightsY_, N) | [&] (weights_type& y, const auto& nbh) { y = MANIFOLD::dist_squared(nbh(0,0),nbh(1,0)); };
+    //weights_type *lastrow = &weightsY_(nr-1,0);
+    //for(int c=0; c< nc; c++) 
+    //	lastrow[c]=0.0;
+    
+    // ALTERNATIVE IMPLEMENTATION
+    vpp::fill(weightsY_, 0.0);
+    vpp::pixel_wise(weightsY_ | without_last_row, data_.img_ | without_last_row, data_.img_ | without_first_row )(/*vpp::_no_threads*/)| [&] (weights_type& y, const value_type i, const value_type n) { 
+	y = MANIFOLD::dist_squared(i,n); 
+    };	
     #ifdef TV_FUNC_DEBUG 
 	data_.output_weights(weightsY_,"YWeights.csv");
     #endif	
@@ -185,6 +204,92 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::updateWeights(){
     
 	auto h =  [&] (const weights_type& ew, weights_type& y) { y = ew / std::sqrt(y+eps2_);  };
 	vpp::pixel_wise(data_.edge_weights_, weightsY_) | h ;
+    }
+}
+
+template <enum FUNCTIONAL_DISC disc, typename MANIFOLD, class DATA >
+void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::updateWeights3D(){
+
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t Update Weights..." << std::endl;
+    #endif
+
+    // Neighbourhood box
+    int ns = data_.img_.nslices();  // z
+    int nr = data_.img_.nrows();    // y
+    int nc = data_.img_.ncols();    // x
+    
+    // Subimage boxes
+    vpp::box3d without_last_x(vpp::vint3(0,0,0), vpp::vint3(ns - 1, nr - 1, nc - 2)); // subdomain without last xslice
+    vpp::box3d without_last_y(vpp::vint3(0,0,0), vpp::vint3(ns - 1, nr - 2, nc - 1)); // subdomain without last yslice
+    vpp::box3d without_last_z(vpp::vint3(0,0,0), vpp::vint3(ns - 2, nr - 1, nc - 1)); // subdomain without last zslice
+    vpp::box3d without_first_x(vpp::vint3(0,0,1), vpp::vint3(ns - 1, nr - 1, nc - 1)); // subdomain without first xlice
+    vpp::box3d without_first_y(vpp::vint3(0,1,0), vpp::vint3(ns - 1, nr - 1, nc - 1)); // subdomain without first yslice
+    vpp::box3d without_first_z(vpp::vint3(1,0,0), vpp::vint3(ns - 1, nr - 1, nc - 1)); // subdomain without first zslice
+
+    weightsX_ = weights_mat(data_.img_.domain());
+    weightsY_ = weights_mat(data_.img_.domain());
+    weightsZ_ = weights_mat(data_.img_.domain());
+
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...X neighbours " << std::endl;
+    #endif
+    
+    // X Neighbours
+    vpp::fill(weightsX_, 0.0);
+    vpp::pixel_wise(weightsX_ | without_last_x, data_.img_ | without_last_x, data_.img_ | without_first_x )(/*vpp::_no_threads*/)| [&] (weights_type& x, const value_type i, const value_type n) { 
+	x = MANIFOLD::dist_squared(i,n); 
+    };
+
+    #ifdef TV_FUNC_DEBUG 
+	data_.output_weights(weightsX_,"XWeights.csv");
+    #endif	
+
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...Y neighbours" << std::endl;
+    #endif
+
+    // Y Neighbours
+    vpp::fill(weightsY_, 0.0);
+    vpp::pixel_wise(weightsY_ | without_last_y, data_.img_ | without_last_y, data_.img_ | without_first_y )(/*vpp::_no_threads*/)| [&] (weights_type& y, const value_type i, const value_type n) { 
+	y = MANIFOLD::dist_squared(i,n); 
+    };	
+
+    #ifdef TV_FUNC_DEBUG 
+	data_.output_weights(weightsY_,"YWeights.csv");
+    #endif	
+    
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...Reweighting" << std::endl;
+    #endif
+
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...Vertical neighbours" << std::endl;
+    #endif
+
+    // Z Neighbours
+    vpp::fill(weightsZ_, 0.0);
+    vpp::pixel_wise(weightsZ_ | without_last_z, data_.img_ | without_last_z, data_.img_ | without_first_z )(/*vpp::_no_threads*/)| [&] (weights_type& z, const value_type i, const value_type n) { 
+	z = MANIFOLD::dist_squared(i,n); 
+    };	
+
+    #ifdef TV_FUNC_DEBUG 
+	data_.output_weights(weightsZ_,"ZWeights.csv");
+    #endif	
+    
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...Reweighting" << std::endl;
+    #endif
+
+    if(disc==ISO){
+	auto g =  [&] (const weights_type& ew, weights_type& x, weights_type& y, weights_type& z) { x = ew / std::sqrt(x+y+z+eps2_); y = x = z; };
+	vpp::pixel_wise(data_.edge_weights_, weightsX_, weightsY_, weightsZ_) | g ;
+    }
+    else{
+	auto g =  [&] (const weights_type& ew, weights_type& w) { w = ew / std::sqrt(w+eps2_); };
+	vpp::pixel_wise(data_.edge_weights_, weightsX_) | g ;
+	vpp::pixel_wise(data_.edge_weights_, weightsY_) | g ;
+	vpp::pixel_wise(data_.edge_weights_, weightsZ_) | g ;
     }
 }
 
@@ -471,7 +576,6 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
     nbh_type N = nbh_type(data_.img_);
     
     // Subimage boxes
-    // TODO: Make static class variables
     vpp::box2d without_last_col(vpp::vint2(0,0), vpp::vint2(nr-1, nc-2)); // subdomain without last column
     vpp::box2d without_first_col(vpp::vint2(0,1), vpp::vint2(nr-1, nc-1)); // subdomain without first column
     vpp::box2d without_last_row(vpp::vint2(0,0), vpp::vint2(nr-2, nc-1)); // subdomain without last row
