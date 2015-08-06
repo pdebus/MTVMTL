@@ -62,6 +62,7 @@ class Functional<FIRSTORDER, disc, MANIFOLD, DATA >{
 
 
 	// Functional parameters and return types
+	static const FUNCTIONAL_DISC disc_type;
 	typedef double param_type;
 	typedef double result_type;
 	
@@ -121,6 +122,9 @@ class Functional<FIRSTORDER, disc, MANIFOLD, DATA >{
 
 
 //--------Implementation FIRSTORDER-----/
+
+template <enum FUNCTIONAL_DISC disc, typename MANIFOLD, class DATA >
+const FUNCTIONAL_DISC Functional<FIRSTORDER, disc, MANIFOLD, DATA >::disc_type = disc;
 
 // Update the Weights
 template <enum FUNCTIONAL_DISC disc, typename MANIFOLD, class DATA >

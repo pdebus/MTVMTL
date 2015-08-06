@@ -65,6 +65,7 @@ int main(int argc, const char *argv[])
 	myFunc.seteps2(0.0);
 
 	tvmin_t myTVMin(myFunc, myData);
+	myTVMin.use_approximate_mean(true);
 
 	vpp::image2d<vpp::vuchar3> img;
 	

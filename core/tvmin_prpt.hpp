@@ -37,7 +37,6 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 	    // Manifold typedefs
 	    typedef typename MANIFOLD::scalar_type scalar_type;
 	    typedef typename MANIFOLD::value_type value_type;
-//	    typedef typename MANIFOLD::value_list value_list;
 
 	    // Functional typedefs
 	    typedef typename FUNCTIONAL::weights_mat weights_mat;
@@ -47,30 +46,32 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 	    typedef vpp::box_nbh2d<value_type,3,3> nbh_type;
 	    typedef typename DATA::storage_type img_type;
 
-//	    typedef vpp::boxNd<DATA::img_dim> box_type;
-//	    typedef vpp::imageNd<value_list, DATA::img_dim> proxmap_type;
 
 	    // Constructor
 	    TV_Minimizer(FUNCTIONAL& func, DATA& dat):
 		func_(func),
 		data_(dat)
 	    {
-		//TODO: ANISO testing static assert
+		static_assert(FUNCTIONAL::disc_type == ANISO, "Proximal point is only possible with anisotropic weights!");
 
 		for(int i = 0; i < 5; i++){
 		    proximal_mappings_[i] = img_type(data_.img_.domain());
 		}
-
+		use_approximate_mean_ = false;
 		max_prpt_steps_ = 50;
 		tolerance_ = 1e-4;
 		max_runtime_ = 1000.0;
 	    }
+	    
+	    void use_approximate_mean(bool u) { use_approximate_mean_ = u; }
 
 	    void first_guess();
 	    
 	    void updateFidelity(double muk);
 	    void updateTV(double muk, int dim, const weights_mat& W);
+
 	    void geod_mean();
+	    void approx_mean();
 
 	    void prpt_step(double muk);
 	    void minimize();
@@ -81,6 +82,8 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 	    DATA& data_;
 	
 	    img_type proximal_mappings_[5];
+
+	    bool use_approximate_mean_;
 
 	    int prpt_step_;
 	    int max_prpt_steps_;
@@ -251,6 +254,26 @@ void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::geod_mean(){
 
 }
 
+template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
+void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::approx_mean(){
+    typedef value_type& vtr;
+    typedef const vtr cvtr;
+    
+    #ifdef TVMTL_TVMIN_DEBUG
+	    std::cout << "\t Calculate approximate mean via convex combinations: "<< std::endl;
+    #endif 
+
+    auto convex_comb_mean = [&] (vtr i, cvtr p0, cvtr p1, cvtr p2, cvtr p3, cvtr p4) {
+	value_type p01, p23;
+	MANIFOLD::convex_combination(p0, p1, 0.5, p01);
+	MANIFOLD::convex_combination(p2, p3, 0.5, p23);
+	MANIFOLD::convex_combination(p01, p23, 0.5, i);
+	MANIFOLD::convex_combination(i, p4, 0.2, i);
+    };
+
+    vpp::pixel_wise(data_.img_, proximal_mappings_[0], proximal_mappings_[1], proximal_mappings_[2], proximal_mappings_[3], proximal_mappings_[4]) | convex_comb_mean;
+
+}
 
 template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
 void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::prpt_step(double muk){
@@ -264,8 +287,11 @@ void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::prpt_step(double muk){
     
     updateTV(muk, 0, Y);
     updateTV(muk, 1, X);
-
-    geod_mean();
+    
+    if(use_approximate_mean_)
+	approx_mean();
+    else
+	geod_mean();
 }
 
 template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
