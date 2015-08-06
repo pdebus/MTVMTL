@@ -111,7 +111,39 @@ class Data< MANIFOLD, 2>{
 // Specialization 3D Data
 template < typename MANIFOLD >
 class Data<MANIFOLD, 3>{
+    
+    public:
+	static const int img_dim;
 
+	// Manifold typedefs
+	typedef typename MANIFOLD::value_type value_type;
+	typedef typename MANIFOLD::scalar_type scalar_type;
+	
+	// Storage typedefs
+	typedef vpp::image3d<value_type> storage_type;
+	
+	typedef double weights_type;
+	typedef vpp::image3d<weights_type> weights_mat;
+	
+	typedef bool inp_type;
+	typedef vpp::image3d<inp_type> inp_mat;
+
+	inline bool doInpaint() const { return inpaint_; }
+	    
+	// Data Init functions
+	inline void initEdgeweights();
+	inline void initInp();
+	
+	void setEdgeWeights(const weights_mat&);
+    
+
+//  private:
+	storage_type img_;
+	storage_type noise_img_;
+	weights_mat edge_weights_;
+
+	bool inpaint_;
+	inp_mat inp_; 
 };
 
 
@@ -599,6 +631,28 @@ void Data<MANIFOLD, 2>::output_nimg(const char* filename) const{
 	f <<  std::endl;
     }
     f.close();
+}
+
+/*----- Implementation 3D Data ------*/
+template < typename MANIFOLD >
+const int Data<MANIFOLD, 3>::img_dim = 3;
+
+template < typename MANIFOLD >
+void Data<MANIFOLD, 3>::setEdgeWeights(const weights_mat& w){
+    edge_weights_= vpp::clone(w);
+}
+
+template < typename MANIFOLD >
+void Data<MANIFOLD, 3>::initInp(){
+    inp_ = inp_mat(noise_img_.domain());
+    vpp::fill(inp_, false);
+    inpaint_ = false;
+}
+
+template < typename MANIFOLD >
+void Data<MANIFOLD, 3>::initEdgeweights(){
+    edge_weights_ = weights_mat(noise_img_.domain());
+    vpp::fill(edge_weights_, 1.0);
 }
 
 }// end namespace tvmtl
