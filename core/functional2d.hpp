@@ -451,22 +451,25 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
     vpp::box2d without_first_col(vpp::vint2(0,1), vpp::vint2(nr-1, nc-1)); // subdomain without first column
     vpp::box2d without_last_row(vpp::vint2(0,0), vpp::vint2(nr-2, nc-1)); // subdomain without last row
     vpp::box2d without_first_row(vpp::vint2(1,0), vpp::vint2(nr-1, nc-1)); // subdomain without first row
-    
+
+    auto calc_xx_der = [&] (deriv2_type& x, const weights_type& w, const value_type& i, const value_type& n) { MANIFOLD::deriv2xx_dist_squared(i, n, x); x*=w; };
+    auto calc_xy_der = [&] (deriv2_type& xy, const weights_type& w, const value_type& i, const value_type& n) { MANIFOLD::deriv2xy_dist_squared(i, n, xy); xy*=w; };
+    auto calc_yy_der = [&] (deriv2_type& y, const weights_type& w, const value_type& i, const value_type& n) { MANIFOLD::deriv2yy_dist_squared(i, n, y); y*=w; };
+    auto add_to_hessian =  [&] (deriv2_type& h, const deriv2_type& d) { h += d; };
+
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...->XD11" << std::endl;
     #endif
     // Horizontal Second Derivatives and weighting
     // ... w.r.t. first arguments
     { // Temporary image XD11 is deallocated after this scope
-	hessian_type XD11(data_.img_.domain());
-        vpp::pixel_wise(XD11, weightsX_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
-    	    MANIFOLD::deriv2xx_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
+	hessian_type XD11(without_last_col);
+        vpp::pixel_wise(XD11, weightsX_ | without_last_col, data_.img_ | without_last_col, data_.img_ | without_first_col) | calc_xx_der;
         #ifdef TV_FUNC_DEBUG 
 		output_matval_img(XD11,"XD11.csv");
         #endif
 	auto hess_subX11  = hessian | without_last_col;
-	auto deriv_subX11 = XD11 | without_last_col;
-	vpp::pixel_wise(hess_subX11, deriv_subX11) | [&] (deriv2_type& h, const deriv2_type& d) { h=d; };
+	vpp::pixel_wise(hess_subX11, XD11) | [&] (deriv2_type& h, const deriv2_type& d) { h=d; };
     }
 	#pragma omp parallel for
 	for(int r=0; r< nr; r++) 
@@ -477,15 +480,13 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
     #endif
     //... w.r.t. second arguments
     {
-	hessian_type XD22(data_.img_.domain());
-	vpp::pixel_wise(XD22, weightsX_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
-	    MANIFOLD::deriv2yy_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
+	hessian_type XD22(without_last_col);
+        vpp::pixel_wise(XD22, weightsX_ | without_last_col, data_.img_ | without_last_col, data_.img_ | without_first_col) | calc_yy_der;
 	#ifdef TV_FUNC_DEBUG 
 	    output_matval_img(XD22,"XD22.csv");
 	#endif
 	auto hess_subX22  = hessian | without_first_col;
-	auto deriv_subX22 = XD22 | without_last_col;
-	vpp::pixel_wise(hess_subX22, deriv_subX22) | [&] (deriv2_type& h, const deriv2_type& d) { h+=d; };
+	vpp::pixel_wise(hess_subX22, XD22) | add_to_hessian;
     }
 
     #ifdef TV_FUNC_DEBUG_VERBOSE
@@ -494,15 +495,13 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
     // Vertical Second Derivatives weighting
     //... w.r.t. first arguments
     {
-	hessian_type YD11(data_.img_.domain());
-	vpp::pixel_wise(YD11, weightsY_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
-	    MANIFOLD::deriv2xx_dist_squared(nbh(0,0), nbh(1,0), x); x*=w; };
+	hessian_type YD11(without_last_row);
+        vpp::pixel_wise(YD11, weightsY_ | without_last_row, data_.img_ | without_last_row, data_.img_ | without_first_row) | calc_xx_der;
 	#ifdef TV_FUNC_DEBUG 
 	    output_matval_img(YD11,"YD11.csv");
 	#endif
 	auto hess_subY11  = hessian | without_last_row;
-	auto deriv_subY11 = YD11 | without_last_row;
-	vpp::pixel_wise(hess_subY11, deriv_subY11) | [&] (deriv2_type& h, const deriv2_type& d) { h+=d; };
+	vpp::pixel_wise(hess_subY11, YD11) | add_to_hessian;
     }
 
     #ifdef TV_FUNC_DEBUG_VERBOSE
@@ -510,15 +509,13 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
     #endif
     //... w.r.t. second arguments
     {
-	hessian_type YD22(data_.img_.domain());
-	vpp::pixel_wise(YD22, weightsY_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
-	        MANIFOLD::deriv2yy_dist_squared(nbh(0,0), nbh(1,0), x); x*=w; };
+	hessian_type YD22(without_last_row);
+        vpp::pixel_wise(YD22, weightsY_ | without_last_row, data_.img_ | without_last_row, data_.img_ | without_first_row) | calc_yy_der;
 	#ifdef TV_FUNC_DEBUG 
 	    output_matval_img(YD22,"YD22.csv");
 	#endif
 	auto hess_subY22  = hessian | without_first_row;
-	auto deriv_subY22 = YD22 | without_last_row;
-	vpp::pixel_wise(hess_subY22, deriv_subY22) | [&] (deriv2_type& h, const deriv2_type& d) { h+=d; };
+	vpp::pixel_wise(hess_subY22, YD22) | [&] (deriv2_type& h, const deriv2_type& d) { h+=d; };
     }
     
     #ifdef TV_FUNC_DEBUG
@@ -571,8 +568,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
     // ... w.r.t. first and second arguments 
     {
 	hessian_type XD12(without_last_col);
-	vpp::pixel_wise(XD12, weightsX_ | without_last_col, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
-	    MANIFOLD::deriv2xy_dist_squared(nbh(0,0), nbh(0,1), x); x*=w; };
+	vpp::pixel_wise(XD12, weightsX_ | without_last_col, data_.img_ | without_last_col, data_.img_ | without_first_col ) | calc_xy_der;
 	#ifdef TV_FUNC_DEBUG 
 	    output_matval_img(XD12,"XD12.csv");
 	#endif
@@ -592,8 +588,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
     //... w.r.t. second arguments
     {
 	hessian_type YD12(data_.img_.domain());
-	vpp::pixel_wise(YD12, weightsY_, N) | [&] (deriv2_type& x, const weights_type& w, const auto& nbh) { 
-	    MANIFOLD::deriv2xy_dist_squared(nbh(0,0), nbh(1,0), x); x*=w; };
+	vpp::pixel_wise(YD12 | without_last_row, weightsY_ | without_last_row, data_.img_ | without_last_row, data_.img_ | without_first_row) | calc_xy_der;
 	#ifdef TV_FUNC_DEBUG 
 	    output_matval_img(YD12,"YD12.csv");
         #endif
