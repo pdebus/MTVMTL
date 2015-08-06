@@ -33,12 +33,14 @@ struct Manifold< SPD, N> {
 	typedef double scalar_type;
 	typedef double dist_type;
 	typedef std::complex<double> complex_type;
+	typedef std::vector<double> weight_list; 
 
 	// Value Typedef
 	typedef Eigen::Matrix< scalar_type, N, N>				value_type;
 	typedef value_type&							ref_type;
 	typedef const value_type&						cref_type;
 	typedef std::vector<value_type, Eigen::aligned_allocator<value_type> >	value_list; 
+	
 
 
 	// Tangent space typedefs
@@ -71,12 +73,13 @@ struct Manifold< SPD, N> {
 
 	inline static void convex_combination(cref_type x, cref_type y, double t, ref_type result);
 
-	// Implementation of the Karcher mean
+	// Implementations of the Karcher mean
 	// Slow list version
-	inline static void karcher_mean_gradient(ref_type x, const value_list& v);
+	inline static void karcher_mean(ref_type x, const value_list& v, double tol=1e-10, int maxit=15);
+	inline static void weighted_karcher_mean(ref_type x, const weight_list& w, const value_list& v, double tol=1e-10, int maxit=15);
 	// Variadic templated version
 	template <typename V, class... Args>
-	inline static void karcher_mean_gradient(V& x, const Args&... args);
+	inline static void karcher_mean(V& x, const Args&... args);
 	template <typename V>
 	inline static void variadic_karcher_mean_gradient(V& x, const V& y);
 	template <typename V, class... Args>
@@ -254,29 +257,66 @@ inline void Manifold <SPD, N>::convex_combination(cref_type x, cref_type y, doub
 
 // Karcher mean implementations
 template <int N>
-inline void Manifold <SPD, N>::karcher_mean_gradient(ref_type x, const value_list& v){
+inline void Manifold<SPD, N>::karcher_mean(ref_type x, const value_list& v, double tol, int maxit){
     value_type L, temp;
-    L = value_type::Zero();
-    for(int i = 0; i < v.size(); ++i){
-	log(x, v[i], temp);
-	L += temp;
-    }
-    
-    exp(x, 0.5 / v.size() * (L + L.transpose()), temp);
-    x = temp;
+   
+    int k = 0;
+    double error = 0.0;
+    do{
+	scalar_type m1 = x.sum();
+	L = value_type::Zero();
+	for(int i = 0; i < v.size(); ++i){
+	    log(x, v[i], temp);
+	    L += temp;
+	}
+	exp(x, 0.5 / v.size() * (L + L.transpose()), temp);
+	x = temp;
+	error = std::abs(x.sum() - m1);
+	++k;
+    } while(error > tol && k < maxit);
+
+}
+
+template <int N>
+inline void Manifold<SPD, N>::weighted_karcher_mean(ref_type x, const weight_list& w, const value_list& v, double tol, int maxit){
+    value_type L, temp;
+   
+    int k = 0;
+    double error = 0.0;
+    do{
+	scalar_type m1 = x.sum();
+	L = value_type::Zero();
+	for(int i = 0; i < v.size(); ++i){
+	    log(x, v[i], temp);
+	    L += w[i] * temp;
+	}
+	exp(x, 0.5 / v.size() * (L + L.transpose()), temp);
+	x = temp;
+	error = std::abs(x.sum() - m1);
+	++k;
+    } while(error > tol && k < maxit);
+
 }
 
 template <int N>
 template <typename V, class... Args>
-inline void Manifold<SPD, N>::karcher_mean_gradient(V& x, const Args&... args){
-    int numArgs = sizeof...(args);
-
+inline void Manifold<SPD, N>::karcher_mean(V& x, const Args&... args){
     V temp, sum;
-    sum = x;
-
-    variadic_karcher_mean_gradient(sum, args...);
-    exp(x, 0.5 / numArgs * (sum + sum.transpose()), temp);
-    x = temp;
+    
+    int numArgs = sizeof...(args);
+    int k = 0;
+    double error = 0.0;    
+    double tol = 1e-10;
+    int maxit = 15;
+    do{
+	scalar_type m1 = x.sum();
+	sum = x;
+	variadic_karcher_mean_gradient(sum, args...);
+	exp(x, 0.5 / numArgs * (sum + sum.transpose()), temp);
+	x = temp;
+	error = std::abs(x.sum() - m1);
+	++k;
+    } while(error > tol && k < maxit);
 }
 
 template <int N>

@@ -229,41 +229,25 @@ void TV_Minimizer<PRPT, FUNCTIONAL, MANIFOLD, DATA, PAR>::geod_mean(){
 	    std::cout << "\t\t...Karcher mean Iteration: "<< std::endl;
     #endif 
 
-auto karcher_mean = [&] (vtr i, cvtr p0, cvtr p1, cvtr p2, cvtr p3, cvtr p4) {
-    
-    /* Slow version, - needs to copy p_i for insertion in value_list
-     typename MANIFOLD::value_list v;
-    v.push_back(p0);
-    v.push_back(p1);
-    v.push_back(p2);
-    v.push_back(p3);
-    v.push_back(p4);
-    MANIFOLD::karcher_mean_gradient(i, v); */
-    MANIFOLD::karcher_mean_gradient(i, p0, p1, p2, p3, p4);
-    };
-
-    weights_mat diff(data_.img_.domain());
-
     //TODO: Put in Algo traits
     double tol = 1e-10;
     double max_karcher_iterations = 15;
 
-    #ifdef TVMTL_TVMIN_DEBUG
-	    std::cout << "\t\t...Errror estimation: "<< std::endl;
-    #endif 
+    auto karcher_mean = [&] (vtr i, cvtr p0, cvtr p1, cvtr p2, cvtr p3, cvtr p4) {
     
-    int k = 0;
-    double error;
+	/* Slow version, - needs to copy p_i for insertion in value_list
+	typename MANIFOLD::value_list v;
+	v.push_back(p0);
+	v.push_back(p1);
+	v.push_back(p2);
+	v.push_back(p3);
+	v.push_back(p4);
+	MANIFOLD::karcher_mean(i, v, tol, max_karcher_iterations); */
+    
+	MANIFOLD::karcher_mean(i, p0, p1, p2, p3, p4);
+    };
 
-    do{
-	error = 0.0;
-	vpp::pixel_wise(data_.img_, diff) | [&] (const value_type& i, weights_type& w) { w = i.sum(); };
-	vpp::pixel_wise(data_.img_, proximal_mappings_[0], proximal_mappings_[1], proximal_mappings_[2], proximal_mappings_[3], proximal_mappings_[4]) | karcher_mean;
-	vpp::pixel_wise(data_.img_, diff)(vpp::_no_threads) | [&] (const value_type& i, const weights_type& w) { error = std::max(error, std::abs(w - i.sum())); };
-    #ifdef TVMTL_TVMIN_DEBUG
-	    std::cout << "\t\tError =  "<< error << ", Iterations = " << ++k << std::endl;
-    #endif 
-    }while(error > tol && k < max_karcher_iterations);
+    vpp::pixel_wise(data_.img_, proximal_mappings_[0], proximal_mappings_[1], proximal_mappings_[2], proximal_mappings_[3], proximal_mappings_[4]) | karcher_mean;
 
 }
 

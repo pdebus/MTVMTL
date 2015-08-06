@@ -21,9 +21,9 @@ struct Manifold< EUCLIDIAN, N > {
 
 
 	// Scalar type of manifold
-	//typedef double scalar_type;
 	typedef double scalar_type;
 	typedef double dist_type;
+	typedef std::vector<double>						weight_list; 
 	
 
 	// Value Typedef
@@ -64,18 +64,18 @@ struct Manifold< EUCLIDIAN, N > {
 	
 	inline static void convex_combination(cref_type x, cref_type y, double t, ref_type result);
 	
-
-	// Implementation of the Karcher mean
+	// Implementations of the Karcher mean
 	// Slow list version
-	inline static void karcher_mean_gradient(ref_type x, const value_list& v);
+	inline static void karcher_mean(ref_type x, const value_list& v, double tol=1e-10, int maxit=15);
+	inline static void weighted_karcher_mean(ref_type x, const weight_list& w, const value_list& v, double tol=1e-10, int maxit=15);
 	// Variadic templated version
 	template <typename V, class... Args>
-	inline static void karcher_mean_gradient(V& x, const Args&... args);
+	inline static void karcher_mean(V& x, const Args&... args);
 	template <typename V>
 	inline static void variadic_karcher_mean_gradient(V& x, const V& y);
 	template <typename V, class... Args>
 	inline static void variadic_karcher_mean_gradient(V& x, const V& y1, const Args&... args);
-
+	
 
 	// Basis transformation for restriction to tangent space
 	inline static void tangent_plane_base(cref_type x, tm_base_ref_type result);
@@ -181,7 +181,7 @@ inline void Manifold <EUCLIDIAN, N>::convex_combination(cref_type x, cref_type y
 
 // Karcher mean implementations
 template <int N>
-inline void Manifold <EUCLIDIAN, N>::karcher_mean_gradient(ref_type x, const value_list& v){
+inline void Manifold <EUCLIDIAN, N>::karcher_mean(ref_type x, const value_list& v, double tol, int maxit){
     value_type L = value_type::Zero();
     for(int i = 0; i < v.size(); ++i)
 	L += v[i];
@@ -189,8 +189,16 @@ inline void Manifold <EUCLIDIAN, N>::karcher_mean_gradient(ref_type x, const val
 }
 
 template <int N>
+inline void Manifold <EUCLIDIAN, N>::weighted_karcher_mean(ref_type x, const weight_list& w, const value_list& v, double tol, int maxit){
+    value_type L = value_type::Zero();
+    for(int i = 0; i < v.size(); ++i)
+	L += w[i]*v[i];
+    x = L / v.size();
+}
+
+template <int N>
 template <typename V, class... Args>
-inline void Manifold<EUCLIDIAN, N>::karcher_mean_gradient(V& x, const Args&... args){
+inline void Manifold<EUCLIDIAN, N>::karcher_mean(V& x, const Args&... args){
     int numArgs = sizeof...(args);
     variadic_karcher_mean_gradient(x, args...);
     x /= numArgs;

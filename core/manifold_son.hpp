@@ -32,14 +32,17 @@ struct Manifold< SO, N> {
 	typedef double scalar_type;
 	typedef double dist_type;
 	typedef std::complex<double> complex_type;
+	typedef std::vector<double> weight_list; 
 
 	// Value Typedef
-	typedef Eigen::Matrix< scalar_type, N, N>   value_type;
-	typedef value_type&			    ref_type;
-	typedef const value_type&		    cref_type;
+	typedef Eigen::Matrix< scalar_type, N, N>				value_type;
+	typedef value_type&							ref_type;
+	typedef const value_type&						cref_type;
+	typedef std::vector<value_type, Eigen::aligned_allocator<value_type> >	value_list; 
+
 	
 	// Tangent space typedefs
-	typedef Eigen::Matrix <scalar_type, N*N, N * (N - 1) / 2> tm_base_type;
+	typedef Eigen::Matrix <scalar_type, N * N, N * (N - 1) / 2> tm_base_type;
 	typedef tm_base_type& tm_base_ref_type;
 
 	// Derivative Typedefs
@@ -70,6 +73,20 @@ struct Manifold< SO, N> {
 	template <typename DerivedX, typename DerivedY>
 	inline static void exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedX>& result);
 	inline static void log(cref_type x, cref_type y, ref_type result);
+	
+	inline static void convex_combination(cref_type x, cref_type y, double t, ref_type result);
+
+	// Implementations of the Karcher mean
+	// Slow list version
+	inline static void karcher_mean(ref_type x, const value_list& v, double tol=1e-10, int maxit=15);
+	inline static void weighted_karcher_mean(ref_type x, const weight_list& w, const value_list& v, double tol=1e-10, int maxit=15);
+	// Variadic templated version
+	template <typename V, class... Args>
+	inline static void karcher_mean(V& x, const Args&... args);
+	template <typename V>
+	inline static void variadic_karcher_mean_gradient(V& x, const V& y);
+	template <typename V, class... Args>
+	inline static void variadic_karcher_mean_gradient(V& x, const V& y1, const Args&... args);
 
 	// Basis transformation for restriction to tangent space
 	inline static void tangent_plane_base(cref_type x, tm_base_ref_type result);
@@ -206,6 +223,104 @@ inline void Manifold <SO, N>::tangent_plane_base(cref_type x, tm_base_ref_type r
 	}
 }
 
+// Convex geodesic combinations
+template <int N>
+inline void Manifold <SO, N>::convex_combination(cref_type x, cref_type y, double t, ref_type result){
+    value_type l;
+    if (t == 0.5){
+	result = x + y;
+	projector(result);
+    }
+    else{
+    log(x, y, l);
+    exp(x, l * t, result);
+    }
+}
+
+// Karcher mean implementations
+template <int N>
+inline void Manifold<SO, N>::karcher_mean(ref_type x, const value_list& v, double tol, int maxit){
+    value_type L, temp;
+   
+    int k = 0;
+    double error = 0.0;
+    do{
+	scalar_type m1 = x.sum();
+	L = value_type::Zero();
+	for(int i = 0; i < v.size(); ++i){
+	    log(x, v[i], temp);
+	    L += temp;
+	}
+	exp(x, 1.0 / v.size() * L , temp);
+	x = temp;
+	error = std::abs(x.sum() - m1);
+	++k;
+    } while(error > tol && k < maxit);
+
+}
+
+template <int N>
+inline void Manifold<SO, N>::weighted_karcher_mean(ref_type x, const weight_list& w, const value_list& v, double tol, int maxit){
+    value_type L, temp;
+   
+    int k = 0;
+    double error = 0.0;
+    do{
+	scalar_type m1 = x.sum();
+	L = value_type::Zero();
+	for(int i = 0; i < v.size(); ++i){
+	    log(x, v[i], temp);
+	    L += w[i] * temp;
+	}
+	exp(x, 1.0 / v.size() * L , temp);
+	x = temp;
+	error = std::abs(x.sum() - m1);
+	++k;
+    } while(error > tol && k < maxit);
+
+}
+
+template <int N>
+template <typename V, class... Args>
+inline void Manifold<SO, N>::karcher_mean(V& x, const Args&... args){
+    V temp, sum;
+    
+    int numArgs = sizeof...(args);
+    int k = 0;
+    double error = 0.0;    
+    double tol = 1e-10;
+    int maxit = 15;
+    do{
+	scalar_type m1 = x.sum();
+	sum = x;
+	variadic_karcher_mean_gradient(sum, args...);
+	exp(x, 1.0 / numArgs * sum, temp);
+	x = temp;
+	error = std::abs(x.sum() - m1);
+	++k;
+    } while(error > tol && k < maxit);
+}
+
+template <int N>
+template <typename V>
+inline void Manifold<SO, N>::variadic_karcher_mean_gradient(V& x, const V& y){
+    V temp;
+    log(x, y, temp);
+    x = temp;
+}
+
+template <int N>
+template <typename V, class... Args>
+inline void Manifold<SO, N>::variadic_karcher_mean_gradient(V& x, const V& y1, const Args& ... args){
+    V temp1, temp2;
+    temp2 = x;
+    
+    log(x, y1, temp1);
+
+    variadic_karcher_mean_gradient(temp2, args...);
+    temp1 += temp2;
+    x = temp1;
+}
 
 template <int N>
 inline void Manifold <SO, N>::projector(ref_type x){

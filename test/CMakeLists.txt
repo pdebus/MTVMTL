@@ -116,6 +116,10 @@ add_executable(sphere_tvmin_test sphere_tvmin_test.cpp)
 add_test(sphere_tvmin_test sphere_tvmin_test)
 target_link_libraries(sphere_tvmin_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 
+add_executable(sphere_tvmin_prpt_test sphere_tvmin_prpt_test.cpp)
+add_test(sphere_tvmin_prpt_test sphere_tvmin_prpt_test)
+target_link_libraries(sphere_tvmin_prpt_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+
 add_executable(grassmann_chromaticnoise_test grassmann_chromaticnoise_test.cpp)
 add_test(grassmann_chromaticnoise_test grassmann_chromaticnoise_test)
 target_link_libraries(grassmann_chromaticnoise_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
