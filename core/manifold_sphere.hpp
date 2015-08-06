@@ -246,17 +246,29 @@ inline void Manifold < SPHERE, N>::deriv2yy_dist_squared( cref_type x, cref_type
 template <int N>
 template <typename DerivedX, typename DerivedY>
 inline void Manifold <SPHERE, N>::exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedX>& result){
-    result=(x+y).normalized();
-    /*scalar_type n = y.norm();
+    //result=(x+y).normalized();
+    scalar_type n = y.norm();
     if(n!=0)
-	result = std::cos(n) * x + std::sin(n) * y.normalized();
+	result = std::cos(n) * x + std::sin(n) * y / n;
     else
-	result = x;*/
+	result = x;
 }
 
 template <int N>
 inline void Manifold <SPHERE, N>::log(cref_type x, cref_type y, ref_type result){
-    result = (y-x).normalized();
+    //result = (y-x).normalized();
+    scalar_type xdoty = x.dot(y);
+    bool useSeries = false;
+
+    if (xdoty < - 1.0) xdoty = -1.0;
+    if (xdoty >=  1.0) { xdoty = 1.0; useSeries = true; }
+    
+    if(!useSeries){
+	scalar_type fac = std::acos(xdoty) / std::sqrt(1.0 - xdoty * xdoty);
+	result = fac * (y - xdoty * x);
+    }
+    else
+	result =  y - xdoty * x;
 }
 
 // Tangent Plane restriction
