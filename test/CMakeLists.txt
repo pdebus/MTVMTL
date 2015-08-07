@@ -72,6 +72,10 @@ add_executable(data_test data_test.cpp)
 add_test(data_test data_test)
 target_link_libraries(data_test ${OpenCV_LIBS} gomp)
 
+add_executable(data3d_test data3d_test.cpp)
+add_test(data3d_test data3d_test)
+target_link_libraries(data3d_test ${OpenCV_LIBS} gomp)
+
 add_executable(sphere_data_test sphere_data_test.cpp)
 add_test(sphere_data_test sphere_data_test)
 target_link_libraries(sphere_data_test ${OpenCV_LIBS} gomp)
@@ -91,6 +95,10 @@ target_link_libraries(dti_data_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LI
 add_executable(functional_test functional_test.cpp)
 add_test(functional_test functional_test)
 target_link_libraries(functional_test ${OpenCV_LIBS} gomp)
+
+add_executable(functional3d_test functional3d_test.cpp)
+add_test(functional3d_test functional3d_test)
+target_link_libraries(functional3d_test ${OpenCV_LIBS} gomp)
 
 add_executable(brightness_functional_test brightness_functional_test.cpp)
 add_test(brightness_functional_test brightness_functional_test)

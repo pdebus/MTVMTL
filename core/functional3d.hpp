@@ -152,9 +152,6 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3>::updateWeights(){
     vpp::fill(weightsX_, 0.0);
     vpp::pixel_wise(weightsX_ | without_last_x, data_.img_ | without_last_x, data_.img_ | without_first_x )(/*vpp::_no_threads*/) | calc_dist; 
 
-    #ifdef TV_FUNC_DEBUG 
-	data_.output_weights(weightsX_,"XWeights.csv");
-    #endif	
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Y neighbours" << std::endl;
     #endif
@@ -163,9 +160,6 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3>::updateWeights(){
     vpp::fill(weightsY_, 0.0);
     vpp::pixel_wise(weightsY_ | without_last_y, data_.img_ | without_last_y, data_.img_ | without_first_y )(/*vpp::_no_threads*/) | calc_dist;
 
-    #ifdef TV_FUNC_DEBUG 
-	data_.output_weights(weightsY_,"YWeights.csv");
-    #endif	
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Reweighting" << std::endl;
     #endif
@@ -178,10 +172,6 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3>::updateWeights(){
     vpp::fill(weightsZ_, 0.0);
     vpp::pixel_wise(weightsZ_ | without_last_z, data_.img_ | without_last_z, data_.img_ | without_first_z )(/*vpp::_no_threads*/) | calc_dist;
 
-    #ifdef TV_FUNC_DEBUG 
-	data_.output_weights(weightsZ_,"ZWeights.csv");
-    #endif	
-    
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Reweighting" << std::endl;
     #endif
@@ -211,9 +201,6 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::updateTMBase(){
    vpp::pixel_wise(T, data_.img_)(/*vpp::_no_threads*/) | [&] (tm_base_type& t, const value_type& i) { MANIFOLD::tangent_plane_base(i,t); };
    T_=T;
     
-    #ifdef TV_FUNC_DEBUG 
-        output_img(T_,"T.csv");
-    #endif
 }
 
 

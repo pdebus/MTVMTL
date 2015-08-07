@@ -443,9 +443,6 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA >::evaluateHJ(){
     triplist.clear();
     triplist.reserve(3*sparsedim*manifold_dim);
 
-    // Neighbourhood box
-    nbh_type N = nbh_type(data_.img_);
-    
     // Subimage boxes
     vpp::box2d without_last_col(vpp::vint2(0,0), vpp::vint2(nr-1, nc-2)); // subdomain without last column
     vpp::box2d without_first_col(vpp::vint2(0,1), vpp::vint2(nr-1, nc-1)); // subdomain without first column
