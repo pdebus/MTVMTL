@@ -20,6 +20,7 @@
 #include <vpp/vpp.hh>
 
 // own includes 
+#include "data3d_utils.hpp"
 #include "manifold.hpp"
 
 namespace tvmtl{
@@ -47,12 +48,12 @@ class Data<MANIFOLD, 3>{
 	inline bool doInpaint() const { return inpaint_; }
 	    
 	// Data Init functions
-	//inline void initEdgeweights();
-	//inline void initInp();
+	inline void initEdgeweights();
+	inline void initInp();
 	
 	void create_noisy_gray(const int nz, const int ny, const int nx, double color=0.5, double stdev=0.1);
 
-	//void setEdgeWeights(const weights_mat&);
+	void setEdgeWeights(const weights_mat&);
 
 //  private:
 	storage_type img_;
@@ -67,25 +68,23 @@ class Data<MANIFOLD, 3>{
 /*----- Implementation 3D Data ------*/
 template < typename MANIFOLD >
 const int Data<MANIFOLD, 3>::img_dim = 3;
-/*
 template < typename MANIFOLD >
 void Data<MANIFOLD, 3>::setEdgeWeights(const weights_mat& w){
-    edge_weights_= vpp::clone(w);
+    //edge_weights_= vpp::clone(w);
 }
 
 template < typename MANIFOLD >
 void Data<MANIFOLD, 3>::initInp(){
     inp_ = inp_mat(noise_img_.domain());
-    vpp::fill(inp_, false);
+    //vpp::fill(inp_, false);
     inpaint_ = false;
 }
 
 template < typename MANIFOLD >
 void Data<MANIFOLD, 3>::initEdgeweights(){
     edge_weights_ = weights_mat(noise_img_.domain());
-    vpp::fill(edge_weights_, 1.0);
+    //vpp::fill(edge_weights_, 1.0);
 }
-*/
 
 template < typename MANIFOLD >
 void Data<MANIFOLD, 3>::create_noisy_gray(const int nz, const int ny, const int nx, double color, double stdev){
@@ -96,6 +95,12 @@ void Data<MANIFOLD, 3>::create_noisy_gray(const int nz, const int ny, const int 
     std::mt19937 gen(rd());
     std::normal_distribution<typename MANIFOLD::scalar_type> rand(0.0, stdev);
 
+    for(int s = 0; s < nz; ++s)
+	for(int r = 0; r < ny; ++r)
+	    for(int c = 0; c < nx; ++c){
+		noise_img_(s, r, c).setConstant(color + rand(gen));
+		img_(s, r, c) = noise_img_(s, r, c);
+	    }
     //vpp::pixel_wise(noise_img_) | [&] (value_type& i) { i.setConstant(color + rand(gen)); };
 }
 
