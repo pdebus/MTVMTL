@@ -54,8 +54,59 @@ void pixel_wise3d(FUNC func, T& head, Args&... args){
 	    auto* head_row_pointer = &head(s,r,0);
 	    perform_inner_loop(func, nc, head_row_pointer, get_row_pointer(s, r, args)...);
 	}
+    }
+}
+
+template <class FUNC, class T>
+void pixel_wise3d_nothreads(FUNC func, T& head){
+
+    int ns = head.nslices();  // z
+    int nr = head.nrows();    // y
+    int nc = head.ncols();    // x
+    
+    for(int s = 0; s < ns; ++s){
+	for(int r = 0; r < nr; ++r){
+	    auto* head_row_pointer = &head(s, r, 0);
+	    for(int c = 0; c < nc; ++c)
+		func(head_row_pointer[c]);
+	}
     } 
 
+}
+
+template <class FUNC, class T, class... Args>
+void pixel_wise3d_nothreads(FUNC func, T& head, Args&... args){
+
+    int ns = head.nslices();  // z
+    int nr = head.nrows();    // y
+    int nc = head.ncols();    // x
+   
+    for(int s = 0; s < ns; ++s){
+	for(int r = 0; r < nr; ++r){
+	    auto* head_row_pointer = &head(s,r,0);
+	    perform_inner_loop(func, nc, head_row_pointer, get_row_pointer(s, r, args)...);
+	}
+    } 
+}
+
+template <class IMG, class VAL>
+void fill3d(IMG& img, VAL val){
+    auto fill = [&] (VAL& i) { i = val;};
+    pixel_wise3d(fill, img);
+}
+
+template <class IMG>
+void clone3d(IMG& src, IMG& dst){
+    auto clone = [] (const auto& src_pixel, auto& dst_pixel) { dst_pixel = src_pixel;  };
+    pixel_wise3d(clone, src, dst);
+}
+
+template <class IMG>
+auto sum3d(IMG& img){
+    auto sum = img(0,0,0);
+    auto add = [&] (const auto& i) { sum += i; };
+    pixel_wise3d_nothreads(add, img);
+    return sum;
 }
 
 

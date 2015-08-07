@@ -42,11 +42,28 @@ int main(int argc, const char *argv[])
 
     pixel_wise3d(fill, myData.img_);
     pixel_wise3d(output, myData.img_);
+    std::cout << std::endl;
+
     pixel_wise3d(copy, myData.noise_img_, myData.img_);
     pixel_wise3d(output, myData.img_);
+    std::cout << std::endl;
+
     pixel_wise3d(add, myData.img_, myData.noise_img_, myData.img_);
     pixel_wise3d(output, myData.img_);
+    std::cout << std::endl;
 
+    mf_t::value_type v; v.setConstant(0.5);
+
+    fill3d(myData.img_, v);
+    pixel_wise3d(output, myData.img_);
+    std::cout << std::endl;
+    
+    clone3d(myData.noise_img_, myData.img_);
+    pixel_wise3d(output, myData.img_);
+    std::cout << std::endl;
+    
+    mf_t::value_type sum = sum3d(myData.img_);
+    std::cout << "SUM of all elements: " <<  sum << std::endl;
 
     return 0;
 }
