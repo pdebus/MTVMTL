@@ -46,8 +46,6 @@ class Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3>{
 	typedef typename DATA::weights_mat weights_mat;
 	typedef typename DATA::inp_mat inp_mat;
 
-	typedef vpp::box_nbh2d<value_type,3,3> nbh_type;
-
 	// Functional parameters and return types
 	static const FUNCTIONAL_DISC disc_type;
 	typedef double param_type;
@@ -141,7 +139,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3>::updateWeights(){
     weightsZ_ = weights_mat(data_.img_.domain());
 
     auto calc_dist = [&] (weights_type& w, const value_type i, const value_type n) {
-	i = MANIFOLD::dist_squared(i, n);
+	w = MANIFOLD::dist_squared(i, n);
     };
 
     #ifdef TV_FUNC_DEBUG_VERBOSE
@@ -149,16 +147,16 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3>::updateWeights(){
     #endif
     
     // X Neighbours
-    vpp::fill(weightsX_, 0.0);
-    vpp::pixel_wise(weightsX_ | without_last_x, data_.img_ | without_last_x, data_.img_ | without_first_x )(/*vpp::_no_threads*/) | calc_dist; 
+    fill3d(weightsX_, 0.0);
+    pixel_wise3d(calc_dist, weightsX_ | without_last_x, data_.img_ | without_last_x, data_.img_ | without_first_x );
 
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Y neighbours" << std::endl;
     #endif
 
     // Y Neighbours
-    vpp::fill(weightsY_, 0.0);
-    vpp::pixel_wise(weightsY_ | without_last_y, data_.img_ | without_last_y, data_.img_ | without_first_y )(/*vpp::_no_threads*/) | calc_dist;
+    fill3d(weightsY_, 0.0);
+    pixel_wise3d(calc_dist, weightsY_ | without_last_y, data_.img_ | without_last_y, data_.img_ | without_first_y );
 
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Reweighting" << std::endl;
@@ -169,8 +167,8 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3>::updateWeights(){
     #endif
 
     // Z Neighbours
-    vpp::fill(weightsZ_, 0.0);
-    vpp::pixel_wise(weightsZ_ | without_last_z, data_.img_ | without_last_z, data_.img_ | without_first_z )(/*vpp::_no_threads*/) | calc_dist;
+    fill3d(weightsZ_, 0.0);
+    pixel_wise3d(calc_dist, weightsZ_ | without_last_z, data_.img_ | without_last_z, data_.img_ | without_first_z );
 
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Reweighting" << std::endl;
@@ -178,13 +176,13 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3>::updateWeights(){
 
     if(disc==ISO){
 	auto g =  [&] (const weights_type& ew, weights_type& x, weights_type& y, weights_type& z) { x = ew / std::sqrt(x + y + z + eps2_); y = x; z = x; };
-	vpp::pixel_wise(data_.edge_weights_, weightsX_, weightsY_, weightsZ_) | g ;
+	pixel_wise3d(g, data_.edge_weights_, weightsX_, weightsY_, weightsZ_);
     }
     else{
 	auto g =  [&] (const weights_type& ew, weights_type& w) { w = ew / std::sqrt(w+eps2_); };
-	vpp::pixel_wise(data_.edge_weights_, weightsX_) | g ;
-	vpp::pixel_wise(data_.edge_weights_, weightsY_) | g ;
-	vpp::pixel_wise(data_.edge_weights_, weightsZ_) | g ;
+	pixel_wise3d(g, data_.edge_weights_, weightsX_);
+	pixel_wise3d(g, data_.edge_weights_, weightsY_);
+	pixel_wise3d(g, data_.edge_weights_, weightsZ_);
     }
 }
 
@@ -198,7 +196,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::updateTMBase(){
 
 
    tm_base_mat_type T(data_.img_.domain());
-   vpp::pixel_wise(T, data_.img_)(/*vpp::_no_threads*/) | [&] (tm_base_type& t, const value_type& i) { MANIFOLD::tangent_plane_base(i,t); };
+   pixel_wise3d([&] (tm_base_type& t, const value_type& i) { MANIFOLD::tangent_plane_base(i,t); }, T, data_.img_);
    T_=T;
     
 }
@@ -219,12 +217,12 @@ typename Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::result_type Functiona
 
 
     if(data_.doInpaint()){
-	auto f = [] (const value_type& i, const value_type& n, const bool inp ) { return MANIFOLD::dist_squared(i,n)*(1-inp); };
-	J1 = vpp::sum(vpp::pixel_wise(data_.img_, data_.noise_img_, data_.inp_) | f);
+	auto f = [&] (const value_type& i, const value_type& n, const bool inp ) { J1 += MANIFOLD::dist_squared(i,n)*(1-inp); };
+	pixel_wise3d_nothreads(f, data_.img_, data_.noise_img_, data_.inp_);
     }
     else{
-	auto f = [] (const value_type& i, const value_type& n) { return MANIFOLD::dist_squared(i,n); };
-	J1 = vpp::sum(vpp::pixel_wise(data_.img_, data_.noise_img_)(/*vpp::_no_threads*/)| f);
+	auto f = [&] (const value_type& i, const value_type& n) { J1 += MANIFOLD::dist_squared(i,n); };
+	pixel_wise3d_nothreads(f, data_.img_, data_.noise_img_);
     }
 
 	updateWeights();
@@ -234,9 +232,9 @@ typename Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::result_type Functiona
     #endif
 
     if(disc==ISO)
-	J2 = vpp::sum( vpp::pixel_wise(weightsX_) | [&] (const weights_type& w) {return 1.0/w;} );
+	pixel_wise3d_nothreads([&] (const weights_type& w) { J2 += 1.0/w;} ,weightsX_);
     else
-	J2 = vpp::sum( vpp::pixel_wise(weightsX_, weightsY_, weightsZ_) | [&] (const weights_type& wx, const weights_type& wy, const weights_type& wz) {return 1.0 / wx + 1.0 / wy+ 1.0 / wz;} );
+	pixel_wise3d_nothreads([&] (const weights_type& wx, const weights_type& wy, const weights_type& wz) { J2 += 1.0 / wx + 1.0 / wy+ 1.0 / wz;}, weightsX_, weightsY_, weightsZ_); 
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "J1: " << J1 << std::endl;
 	std::cout << "J2: " << J2 << std::endl;

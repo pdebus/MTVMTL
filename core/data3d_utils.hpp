@@ -6,7 +6,7 @@
 namespace tvmtl{
 
 template<class T>
-auto* get_row_pointer(int s, int r, T& image3d){
+auto* get_row_pointer(int s, int r, T&& image3d){
     return &image3d(s, r, 0);
 }
 
@@ -24,7 +24,7 @@ void perform_inner_loop(FUNC func, int nc, T* head, Args*... args){
 
 
 template <class FUNC, class T>
-void pixel_wise3d(FUNC func, T& head){
+void pixel_wise3d(FUNC func, T&& head){
 
     int ns = head.nslices();  // z
     int nr = head.nrows();    // y
@@ -42,7 +42,7 @@ void pixel_wise3d(FUNC func, T& head){
 }
 
 template <class FUNC, class T, class... Args>
-void pixel_wise3d(FUNC func, T& head, Args&... args){
+void pixel_wise3d(FUNC func, T&& head, Args&&... args){
 
     int ns = head.nslices();  // z
     int nr = head.nrows();    // y
@@ -58,7 +58,7 @@ void pixel_wise3d(FUNC func, T& head, Args&... args){
 }
 
 template <class FUNC, class T>
-void pixel_wise3d_nothreads(FUNC func, T& head){
+void pixel_wise3d_nothreads(FUNC func, T&& head){
 
     int ns = head.nslices();  // z
     int nr = head.nrows();    // y
@@ -75,7 +75,7 @@ void pixel_wise3d_nothreads(FUNC func, T& head){
 }
 
 template <class FUNC, class T, class... Args>
-void pixel_wise3d_nothreads(FUNC func, T& head, Args&... args){
+void pixel_wise3d_nothreads(FUNC func, T&& head, Args&&... args){
 
     int ns = head.nslices();  // z
     int nr = head.nrows();    // y
@@ -90,19 +90,20 @@ void pixel_wise3d_nothreads(FUNC func, T& head, Args&... args){
 }
 
 template <class IMG, class VAL>
-void fill3d(IMG& img, VAL val){
+void fill3d(IMG&& img, VAL val){
     auto fill = [&] (VAL& i) { i = val;};
     pixel_wise3d(fill, img);
 }
 
-template <class IMG>
-void clone3d(IMG& src, IMG& dst){
+template <class SRC, class DST>
+void clone3d(SRC&& src, DST&& dst){
+    //TODO static assert for domains
     auto clone = [] (const auto& src_pixel, auto& dst_pixel) { dst_pixel = src_pixel;  };
     pixel_wise3d(clone, src, dst);
 }
 
 template <class IMG>
-auto sum3d(IMG& img){
+auto sum3d(IMG&& img){
     auto sum = img(0,0,0);
     auto add = [&] (const auto& i) { sum += i; };
     pixel_wise3d_nothreads(add, img);

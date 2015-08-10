@@ -63,7 +63,27 @@ int main(int argc, const char *argv[])
     std::cout << std::endl;
     
     mf_t::value_type sum = sum3d(myData.img_);
+
     std::cout << "SUM of all elements: " <<  sum << std::endl;
+
+    typedef Manifold< EUCLIDIAN, 3 > mf_t2;
+    typedef Data< mf_t2, 3> data_t2;	
+
+    data_t2 myData2=data_t2();
+    myData2.create_noisy_rgb(3, 2, 2);
+
+    ns = myData2.img_.nslices();  // z
+    nr = myData2.img_.nrows();    // y
+    nc = myData2.img_.ncols();    // x
+    
+    for(int s = 0; s < ns; ++s){
+	std::cout << "\nSlice " << s << ":\n";
+	for(int r = 0; r < nr; ++r){
+	    for(int c = 0; c < nc; ++c)
+		std::cout << myData2.img_(s, r, c) << " ";
+	    std::cout << std::endl;
+	}
+    }
 
     return 0;
 }

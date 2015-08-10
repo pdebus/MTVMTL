@@ -52,6 +52,7 @@ class Data<MANIFOLD, 3>{
 	inline void initInp();
 	
 	void create_noisy_gray(const int nz, const int ny, const int nx, double color=0.5, double stdev=0.1);
+	void create_noisy_rgb(const int nz, const int ny, const int nx, int color=1, double stdev=0.1);
 
 	void setEdgeWeights(const weights_mat&);
 
@@ -70,41 +71,56 @@ template < typename MANIFOLD >
 const int Data<MANIFOLD, 3>::img_dim = 3;
 template < typename MANIFOLD >
 void Data<MANIFOLD, 3>::setEdgeWeights(const weights_mat& w){
-    //edge_weights_= vpp::clone(w);
+    clone3d(w, edge_weights_);
 }
 
 template < typename MANIFOLD >
 void Data<MANIFOLD, 3>::initInp(){
     inp_ = inp_mat(noise_img_.domain());
-    //vpp::fill(inp_, false);
+    fill3d(inp_, false);
     inpaint_ = false;
 }
 
 template < typename MANIFOLD >
 void Data<MANIFOLD, 3>::initEdgeweights(){
     edge_weights_ = weights_mat(noise_img_.domain());
-    //vpp::fill(edge_weights_, 1.0);
+    fill3d(edge_weights_, 1.0);
 }
 
 template < typename MANIFOLD >
 void Data<MANIFOLD, 3>::create_noisy_gray(const int nz, const int ny, const int nx, double color, double stdev){
+    static_assert(MANIFOLD::value_dim == 1, "Method is only callable for Manifolds with embedding dimension 1");
     noise_img_ = storage_type(nz, ny, nx);
     img_ = storage_type(noise_img_.domain());
 
     std::random_device rd;
     std::mt19937 gen(rd());
     std::normal_distribution<typename MANIFOLD::scalar_type> rand(0.0, stdev);
+    auto insert = [&] (value_type& i) { i.setConstant(color + rand(gen)); };
 
-    for(int s = 0; s < nz; ++s)
-	for(int r = 0; r < ny; ++r)
-	    for(int c = 0; c < nx; ++c){
-		noise_img_(s, r, c).setConstant(color + rand(gen));
-		img_(s, r, c) = noise_img_(s, r, c);
-	    }
-    //vpp::pixel_wise(noise_img_) | [&] (value_type& i) { i.setConstant(color + rand(gen)); };
+    pixel_wise3d(insert, noise_img_);
+    clone3d(noise_img_, img_);
+    initInp();
+    initEdgeweights();
 }
 
+template < typename MANIFOLD >
+void Data<MANIFOLD, 3>::create_noisy_rgb(const int nz, const int ny, const int nx, int color, double stdev){
+    static_assert(MANIFOLD::value_dim == 3, "Method is only callable for Manifolds with embedding dimension 3");
+    noise_img_ = storage_type(nz, ny, nx);
+    img_ = storage_type(noise_img_.domain());
 
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::normal_distribution<typename MANIFOLD::scalar_type> rand(0.0, stdev);
+    value_type v(0.7 + rand(gen), 0.3 + rand(gen), 0.3 + rand(gen));
+    auto insert = [&] (value_type& i) { i = v;  };
+
+    pixel_wise3d(insert, noise_img_);
+    clone3d(noise_img_, img_);
+    initInp();
+    initEdgeweights();
+}
 }// end namespace tvmtl
 
 #endif
