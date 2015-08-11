@@ -43,7 +43,6 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 	    typedef typename FUNCTIONAL::weights_type weights_type;
 
 	    // Data acccess typedefs
-	    typedef vpp::box_nbh2d<value_type,3,3> nbh_type;
 	    typedef typename DATA::storage_type img_type;
 
 
@@ -81,7 +80,7 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 	    FUNCTIONAL& func_;
 	    DATA& data_;
 	
-	    img_type proximal_mappings_[5];
+	    img_type proximal_mappings_[7];
 
 	    bool use_approximate_mean_;
 

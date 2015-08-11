@@ -151,6 +151,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3>::updateWeights(){
     pixel_wise3d(calc_dist, weightsX_ | without_last_x, data_.img_ | without_last_x, data_.img_ | without_first_x );
 
     #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...Reweighting" << std::endl;
 	std::cout << "\t\t...Y neighbours" << std::endl;
     #endif
 
@@ -160,9 +161,6 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3>::updateWeights(){
 
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Reweighting" << std::endl;
-    #endif
-
-    #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Z neighbours" << std::endl;
     #endif
 
@@ -246,13 +244,436 @@ typename Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::result_type Functiona
 // Evaluation of J'
 template <enum FUNCTIONAL_DISC disc, typename MANIFOLD, class DATA >
 void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateDJ(){
-    //TODO
+    
+    img_type grad = img_type(data_.img_.domain());
+    int ns = data_.img_.nslices();
+    int nr = data_.img_.nrows();
+    int nc = data_.img_.ncols();
+    
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\tGradient evaluation..." << std::endl;
+	std::cout << "\t\t...Fidelity part" << std::endl;
+    #endif
+    //GRADIENT OF FIDELITY TERM
+    if(data_.doInpaint()){
+	auto f = [] (value_type& g, const value_type& i, const value_type& n, const bool inp ) { MANIFOLD::deriv1x_dist_squared(i,n,g); g*=(1-inp); };
+	pixel_wise3d(f, grad, data_.img_, data_.noise_img_, data_.inp_);
+    }
+    else{
+	auto f = [] (value_type& g, const value_type& i, const value_type& n) { MANIFOLD::deriv1x_dist_squared(i,n,g); };
+	pixel_wise3d(f, grad, data_.img_, data_.noise_img_);
+    }
+    
+    //GRADIENT OF TV TERM
+    
+    // Subimage boxes
+    vpp::box3d without_last_x(vpp::vint3(0,0,0), vpp::vint3(ns - 1, nr - 1, nc - 2)); // subdomain without last xslice
+    vpp::box3d without_last_y(vpp::vint3(0,0,0), vpp::vint3(ns - 1, nr - 2, nc - 1)); // subdomain without last yslice
+    vpp::box3d without_last_z(vpp::vint3(0,0,0), vpp::vint3(ns - 2, nr - 1, nc - 1)); // subdomain without last zslice
+    vpp::box3d without_first_x(vpp::vint3(0,0,1), vpp::vint3(ns - 1, nr - 1, nc - 1)); // subdomain without first xlice
+    vpp::box3d without_first_y(vpp::vint3(0,1,0), vpp::vint3(ns - 1, nr - 1, nc - 1)); // subdomain without first yslice
+    vpp::box3d without_first_z(vpp::vint3(1,0,0), vpp::vint3(ns - 1, nr - 1, nc - 1)); // subdomain without first zslice
+
+    auto calc_first_arg_deriv = [&] (value_type& x, const weights_type& w, const value_type& i, const value_type& n) { MANIFOLD::deriv1x_dist_squared(i, n, x); x *= w; };
+    auto calc_second_arg_deriv = [&] (value_type& y, const weights_type& w, const value_type& i, const value_type& n) { MANIFOLD::deriv1y_dist_squared(i, n, y); y *= w; };
+    auto add_to_gradient = [&] (value_type& g, const value_type& d) { g+=d*lambda_; };
+
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\tGradient evaluation..." << std::endl;
+	std::cout << "\t\t...TV part" << std::endl;
+	std::cout << "\t\t...-> XD1" << std::endl;
+    #endif
+    // X neighbors and reweighting
+    // ... w.r.t. to first argument
+    { // Temporary image XD1 is deallocated after this scope 
+	img_type XD1 = img_type(without_last_x);
+	pixel_wise3d(calc_first_arg_deriv, XD1, weightsX_ | without_last_x, data_.img_ | without_last_x, data_.img_ | without_first_x);
+	pixel_wise3d(add_to_gradient, grad | without_last_x, XD1);
+    }
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...-> XD2" << std::endl;
+    #endif
+    // ... w.r.t. second argument
+    {
+	img_type XD2 = img_type(without_last_x);
+	pixel_wise3d(calc_second_arg_deriv, XD2, weightsX_ | without_last_x, data_.img_ | without_last_x, data_.img_ | without_first_x);
+	pixel_wise3d(add_to_gradient, grad | without_first_x,  XD2);
+    }
+
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...-> YD1" << std::endl;
+    #endif
+    // Vertical derivatives and weighting
+    // ... w.r.t. first argument
+    {
+	img_type YD1 = img_type(without_last_y);
+	pixel_wise3d(calc_first_arg_deriv, YD1, weightsY_ | without_last_y, data_.img_ | without_last_y, data_.img_ | without_first_y);
+	pixel_wise3d(add_to_gradient, grad | without_first_y, YD1);
+    }
+    
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...-> YD2" << std::endl;
+    #endif
+    // ... w.r.t second argument
+    {
+	img_type YD2 = img_type(without_last_y);
+	pixel_wise3d(calc_second_arg_deriv, YD2, weightsY_ | without_last_y, data_.img_ | without_last_y, data_.img_ | without_first_y);
+        pixel_wise3d(add_to_gradient, grad | without_first_y, YD2);
+    }
+
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...-> ZD1" << std::endl;
+    #endif
+    // Vertical derivatives and weighting
+    // ... w.r.t. first argument
+    {
+	img_type ZD1 = img_type(without_last_z);
+	pixel_wise3d(calc_first_arg_deriv, ZD1, weightsZ_ | without_last_z, data_.img_ | without_last_z, data_.img_ | without_first_z);
+	pixel_wise3d(add_to_gradient, grad | without_first_y, ZD1);
+    }
+    
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...-> ZD2" << std::endl;
+    #endif
+    // ... w.r.t second argument
+    {
+	img_type ZD2 = img_type(without_last_z);
+	pixel_wise3d(calc_second_arg_deriv, ZD2, weightsZ_ | without_last_z, data_.img_ | without_last_z, data_.img_ | without_first_z);
+        pixel_wise3d(add_to_gradient, grad | without_first_z, ZD2);
+    }
+    
+    DJ_ = gradient_type::Zero(ns*nr*nc*manifold_dim); 
+    
+    updateTMBase();
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...Local to global insert" << std::endl;
+    #endif
+    
+   for(int s = 0; s < ns; ++s){
+	#pragma omp parallel for
+	for(int r = 0; r < nr; ++r){
+	    // Start of row pointers
+	    value_type* p = &grad(s, r, 0);
+	    tm_base_type* t = &T_(s, r, 0);
+	    for(int c = 0; c < nc; ++c)
+		DJ_.segment(manifold_dim * (s + ns * r + ns * nr * c), manifold_dim) = t[c].transpose() * Eigen::Map<const Eigen::VectorXd>(p[c].data(), p[c].size()); 
+	}
+    } 
+
+    #ifdef TV_FUNC_DEBUG 
+	std::fstream f;
+	f.open("gradJ.csv",std::fstream::out);
+	f << DJ_;
+	f.close();
+    #endif
 }
 
 // Evaluation of Hessian J
 template <enum FUNCTIONAL_DISC disc, typename MANIFOLD, class DATA >
 void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
-    //TODO
+    hessian_type hessian(data_.img_.domain());
+
+    int ns = data_.img_.nslices();
+    int nr = data_.img_.nrows();
+    int nc = data_.img_.ncols();
+    int sparsedim = ns*nr*nc*manifold_dim;
+    
+        
+    //HESSIAN OF FIDELITY TERM
+     #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\tHessian evaluation..." << std::endl;
+	std::cout << "\t\t...Fidelity part" << std::endl;
+    #endif
+
+    sparse_hessian_type HF(sparsedim,sparsedim);
+
+    //HF.reserve(Eigen::VectorXi::Constant(nc,manifold_dim));
+    typedef Eigen::Triplet<double> Trip;
+    std::vector<Trip> triplist;
+    triplist.reserve(sparsedim*manifold_dim);
+	
+    if(data_.doInpaint()){
+	auto f = [] (deriv2_type& h, const value_type& i, const value_type& n, const bool inp ) { MANIFOLD::deriv2xx_dist_squared(i,n,h); h*=(1-inp); };
+	pixel_wise3d(f, hessian, data_.img_, data_.noise_img_, data_.inp_);
+    }
+    else{
+	auto f = [] (deriv2_type& h, const value_type& i, const value_type& n) { MANIFOLD::deriv2xx_dist_squared(i,n,h); };
+	pixel_wise3d(f, hessian, data_.img_, data_.noise_img_);
+    }
+    
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...Local to global insert" << std::endl;
+    #endif
+   for(int s = 0; s < ns; ++s){
+    for(int r = 0; r < nr; ++r){
+	    // Start of row pointers
+	    deriv2_type* h = &hessian(s, r, 0);
+	    tm_base_type* t = &T_(s, r, 0);
+	    for(int c = 0; c < nc; ++c){
+		int pos = manifold_dim * (s + ns * r + ns * nr * c); // columnwise flattening
+		restricted_deriv2_type ht=t[c].transpose()*h[c]*t[c];
+	    
+		for(int local_row = 0; local_row<ht.rows(); local_row++)
+		    for(int local_col = local_row; local_col < ht.cols(); local_col++){
+			scalar_type e = ht(local_row, local_col);
+			    if(e!=0){
+				int global_row = pos + local_row;
+				int global_col = pos + local_col;
+				triplist.push_back(Trip(global_row,global_col,e));
+				if(global_row != global_col)
+				    triplist.push_back(Trip(global_col,global_row,e));
+			    }
+		    }
+	    
+	    }
+	}
+    } 
+	
+     #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...Triplet list created" << std::endl;
+    #endif
+    HF.setFromTriplets(triplist.begin(),triplist.end());              
+    HF.makeCompressed();
+
+    //HESSIAN OF TV TERM
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\tHessian evaluation..." << std::endl;
+	std::cout << "\t\t...TV part" << std::endl;
+    #endif
+
+    sparse_hessian_type HTV(sparsedim,sparsedim);
+    
+    //HTV.reserve(Eigen::VectorXi::Constant(nc,5*manifold_dim));
+    triplist.clear();
+    triplist.reserve(3*sparsedim*manifold_dim);
+
+    // Subimage boxes
+    vpp::box3d without_last_x(vpp::vint3(0,0,0), vpp::vint3(ns - 1, nr - 1, nc - 2)); // subdomain without last xslice
+    vpp::box3d without_last_y(vpp::vint3(0,0,0), vpp::vint3(ns - 1, nr - 2, nc - 1)); // subdomain without last yslice
+    vpp::box3d without_last_z(vpp::vint3(0,0,0), vpp::vint3(ns - 2, nr - 1, nc - 1)); // subdomain without last zslice
+    vpp::box3d without_first_x(vpp::vint3(0,0,1), vpp::vint3(ns - 1, nr - 1, nc - 1)); // subdomain without first xlice
+    vpp::box3d without_first_y(vpp::vint3(0,1,0), vpp::vint3(ns - 1, nr - 1, nc - 1)); // subdomain without first yslice
+    vpp::box3d without_first_z(vpp::vint3(1,0,0), vpp::vint3(ns - 1, nr - 1, nc - 1)); // subdomain without first zslice
+
+
+    auto calc_xx_der = [&] (deriv2_type& x, const weights_type& w, const value_type& i, const value_type& n) { MANIFOLD::deriv2xx_dist_squared(i, n, x); x*=w; };
+    auto calc_xy_der = [&] (deriv2_type& xy, const weights_type& w, const value_type& i, const value_type& n) { MANIFOLD::deriv2xy_dist_squared(i, n, xy); xy*=w; };
+    auto calc_yy_der = [&] (deriv2_type& y, const weights_type& w, const value_type& i, const value_type& n) { MANIFOLD::deriv2yy_dist_squared(i, n, y); y*=w; };
+    auto add_to_hessian =  [&] (deriv2_type& h, const deriv2_type& d) { h += d; };
+
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...->XD11" << std::endl;
+    #endif
+    
+    // Horizontal Second Derivatives and weighting
+    // ... w.r.t. first arguments
+    { // Temporary image XD11 is deallocated after this scope
+	hessian_type XD11(without_last_x);
+        pixel_wise3d(calc_xx_der, XD11, weightsX_ | without_last_x, data_.img_ | without_last_x, data_.img_ | without_first_x);
+	pixel_wise3d([&] (deriv2_type& h, const deriv2_type& d) { h=d; }, hessian | without_last_x, XD11);
+    }
+    
+    for(int s=0; s < ns; ++s)
+	for(int r=0; r<nr; ++r)
+	    hessian(s,r,nc-1)=deriv2_type::Zero();
+
+
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...->XD22" << std::endl;
+    #endif
+    //... w.r.t. second arguments
+    {
+	hessian_type XD22(without_last_x);
+        pixel_wise3d(calc_yy_der, XD22, weightsX_ | without_last_x, data_.img_ | without_last_x, data_.img_ | without_first_x);
+	pixel_wise3d(add_to_hessian, hessian | without_first_x, XD22);
+    }
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...->YD11" << std::endl;
+    #endif
+    // Vertical Second Derivatives weighting
+    //... w.r.t. first arguments
+    {
+	hessian_type YD11(without_last_y);
+        pixel_wise3d(calc_xx_der, YD11, weightsY_ | without_last_y, data_.img_ | without_last_y, data_.img_ | without_first_y);
+	pixel_wise3d(add_to_hessian, hessian | without_last_y, YD11);
+    }
+
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...->YD22" << std::endl;
+    #endif
+    //... w.r.t. second arguments
+    {
+	hessian_type YD22(without_last_y);
+        pixel_wise3d(calc_yy_der, YD22, weightsY_ | without_last_y, data_.img_ | without_last_y, data_.img_ | without_first_y); 
+	pixel_wise3d(add_to_hessian, hessian | without_first_y, YD22);
+    }
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...->ZD11" << std::endl;
+    #endif
+    // Vertical Second Derivatives weighting
+    //... w.r.t. first arguments
+    {
+	hessian_type ZD11(without_last_z);
+        pixel_wise3d(calc_xx_der, ZD11, weightsZ_ | without_last_z, data_.img_ | without_last_z, data_.img_ | without_first_z);
+	pixel_wise3d(add_to_hessian, hessian | without_last_z, ZD11);
+    }
+
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...->ZD22" << std::endl;
+    #endif
+    //... w.r.t. second arguments
+    {
+	hessian_type ZD22(without_last_z);
+        pixel_wise3d(calc_yy_der, ZD22, weightsZ_ | without_last_z, data_.img_ | without_last_z, data_.img_ | without_first_z); 
+	pixel_wise3d(add_to_hessian, hessian | without_first_z, ZD22);
+    } 
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...Local to global insert" << std::endl;
+    #endif
+    // Insert elementwise into sparse Hessian
+    // NOTE: Eventually make single version for both cases, including an offset
+    // --> additional parameters sparse_mat, offset
+    auto HTV_insert = [&]( hessian_type H, tm_base_mat_type T1, tm_base_mat_type T2, int row_offset, int col_offset){
+	int ns = H.nslices();
+	int nr = H.nrows();
+	int nc = H.ncols();
+    
+	for(int s = 0; s < ns; ++s){
+	    for(int r = 0; r < nr; ++r){
+		// Start of row pointers
+		deriv2_type* h = &H(s, r, 0);
+		tm_base_type* t1 = &T1(s, r, 0);
+		tm_base_type* t2 = &T2(s, r, 0);
+		for(int c = 0; c < nc; ++c){
+		    int pos = manifold_dim * (s + ns * r + ns * nr * c); // columnwise flattening
+		    restricted_deriv2_type ht = t1[c].transpose()*h[c]*t2[c];
+		
+		    for(int local_row = 0; local_row<ht.rows(); local_row++)
+			for(int local_col = 0; local_col < ht.cols(); local_col++){
+			    scalar_type e = ht(local_row, local_col);
+				if(e!=0){
+				    int global_row = pos + row_offset + local_row;
+				    int global_col = pos + col_offset + local_col;
+				    triplist.push_back(Trip(global_row,global_col,e));
+				    if(row_offset > 0 || col_offset > 0)
+					triplist.push_back(Trip(global_col,global_row,e));
+				}
+			}
+		
+		}
+	    }
+	}
+    };
+
+    HTV_insert(hessian, T_, T_, 0, 0);
+
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...->XD12" << std::endl;
+    #endif              
+    // X Neighbors Second Derivatives and weighting
+    // ... w.r.t. first and second arguments 
+    {
+	hessian_type XD12(without_last_x);
+	pixel_wise3d(calc_xy_der, XD12, weightsX_ | without_last_x, data_.img_ | without_last_x, data_.img_ | without_first_x );
+	#ifdef TV_FUNC_DEBUG_VERBOSE
+		std::cout << "\t\t...Local to global insert:" << std::endl;
+	#endif
+	// Offsets for upper nyth subdiagonal
+	HTV_insert(XD12, T_ | without_last_x, T_ | without_first_x, 0, manifold_dim * nr);
+    }
+    
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...->YD12" << std::endl;
+    #endif
+    // Y Neighbors Second Derivatives and weighting
+    //... w.r.t. second arguments
+    {
+	hessian_type YD12(data_.img_.domain());
+	pixel_wise3d(calc_xy_der, YD12 | without_last_y, weightsY_ | without_last_y, data_.img_ | without_last_y, data_.img_ | without_first_y);
+	
+	//Set last row to zero
+	for(int s=0; s < ns; ++s){
+	    deriv2_type* row = &YD12(s, nr-1,0);
+	    for(int c=0; c<nc; ++c)
+		row[c]=deriv2_type::Zero();
+	}
+
+	#ifdef TV_FUNC_DEBUG_VERBOSE
+		std::cout << "\t\t...Local to global insert:" << std::endl;
+	#endif
+	// Offsets for first upper subdiagonal
+	HTV_insert(YD12 | without_last_y, T_ | without_last_y, T_ | without_first_y, 0, manifold_dim);
+	
+	//Manually insert last row
+	//for(int c=0; c<nc-1; c++) 
+	//    local2globalInsertHTV(T_(nr-1,c), T_(nr-1,c + 1), YD12(nr-1,c), vpp::vint2(nr-1, c));
+	
+    }
+
+    #ifdef TV_FUNC_DEBUG_VERBOSE
+	std::cout << "\t\t...->ZD12" << std::endl;
+    #endif
+    // Z neightbors Second Derivatives and weighting
+    //... w.r.t. second arguments
+    {
+	hessian_type ZD12(data_.img_.domain());
+	pixel_wise3d(calc_xy_der, ZD12 | without_last_z, weightsZ_ | without_last_z, data_.img_ | without_last_z, data_.img_ | without_first_z);
+	
+	#ifdef TV_FUNC_DEBUG_VERBOSE
+		std::cout << "\t\t...Local to global insert:" << std::endl;
+	#endif
+	//HTV_insert(ZD12 | without_last_z, T_ | without_last_z, T_ | without_first_z, 0, ns * nr * manifold_dim);
+	
+	HTV.setFromTriplets(triplist.begin(),triplist.end());              
+	HTV.makeCompressed();
+	triplist.clear();
+    }   	
+	#ifdef TV_FUNC_DEBUG_VERBOSE
+		std::cout << "\t\t...Combine Fidelity and TV parts:" << std::endl;
+	#endif 
+	
+	HJ_= HF + lambda_*HTV;
+	
+	#ifdef TV_FUNC_DEBUG_VERBOSE
+		std::cout << "\t\t...Output Hessian (stats):" << std::endl;
+	#endif
+    #ifdef TV_FUNC_DEBUG
+	if (sparsedim<200){
+	    if(sparsedim<70){
+		std::cout << "\nFidelity\n" << HF << std::endl; 
+		std::cout << "\nTV\n" << HTV << std::endl; 
+		std::cout << "\nHessian\n" << HJ_ << std::endl; 
+	    }
+
+	    std::fstream f;
+	    f.open("H.csv",std::fstream::out);
+	    Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "", "");
+	    //f << HJ_.format(CommaInitFmt).;
+	    f << HJ_;
+	    f.close();
+
+	}
+	else{
+	    std::cout << "\nFidelity Non-Zeros: " << HJ_.nonZeros() << std::endl; 
+	    std::cout << "\nTV Non-Zeros: " << HJ_.nonZeros() << std::endl; 
+	    std::cout << "\nHessian Non-Zeros: " << HJ_.nonZeros() << std::endl; 
+	}
+    // Test Solver:
+	#ifdef TV_FUNC_DEBUG_VERBOSE
+		std::cout << "\t\t...Test Solve" << std::endl;
+	#endif
+	gradient_type x;
+    
+	Eigen::SparseLU<sparse_hessian_type> solver;
+	solver.analyzePattern(HJ_);
+	solver.factorize(HJ_);
+	x = solver.solve(DJ_);
+
+	std::fstream f;
+	f.open("Sol.csv",std::fstream::out);
+	f << x;
+	f.close();
+    #endif
 }
 
 
