@@ -116,6 +116,10 @@ add_executable(tvmin_test_prpt tvmin_test_prpt.cpp)
 add_test(tvmin_test_prpt tvmin_test_prpt)
 target_link_libraries(tvmin_test_prpt ${OpenCV_LIBS} gomp)
 
+add_executable(tvmin_test_prpt3d tvmin_test_prpt3d.cpp)
+add_test(tvmin_test_prpt3d tvmin_test_prpt3d)
+target_link_libraries(tvmin_test_prpt3d ${OpenCV_LIBS} gomp)
+
 add_executable(inpaint_test inpaint_test.cpp)
 add_test(inpaint_test inpaint_test)
 target_link_libraries(inpaint_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})

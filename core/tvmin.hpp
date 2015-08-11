@@ -34,7 +34,7 @@
 namespace tvmtl {
 
 // Primary Template
-template < enum ALGORITHM AL, class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
+template < enum ALGORITHM AL, class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR=OMP, int DIM=2 > 
     class TV_Minimizer {
     
     };
@@ -43,5 +43,6 @@ template < enum ALGORITHM AL, class FUNCTIONAL, class MANIFOLD, class DATA, enum
 
 #include "tvmin_irls.hpp"
 #include "tvmin_prpt.hpp"
+#include "tvmin_prpt3d.hpp"
 
 #endif

@@ -85,5 +85,97 @@ int main(int argc, const char *argv[])
 	}
     }
 
+    std::cout << "\n\n\n Blockwise test" << std::endl;
+    data_t myData3 = data_t();
+    myData3.create_noisy_gray(6,4,2);
+
+    ns = myData3.img_.nslices();  // z
+    nr = myData3.img_.nrows();    // y
+    nc = myData3.img_.ncols();    // x
+    
+    for(int s = 0; s < ns; ++s){
+	std::cout << "\nSlice " << s << ":\n";
+	for(int r = 0; r < nr; ++r){
+	    for(int c = 0; c < nc; ++c)
+		std::cout << myData3.img_(s, r, c) << " ";
+	    std::cout << std::endl;
+	}
+    }
+
+    int k=0; 
+    vpp::vint3 dims(2,2,2);
+
+    for(int s = 0; s < ns; s += dims(0)){
+	#pragma omp parallel for
+	for(int r = 0; r < nr; r += dims(1)){
+	    for(int c = 0; c < nc; c+= dims(2)){
+		vpp::vint3 first(s,r,c);
+		vpp::vint3 last(s + dims(0) - 1, r + dims(1) - 1, c + dims(2)-1 );
+		vpp::box3d block(first, last);
+	
+		for (auto p : block){
+		    myData3.img_(p).setConstant(k);
+		}
+		++k;
+	    }
+	}
+    }
+
+   for(int s = 0; s < ns; ++s){
+	std::cout << "\nSlice " << s << ":\n";
+	for(int r = 0; r < nr; ++r){
+	    for(int c = 0; c < nc; ++c)
+		std::cout << myData3.img_(s, r, c) << " ";
+	    std::cout << std::endl;
+	}
+    } 
+
+// SLICE TEST
+    vpp::box3d without_last_x(vpp::vint3(0,0,0), vpp::vint3(ns - 1, nr - 1, nc - 2)); // subdomain without last xslice
+    vpp::box3d without_last_y(vpp::vint3(0,0,0), vpp::vint3(ns - 1, nr - 2, nc - 1)); // subdomain without last yslice
+    vpp::box3d without_last_z(vpp::vint3(0,0,0), vpp::vint3(ns - 2, nr - 1, nc - 1)); // subdomain without last zslice
+    vpp::box3d without_first_x(vpp::vint3(0,0,1), vpp::vint3(ns - 1, nr - 1, nc - 1)); // subdomain without first xlice
+    vpp::box3d without_first_y(vpp::vint3(0,1,0), vpp::vint3(ns - 1, nr - 1, nc - 1)); // subdomain without first yslice
+    vpp::box3d without_first_z(vpp::vint3(1,0,0), vpp::vint3(ns - 1, nr - 1, nc - 1)); // subdomain without first zslice
+
+   
+   std::cout << "\n\n\nSlice test:" << std::endl;
+    k=0;
+    for(int s = 0; s < ns; ++s){
+	for(int r = 0; r < nr; ++r){
+	    for(int c = 0; c < nc; ++c)
+		myData3.img_(s,r,c).setConstant(k++);
+	}
+    }
+    
+    for(int s = 0; s < ns; ++s){
+	std::cout << "\nSlice " << s << ":\n";
+	for(int r = 0; r < nr; ++r){
+	    for(int c = 0; c < nc; ++c)
+		std::cout << myData3.img_(s, r, c) << " ";
+	    std::cout << std::endl;
+	}
+    }
+
+    auto I2 = myData3.img_ | without_last_z;
+    auto I3 = myData3.img_ | without_first_z;
+
+    for(int s = 0; s < ns-1; ++s){
+	std::cout << "\nSlice " << s << ":\n";
+	for(int r = 0; r < nr; ++r){
+	    for(int c = 0; c < nc; ++c)
+		std::cout << I2(s, r, c) << " ";
+	    std::cout << std::endl;
+	}
+    }
+    
+    for(int s = 0; s < ns-1; ++s){
+	std::cout << "\nSlice " << s << ":\n";
+	for(int r = 0; r < nr; ++r){
+	    for(int c = 0; c < nc; ++c)
+		std::cout << I3(s, r, c) << " ";
+	    std::cout << std::endl;
+	}
+    }
     return 0;
 }
