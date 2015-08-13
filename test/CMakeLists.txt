@@ -45,6 +45,10 @@ add_executable(opengl_cube_test opengl_cube_test.cpp)
 add_test(opengl_cube_test opengl_cube_test )
 target_link_libraries(opengl_cube_test ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
 
+add_executable(opengl_image_cube_test opengl_image_cube_test.cpp)
+add_test(opengl_image_cube_test opengl_image_cube_test )
+target_link_libraries(opengl_image_cube_test ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+
 add_executable(opengl_ellipsoid_test opengl_ellipsoid_test.cpp)
 add_test(opengl_ellipsoid_test opengl_ellipsoid_test )
 target_link_libraries(opengl_ellipsoid_test ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})

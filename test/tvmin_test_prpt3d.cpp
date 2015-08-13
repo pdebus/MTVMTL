@@ -63,6 +63,21 @@ int main(int argc, const char *argv[])
 	    }
 	}		
 
+    typedef Manifold< EUCLIDIAN, 3 > mf_t2;
+    typedef Data< mf_t2, 3> data_t2;	
+    typedef Functional<FIRSTORDER, ANISO, mf_t2, data_t2, 3> func_t2;
+    typedef TV_Minimizer< PRPT, func_t2, mf_t2, data_t2, OMP, 3 > tvmin_t2;
 
+
+    data_t2 myData2=data_t2();
+    myData2.rgb_slice_reader("slices/noisycrayons0.jpg", 51);
+    
+    func_t2 myFunc2(lam, myData2);
+    myFunc.seteps2(0.0);
+
+    tvmin_t2 myTVMin2(myFunc2, myData2);
+    myTVMin2.use_approximate_mean(false);
+    
+    myTVMin2.minimize();
 	return 0;
 }

@@ -350,10 +350,10 @@ void Data<MANIFOLD, 2>::readMatrixDataFromCSV(const char* filename, const int nx
     infile.clear();
     infile.seekg(0, std::ios_base::beg);
     
-    int i=0;
     Eigen::Matrix<typename MANIFOLD::scalar_type, N2, 1> vectorizedMat;
     vectorizedMat.setZero();
 
+    auto it = noise_img_.begin();
     while (std::getline(infile, line)){
 	std::stringstream strstr(line);
 	std::string word = "";
@@ -363,8 +363,8 @@ void Data<MANIFOLD, 2>::readMatrixDataFromCSV(const char* filename, const int nx
 	    vectorizedMat(j) = entry;
 	    ++j;
 	}
-	noise_img_(i / nx, i % nx) = Eigen::Map<typename MANIFOLD::value_type>(vectorizedMat.data());
-	++i;
+	*it = Eigen::Map<typename MANIFOLD::value_type>(vectorizedMat.data());
+	it.next();
     }
     img_ = vpp::clone(noise_img_, vpp::_border = 1);
     fill_border_closest(img_);

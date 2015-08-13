@@ -177,5 +177,25 @@ int main(int argc, const char *argv[])
 	    std::cout << std::endl;
 	}
     }
+    
+    data_t2 myData4=data_t2();
+    myData4.rgb_slice_reader("slices/noisy_crayons0.jpg", 51);
+
+    ns = 10; //myData4.img_.nslices();  // z
+    nr = 10; //myData4.img_.nrows();    // y
+    nc = 10; //myData4.img_.ncols();    // x
+    
+    for(int s = 0; s < ns; ++s){
+	std::cout << "\nSlice " << s << ":\n";
+	for(int r = 0; r < nr; ++r){
+	    for(int c = 0; c < nc; ++c)
+		std::cout << myData4.img_(s, r, c) << " ";
+	    std::cout << std::endl;
+	}
+    } 
+
+
+
+
     return 0;
 }
