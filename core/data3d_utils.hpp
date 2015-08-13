@@ -140,8 +140,8 @@ void block_wise3d(FUNC func, DIMS dims, T&& head, Args&&... args){
 }
 
 template <class IMG, class VAL>
-void fill3d(IMG&& img, VAL val){
-    auto fill = [&] (VAL& i) { i = val;};
+void fill3d(IMG&& img, VAL&& val){
+    auto fill = [=] (VAL& i) { i = val;};
     pixel_wise3d(fill, img);
 }
 

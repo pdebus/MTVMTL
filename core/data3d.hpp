@@ -198,7 +198,7 @@ void Data<MANIFOLD, 3>::readMatrixDataFromCSV(const char* filename, const int nz
 	std::cout << "ReadMatrixData from CSV File..." << std::endl;
     #endif
     noise_img_ = storage_type(nz, ny, nx);
-    fill3d(noise_img_, MANIFOLD::value_type::Zero());
+    //fill3d(noise_img_, MANIFOLD::value_type::Zero());
 
     const int N = MANIFOLD::value_type::RowsAtCompileTime; 
     const int N2 = MANIFOLD::value_dim;

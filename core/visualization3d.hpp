@@ -312,15 +312,18 @@ void Visualization<SPD, 3, DATA, 3>::draw(void)
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
     glMaterialf(GL_FRONT, GL_SHININESS, high_shininess);
 
+    int nz=data_.img_.nslices();
     int nx=data_.img_.ncols();
     int ny=data_.img_.nrows();
     
-    int max =  nx ^ ((nx ^ ny) & -(nx < ny));
+    int max = std::max(nx,std::max(ny,nz)); 
    
     float scaling = 2.0 / (3.0 * max);
     float spacing = 4.0 * scaling;
-    float z_distance= -3.0;
-    
+
+    float z_distance= -4.0;
+    scaling *=0.5;
+
     #ifdef TV_VISUAL_DEBUG
 	std::cout << "ny: " << ny << " nx: " << nx << std::endl;
 	std::cout << "Maximum: " << max << " Scaling " << scaling << std::endl;
@@ -329,52 +332,57 @@ void Visualization<SPD, 3, DATA, 3>::draw(void)
     glLoadIdentity();
     
     //glTranslatef(-1.2, 1.2, z_distance); // Left->Right, Top->Bottom
-    glTranslatef(-1.2, -1.2, z_distance); // Left->Right, Bottom->Top
+    glTranslatef(-0.8, -1.0, z_distance); // Left->Right, Bottom->Top
 
-    auto ellipsoid_drawer = [&](const typename mf_t::value_type& v, const vpp::vint2& coords, const typename DATA::inp_type& i){
-	if(paint_inpainted_pixel_ || !i){
-	    glPushMatrix();
+    for(int s = 0; s < nz; ++s){
+	for(int r = 0; r < ny; ++r){
+	    // Start of row pointers
+	    const typename mf_t::value_type* v = &data_.img_(s, r, 0);
+	    const typename DATA::inp_type* i = &data_.inp_(s, r, 0);
+	    for(int c = 0; c < nx; ++c){
+		if(paint_inpainted_pixel_ || !i[c]){
+		    glPushMatrix();
 
-	    //glTranslatef(coords(1) * spacing, -coords(0) * spacing, 0.0); //Left->Right, Top->Bottom
-	    glTranslatef(coords(1) * spacing, coords(0) * spacing, 0.0); //Left->Right, Bottom->Top
+		    //glTranslatef(coords(1) * spacing, -coords(0) * spacing, 0.0); //Left->Right, Top->Bottom
+		    glTranslatef(c * spacing, r * spacing, s * spacing); //Left->Right, Bottom->Top
+		    
+		    
+		    Eigen::Affine3f t = Eigen::Affine3f::Identity();
+		    Eigen::SelfAdjointEigenSolver<typename mf_t::value_type> es(v[c]);
+		
+		    double mean_diffusity = es.eigenvalues().sum() / 3.0;
+
+		    // anisotropic scaling transfomation and rotation
+		    t.linear() = (es.eigenvectors() * (es.eigenvalues() / mean_diffusity).asDiagonal()).cast<float>();
+		    //t.linear() = es.eigenvalues().cast<float>().asDiagonal(); 
+		    glMultMatrixf(t.data());
+		   
+		    #ifdef TV_VISUAL_DEBUG
+			std::cout << "Transformation matrix:\n" << t.matrix() << std::endl;
+		    #endif
+		
+		    // isotropic scaling transformation
+		    glScalef(5.0 * scaling, 5.0 * scaling, 5.0 * scaling);
+		    
+		    int argmax;
+		    es.eigenvalues().maxCoeff(&argmax);
+		    Eigen::Vector3d principal_direction = es.eigenvectors().col(argmax);
+		    //principal_direction /= principal_direction.maxCoeff();	    
+		    principal_direction.normalize();
+
+		    glColor3d(std::abs(principal_direction(0)), std::abs(principal_direction(1)),std::abs(principal_direction(2)));
+		    // draw sphere
+		    glutSolidSphere(0.5, 35, 35);
+		    
+		    
+		    // scaling to correct global size
+		    glPopMatrix();
+		}
 	    
-	    
-	    Eigen::Affine3f t = Eigen::Affine3f::Identity();
-	    Eigen::SelfAdjointEigenSolver<typename mf_t::value_type> es(v);
-	
-	    double mean_diffusity = es.eigenvalues().sum() / 3.0;
-
-	    // anisotropic scaling transfomation and rotation
-	    t.linear() = (es.eigenvectors() * (es.eigenvalues() / mean_diffusity).asDiagonal()).cast<float>();
-	    //t.linear() = es.eigenvalues().cast<float>().asDiagonal(); 
-	    glMultMatrixf(t.data());
-	   
-	    #ifdef TV_VISUAL_DEBUG
-		std::cout << "Transformation matrix:\n" << t.matrix() << std::endl;
-	    #endif
-	
-	    // isotropic scaling transformation
-	    glScalef(5.0 * scaling, 5.0 * scaling, 5.0 * scaling);
-	    
-	    int argmax;
-	    es.eigenvalues().maxCoeff(&argmax);
-	    Eigen::Vector3d principal_direction = es.eigenvectors().col(argmax);
-	    //principal_direction /= principal_direction.maxCoeff();	    
-	    principal_direction.normalize();
-
-	    glColor3d(std::abs(principal_direction(0)), std::abs(principal_direction(1)),std::abs(principal_direction(2)));
-	    // draw sphere
-	    glutSolidSphere(0.5, 35, 35);
-	    
-	    
-	    // scaling to correct global size
-	    glPopMatrix();
-	}	
-    };
-
-    vpp::pixel_wise(data_.img_, data_.img_.domain(), data_.inp_)(vpp::_no_threads)| ellipsoid_drawer;
-
-    glFlush();
+	    }
+	}
+    }
+        glFlush();
 }
 
 template <class DATA>
