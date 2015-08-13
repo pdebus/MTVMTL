@@ -321,7 +321,7 @@ void Visualization<SPD, 3, DATA, 3>::draw(void)
     float scaling = 2.0 / (3.0 * max);
     float spacing = 4.0 * scaling;
 
-    float z_distance= -4.0;
+    float z_distance= -4.5;
     scaling *=0.5;
 
     #ifdef TV_VISUAL_DEBUG
@@ -332,7 +332,7 @@ void Visualization<SPD, 3, DATA, 3>::draw(void)
     glLoadIdentity();
     
     //glTranslatef(-1.2, 1.2, z_distance); // Left->Right, Top->Bottom
-    glTranslatef(-0.8, -1.0, z_distance); // Left->Right, Bottom->Top
+    glTranslatef(-1.0, -1.25, z_distance); // Left->Right, Bottom->Top
 
     for(int s = 0; s < nz; ++s){
 	for(int r = 0; r < ny; ++r){
