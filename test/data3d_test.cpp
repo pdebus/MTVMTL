@@ -5,6 +5,7 @@
 
 #define TV_DATA_DEBUG
 #include "../core/data.hpp"
+#include "../core/visualization.hpp"
 
 int main(int argc, const char *argv[])
 {
@@ -179,8 +180,8 @@ int main(int argc, const char *argv[])
     }
     
     data_t2 myData4=data_t2();
-    myData4.rgb_slice_reader("slices/noisy_crayons0.jpg", 51);
-
+    myData4.rgb_slice_reader("slices/noisy_crayons0.jpg", 16);
+/*
     ns = 10; //myData4.img_.nslices();  // z
     nr = 10; //myData4.img_.nrows();    // y
     nc = 10; //myData4.img_.ncols();    // x
@@ -193,8 +194,19 @@ int main(int argc, const char *argv[])
 	    std::cout << std::endl;
 	}
     } 
+*/
+	data_t2 myData5=data_t2();
+	myData5.create_noisy_rgb(24, 64, 32);
 
 
+	typedef Visualization<EUCLIDIAN, 3, data_t2, 3> visual_t;
+
+	visual_t myVisual(myData5);
+	myVisual.saveImage("3D_Cube_Crayons.png");
+
+	std::cout << "Starting OpenGL-Renderer..." << std::endl;
+	myVisual.GLInit("Image Cube Renderer ");
+	std::cout << "Rendering finished." << std::endl;
 
 
     return 0;

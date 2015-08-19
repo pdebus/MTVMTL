@@ -2,7 +2,7 @@
 
 
 #define TV_DATA_DEBUG
-//#define TV_VISUAL_DEBUG
+#define TV_VISUAL_CONTROLS_DEBUG
 
 #include "../core/data.hpp"
 #include "../core/visualization.hpp"

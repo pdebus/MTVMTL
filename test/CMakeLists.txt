@@ -4,6 +4,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 find_package(OpenGL REQUIRED)
 find_package(GLUT REQUIRED)
+find_package(GLEW REQUIRED)
 include_directories( ${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS} )
 
 find_package(OpenCV REQUIRED)
@@ -47,7 +48,7 @@ target_link_libraries(opengl_cube_test ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
 
 add_executable(opengl_image_cube_test opengl_image_cube_test.cpp)
 add_test(opengl_image_cube_test opengl_image_cube_test )
-target_link_libraries(opengl_image_cube_test ${OPENGL_LIBRARIES} ${GLUT_LIBRARY})
+target_link_libraries(opengl_image_cube_test ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARIES})
 
 add_executable(opengl_ellipsoid_test opengl_ellipsoid_test.cpp)
 add_test(opengl_ellipsoid_test opengl_ellipsoid_test )
@@ -78,7 +79,7 @@ target_link_libraries(data_test ${OpenCV_LIBS} gomp)
 
 add_executable(data3d_test data3d_test.cpp)
 add_test(data3d_test data3d_test)
-target_link_libraries(data3d_test ${OpenCV_LIBS} gomp)
+target_link_libraries(data3d_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp)
 
 add_executable(sphere_data_test sphere_data_test.cpp)
 add_test(sphere_data_test sphere_data_test)

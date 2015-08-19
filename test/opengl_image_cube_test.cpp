@@ -1,3 +1,4 @@
+#include <GL/glew.h>
 #include <GL/freeglut.h>
 
 #include <iostream>
@@ -6,85 +7,160 @@
 #include <cstdlib>
 
  GLfloat xRotated, yRotated, zRotated;
- int ny,nx; 
+ int nz, ny, nx; 
+ std::string fname;
+ GLuint* textureIDs;
+ GLuint texture3d_id;
+
+ GLfloat dOrthoSize = 1.0f;
+
+void initTextures(){
+    
+    int pixel_num = nz * ny * nx;
+    
+    std::fstream file;
+    file.open(fname, std::ios::in|std::ios::binary|std::ios::ate);
+
+    std::streampos size;
+    char* buffer;
+    bool read_failure = true;
+
+    std::cout << "Reading file " << fname << " with dimensions(Slices, Rows, Cols) " << nz << " X " << ny << " X " << nx << std::endl;
+    std::cout << "Number of pixels = " << pixel_num << std::endl;
+
+    if(file.is_open()){
+	size = file.tellg();
+	buffer = new char[size];
+	file.seekg(0, std::ios::beg);
+	file.read(buffer, size);
+	file.close();
+	read_failure = false;
+    }
+
+    if(read_failure){
+	std::cout << "File import not successfull!" << std::endl;
+	return;
+	}
+
+    std::cout << "File successfully imported! File Size = " << size << " Bytes" <<std::endl;
+/*
+    textureIDs = new GLuint[nz];
+    glGenTextures(nz, (GLuint*) textureIDs );
+
+    char* framebuffer;// = new char[ny * nx];
+    char* RGBAbuffer =  new char[ny * nx * 4];
+    for(int i=0; i < nz; ++i){
+	framebuffer = &buffer[i * ny * nx];
+	for(int px = 0; px < ny*nx; px++){
+	    RGBAbuffer[px * 4] = framebuffer[px];
+	    RGBAbuffer[px * 4 + 1] = framebuffer[px];
+	    RGBAbuffer[px * 4 + 2] = framebuffer[px];
+	    RGBAbuffer[px * 4 + 3] = framebuffer[px];
+	}
+
+	glBindTexture(GL_TEXTURE_2D, textureIDs[i]);
+	glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, nx, ny , 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid *) RGBAbuffer);
+	glBindTexture(GL_TEXTURE_2D, 0);
+    }
+    
+    delete[] textureIDs;
+    */
+    char* RGBAbuffer = new char[size * 4];
+    for(int px = 0; px < size; px++){
+	RGBAbuffer[px * 4] = buffer[px];
+	RGBAbuffer[px * 4 + 1] = buffer[px];
+	RGBAbuffer[px * 4 + 2] = buffer[px];
+	RGBAbuffer[px * 4 + 3] = buffer[px];
+ 
+    }
+    glGenTextures(1, (GLuint*)&texture3d_id);
+    glBindTexture( GL_TEXTURE_3D, texture3d_id );
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+ 
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, nx, ny, nz, 0, GL_RGBA, GL_UNSIGNED_BYTE, RGBAbuffer );
+    glBindTexture( GL_TEXTURE_3D, 0 );
+
+    delete[] RGBAbuffer;
+
+    delete[] buffer;
+}
 
 void init(void)
 {
-glClearColor(1.0,1.0,1.0,0);
- 
+    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    glewInit();
+    initTextures();
 }
 
 void DrawCube(void)
 {
 
     glMatrixMode(GL_MODELVIEW);
-    // clear the drawing buffer.
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    // Enable depth test
-    glEnable(GL_DEPTH_TEST);
-    // Accept fragment if it closer to the camera than the former one
-    glDepthFunc(GL_LESS); 
+    
+/*  glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS); */
 
-    int max =  nx ^ ((nx ^ ny) & -(nx < ny));
+    glEnable(GL_ALPHA_TEST );
+    glAlphaFunc(GL_GREATER, 0.05f);
 
-    float scaling = 2.0 / (3.0 * max);
-    float spacing = 4.0 * scaling;
-    float z_distance= -3.0;
-  std::cout << "ny: " << ny << " nx: " << nx << std::endl;
-  std::cout << "Maximum: " << max << " Scaling " << scaling << std::endl;
-  
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glMatrixMode(GL_TEXTURE);
     glLoadIdentity();
-    //glTranslatef(-nx * 0.5 * spacing + 1.0, ny*0.5*spacing - 1.0, z_distance);
-    glTranslatef(-1.1, 1.1, z_distance);
 
-    for (int i=0; i<ny; i++)
-	for(int j=0; j<nx; j++){
+    glTranslatef(0.5f, 0.5f, 0.5f);
+    glScaled( (float)nx /(float) nx, -1.0f*(float) nx/(float)ny, (float)nx/(float)nz);
+    glTranslatef(-0.5f, -0.5f, -0.5f);
+/*
+    glEnable(GL_TEXTURE_2D); 
 	    
-	    glPushMatrix();
-	    glTranslatef(j*spacing, -i*spacing, 0.0);
-	    
-	    glRotatef(xRotated,1.0,0.0,0.0);
-	    // rotation about Y axis
-	    glRotatef(yRotated*0.2*i,0.0,1.0,0.0);
-	    // rotation about Z axis
-	    glRotatef(zRotated,0.0,0.0,1.0);
-	    glScalef(scaling, scaling, scaling);
-	    
-	    glBegin(GL_QUADS);        // Draw The Cube Using quads
-	    glColor3f(0.0f,1.0f,0.0f);    // Color Blue
-	    glVertex3f( 1.0f, 1.0f,-1.0f);    // Top Right Of The Quad (Top)
-	    glVertex3f(-1.0f, 1.0f,-1.0f);    // Top Left Of The Quad (Top)
-	    glVertex3f(-1.0f, 1.0f, 1.0f);    // Bottom Left Of The Quad (Top)
-	    glVertex3f( 1.0f, 1.0f, 1.0f);    // Bottom Right Of The Quad (Top)
-	    glColor3f(1.0f,0.5f,0.0f);    // Color Orange
-	    glVertex3f( 1.0f,-1.0f, 1.0f);    // Top Right Of The Quad (Bottom)
-	    glVertex3f(-1.0f,-1.0f, 1.0f);    // Top Left Of The Quad (Bottom)
-	    glVertex3f(-1.0f,-1.0f,-1.0f);    // Bottom Left Of The Quad (Bottom)
-	    glVertex3f( 1.0f,-1.0f,-1.0f);    // Bottom Right Of The Quad (Bottom)
-	    glColor3f(1.0f,0.0f,0.0f);    // Color Red    
-	    glVertex3f( 1.0f, 1.0f, 1.0f);    // Top Right Of The Quad (Front)
-	    glVertex3f(-1.0f, 1.0f, 1.0f);    // Top Left Of The Quad (Front)
-	    glVertex3f(-1.0f,-1.0f, 1.0f);    // Bottom Left Of The Quad (Front)
-	    glVertex3f( 1.0f,-1.0f, 1.0f);    // Bottom Right Of The Quad (Front)
-	    glColor3f(1.0f,1.0f,0.0f);    // Color Yellow
-	    glVertex3f( 1.0f,-1.0f,-1.0f);    // Top Right Of The Quad (Back)
-	    glVertex3f(-1.0f,-1.0f,-1.0f);    // Top Left Of The Quad (Back)
-	    glVertex3f(-1.0f, 1.0f,-1.0f);    // Bottom Left Of The Quad (Back)
-	    glVertex3f( 1.0f, 1.0f,-1.0f);    // Bottom Right Of The Quad (Back)
-	    glColor3f(0.0f,0.0f,1.0f);    // Color Blue
-	    glVertex3f(-1.0f, 1.0f, 1.0f);    // Top Right Of The Quad (Left)
-	    glVertex3f(-1.0f, 1.0f,-1.0f);    // Top Left Of The Quad (Left)
-	    glVertex3f(-1.0f,-1.0f,-1.0f);    // Bottom Left Of The Quad (Left)
-	    glVertex3f(-1.0f,-1.0f, 1.0f);    // Bottom Right Of The Quad (Left)
-	    glColor3f(1.0f,0.0f,1.0f);    // Color Violet
-	    glVertex3f( 1.0f, 1.0f,-1.0f);    // Top Right Of The Quad (Right)
-	    glVertex3f( 1.0f, 1.0f, 1.0f);    // Top Left Of The Quad (Right)
-	    glVertex3f( 1.0f,-1.0f, 1.0f);    // Bottom Left Of The Quad (Right)
-	    glVertex3f( 1.0f,-1.0f,-1.0f);    // Bottom Right Of The Quad (Right)
-	  glEnd();            // End Drawing The Cube
-	  glPopMatrix();
-	}
-glFlush();
+    for(int i=0; i < nz; ++i){
+        glBindTexture(GL_TEXTURE_2D, textureIDs[i]);
+	
+	glBegin(GL_QUADS);
+	    glTexCoord2f(	0.0f,	0.0f);
+	    glVertex3f(	-1.0f,	-1.0f, 1.0 - (GLfloat)(i / nz));    // Top Right Of The Quad (Top)
+	    glTexCoord2f(	1.0f,	0.0f);
+	    glVertex3f(	1.0f,   -1.0f, 1.0 - (GLfloat)(i / nz));    // Top Left Of The Quad (Top)
+	    glTexCoord2f(	1.0f,	1.0f);
+	    glVertex3f(	1.0f,   1.0f,  1.0 - (GLfloat)(i / nz));    // Bottom Left Of The Quad (Top)
+	    glTexCoord2f(	0.0f,	1.0f);
+	    glVertex3f(	-1.0f,  1.0f,  1.0 - (GLfloat)(i / nz));    // Bottom Right Of The Quad (Top)
+	glEnd();            
+	
+	glBindTexture(GL_TEXTURE_2D, 0);
+    }
+*/
+    glEnable(GL_TEXTURE_3D);
+    glBindTexture(GL_TEXTURE_3D, texture3d_id);
+
+    for (float fIndx = -1.0f; fIndx <= 1.0f; fIndx+=0.01f ){
+	glBegin(GL_QUADS);
+	glTexCoord3f(0.0f, 0.0f, ((float)fIndx+1.0f)/2.0f);  
+        glVertex3f(-dOrthoSize,-dOrthoSize,fIndx);
+        glTexCoord3f(1.0f, 0.0f, ((float)fIndx+1.0f)/2.0f);  
+        glVertex3f(dOrthoSize,-dOrthoSize,fIndx);
+        glTexCoord3f(1.0f, 1.0f, ((float)fIndx+1.0f)/2.0f);  
+        glVertex3f(dOrthoSize,dOrthoSize,fIndx);
+        glTexCoord3f(0.0f, 1.0f, ((float)fIndx+1.0f)/2.0f); 
+        glVertex3f(-dOrthoSize,dOrthoSize,fIndx);
+	glEnd();
+    }
+
+    glutSwapBuffers();
 }
 
 
@@ -107,28 +183,28 @@ void keyboard(unsigned char key, int x, int y) {
 
 void reshape(int x, int y)
 {
-    if (y == 0 || x == 0) return;  //Nothing is visible then, so return
-    //Set a new projection matrix
+    GLdouble AspectRatio = ( GLdouble )(x) / ( GLdouble )(y);
+
+    glViewport(0.0, 0.0 , x, y);  //Use the whole window for rendering
     glMatrixMode(GL_PROJECTION);  
     glLoadIdentity();
-    //Angle of view:40 degrees
-    //Near clipping plane distance: 0.5
-    //Far clipping plane distance: 20.0
+
     
-    float nx = 5*1.5;
-    float ny = 4*1.5;
+    if( x <= y )
+	glOrtho( -dOrthoSize, dOrthoSize, -( dOrthoSize / AspectRatio ) ,dOrthoSize / AspectRatio, 2.0f*-dOrthoSize, 2.0f*dOrthoSize );
+    else
+	glOrtho( -dOrthoSize * AspectRatio, dOrthoSize * AspectRatio, -dOrthoSize, dOrthoSize, 2.0f*-dOrthoSize, 2.0f*dOrthoSize );
     
-    gluPerspective(45.0,(GLdouble)x/(GLdouble)y,0.1,100.0);
-    glViewport(0.0, 0.0 , x, y);  //Use the whole window for rendering
-    
+    glMatrixMode( GL_MODELVIEW );
+    glLoadIdentity();
 }
 
 int main(int argc, char** argv){
-    int nz = 30;
-    int ny = 30;
-    int nx = 30;
+    nz = 30;
+    ny = 30;
+    nx = 30;
 
-    std::string fname("test.raw");
+    fname = "test.raw";
 
     if(argc > 1){
 	fname = argv[1];
@@ -137,39 +213,10 @@ int main(int argc, char** argv){
 	nx=atoi(argv[4]);
     }
 
-
-    int pixel_num = nz * ny * nx;
-    
-    std::fstream file;
-    file.open(fname, std::ios::in|std::ios::binary|std::ios::ate);
-
-    std::streampos size;
-    char* buffer;
-    bool read_failure = true;
-
-    std::cout << "Reading file " << fname << " with dimensions(Slices, Rows, Cols) " << nz << " X " << ny << " X " << nx << std::endl;
-
-    if(file.is_open()){
-	size = file.tellg();
-	buffer = new char[size];
-	file.seekg(0, std::ios::beg);
-	file.read(buffer, size);
-	file.close();
-	read_failure = false;
-    }
-
-    if(read_failure){
-	std::cout << "File import not successfull!" << std::endl;
-	return 1;
-	}
-
-    std::cout << "File successfully imported!" << std::endl;
-
-/*
     glutInit(&argc, argv);
     //we initizlilze the glut. functions
     glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
-    glutInitDisplayMode(GLUT_SINGLE| GLUT_RGB| GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
     glutInitWindowPosition(100, 100);
     glutCreateWindow(argv[0]);
     init();
@@ -180,12 +227,7 @@ int main(int argc, char** argv){
     //glutIdleFunc(animation);
     glutMainLoop();
 
-    std::cout << "After MainLoop\n";*/
-
-    
-
-    delete[] buffer;
-    return 0;
+        return 0;
 } 
 
 
