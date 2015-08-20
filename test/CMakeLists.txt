@@ -127,7 +127,7 @@ target_link_libraries(tvmin_test_prpt ${OpenCV_LIBS} gomp)
 
 add_executable(tvmin_test_prpt3d tvmin_test_prpt3d.cpp)
 add_test(tvmin_test_prpt3d tvmin_test_prpt3d)
-target_link_libraries(tvmin_test_prpt3d ${OpenCV_LIBS} gomp)
+target_link_libraries(tvmin_test_prpt3d ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARIES} gomp)
 
 add_executable(inpaint_test inpaint_test.cpp)
 add_test(inpaint_test inpaint_test)

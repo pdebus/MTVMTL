@@ -12,6 +12,7 @@
 #include "../core/data.hpp"
 #include "../core/functional.hpp"
 #include "../core/tvmin.hpp"
+#include "../core/visualization.hpp"
 
 #include <vpp/vpp.hh>
 
@@ -21,63 +22,44 @@ typedef Manifold< EUCLIDIAN, 1 > mf_t;
 typedef Data< mf_t, 3> data_t;	
 typedef Functional<FIRSTORDER, ANISO, mf_t, data_t, 3> func_t;
 typedef TV_Minimizer< PRPT, func_t, mf_t, data_t, OMP, 3 > tvmin_t;
+typedef Visualization<EUCLIDIAN, 1, data_t, 3> visual_t;
 
 
 int main(int argc, const char *argv[])
 {
+    if(argc!=5){
+	std::cout << "Usage: " << argv[0] << " filename zDim yDim xDim " << std::endl;
+	return 1;
+    }
 
+    const char* fname = argv[1];
+    int nz=atoi(argv[2]);
+    int ny=atoi(argv[3]);
+    int nx=atoi(argv[4]);
+    double lam=0.1;
+	    
+    data_t myData=data_t();
+    myData.readRawVolumeData(fname, nz, ny, nx);
+    myData.add_gaussian_noise(0.1);
+    visual_t myVisual(myData);
 
-	double lam=0.1;
+    myVisual.saveImage("noisyVolumeImg.png");
+    std::cout << "Starting OpenGL-Renderer..." << std::endl;
+    myVisual.GLInit("Image Cube Renderer ");
+    std::cout << "Rendering finished." << std::endl;
 
-	data_t myData=data_t();
-	myData.create_noisy_gray(7,5,4);
-
-	func_t myFunc(lam, myData);
-	myFunc.seteps2(0.0);
-
-	tvmin_t myTVMin(myFunc, myData);
-	myTVMin.use_approximate_mean(false);
-    
-	int ns = myData.img_.nslices();  // z
-	int nr = myData.img_.nrows();    // y
-	int nc = myData.img_.ncols();    // x
-    
-    
-	for(int s = 0; s < ns; ++s){
-	    std::cout << "\nSlice " << s << ":\n";
-	    for(int r = 0; r < nr; ++r){
-		for(int c = 0; c < nc; ++c)
-		    std::cout << myData.img_(s, r, c) << " ";
-		std::cout << std::endl;
-	    }
-	}
-
-	myTVMin.minimize();
-	
-	for(int s = 0; s < ns; ++s){
-	    std::cout << "\nSlice " << s << ":\n";
-	    for(int r = 0; r < nr; ++r){
-		for(int c = 0; c < nc; ++c)
-		    std::cout << myData.img_(s, r, c) << " ";
-		std::cout << std::endl;
-	    }
-	}		
-
-    typedef Manifold< EUCLIDIAN, 3 > mf_t2;
-    typedef Data< mf_t2, 3> data_t2;	
-    typedef Functional<FIRSTORDER, ANISO, mf_t2, data_t2, 3> func_t2;
-    typedef TV_Minimizer< PRPT, func_t2, mf_t2, data_t2, OMP, 3 > tvmin_t2;
-
-
-    data_t2 myData2=data_t2();
-    myData2.rgb_slice_reader("slices/noisycrayons0.jpg", 51);
-    
-    func_t2 myFunc2(lam, myData2);
+    func_t myFunc(lam, myData);
     myFunc.seteps2(0.0);
 
-    tvmin_t2 myTVMin2(myFunc2, myData2);
-    myTVMin2.use_approximate_mean(false);
+    tvmin_t myTVMin(myFunc, myData);
+    myTVMin.use_approximate_mean(false);
     
-    myTVMin2.minimize();
-	return 0;
+    myTVMin.minimize();
+
+    myVisual.saveImage("denoisedVolumeImg.png");
+    std::cout << "Starting OpenGL-Renderer..." << std::endl;
+    myVisual.GLInit("Image Cube Renderer ");
+    std::cout << "Rendering finished." << std::endl;
+
+    return 0;
 }

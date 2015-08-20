@@ -199,7 +199,27 @@ int main(int argc, const char *argv[])
 	}
     } 
 */
-	typedef Visualization<EUCLIDIAN, 3, data_t2, 3> visual_t;
+	if(argc > 1){
+	    const char* fname = argv[1];
+	    int nz=atoi(argv[2]);
+	    int ny=atoi(argv[3]);
+	    int nx=atoi(argv[4]);
+	    
+	    data_t myData6=data_t();
+	    myData6.readRawVolumeData(fname, nz, ny, nx);
+	    myData6.add_gaussian_noise(0.1);
+
+	    typedef Visualization<EUCLIDIAN, 1, data_t, 3> visual_t2;
+
+	    visual_t2 myVisual2(myData6);
+	    myVisual2.saveImage("3DVolumeImage.png");
+
+	    std::cout << "Starting OpenGL-Renderer..." << std::endl;
+	    myVisual2.GLInit("Image Cube Renderer ");
+	    std::cout << "Rendering finished." << std::endl;
+	}
+    else{
+   	typedef Visualization<EUCLIDIAN, 3, data_t2, 3> visual_t;
 
 	visual_t myVisual(myData4);
 	myVisual.saveImage("3D_Cube_Crayons.png");
@@ -207,7 +227,6 @@ int main(int argc, const char *argv[])
 	std::cout << "Starting OpenGL-Renderer..." << std::endl;
 	myVisual.GLInit("Image Cube Renderer ");
 	std::cout << "Rendering finished." << std::endl;
-
-
+    }
     return 0;
 }

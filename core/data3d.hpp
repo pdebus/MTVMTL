@@ -63,6 +63,10 @@ class Data<MANIFOLD, 3>{
 	// Input functions
 	void rgb_slice_reader(const char* filename, int num_slides);
 	void readMatrixDataFromCSV(const char* filename, const int nz, const int ny, const int nx);
+	void readRawVolumeData(const char* filename, const int nz, const int ny, const int nx);
+	
+	// Noise functions
+	void add_gaussian_noise(double stdev);
 	
 	// Creation functions
 	void create_noisy_gray(const int nz, const int ny, const int nx, double color=0.5, double stdev=0.1);
@@ -100,6 +104,30 @@ template < typename MANIFOLD >
 void Data<MANIFOLD, 3>::initEdgeweights(){
     edge_weights_ = weights_mat(noise_img_.domain());
     fill3d(edge_weights_, 1.0);
+}
+
+template <typename MANIFOLD>
+void Data<MANIFOLD, 3>::add_gaussian_noise(double stdev){
+
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::normal_distribution<typename MANIFOLD::scalar_type> rand(0.0, stdev);
+
+    auto generate = [&] (typename MANIFOLD::scalar_type entry){
+	return entry + rand(gen);
+    };
+    
+    if(MANIFOLD::non_isometric_embedding)
+	pixel_wise3d([&] (value_type& i){ MANIFOLD::interpolation_preprocessing(i); }, noise_img_);
+
+    pixel_wise3d([&] (value_type& i) {if(i.norm() > 0.07 ) i = i.unaryExpr(generate); }, noise_img_);
+
+    if(MANIFOLD::non_isometric_embedding)
+	pixel_wise3d([&] (value_type& i){ MANIFOLD::interpolation_postprocessing(i); }, noise_img_);
+
+    pixel_wise3d([&] (value_type& i) { MANIFOLD::projector(i); }, noise_img_);
+
+    clone3d(noise_img_, img_);
 }
 
 template < typename MANIFOLD >
@@ -247,7 +275,58 @@ void Data<MANIFOLD, 3>::readMatrixDataFromCSV(const char* filename, const int nz
     initEdgeweights();
 }
 
+template <typename MANIFOLD>
+void Data<MANIFOLD, 3>::readRawVolumeData(const char* filename, const int nz, const int ny, const int nx){
 
+    static_assert(MANIFOLD::MyType == EUCLIDIAN, "readRawVolumeData is only Implemented for Euclidian Manifolds");
+    static_assert(MANIFOLD::value_dim == 1, "readMatrixDataFromCSV is only for grayscale volume picture input");
+
+    int pixel_num = nz * ny * nx;
+    noise_img_ = storage_type(nz, ny, nx);
+
+    std::string fname(filename);
+    std::fstream file;
+    file.open(fname, std::ios::in|std::ios::binary|std::ios::ate);
+
+    std::streampos size;
+    char* buffer;
+    bool read_failure = true;
+
+    std::cout << "Reading file " << fname << " with dimensions(Slices, Rows, Cols) " << nz << " X " << ny << " X " << nx << std::endl;
+    std::cout << "Number of pixels = " << pixel_num << std::endl;
+
+    if(file.is_open()){
+	size = file.tellg();
+	buffer = new char[size];
+	file.seekg(0, std::ios::beg);
+	file.read(buffer, size);
+	file.close();
+	read_failure = false;
+    }
+
+    if(read_failure){
+	std::cout << "File import not successfull!" << std::endl;
+	return;
+	}
+
+    std::cout << "File successfully imported! File Size = " << size << " Bytes" <<std::endl;
+    
+    assert(size == pixel_num);
+
+    int k = 0;
+    for(auto& p : noise_img_){
+	double px = static_cast<double>(buffer[k]) / static_cast<double>(std::numeric_limits<unsigned char>::max());
+	p.setConstant(px);
+	++k;
+    }
+    
+    img_ = storage_type(noise_img_.domain()); 
+    clone3d(noise_img_, img_);
+
+    initInp();
+    initEdgeweights();
+
+}
 
 }// end namespace tvmtl
 

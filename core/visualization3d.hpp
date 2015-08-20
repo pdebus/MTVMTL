@@ -63,11 +63,11 @@ class Visualization< SO, 3, DATA, 3>{
 };
 
 // Specialization EUCLIDIAN 
-template <class DATA>
-class Visualization< EUCLIDIAN, 3, DATA, 3>{
+template <class DATA, int N>
+class Visualization< EUCLIDIAN, N, DATA, 3>{
     public:
-        typedef Manifold<EUCLIDIAN,3> mf_t;
-	typedef Visualization<EUCLIDIAN,3, DATA, 3> myType;
+        typedef Manifold<EUCLIDIAN, N> mf_t;
+	typedef Visualization<EUCLIDIAN, N, DATA, 3> myType;
 
 	// Constructor
 	Visualization(DATA& dat): data_(dat), filename_(""), paint_inpainted_pixel_(false), cam_(Camera()) {}
@@ -615,8 +615,8 @@ void Visualization<SPD, 3, DATA, 3>::GLInit(const char* window_name){
 //Implementation EUCLIDIAN
 //
 
-template <class DATA>
-void Visualization<EUCLIDIAN, 3, DATA, 3>::initTextures(){
+template <class DATA, int N>
+void Visualization<EUCLIDIAN, N, DATA, 3>::initTextures(){
 
     int nz = data_.img_.nslices();
     int ny = data_.img_.nrows();
@@ -625,20 +625,34 @@ void Visualization<EUCLIDIAN, 3, DATA, 3>::initTextures(){
     int size = nz * ny * nx;
     char* RGBAbuffer = new char[size * 4];
 
+    static_assert(N == 3 || N == 1, "Cube Visualization only possible for N=1 or N=3");
+
     int k = 0;
-    for(auto& p : data_.img_){
-	Eigen::Vector3d v = p * (double) std::numeric_limits<unsigned char>::max();
-	//std::cout << "Image Vector:\n" << p << std::endl;
-	//std::cout << "Scaling Factor: " << (int) std::numeric_limits<unsigned char>::max() << std::endl;
-	//std::cout << "Scaled Vector:\n " << v << std::endl;
-	double avg = v.sum() /3; 
-	RGBAbuffer[k * 4]	= static_cast<char>(v(0));
-	RGBAbuffer[k * 4 + 1]	= static_cast<char>(v(1));
-	RGBAbuffer[k * 4 + 2]	= static_cast<char>(v(2));
-	RGBAbuffer[k * 4 + 3]	= static_cast<char>(avg); 
-	//for(int i = 0; i<4; ++i) std::cout << (int) RGBAbuffer[k*4 + i] << ", ";
-	//std::cout << std::endl;
-	++k;
+    if(N == 3){
+	for(auto& p : data_.img_){
+	    typename mf_t::value_type v = p * (double) std::numeric_limits<unsigned char>::max();
+	    //std::cout << "Image Vector:\n" << p << std::endl;
+	    //std::cout << "Scaling Factor: " << (int) std::numeric_limits<unsigned char>::max() << std::endl;
+	    //std::cout << "Scaled Vector:\n " << v << std::endl;
+	    double avg = v.sum() /3; 
+	    RGBAbuffer[k * 4]	= static_cast<char>(v[0]);
+	    RGBAbuffer[k * 4 + 1]	= static_cast<char>(v[1]);
+	    RGBAbuffer[k * 4 + 2]	= static_cast<char>(v[2]);
+	    RGBAbuffer[k * 4 + 3]	= static_cast<char>(avg); 
+	    //for(int i = 0; i<4; ++i) std::cout << (int) RGBAbuffer[k*4 + i] << ", ";
+	    //std::cout << std::endl;
+	    ++k;
+	}
+    }
+    else{
+	for(auto& p : data_.img_){
+	    double  v = p[0] * (double) std::numeric_limits<unsigned char>::max();
+	    RGBAbuffer[k * 4]		= static_cast<char>(v);
+	    RGBAbuffer[k * 4 + 1]	= static_cast<char>(v);
+	    RGBAbuffer[k * 4 + 2]	= static_cast<char>(v);
+	    RGBAbuffer[k * 4 + 3]	= static_cast<char>(v); 
+	    ++k;
+	}
     }
 
     glGenTextures(1, (GLuint*) &texture3d_id);
@@ -657,8 +671,8 @@ void Visualization<EUCLIDIAN, 3, DATA, 3>::initTextures(){
 }
 
 
-template <class DATA>
-void Visualization<EUCLIDIAN, 3, DATA, 3>::draw(void)
+template <class DATA, int N>
+void Visualization<EUCLIDIAN, N, DATA, 3>::draw(void)
 {
 
     float dOrthoSize = 1.0;
@@ -715,8 +729,8 @@ void Visualization<EUCLIDIAN, 3, DATA, 3>::draw(void)
 
 
 
-template <class DATA>
-void Visualization<EUCLIDIAN, 3, DATA, 3>::reshape(int x, int y)
+template <class DATA, int N>
+void Visualization<EUCLIDIAN, N, DATA, 3>::reshape(int x, int y)
 {
     width_ = x;    height_ = y;
     GLfloat dOrthoSize = 1.0f;
@@ -735,9 +749,9 @@ void Visualization<EUCLIDIAN, 3, DATA, 3>::reshape(int x, int y)
     glLoadIdentity();
 }
 
-template <class DATA>
+template <class DATA, int N>
 /* Callback handler for normal-key event */
-void Visualization<EUCLIDIAN, 3, DATA, 3>::keyboard(unsigned char key, int x, int y) {
+void Visualization<EUCLIDIAN, N, DATA, 3>::keyboard(unsigned char key, int x, int y) {
    switch (key) {
          case 27:     // ESC key
 	 case 113:	// q ley  
@@ -750,9 +764,9 @@ void Visualization<EUCLIDIAN, 3, DATA, 3>::keyboard(unsigned char key, int x, in
 }
 
 
-template <class DATA>
+template <class DATA, int N>
 /* Callback handler for special-key event */
-void Visualization<EUCLIDIAN, 3, DATA, 3>::specialKeys(int key, int x, int y) {
+void Visualization<EUCLIDIAN, N, DATA, 3>::specialKeys(int key, int x, int y) {
    #ifdef TV_VISUAL_CONTROLS_DEBUG
 	std::cout << "BEFORE keypress: ";
 	cam_.printParams();
@@ -792,20 +806,20 @@ void Visualization<EUCLIDIAN, 3, DATA, 3>::specialKeys(int key, int x, int y) {
 }
 
 
-template <class DATA>
-void Visualization<EUCLIDIAN, 3, DATA, 3>::animation(){
+template <class DATA, int N>
+void Visualization<EUCLIDIAN, N, DATA, 3>::animation(){
     cam_.yAngle_+=0.50;
     draw();
 }
 
 
-template <class DATA>
-void Visualization<EUCLIDIAN, 3, DATA, 3>::saveImage(std::string filename){
+template <class DATA, int N>
+void Visualization<EUCLIDIAN, N, DATA, 3>::saveImage(std::string filename){
     filename_ = filename;
 }
 
-template <class DATA>
-void Visualization<EUCLIDIAN, 3, DATA, 3>::storeImage(std::string filename){
+template <class DATA, int N>
+void Visualization<EUCLIDIAN, N, DATA, 3>::storeImage(std::string filename){
     cv::Mat img(height_, width_, CV_8UC3);
     glPixelStorei(GL_PACK_ALIGNMENT, (img.step & 3)?1:4);
     glPixelStorei(GL_PACK_ROW_LENGTH, img.step/img.elemSize());
@@ -815,8 +829,8 @@ void Visualization<EUCLIDIAN, 3, DATA, 3>::storeImage(std::string filename){
     cv::imwrite(filename, img);
 }
 
-template <class DATA>
-void Visualization<EUCLIDIAN, 3, DATA, 3>::GLInit(const char* window_name){
+template <class DATA, int N>
+void Visualization<EUCLIDIAN, N, DATA, 3>::GLInit(const char* window_name){
 
     int argc = 1;
     char** argv=0;
