@@ -180,7 +180,11 @@ int main(int argc, const char *argv[])
     }
     
     data_t2 myData4=data_t2();
-    myData4.rgb_slice_reader("slices/noisy_crayons0.jpg", 16);
+    myData4.rgb_slice_reader("slices/noisy_crayons0.jpg", 32);
+
+    data_t2 myData5=data_t2();
+    myData5.create_noisy_rgb(24, 64, 32);
+
 /*
     ns = 10; //myData4.img_.nslices();  // z
     nr = 10; //myData4.img_.nrows();    // y
@@ -195,13 +199,9 @@ int main(int argc, const char *argv[])
 	}
     } 
 */
-	data_t2 myData5=data_t2();
-	myData5.create_noisy_rgb(24, 64, 32);
-
-
 	typedef Visualization<EUCLIDIAN, 3, data_t2, 3> visual_t;
 
-	visual_t myVisual(myData5);
+	visual_t myVisual(myData4);
 	myVisual.saveImage("3D_Cube_Crayons.png");
 
 	std::cout << "Starting OpenGL-Renderer..." << std::endl;

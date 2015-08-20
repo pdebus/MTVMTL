@@ -76,7 +76,9 @@ class Visualization< EUCLIDIAN, 3, DATA, 3>{
 	
 	// Class members GL Intergace
 	void GLInit(const char* windowname);
+	void initTextures();
 	void reshape(int x, int y);
+	void animation();
 	void draw(void);
 	void saveImage(std::string filename);
 	void keyboard(unsigned char key, int x, int y);
@@ -95,6 +97,7 @@ class Visualization< EUCLIDIAN, 3, DATA, 3>{
 	
 	Camera cam_;
 
+	GLuint texture3d_id;
 };
 
 // Specialization SPD(3) 
@@ -610,9 +613,55 @@ void Visualization<SPD, 3, DATA, 3>::GLInit(const char* window_name){
 }
 
 //Implementation EUCLIDIAN
+//
+
+template <class DATA>
+void Visualization<EUCLIDIAN, 3, DATA, 3>::initTextures(){
+
+    int nz = data_.img_.nslices();
+    int ny = data_.img_.nrows();
+    int nx = data_.img_.ncols();
+    
+    int size = nz * ny * nx;
+    char* RGBAbuffer = new char[size * 4];
+
+    int k = 0;
+    for(auto& p : data_.img_){
+	Eigen::Vector3d v = p * (double) std::numeric_limits<unsigned char>::max();
+	//std::cout << "Image Vector:\n" << p << std::endl;
+	//std::cout << "Scaling Factor: " << (int) std::numeric_limits<unsigned char>::max() << std::endl;
+	//std::cout << "Scaled Vector:\n " << v << std::endl;
+	double avg = v.sum() /3; 
+	RGBAbuffer[k * 4]	= static_cast<char>(v(0));
+	RGBAbuffer[k * 4 + 1]	= static_cast<char>(v(1));
+	RGBAbuffer[k * 4 + 2]	= static_cast<char>(v(2));
+	RGBAbuffer[k * 4 + 3]	= static_cast<char>(avg); 
+	//for(int i = 0; i<4; ++i) std::cout << (int) RGBAbuffer[k*4 + i] << ", ";
+	//std::cout << std::endl;
+	++k;
+    }
+
+    glGenTextures(1, (GLuint*) &texture3d_id);
+    glBindTexture( GL_TEXTURE_3D, texture3d_id );
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_REPLACE);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_BORDER);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+ 
+    glTexImage3D(GL_TEXTURE_3D, 0, GL_RGBA, nx, ny, nz, 0, GL_RGBA, GL_UNSIGNED_BYTE, RGBAbuffer );
+    glBindTexture( GL_TEXTURE_3D, 0 );
+
+    delete[] RGBAbuffer;
+}
+
+
 template <class DATA>
 void Visualization<EUCLIDIAN, 3, DATA, 3>::draw(void)
 {
+
+    float dOrthoSize = 1.0;
 
     glMatrixMode(GL_MODELVIEW);
     // clear the drawing buffer.
@@ -631,78 +680,35 @@ void Visualization<EUCLIDIAN, 3, DATA, 3>::draw(void)
     int nx = data_.img_.ncols();
     int ny = data_.img_.nrows();
 
-   int max = std::max(nx,std::max(ny,nz));
-
-    float scaling = 2.0 / (3.0 * max);
-    float spacing = 4.0 * scaling;
-    float z_distance= -4.5;
-    scaling *= 0.5;
-    spacing *= 0.5;
-
     #ifdef TV_VISUAL_DEBUG
 	std::cout << "ny: " << ny << " nx: " << nx << std::endl;
-	std::cout << "Maximum: " << max << " Scaling " << scaling << std::endl;
     #endif
- 
+
+    glMatrixMode(GL_TEXTURE); 
     glLoadIdentity();
-    gluLookAt(cam_.xPos_, cam_.yPos_, cam_.zPos_, cam_.xDir_, cam_.yDir_, cam_.zDir_, 0.0f, 1.0f, 0.0f);
+    glTranslatef(0.5f, 0.5f, 0.5f);
+    glScaled( (float)nx /(float) nx, -1.0f*(float) nx/(float)ny, (float)nx/(float)nz);
+    glRotated(cam_.yAngle_, 0.0, 1.0, 0.0);
+    glTranslatef(-0.5f, -0.5f, -0.5f);
 
-    glTranslatef(-1.0, -1.25, z_distance); // Left->Right, Bottom->Top
-   
-    for(int s = 0; s < nz; ++s){
-	for(int r = 0; r < ny; ++r){
-	// Start of row pointers
-	const typename mf_t::value_type* v = &data_.img_(s, r, 0);
-	const typename DATA::inp_type* i = &data_.inp_(s, r, 0);
-	for(int c = 0; c < nx; ++c){
-	    if(paint_inpainted_pixel_ || !i[c]){
-		glPushMatrix();
-	        glTranslatef(c * spacing, r * spacing, s * spacing); //Left->Right, Bottom->Top 
+    //gluLookAt(cam_.xPos_, cam_.yPos_, cam_.zPos_, cam_.xDir_, cam_.yDir_, cam_.zDir_, 0.0f, 1.0f, 0.0f);
 
+    glEnable(GL_TEXTURE_3D);
+    glBindTexture(GL_TEXTURE_3D, texture3d_id);
 
-		Eigen::Vector3f col = v[c].cast<float>();
-		float norm = col.norm();
-		glScalef(scaling, scaling, scaling);
-	    
-		glBegin(GL_QUADS);        // Draw The Cube Using quads
-		//glColor4f(1.0f,0.0f,0.0f);    // Color Red    
-		//glColor3f(col(0), col(1), col(2));    // Color
-		glColor4f(col(0), col(1), col(2), norm);    // Color
-		glVertex3f( 1.0f, 1.0f,-1.0f);    // Top Right Of The Quad (Top)
-		glVertex3f(-1.0f, 1.0f,-1.0f);    // Top Left Of The Quad (Top)
-		glVertex3f(-1.0f, 1.0f, 1.0f);    // Bottom Left Of The Quad (Top)
-		glVertex3f( 1.0f, 1.0f, 1.0f);    // Bottom Right Of The Quad (Top)
-		//glColor3f(1.0f,0.5f,0.0f);    // Color Orange
-		glVertex3f( 1.0f,-1.0f, 1.0f);    // Top Right Of The Quad (Bottom)
-		glVertex3f(-1.0f,-1.0f, 1.0f);    // Top Left Of The Quad (Bottom)
-		glVertex3f(-1.0f,-1.0f,-1.0f);    // Bottom Left Of The Quad (Bottom)
-		glVertex3f( 1.0f,-1.0f,-1.0f);    // Bottom Right Of The Quad (Bottom)
-		//glColor3f(1.0f,0.0f,0.0f);    // Color Red    
-		glVertex3f( 1.0f, 1.0f, 1.0f);    // Top Right Of The Quad (Front)
-		glVertex3f(-1.0f, 1.0f, 1.0f);    // Top Left Of The Quad (Front)
-		glVertex3f(-1.0f,-1.0f, 1.0f);    // Bottom Left Of The Quad (Front)
-		glVertex3f( 1.0f,-1.0f, 1.0f);    // Bottom Right Of The Quad (Front)
-		//glColor3f(1.0f,1.0f,0.0f);    // Color Yellow
-		glVertex3f( 1.0f,-1.0f,-1.0f);    // Top Right Of The Quad (Back)
-		glVertex3f(-1.0f,-1.0f,-1.0f);    // Top Left Of The Quad (Back)
-		glVertex3f(-1.0f, 1.0f,-1.0f);    // Bottom Left Of The Quad (Back)
-		glVertex3f( 1.0f, 1.0f,-1.0f);    // Bottom Right Of The Quad (Back)
-		//glColor3f(0.0f,0.0f,1.0f);    // Color Blue
-		glVertex3f(-1.0f, 1.0f, 1.0f);    // Top Right Of The Quad (Left)
-		glVertex3f(-1.0f, 1.0f,-1.0f);    // Top Left Of The Quad (Left)
-		glVertex3f(-1.0f,-1.0f,-1.0f);    // Bottom Left Of The Quad (Left)
-		glVertex3f(-1.0f,-1.0f, 1.0f);    // Bottom Right Of The Quad (Left)
-		//glColor3f(1.0f,0.0f,1.0f);    // Color Violet
-		glVertex3f( 1.0f, 1.0f,-1.0f);    // Top Right Of The Quad (Right)
-		glVertex3f( 1.0f, 1.0f, 1.0f);    // Top Left Of The Quad (Right)
-		glVertex3f( 1.0f,-1.0f, 1.0f);    // Bottom Left Of The Quad (Right)
-		glVertex3f( 1.0f,-1.0f,-1.0f);    // Bottom Right Of The Quad (Right)
-		glEnd();            // End Drawing The Cube
-		glPopMatrix();
-	    }
-	}
+    for (float fIndx = -1.0f; fIndx <= 1.0f; fIndx+=0.01f ){
+	glBegin(GL_QUADS);
+	glTexCoord3f(0.0f, 0.0f, ((float)fIndx+1.0f)/2.0f);  
+        glVertex3f(-dOrthoSize,-dOrthoSize,fIndx);
+        glTexCoord3f(1.0f, 0.0f, ((float)fIndx+1.0f)/2.0f);  
+        glVertex3f(dOrthoSize,-dOrthoSize,fIndx);
+        glTexCoord3f(1.0f, 1.0f, ((float)fIndx+1.0f)/2.0f);  
+        glVertex3f(dOrthoSize,dOrthoSize,fIndx);
+        glTexCoord3f(0.0f, 1.0f, ((float)fIndx+1.0f)/2.0f); 
+        glVertex3f(-dOrthoSize,dOrthoSize,fIndx);
+	glEnd();
     }
-}
+ 
     glutSwapBuffers();
 }
 
@@ -712,15 +718,21 @@ void Visualization<EUCLIDIAN, 3, DATA, 3>::draw(void)
 template <class DATA>
 void Visualization<EUCLIDIAN, 3, DATA, 3>::reshape(int x, int y)
 {
-    if (y == 0 || x == 0) return;  //Nothing is visible then, so return
+    width_ = x;    height_ = y;
+    GLfloat dOrthoSize = 1.0f;
+    GLdouble AspectRatio = ( GLdouble )(x) / ( GLdouble )(y);
 
-    width_ = x;
-    height_ = y;
-
+    glViewport(0.0, 0.0 , x, y);  //Use the whole window for rendering
     glMatrixMode(GL_PROJECTION);  
     glLoadIdentity();
-    gluPerspective(45.0,(GLdouble)x/(GLdouble)y,0.1,100.0);
-    glViewport(0.0, 0.0 , x, y);  //Use the whole window for rendering
+
+    if( x <= y )
+	glOrtho( -dOrthoSize, dOrthoSize, -( dOrthoSize / AspectRatio ) ,dOrthoSize / AspectRatio, 2.0f*-dOrthoSize, 2.0f*dOrthoSize );
+    else
+	glOrtho( -dOrthoSize * AspectRatio, dOrthoSize * AspectRatio, -dOrthoSize, dOrthoSize, 2.0f*-dOrthoSize, 2.0f*dOrthoSize );
+    
+    glMatrixMode( GL_MODELVIEW );
+    glLoadIdentity();
 }
 
 template <class DATA>
@@ -780,6 +792,12 @@ void Visualization<EUCLIDIAN, 3, DATA, 3>::specialKeys(int key, int x, int y) {
 }
 
 
+template <class DATA>
+void Visualization<EUCLIDIAN, 3, DATA, 3>::animation(){
+    cam_.yAngle_+=0.50;
+    draw();
+}
+
 
 template <class DATA>
 void Visualization<EUCLIDIAN, 3, DATA, 3>::saveImage(std::string filename){
@@ -811,9 +829,11 @@ void Visualization<EUCLIDIAN, 3, DATA, 3>::GLInit(const char* window_name){
     glutCreateWindow(window_name);
     
     glClearColor(0.0, 0.0, 0.0, 0.0);
-    
+    glewInit();
+    initTextures();
+
     glutDisplayFunc(getCFunctionPointer(&myType::draw,this));
-    glutIdleFunc(getCFunctionPointer(&myType::draw,this));
+    glutIdleFunc(getCFunctionPointer(&myType::animation,this));
     
 	typedef void (*reshape_mptr)(int, int);
 	Callback<void(int, int)>::func = std::bind(&myType::reshape, this, std::placeholders::_1, std::placeholders::_2);

@@ -123,6 +123,7 @@ void DrawCube(void)
 
     glTranslatef(0.5f, 0.5f, 0.5f);
     glScaled( (float)nx /(float) nx, -1.0f*(float) nx/(float)ny, (float)nx/(float)nz);
+    glRotated(yRotated, 0.0, 1.0, 0.0);
     glTranslatef(-0.5f, -0.5f, -0.5f);
 /*
     glEnable(GL_TEXTURE_2D); 
@@ -167,7 +168,7 @@ void DrawCube(void)
 void animation(void)
 {
  
-     yRotated += 0.01;
+     yRotated += 0.50;
      xRotated += 0.02;
     DrawCube();
 }
@@ -203,7 +204,7 @@ int main(int argc, char** argv){
     nz = 30;
     ny = 30;
     nx = 30;
-
+    yRotated = 0.0;
     fname = "test.raw";
 
     if(argc > 1){
@@ -224,7 +225,7 @@ int main(int argc, char** argv){
     glutReshapeFunc(reshape);
     glutKeyboardFunc(keyboard);
     //Set the function for the animation.
-    //glutIdleFunc(animation);
+    glutIdleFunc(animation);
     glutMainLoop();
 
         return 0;

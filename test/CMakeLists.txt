@@ -79,7 +79,7 @@ target_link_libraries(data_test ${OpenCV_LIBS} gomp)
 
 add_executable(data3d_test data3d_test.cpp)
 add_test(data3d_test data3d_test)
-target_link_libraries(data3d_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp)
+target_link_libraries(data3d_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARIES} gomp)
 
 add_executable(sphere_data_test sphere_data_test.cpp)
 add_test(sphere_data_test sphere_data_test)

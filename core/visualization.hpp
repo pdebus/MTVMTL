@@ -13,6 +13,7 @@
 #include <opencv2/opencv.hpp>
 
 //OpenGL includes
+#include <GL/glew.h>
 #include <GL/freeglut.h>
 
 // video++ includes
