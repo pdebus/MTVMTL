@@ -1,5 +1,5 @@
-#ifndef TVMTL_TVMINIMIZER_IRLS_HPP
-#define TVMTL_TVMINIMIZER_IRLS_HPP
+#ifndef TVMTL_TVMINIMIZER_IRLS3D_HPP
+#define TVMTL_TVMINIMIZER_IRLS3D_HPP
 
 //System includes
 #include <iostream>
@@ -14,7 +14,6 @@
 //Eigen includes
 #include <Eigen/Sparse>
 #include <Eigen/Core>
-#include <unsupported/Eigen/Splines>
 
 //CGAL includes For linear Interpolation
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
@@ -31,7 +30,7 @@
 namespace tvmtl {
 
 template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
-    class TV_Minimizer< IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR > {
+    class TV_Minimizer< IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR, 3> {
     
 	public:
 	    // Manifold typedefs
@@ -88,15 +87,19 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 
 //First Guess
 template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
-void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::first_guess(){
+void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR, 3>::first_guess(){
+    
+    int ns = data_.img_.nslices();
+    int nr = data_.img_.nrows();
+    int nc = data_.img_.ncols();
 
     std::cout << "Starting interpolation of damaged Area" << std::endl;
 
     typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
-    typedef CGAL::Delaunay_triangulation_2<K> Delaunay_triangulation;
-    typedef CGAL::Interpolation_traits_2<K> Traits;
+    typedef CGAL::Delaunay_triangulation_3<K> Delaunay_triangulation;
+    typedef CGAL::Interpolation_traits_3<K> Traits;
     typedef K::FT Coord_type;
-    typedef K::Point_2 Point;
+    typedef K::Point_3 Point;
 
     typedef typename DATA::inp_type inp_type;
     int value_dim = FUNCTIONAL::value_dim;
@@ -104,56 +107,74 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::first_guess(){
     int value_cols = value_type::ColsAtCompileTime;
 
     if(MANIFOLD::non_isometric_embedding)
-	vpp::pixel_wise(data_.img_) | [&] (value_type& i){ MANIFOLD::interpolation_preprocessing(i); };
+        pixel_wise3d([&] (value_type& i){ MANIFOLD::interpolation_preprocessing(i); }, data_.img_);
      
-    for(int r=0; r<value_rows; r++)
-	for(int c=0; c<value_cols; c++){
-	    std::cout << "\t Channel " << value_cols*r+c+1 << " of " << value_dim << "..." << std::endl;
+    for(int R=0; R<value_rows; R++)
+	for(int C=0; C<value_cols; C++){
+	    std::cout << "\t Channel " << value_cols*R+C+1 << " of " << value_dim << "..." << std::endl;
 	    Delaunay_triangulation T;
 	    std::map<Point, Coord_type, K::Less_xy_2> function_values;
 	    typedef CGAL::Data_access< std::map<Point, Coord_type, K::Less_xy_2 > >  Value_access;
 	    #ifdef TVMTL_TVMIN_DEBUG
-		std::cout << "NZ-Entries in inpainting matrix:" << vpp::sum(data_.inp_) << std::endl;
+		std::cout << "NZ-Entries in inpainting matrix:" << sum3d(data_.inp_) << std::endl;
 	    #endif
 
 	    int numnodes=0;
+		
 	    // Add Interpolation nodes
-	    vpp::pixel_wise(data_.inp_, data_.img_, data_.img_.domain())(vpp::_no_threads)  | [&] (inp_type inp, const value_type& i, const vpp::vint2& coord) {
-		if(!inp){
-			Point p(coord[0], coord[1]);
+	    for(int s = 0; s < ns; ++s){
+		for(int r = 0; r < nr; ++r){
+		// Start of row pointers
+		const inp_type* inp = &data_.inp_(s, r, 0);
+		const value_type* i = &data_.img_(s, r, 0);
+		for(int c = 0; c < nc; ++c)
+		    if(!inp[c]){
+			Point p(s, r, c);
 			T.insert(p);
-			function_values.insert(std::make_pair(p,i(r,c)));
+			function_values.insert(std::make_pair(p,i[c](R,C)));
 			numnodes++;
+		    }	    
 		}
-	    };
+	    }
+
 	    std::cout << "\t\tNumber of Nodes: " << numnodes << std::endl;
 
 	    int numdampix=0;
 	    // Interpolate missing nodes
-	    vpp::pixel_wise(data_.inp_, data_.img_, data_.img_.domain())(vpp::_no_threads) | [&] (inp_type inp, value_type& i, const vpp::vint2& coord) {
-		if(inp){
-		    Point p(coord[0], coord[1]);
-		    std::vector< std::pair< Point, Coord_type > > coords;
-                    Coord_type norm =  CGAL::natural_neighbor_coordinates_2(T, p,std::back_inserter(coords)).second;
-		    Coord_type res = CGAL::linear_interpolation(coords.begin(), coords.end(), norm,Value_access(function_values));
-		    i(r,c)=static_cast<scalar_type>(res);
-		    numdampix++;
+	    for(int s = 0; s < ns; ++s){
+		for(int r = 0; r < nr; ++r){
+		    // Start of row pointers
+		    const inp_type* inp = &data_.inp_(s, r, 0);
+		    const value_type* i = &data_.img_(s, r, 0);
+		    for(int c = 0; c < nc; ++c)
+			if(inp[c]){
+			    Point p(s, r, c);
+		            std::vector< std::pair< Point, Coord_type > > coords;
+			    Coord_type norm =  CGAL::natural_neighbor_coordinates_2(T, p,std::back_inserter(coords)).second;
+			    Coord_type res = CGAL::linear_interpolation(coords.begin(), coords.end(), norm,Value_access(function_values));
+			    i[c](R,C)=static_cast<scalar_type>(res);
+			    numdampix++;
+			}
 		}
-	    };
+	    }
+
 	    std::cout << "\t\tNumber of interpolated Pixels: " << numdampix << std::endl;
 	}
 
 	if(MANIFOLD::non_isometric_embedding)
-	    vpp::pixel_wise(data_.img_) | [&] (value_type& i){ MANIFOLD::interpolation_postprocessing(i); };
+	    pixel_wise3d([&] (value_type& i){ MANIFOLD::interpolation_postprocessing(i); }, data_.img_);
 
-    	vpp::pixel_wise(data_.img_) | [&] (value_type& i) { MANIFOLD::projector(i); };
+	pixel_wise3d([&] (value_type& i){ MANIFOLD::projector(i); }, data_.img_);
 
 }
 
 //Smoothening
 template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
-void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::smoothening(int smooth_steps){
-    
+void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR, 3>::smoothening(int smooth_steps){
+    int ns = data_.img_.nslices();
+    int nr = data_.img_.nrows();
+    int nc = data_.img_.ncols();
+ 
     std::cout << "Start Smoothening with max_steps = " << smooth_steps << std::endl;
 
     //TODO: Add Manifold dependent tranformation Before and after smoothening
@@ -162,48 +183,34 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::smoothening(int smooth
     int step = 0;
 
     typename FUNCTIONAL::img_type temp_img(data_.img_.domain(), vpp::_border=1);
-    typename FUNCTIONAL::nbh_type N(temp_img);
+    //    typename FUNCTIONAL::nbh_type N(temp_img);
 
     std::cout << "Initial functional value J=" << Jnew << "\n\n" << std::endl;
 
     while(Jnew<Jold && step < smooth_steps){
-	#ifdef TVMTL_TVMIN_DEBUG_SPD
-	   data_.output_matval_img("presmoothend_spd_img.csv");
-	#endif
 	if(MANIFOLD::non_isometric_embedding)
-	    vpp::pixel_wise(data_.img_) | [&] (value_type& i){ MANIFOLD::interpolation_preprocessing(i); };
+	    pixel_wise3d([&] (value_type& i){ MANIFOLD::interpolation_preprocessing(i); }, data_.img_);
 	
-	#ifdef TVMTL_TVMIN_DEBUG_SPD
-	   data_.output_matval_img("preprocessedsmoothend_spd_img.csv");
-	#endif
-	vpp::copy(data_.img_, temp_img);
-	vpp::fill_border_closest(temp_img);
+	clone3d(data_.img_, temp_img);
+	//vpp::fill_border_closest(temp_img);
 
 	std::cout << "\tSmoothen step #" << step+1 << std::endl;
 	std::cout << "\t Value of Functional J: " << Jnew << std::endl;
 	Jold = Jnew;
-	// Standard smoothening stencil 
-	//	1	 
-	//  1	4   1	/   8
-	//	1      
-	auto boxfilter = [&] (value_type& i, const auto& nbh) { 
-	    i = (4 * nbh(0,0) + nbh(1,0) + nbh(0,1) + nbh(-1,0) + nbh(0,-1))/8.0; 
-	    MANIFOLD::projector(i);
-	};
-
-	vpp::pixel_wise(data_.img_, N)(/*vpp::_no_threads*/) | boxfilter;
-
-	#ifdef TVMTL_TVMIN_DEBUG_SPD
-	   data_.output_matval_img("boxfiltersmoothend_spd_img.csv");
-	#endif
+	
+        for(int s = 0; s < ns; ++s){
+	    for(int r = 0; r < nr; ++r){
+	     // Start of row pointers
+	        value_type* i = &data_.img_(s, r, 0);
+	        for(int c = 0; c < nc; ++c){
+		    i[c] = (6 * t[s,r,c] + t[s,r,c-1] + t[s,r,c+1] + t[s,r-1,c] + t[s,r+1,c] + t[s-1,r,c] + t[s+1,r,c]) / 12.0		
+		}
+	    }
+	}
 	
 	if(MANIFOLD::non_isometric_embedding)
-	    vpp::pixel_wise(data_.img_) | [&] (value_type& i){ MANIFOLD::interpolation_postprocessing(i); };
+	    pixel_wise3d([&] (value_type& i){ MANIFOLD::interpolation_postprocessing(i); }, data_.img_);
 	
-        #ifdef TVMTL_TVMIN_DEBUG_SPD
-	   data_.output_matval_img("postsmoothend_spd_img.csv");
-	#endif
-
 	Jnew = func_.evaluateJ();
 	step++;
     }
@@ -213,8 +220,9 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::smoothening(int smooth
 }
 
 template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
-typename TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::newton_error_type TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::newton_step(){
+typename TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR, 3>::newton_error_type TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::newton_step(){
 
+    int ns = data_.img_.nslices();
     int nr = data_.img_.nrows();
     int nc = data_.img_.ncols();
     int value_dim = FUNCTIONAL::value_dim;
@@ -260,19 +268,25 @@ typename TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::newton_error_type 
     x = solver_.solve(b);
     
     // Apply Newton correction to picture
-    // TODO: 
     // - Change VectorXd to something parametrized with scalar_type
     #ifdef TVMTL_TVMIN_DEBUG_VERBOSE
 	std::cout << "\t\t...Apply Newton Correction" << std::endl;
     #endif
     const tm_base_mat_type& T = func_.getT();
-    auto newton_correction = [&] (const tm_base_type& t, value_type& i, const vpp::vint2 coord) { 
-	Eigen::VectorXd v = -t*x.segment(manifold_dim*(coord[0]+nr*coord[1]), manifold_dim);
-	MANIFOLD::exp(i, Eigen::Map<value_type>(v.data()), i);
-	//MANIFOLD::exp(i, -t*x.segment(manifold_dim*(coord[0]+nr*coord[1]), manifold_dim), i);
-    };
     vpp::pixel_wise(T, data_.img_, data_.img_.domain()) | newton_correction;
-    
+
+    for(int s = 0; s < ns; ++s){
+	#pragma omp parallel for
+	for(int r = 0; r < nr; ++r){
+	    // Start of row pointers
+	    value_type* i = &data_.img_(s, r, 0);
+	    tm_base_type* t = &T(s, r, 0);
+	    for(int c = 0; c < nc; ++c){
+		Eigen::VectorXd v = -t[c]*x.segment(manifold_dim * (s + ns * r + ns * nr * c), manifold_dim);
+		MANIFOLD::exp(i[c], Eigen::Map<value_type>(v.data()), i[c]);
+	    }
+	}
+    } 
        // Compute the Error
      #ifdef TVMTL_TVMIN_DEBUG_VERBOSE
 	std::cout << "\t\t...Compute Newton error" << std::endl;
@@ -284,7 +298,7 @@ typename TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::newton_error_type 
 
 
 template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
-void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::minimize(){
+void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR, 3>::minimize(){
     std::cout << "Starting IRLS Algorithm with..." << std::endl;
     std::cout << "\t Lambda = \t" << func_.getlambda() << std::endl;
     std::cout << "\t eps^2 = \t" << func_.geteps2() << std::endl;

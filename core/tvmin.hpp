@@ -42,6 +42,7 @@ template < enum ALGORITHM AL, class FUNCTIONAL, class MANIFOLD, class DATA, enum
 }
 
 #include "tvmin_irls.hpp"
+#include "tvmin_irls3d.hpp"
 #include "tvmin_prpt.hpp"
 #include "tvmin_prpt3d.hpp"
 
