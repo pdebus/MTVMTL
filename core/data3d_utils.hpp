@@ -91,6 +91,7 @@ void pixel_wise3d_nothreads(FUNC func, T&& head, Args&&... args){
 
 
 // FIXME: image(last) and subimage(1,1,1) are not the same. It seems the subimage can only be created from sequential memory addresses....Find workaround
+/*
 template <class FUNC, class DIMS, class T>
 void block_wise3d(FUNC func, DIMS dims, T&& head){
 
@@ -138,6 +139,7 @@ void block_wise3d(FUNC func, DIMS dims, T&& head, Args&&... args){
 	}
     } 
 }
+*/
 
 template <class IMG, class VAL>
 void fill3d(IMG&& img, VAL&& val){

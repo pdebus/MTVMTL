@@ -565,6 +565,21 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 	}
     };
 
+    auto HTV_single_insert = [&] (deriv2_type& h, tm_base_type& t1, tm_base_type& t2, int pos, int row_offset, int col_offset){
+   		    restricted_deriv2_type ht = t1.transpose()*h*t2;
+		    for(int local_row = 0; local_row<ht.rows(); local_row++)
+			for(int local_col = 0; local_col < ht.cols(); local_col++){
+			    scalar_type e = ht(local_row, local_col);
+				if(e!=0){
+				    int global_row = pos + row_offset + local_row;
+				    int global_col = pos + col_offset + local_col;
+				    triplist.push_back(Trip(global_row,global_col,e));
+				    if(row_offset > 0 || col_offset > 0)
+					triplist.push_back(Trip(global_col,global_row,e));
+				}
+			}
+    };
+
     HTV_insert(hessian, T_, T_, 0, 0);
 
     #ifdef TV_FUNC_DEBUG_VERBOSE
@@ -578,8 +593,9 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 	#ifdef TV_FUNC_DEBUG_VERBOSE
 		std::cout << "\t\t...Local to global insert:" << std::endl;
 	#endif
-	// Offsets for upper nyth subdiagonal
-	HTV_insert(XD12, T_ | without_last_x, T_ | without_first_x, 0, manifold_dim * nr);
+	// Offsets for upper nz*ny-th subdiagonal
+	int offset =  manifold_dim * nr * ns;
+	HTV_insert(XD12, T_ | without_last_z, T_ | without_first_z, 0, offset);
     }
     
     #ifdef TV_FUNC_DEBUG_VERBOSE
@@ -589,25 +605,45 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
     //... w.r.t. second arguments
     {
 	hessian_type YD12(data_.img_.domain());
-	pixel_wise3d(calc_xy_der, YD12 | without_last_y, weightsY_ | without_last_y, data_.img_ | without_last_y, data_.img_ | without_first_y);
+	pixel_wise3d(calc_xy_der, YD12 | without_last_y, weightsY_ | without_last_y, data_.img_ | without_last_y, data_.img_ | without_first_y );
 	
-	//Set last row to zero
-	for(int s=0; s < ns; ++s){
-	    deriv2_type* row = &YD12(s, nr-1,0);
-	    for(int c=0; c<nc; ++c)
-		row[c]=deriv2_type::Zero();
+	//Set last y-slice to zero
+	#pragma omp parallel for
+	for(int s = 0; s < ns ; ++s){
+	    deriv2_type* row = &YD12(s, nr-1 ,0);
+	    for(int c = 0; c < nc; ++c)
+		row[c] = deriv2_type::Zero();
 	}
-
 	#ifdef TV_FUNC_DEBUG_VERBOSE
 		std::cout << "\t\t...Local to global insert:" << std::endl;
 	#endif
-	// Offsets for first upper subdiagonal
-	HTV_insert(YD12 | without_last_y, T_ | without_last_y, T_ | without_first_y, 0, manifold_dim);
-	
-	//Manually insert last row
-	//for(int c=0; c<nc-1; c++) 
-	//    local2globalInsertHTV(T_(nr-1,c), T_(nr-1,c + 1), YD12(nr-1,c), vpp::vint2(nr-1, c));
-	
+	// Offsets for first nyth subdiagonal
+	int offset =  manifold_dim * ns;
+
+	// Insert YD12 except last ns entries
+	auto t1_it = T_.begin();
+	auto t2_it = typename tm_base_mat_type::iterator(vpp::vint3(0,1,0), T_); // Iterator at beginning of second row 
+	bool do_break = false;
+	int k = 0;
+	int max_entry = ns * nr * nc - ns;
+
+	for(int s=0; s < ns; ++s){
+	    for(int r=0; r < nr; ++r){
+		 deriv2_type* row = &YD12(s, r, 0);
+		 for(int c=0; c < nc; ++c){
+		    int pos = manifold_dim * (s + ns * r + ns * nr * c); // columnwise flattening
+		    HTV_single_insert(row[c], *t1_it, *t2_it, pos, 0, manifold_dim * ns);
+		    t1_it.next();
+		    t2_it.next();
+		    ++k;
+		    if(k == max_entry) {do_break = true; break;}
+		 }
+		 if(do_break) break;
+	    }
+	    if(do_break) break;
+	}
+
+
     }
 
     #ifdef TV_FUNC_DEBUG_VERBOSE
@@ -619,11 +655,33 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 	hessian_type ZD12(data_.img_.domain());
 	pixel_wise3d(calc_xy_der, ZD12 | without_last_z, weightsZ_ | without_last_z, data_.img_ | without_last_z, data_.img_ | without_first_z);
 	
+	//Set last slice to zero, - actually not necessary but safer than keeping uninitialized data
+	#pragma omp parallel for
+	for(int r = 0; r < nr; ++r){
+	    deriv2_type* row = &ZD12(ns-1, r ,0);
+	    for(int c = 0; c < nc; ++c)
+		row[c] = deriv2_type::Zero();
+	}
+	
 	#ifdef TV_FUNC_DEBUG_VERBOSE
 		std::cout << "\t\t...Local to global insert:" << std::endl;
 	#endif
-	//HTV_insert(ZD12 | without_last_z, T_ | without_last_z, T_ | without_first_z, 0, ns * nr * manifold_dim);
 	
+	// Insert into first upper subdiagonal
+	auto t1_it = T_.begin();
+	auto t2_it = T_.begin(); t2_it.next();
+	for(int s=0; s < ns-1; ++s){ // without last z-slice, since it is zero anyways
+	    for(int r=0; r < nr; ++r){
+		 deriv2_type* row = &ZD12(s, r, 0);
+		 for(int c=0; c < nc; ++c){
+		    int pos = manifold_dim * (s + ns * r + ns * nr * c); // columnwise flattening
+		    HTV_single_insert(row[c], *t1_it, *t2_it, pos, 0, manifold_dim);
+		    t1_it.next();
+		    t2_it.next();
+		 }
+	    }
+	}
+
 	HTV.setFromTriplets(triplist.begin(),triplist.end());              
 	HTV.makeCompressed();
 	triplist.clear();

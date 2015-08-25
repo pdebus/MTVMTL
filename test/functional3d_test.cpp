@@ -22,7 +22,7 @@ int main(int argc, const char *argv[])
 
 	data_t myData=data_t();
 	
-	myData.create_noisy_rgb(7, 5, 3);
+	myData.create_noisy_rgb(5, 4, 3);
 	
 	typedef Functional<FIRSTORDER, ISO, mf_t, data_t, 3> func_t;
 	func_t myFunc(3.0, myData);
