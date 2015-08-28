@@ -471,6 +471,9 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 	hessian_type XD11(without_last_x);
         pixel_wise3d(calc_xx_der, XD11, weightsX_ | without_last_x, data_.img_ | without_last_x, data_.img_ | without_first_x);
 	pixel_wise3d([&] (deriv2_type& h, const deriv2_type& d) { h=d; }, hessian | without_last_x, XD11);
+	#ifdef TV_FUNC_DEBUG
+	    data_.output_matval_img(XD11,"3dXD11.csv");
+	#endif
     }
     
     for(int s=0; s < ns; ++s)
@@ -486,6 +489,9 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 	hessian_type XD22(without_last_x);
         pixel_wise3d(calc_yy_der, XD22, weightsX_ | without_last_x, data_.img_ | without_last_x, data_.img_ | without_first_x);
 	pixel_wise3d(add_to_hessian, hessian | without_first_x, XD22);
+	#ifdef TV_FUNC_DEBUG
+	    data_.output_matval_img(XD22,"3dXD22.csv");
+	#endif
     }
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...->YD11" << std::endl;
@@ -496,6 +502,9 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 	hessian_type YD11(without_last_y);
         pixel_wise3d(calc_xx_der, YD11, weightsY_ | without_last_y, data_.img_ | without_last_y, data_.img_ | without_first_y);
 	pixel_wise3d(add_to_hessian, hessian | without_last_y, YD11);
+	#ifdef TV_FUNC_DEBUG
+	    data_.output_matval_img(YD11,"3dYD11.csv");
+	#endif
     }
 
     #ifdef TV_FUNC_DEBUG_VERBOSE
@@ -506,6 +515,9 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 	hessian_type YD22(without_last_y);
         pixel_wise3d(calc_yy_der, YD22, weightsY_ | without_last_y, data_.img_ | without_last_y, data_.img_ | without_first_y); 
 	pixel_wise3d(add_to_hessian, hessian | without_first_y, YD22);
+	#ifdef TV_FUNC_DEBUG
+	    data_.output_matval_img(YD22,"3dYD22.csv");
+	#endif
     }
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...->ZD11" << std::endl;
@@ -516,6 +528,9 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 	hessian_type ZD11(without_last_z);
         pixel_wise3d(calc_xx_der, ZD11, weightsZ_ | without_last_z, data_.img_ | without_last_z, data_.img_ | without_first_z);
 	pixel_wise3d(add_to_hessian, hessian | without_last_z, ZD11);
+	#ifdef TV_FUNC_DEBUG
+	    data_.output_matval_img(ZD11,"3dZD11.csv");
+	#endif
     }
 
     #ifdef TV_FUNC_DEBUG_VERBOSE
@@ -526,6 +541,9 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 	hessian_type ZD22(without_last_z);
         pixel_wise3d(calc_yy_der, ZD22, weightsZ_ | without_last_z, data_.img_ | without_last_z, data_.img_ | without_first_z); 
 	pixel_wise3d(add_to_hessian, hessian | without_first_z, ZD22);
+	#ifdef TV_FUNC_DEBUG
+	    data_.output_matval_img(ZD22,"3dZD22.csv");
+	#endif
     } 
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Local to global insert" << std::endl;
@@ -534,17 +552,17 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
     // NOTE: Eventually make single version for both cases, including an offset
     // --> additional parameters sparse_mat, offset
     auto HTV_insert = [&]( hessian_type H, tm_base_mat_type T1, tm_base_mat_type T2, int row_offset, int col_offset){
-	int ns = H.nslices();
-	int nr = H.nrows();
-	int nc = H.ncols();
+	int Hns = H.nslices();
+	int Hnr = H.nrows();
+	int Hnc = H.ncols();
     
-	for(int s = 0; s < ns; ++s){
-	    for(int r = 0; r < nr; ++r){
+	for(int s = 0; s < Hns; ++s){
+	    for(int r = 0; r < Hnr; ++r){
 		// Start of row pointers
 		deriv2_type* h = &H(s, r, 0);
 		tm_base_type* t1 = &T1(s, r, 0);
 		tm_base_type* t2 = &T2(s, r, 0);
-		for(int c = 0; c < nc; ++c){
+		for(int c = 0; c < Hnc; ++c){
 		    int pos = manifold_dim * (s + ns * r + ns * nr * c); // columnwise flattening
 		    restricted_deriv2_type ht = t1[c].transpose()*h[c]*t2[c];
 		
@@ -590,6 +608,9 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
     {
 	hessian_type XD12(without_last_x);
 	pixel_wise3d(calc_xy_der, XD12, weightsX_ | without_last_x, data_.img_ | without_last_x, data_.img_ | without_first_x );
+	#ifdef TV_FUNC_DEBUG
+	    data_.output_matval_img(XD12,"3dXD12.csv");
+	#endif
 	#ifdef TV_FUNC_DEBUG_VERBOSE
 		std::cout << "\t\t...Local to global insert:" << std::endl;
 	#endif
@@ -614,6 +635,9 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 	    for(int c = 0; c < nc; ++c)
 		row[c] = deriv2_type::Zero();
 	}
+	#ifdef TV_FUNC_DEBUG
+	    data_.output_matval_img(YD12,"3dYD12.csv");
+	#endif
 	#ifdef TV_FUNC_DEBUG_VERBOSE
 		std::cout << "\t\t...Local to global insert:" << std::endl;
 	#endif
@@ -663,6 +687,9 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 		row[c] = deriv2_type::Zero();
 	}
 	
+	#ifdef TV_FUNC_DEBUG
+	    data_.output_matval_img(ZD12,"3dZD12.csv");
+	#endif
 	#ifdef TV_FUNC_DEBUG_VERBOSE
 		std::cout << "\t\t...Local to global insert:" << std::endl;
 	#endif
@@ -697,7 +724,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 	#endif
     #ifdef TV_FUNC_DEBUG
 	if (sparsedim<200){
-	    if(sparsedim<70){
+	    if(sparsedim<80){
 		std::cout << "\nFidelity\n" << HF << std::endl; 
 		std::cout << "\nTV\n" << HTV << std::endl; 
 		std::cout << "\nHessian\n" << HJ_ << std::endl; 

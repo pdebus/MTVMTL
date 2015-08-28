@@ -66,7 +66,7 @@ int main(int argc, const char *argv[])
 	std::string fname(argv[1]);
 	
 	std::cout << "Smoothen picture to obtain initial state for Newton iteration..." << std::endl;
-	myTVMin.smoothening(10);
+	myTVMin.smoothening(5);
 	DisplayImage("Smoothened", myData.img_, img);
 	cv::imwrite("smoothened_" + fname, to_opencv(img));
 

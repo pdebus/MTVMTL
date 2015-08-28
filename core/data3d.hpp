@@ -74,6 +74,10 @@ class Data<MANIFOLD, 3>{
 
 	void setEdgeWeights(const weights_mat&);
 
+	//Output functions
+	template <class IMG>
+	void output_matval_img(const IMG& img, const char* filename) const;
+
 //  private:
 	storage_type img_;
 	storage_type noise_img_;
@@ -326,6 +330,32 @@ void Data<MANIFOLD, 3>::readRawVolumeData(const char* filename, const int nz, co
     initInp();
     initEdgeweights();
 
+}
+
+template < typename MANIFOLD >
+template < class IMG >
+void Data<MANIFOLD, 3>::output_matval_img(const IMG& img, const char* filename) const{
+    int ns = img.nslices();
+    int nr = img.nrows();
+    int nc = img.ncols();
+
+    std::fstream f;
+    f.open(filename, std::fstream::out);
+    Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "", "\n");
+    /*for (int s=0; s < ns; s++){
+	for (int r=0; r < nr; r++){
+	    const auto* cur = &img(s, r, 0);
+	    for (int c=0; c < nc; c++)
+		f << cur[c].format(CommaInitFmt);
+	}
+    }
+*/
+for (int c=0; c < nc; c++)
+for (int r=0; r < nr; r++)
+for (int s=0; s < ns; s++)
+    f << img(s, r, c).format(CommaInitFmt);
+
+    f.close();
 }
 
 }// end namespace tvmtl

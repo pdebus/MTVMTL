@@ -133,6 +133,10 @@ add_executable(tvmin_test_prpt3d tvmin_test_prpt3d.cpp)
 add_test(tvmin_test_prpt3d tvmin_test_prpt3d)
 target_link_libraries(tvmin_test_prpt3d ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARIES} gomp)
 
+add_executable(tvmin_test_irls3d tvmin_test_irls3d.cpp)
+add_test(tvmin_test_irls3d tvmin_test_irls3d)
+target_link_libraries(tvmin_test_irls3d ${OpenCV_LIBS} ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARIES} gomp)
+
 add_executable(inpaint_test inpaint_test.cpp)
 add_test(inpaint_test inpaint_test)
 target_link_libraries(inpaint_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
@@ -176,6 +180,10 @@ target_link_libraries(dti_tvmin_prpt_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${G
 add_executable(dti_tvmin_prpt_test3d dti_tvmin_prpt_test3d.cpp)
 add_test(dti_tvmin_prpt_test3d dti_tvmin_prpt_test3d)
 target_link_libraries(dti_tvmin_prpt_test3d ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+
+add_executable(dti_tvmin_irls_test3d dti_tvmin_irls_test3d.cpp)
+add_test(dti_tvmin_irls_test3d dti_tvmin_irls_test3d)
+target_link_libraries(dti_tvmin_irls_test3d ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 
 add_executable(son_inpainting_test son_inpainting_test.cpp)
 add_test(son_inpainting_test son_inpainting_test)

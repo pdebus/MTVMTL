@@ -17,9 +17,9 @@
 
 //CGAL includes For linear Interpolation
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
-#include <CGAL/Delaunay_triangulation_2.h>
+#include <CGAL/Delaunay_triangulation_3.h>
 #include <CGAL/Interpolation_traits_2.h>
-#include <CGAL/natural_neighbor_coordinates_2.h>
+#include <CGAL/natural_neighbor_coordinates_3.h>
 #include <CGAL/interpolation_functions.h>
 
 
@@ -97,7 +97,7 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR, 3>::first_guess(){
 
     typedef CGAL::Exact_predicates_inexact_constructions_kernel K;
     typedef CGAL::Delaunay_triangulation_3<K> Delaunay_triangulation;
-    typedef CGAL::Interpolation_traits_3<K> Traits;
+    typedef CGAL::Interpolation_traits_2<K> Traits;
     typedef K::FT Coord_type;
     typedef K::Point_3 Point;
 
@@ -106,6 +106,7 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR, 3>::first_guess(){
     int value_rows = value_type::RowsAtCompileTime;
     int value_cols = value_type::ColsAtCompileTime;
 
+    /*
     if(MANIFOLD::non_isometric_embedding)
         pixel_wise3d([&] (value_type& i){ MANIFOLD::interpolation_preprocessing(i); }, data_.img_);
      
@@ -165,7 +166,7 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR, 3>::first_guess(){
 	    pixel_wise3d([&] (value_type& i){ MANIFOLD::interpolation_postprocessing(i); }, data_.img_);
 
 	pixel_wise3d([&] (value_type& i){ MANIFOLD::projector(i); }, data_.img_);
-
+*/
 }
 
 //Smoothening
@@ -197,13 +198,14 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR, 3>::smoothening(int smo
 	std::cout << "\tSmoothen step #" << step+1 << std::endl;
 	std::cout << "\t Value of Functional J: " << Jnew << std::endl;
 	Jold = Jnew;
-	
+
+	const value_type* t = &temp_img(0,0,0);
         for(int s = 0; s < ns; ++s){
 	    for(int r = 0; r < nr; ++r){
 	     // Start of row pointers
 	        value_type* i = &data_.img_(s, r, 0);
 	        for(int c = 0; c < nc; ++c){
-		    i[c] = (6 * t[s,r,c] + t[s,r,c-1] + t[s,r,c+1] + t[s,r-1,c] + t[s,r+1,c] + t[s-1,r,c] + t[s+1,r,c]) / 12.0		
+		    i[c] = (6 * t[s,r,c] + t[s,r,c-1] + t[s,r,c+1] + t[s,r-1,c] + t[s,r+1,c] + t[s-1,r,c] + t[s+1,r,c]) / 12.0;
 		}
 	    }
 	}
@@ -220,7 +222,7 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR, 3>::smoothening(int smo
 }
 
 template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR> 
-typename TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR, 3>::newton_error_type TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::newton_step(){
+typename TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR, 3>::newton_error_type TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR, 3>::newton_step(){
 
     int ns = data_.img_.nslices();
     int nr = data_.img_.nrows();
@@ -273,14 +275,13 @@ typename TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR, 3>::newton_error_ty
 	std::cout << "\t\t...Apply Newton Correction" << std::endl;
     #endif
     const tm_base_mat_type& T = func_.getT();
-    vpp::pixel_wise(T, data_.img_, data_.img_.domain()) | newton_correction;
 
     for(int s = 0; s < ns; ++s){
 	#pragma omp parallel for
 	for(int r = 0; r < nr; ++r){
 	    // Start of row pointers
 	    value_type* i = &data_.img_(s, r, 0);
-	    tm_base_type* t = &T(s, r, 0);
+	    const tm_base_type* t = &T(s, r, 0);
 	    for(int c = 0; c < nc; ++c){
 		Eigen::VectorXd v = -t[c]*x.segment(manifold_dim * (s + ns * r + ns * nr * c), manifold_dim);
 		MANIFOLD::exp(i[c], Eigen::Map<value_type>(v.data()), i[c]);
@@ -332,7 +333,6 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR, 3>::minimize(){
 	    #ifdef TVMTL_TVMIN_DEBUG
 		    std::string fname("step_img.csv");
 		    fname = std::to_string(irls_step_) + "." + std::to_string(newton_step_) + fname;
-		    data_.output_matval_img(fname.c_str());
 	    #endif
 
 	    std::cout << "\t Error: " << error << std::endl;

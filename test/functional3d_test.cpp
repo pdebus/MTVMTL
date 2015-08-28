@@ -14,7 +14,7 @@ int main(int argc, const char *argv[])
 {
 	using namespace tvmtl;
 
-	typedef Manifold< EUCLIDIAN, 3 > mf_t;
+	typedef Manifold< EUCLIDIAN, 1 > mf_t;
 	typedef typename mf_t::value_type vec3d;
 
 	typedef Data< mf_t, 3> data_t;	
@@ -22,10 +22,10 @@ int main(int argc, const char *argv[])
 
 	data_t myData=data_t();
 	
-	myData.create_noisy_rgb(5, 4, 3);
+	myData.create_noisy_gray(4, 3, 2);
 	
 	typedef Functional<FIRSTORDER, ISO, mf_t, data_t, 3> func_t;
-	func_t myFunc(3.0, myData);
+	func_t myFunc(0.1, myData);
 
 	func_t::result_type result = 0.0;
 	
