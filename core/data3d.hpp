@@ -342,20 +342,20 @@ void Data<MANIFOLD, 3>::output_matval_img(const IMG& img, const char* filename) 
     std::fstream f;
     f.open(filename, std::fstream::out);
     Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "", "\n");
-    /*for (int s=0; s < ns; s++){
+    for (int s=0; s < ns; s++){
 	for (int r=0; r < nr; r++){
 	    const auto* cur = &img(s, r, 0);
 	    for (int c=0; c < nc; c++)
 		f << cur[c].format(CommaInitFmt);
 	}
     }
-*/
+/*
 for (int c=0; c < nc; c++)
 for (int r=0; r < nr; r++)
 for (int s=0; s < ns; s++)
     f << img(s, r, c).format(CommaInitFmt);
 
-    f.close();
+    f.close();*/
 }
 
 }// end namespace tvmtl

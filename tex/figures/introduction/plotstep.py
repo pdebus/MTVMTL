@@ -1,0 +1,14 @@
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+x1=np.linspace(0,1,10)
+x2=np.linspace(0,1,2)
+
+
+plt.ylim(-0.01, 1.01)
+plt.plot(x1, x1, linestyle='-', linewidth=2, label=r'$f_1(x)$')
+plt.step(x1, x1, linestyle='--', linewidth=2, drawstyle='steps-mid', label=r'$f_2(x)$')
+plt.step(x2, x2, linestyle='-.', linewidth=2, drawstyle='steps-mid', label=r'$f_3(x)$')
+plt.legend(loc='upper left')
+plt.show()

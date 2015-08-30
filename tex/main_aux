@@ -1,0 +1,49 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\citation{RudinOsher}
+\@writefile{toc}{\contentsline {chapter}{\numberline {1}Introduction}{3}{chapter.1}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{ch:introduction}{{1}{3}{Introduction}{chapter.1}{}}
+\@writefile{brf}{\backcite{RudinOsher}{{3}{1}{chapter.1}}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.1}Grayscale images}{3}{section.1.1}}
+\citation{ChambolleLions}
+\citation{ChangKuang}
+\newlabel{osher_opt}{{1.1}{4}{Grayscale images}{equation.1.1.1}{}}
+\@writefile{brf}{\backcite{ChambolleLions}{{4}{1.1}{equation.1.1.2}}}
+\newlabel{osher_func}{{1.3}{4}{Grayscale images}{equation.1.1.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.1}Edge preservation}{4}{subsection.1.1.1}}
+\newlabel{sub:Edge preservation}{{1.1.1}{4}{Edge preservation}{subsection.1.1.1}{}}
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:tv12comparison}{{1.1}{4}{}{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.2}Color Images}{4}{section.1.2}}
+\@writefile{brf}{\backcite{ChangKuang}{{4}{1.2}{section.1.2}}}
+\citation{SprecherIRLS}
+\citation{WeinmannPRPT}
+\@writefile{toc}{\contentsline {section}{\numberline {1.3}Manifold-valued Images}{5}{section.1.3}}
+\newlabel{sec:Manifold-valued Images}{{1.3}{5}{Manifold-valued Images}{section.1.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.4}Objective and Outline of this work}{5}{section.1.4}}
+\@writefile{brf}{\backcite{SprecherIRLS}{{5}{1.4}{section.1.4}}}
+\@writefile{brf}{\backcite{WeinmannPRPT}{{5}{1.4}{section.1.4}}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {2}Theory}{6}{chapter.2}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{ch:theory}{{2}{6}{Theory}{chapter.2}{}}
+\bibstyle{plain}
+\bibdata{mt}

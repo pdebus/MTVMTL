@@ -1,0 +1,84 @@
+\usepackage{color}
+\usepackage{relsize}
+\usepackage[scaled=0.8]{beramono}
+\usepackage{listings}
+
+\definecolor{gray}{gray}{0.55}
+
+% Python Code macro ------------------------------------------------------------
+
+\newcommand{\python}[1] {
+  \lstset{language=python,
+          basicstyle=\smaller,
+          basewidth=0.58em,
+          columns=fixed,
+          tabsize=2,
+          fontadjust=true,
+          frame=l,
+          xleftmargin=4.2pt,
+          numbers=left,
+          stepnumber=2,
+          breaklines=true,
+          breakindent=0pt,
+          prebreak=\mbox{\tiny$\searrow$},
+          postbreak=\mbox{{\color{gray}$\cdots$}},
+          keywordstyle=\bfseries,
+          keywords={access,and,break,class,continue,def,del,elif ,else,
+          except,exec,finally,for,from,global,if,import,in,is,
+          lambda,not,or,pass,print,raise,return,try,while,
+          True, False, None, self, from, import, as},
+          numberstyle=\color{gray},
+          commentstyle=\color{gray},
+          stringstyle=\textit,
+          showstringspaces=false,
+        }
+  \lstinputlisting{#1}
+}
+
+% C++ Code macro ---------------------------------------------------------------
+
+\newcommand{\cpp}[1] {
+  \lstset{language=c++,
+          basicstyle=\smaller,
+          basewidth=0.58em,
+          columns=fixed,
+          tabsize=2,
+          fontadjust=true,
+          frame=l,
+          xleftmargin=4.2pt,
+          numbers=left,
+          stepnumber=2,
+          breaklines=true,
+          breakindent=0pt,
+          prebreak=\mbox{\tiny$\searrow$},
+          postbreak=\mbox{{\color{gray}$\cdots$}},
+          numberstyle=\color{gray},
+          commentstyle=\color{gray},
+          stringstyle=\textit,
+          showstringspaces=false,
+        }
+  \lstinputlisting{#1}
+}
+
+% Gnu R Code macro -------------------------------------------------------------
+
+\newcommand{\gnuR}[1] {
+  \lstset{language=R,
+          basicstyle=\smaller,
+          basewidth=0.58em,
+          columns=fixed,
+          tabsize=2,
+          fontadjust=true,
+          frame=l,
+          xleftmargin=4.2pt,
+          numbers=left,
+          stepnumber=2,
+          numberstyle=\color{gray},
+          commentstyle=\color{gray},
+          stringstyle=\textit,
+          showstringspaces=false,
+          literate={<-}{{$\leftarrow$}}1 {~}{{$\sim$}}1,
+          escapeinside={(*}{*)}
+        }
+  \lstinputlisting{#1}
+}
