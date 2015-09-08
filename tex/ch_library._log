@@ -1,0 +1,47 @@
+Input File::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::0::0::Input File
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::1::0::Environment chapter undefined. |\begin{chapter} {The TVMTL Library} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::1::0::Missing \begin{document}. |\begin{chapter}{T he TVMTL Library} 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::1::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 1--3
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::4::0::Missing \begin{document}. |T he library which was developed in the course of this work is an easy-to... 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::4::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 4--5
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::6::0::Undefined control sequence. |\section {Capabilities} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::6::0::Missing \begin{document}. |\section{C apabilities} % (fold) 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::8::0::Undefined control sequence. |\subsection {Supported Manifolds} % (fold)
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::6::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 6--10
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::11::0::   External font `cmex10' loaded for size <7>.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::11::0::   External font `cmex10' loaded for size <5>.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::11::0::Undefined control sequence. |    \item Real Euclidian space $\mathbb {R}^n$
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::11::0::Overfull \hbox (13.11348pt too wide) in paragraph at lines 11--12
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::12::0::Undefined control sequence. |...\item Sphere $S^n=\left\lbrace x\in\mathbb {R}^{n+1}:\; \norm{x}=1\ri...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::12::0::Undefined control sequence. |...\left\lbrace x\in\mathbb{R}^{n+1}:\; \norm {x}=1\right\rbrace$
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::12::0::Overfull \hbox (22.70715pt too wide) in paragraph at lines 12--13
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::12::0::Overfull \hbox (88.00204pt too wide) in paragraph at lines 12--13
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::13::0::Undefined control sequence. |...onal group $SO(n)=\left\lbrace R\in\mathbb {R}^{n\times n}:\; RR^T=\m...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::13::0::Undefined control sequence. |...R\in\mathbb{R}^{n\times n}:\; RR^T=\mathbm {1}, \operatorname{det}(R)...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::13::0::Undefined control sequence. |...times n}:\; RR^T=\mathbm{1}, \operatorname {det}(R)=1 \right\rbrace$
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::13::0::Overfull \hbox (38.94952pt too wide) in paragraph at lines 13--14
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::13::0::Overfull \hbox (158.64775pt too wide) in paragraph at lines 13--14
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::14::0::Undefined control sequence. |... matrices $SPD(n)=\left\lbrace S\in\mathbb {R}^{n\times n}:\; S=S^T, ...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::14::0::Undefined control sequence. |...n}:\; S=S^T, x^TSx>0\; \forall x\in\mathbb {R}^n \right\rbrace$
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::14::0::Overfull \hbox (47.40996pt too wide) in paragraph at lines 14--15
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::14::0::Overfull \hbox (185.66467pt too wide) in paragraph at lines 14--15
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::15::0::Overfull \hbox (46.46318pt too wide) in paragraph at lines 15--16
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::19::0::Undefined control sequence. |\subsection {Data} % (fold)
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::19::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 19--21
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::25::0::Undefined control sequence. |...age data as well as the NIfTI \cite{nifti} format for DT-MRI images | <write> ...: Citation `\@citeb ' on page \thepage  \space undefined\on@line .
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::25::0::Citation `nifti' on page  undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::25::0::Overfull \hbox (5.43053pt too wide) in paragraph at lines 25--26
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::30::0::Undefined control sequence. |\subsection {Functionals} % (fold)
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::30::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 30--32
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::39::0::Undefined control sequence. |\subsection {Minimizer} % (fold)
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::39::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 39--41
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::43::0::Undefined control sequence. |	\imte PRPT
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::46::0::Undefined control sequence. |\subsection {Visualizations} % (fold)
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::46::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 46--48
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::59::0::Undefined control sequence. |\section {Design concepts} % (fold)
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::59::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 59--61
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::64::0::Undefined control sequence. |\section {Using TVTML} % (fold)
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::64::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 64--66
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::70::0::\begin{document} ended by \end{chapter}. |\end{chapter}  
+LaTeX Error::.../pascal/ownCloud/MA/Code/tex/ch_library.tex::0::0::Emergency stop. (job aborted, no legal \end found)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::0::0:: ==> Fatal error occurred, no output PDF file produced! 

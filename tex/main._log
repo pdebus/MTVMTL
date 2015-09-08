@@ -1,0 +1,446 @@
+Input File::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/base/report.cls::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/base/report.cls::0::0::report 2007/10/19 v1.4h Standard LaTeX document class
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/base/size10.clo::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/geometry/geometry.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/geometry/geometry.sty::0::0::geometry 2010/09/12 v5.6 Page Geometry
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/keyval.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/keyval.sty::0::0::keyval 1999/03/16 v1.13 key=value parser (DPC)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/ifpdf.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/ifpdf.sty::0::0::ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/ifpdf.sty::0::0::pdfTeX in PDF mode is detected. (ifpdf)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/ifvtex.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/ifvtex.sty::0::0::ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/ifvtex.sty::0::0::VTeX not detected. (ifvtex)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/ifxetex/ifxetex.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/ifxetex/ifxetex.sty::0::0::ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/float/float.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/float/float.sty::0::0::float 2001/11/08 v1.3d Float enhancements (AL)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::0::0::hyperref 2012/11/06 v6.83m Hypertext links for LaTeX
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty::0::0::hobsub-hyperref 2012/05/28 v1.13 Bundle oberdiek, subset hyperref (HO)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::hobsub-generic 2012/05/28 v1.13 Bundle oberdiek, subset generic (HO)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::hobsub 2012/05/28 v1.13 Construct package bundles (HO)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::LuaTeX not detected. (ifluatex)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::Skipping package `ifvtex' (already loaded). (hobsub)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::intcalc 2007/09/27 v1.1 Expandable calculations with integers (HO)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::Skipping package `ifpdf' (already loaded). (hobsub)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::Could not find \expanded. That can mean that you are not using pdfTeX 1.50 or that some package has redefined \expanded. In the latter case, load this package earlier. (etexcmds)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::kvdefinekeys 2011/04/07 v1.3 Define keys (HO)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::LuaTeX not detected. (pdftexcmds)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::\pdf@primitive is available. (pdftexcmds)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::\pdf@ifprimitive is available. (pdftexcmds)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::\pdfdraftmode found. (pdftexcmds)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::pdfescape 2011/11/25 v1.13 Implements pdfTeX's escape features (HO)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::bigintcalc 2012/04/08 v1.3 Expandable calculations on big integers (HO)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::bitset 2011/01/30 v1.1 Handle bit-vector datatype (HO)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-generic.sty::0::0::uniquecounter 2011/01/30 v1.2 Provide unlimited unique counter (HO)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty::0::0::Skipping package `hobsub' (already loaded). (hobsub)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty::0::0::letltxmacro 2010/09/02 v1.4 Let assignment for LaTeX macros (HO)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty::0::0::hopatch 2012/05/28 v1.2 Wrapper for package hooks (HO)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty::0::0::xcolor-patch 2011/01/30 xcolor patch
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty::0::0::atveryend 2011/06/30 v1.8 Hooks at the very end of document (HO)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty::0::0::\enddocument detected (standard20110627). (atveryend)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty::0::0::atbegshi 2011/10/05 v1.16 At begin shipout hook (HO)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty::0::0::refcount 2011/10/16 v3.4 Data extraction from label references (HO)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/hobsub-hyperref.sty::0::0::hycolor 2011/01/30 v1.7 Color options for hyperref/bookmark (HO)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/oberdiek/auxhook.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/oberdiek/auxhook.sty::0::0::auxhook 2011/03/04 v1.3 Hooks for auxiliary files (HO)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/oberdiek/kvoptions.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/oberdiek/kvoptions.sty::0::0::kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/pd1enc.def::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/latexconfig/hyperref.cfg::0::0::Input File
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::4319::0::Option `hyperindex' set `true'. (hyperref)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::4443::0::Hyper figures OFF. (hyperref)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::4448::0::Link nesting OFF. (hyperref)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::4451::0::Hyper index ON. (hyperref)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::4458::0::Plain pages OFF. (hyperref)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::4461::0::Backreferencing ON. (hyperref)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::0::0::Implicit mode ON; LaTeX internals redefined. (hyperref)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::4688::0::Bookmarks ON. (hyperref)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/backref.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/backref.sty::0::0::backref 2012/07/25 v1.38 Bibliographical back referencing
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty::0::0::rerunfilecheck 2011/04/15 v1.7 Rerun checks for auxiliary files (HO)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty::282::0::New unique counter `rerunfilecheck'. (uniquecounter)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/url/url.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/url/url.sty::0::0::url 2006/04/12  ver 3.3  Verb mode for urls, etc.
+LaTeX Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::5041::0::Redefining \url.
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::6295::0::Hyper figures OFF. (hyperref)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::6300::0::Link nesting OFF. (hyperref)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::6303::0::Hyper index ON. (hyperref)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::6308::0::backreferencing ON. (hyperref)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::6315::0::Link coloring OFF. (hyperref)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::6320::0::Link coloring with OCG OFF. (hyperref)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::6325::0::PDF/A mode OFF. (hyperref)
+LaTeX Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::6365::0::Redefining \ref.
+LaTeX Info::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hyperref.sty::6369::0::Redefining \pageref.
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/hpdftex.def::0::0::Input File
+Input File::/home/pascal/ownCloud/MA/Code/tex/header_math.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amsmath.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amsmath.sty::0::0::amsmath 2013/01/14 v2.14 AMS math features
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amstext.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amstext.sty::0::0::amstext 2000/06/29 v2.01
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amsgen.sty::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amsbsy.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amsbsy.sty::0::0::amsbsy 1999/11/29 v1.2d
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amsopn.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amsopn.sty::0::0::amsopn 1999/12/14 v2.01 operator names
+LaTeX Info::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amsmath.sty::210::0::Redefining \frac.
+LaTeX Info::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amsmath.sty::306::0::Redefining \overline.
+LaTeX Info::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amsmath.sty::378::0::Redefining \ldots.
+LaTeX Info::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amsmath.sty::381::0::Redefining \dots.
+LaTeX Info::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amsmath.sty::466::0::Redefining \cdots.
+LaTeX Font Info::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amsmath.sty::566::0::   Redeclaring font encoding OML.
+LaTeX Font Info::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amsmath.sty::567::0::   Redeclaring font encoding OMS.
+LaTeX Info::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amsmath.sty::2665::0::Redefining \[.
+LaTeX Info::/usr/local/texlive/2013/texmf-dist/tex/latex/amsmath/amsmath.sty::2666::0::Redefining \].
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/amssymb.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/amssymb.sty::0::0::amssymb 2013/01/14 v3.01 AMS font symbols
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/amsfonts.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/amsfonts.sty::0::0::amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+LaTeX Font Info::/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/amsfonts.sty::106::0::   Overwriting math alphabet `\mathfrak' in version `bold' U/euf/m/n --> U/euf/b/n.
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/braket/braket.sty::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/bbm-macros/bbm.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/bbm-macros/bbm.sty::0::0::bbm 1999/03/15 V 1.2 provides fonts for set symbols - TH
+LaTeX Font Info::/usr/local/texlive/2013/texmf-dist/tex/latex/bbm-macros/bbm.sty::33::0::   Overwriting math alphabet `\mathbbm' in version `bold' U/bbm/m/n --> U/bbm/bx/n.
+LaTeX Font Info::/usr/local/texlive/2013/texmf-dist/tex/latex/bbm-macros/bbm.sty::35::0::   Overwriting math alphabet `\mathbbmss' in version `bold' U/bbmss/m/n --> U/bbmss/bx/n.
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/doublestroke/dsfont.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/doublestroke/dsfont.sty::0::0::dsfont 1995/08/01 v0.1 Double stroke roman fonts
+Input File::/home/pascal/ownCloud/MA/Code/tex/header_gfx.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/graphicx.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/graphicx.sty::0::0::graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/graphics.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/graphics.sty::0::0::graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/trig.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/trig.sty::0::0::trig 1999/03/16 v1.09 sin cos tan (DPC)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/latexconfig/graphics.cfg::0::0::Input File
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/graphics.sty::91::0::Driver file: pdftex.def. (graphics)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/pdftex-def/pdftex.def::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/subfig/subfig.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/subfig/subfig.sty::0::0::subfig 2005/06/28 ver: 1.3 subfig package
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/caption/caption.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/caption/caption.sty::0::0::caption 2013/05/02 v3.3-89 Customizing captions (AR)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/caption/caption3.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/caption/caption3.sty::0::0::caption3 2013/05/02 v1.6-88 caption3 kernel (AR)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/caption/caption3.sty::57::0::TeX engine: e-TeX. (caption3)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/caption/caption.sty::0::0::float package is loaded. (caption)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/caption/caption.sty::0::0::hyperref package is loaded. (caption)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/asymptote/asymptote.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/asymptote/asymptote.sty::0::0::asymptote 2012/08/25 v1.27 Asymptote style file for LaTeX
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/base/ifthen.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/base/ifthen.sty::0::0::ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/color.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/color.sty::0::0::color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/latexconfig/color.cfg::0::0::Input File
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/color.sty::130::0::Driver file: pdftex.def. (color)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/catchfile.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/catchfile.sty::0::0::catchfile 2011/03/01 v1.6 Catch the contents of a file (HO)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/frontendlayer/tikz.sty::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/utilities/pgfrcs.sty::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/utilities/pgfutil-common.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/utilities/pgfutil-latex.def::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/ms/everyshi.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/ms/everyshi.sty::0::0::everyshi 2001/05/15 v3.00 EveryShipout Package (MS)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/utilities/pgfrcs.code.tex::0::0::pgfrcs 2010/10/25 v2.10 (rcs-revision 1.24)
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/basiclayer/pgf.sty::0::0::pgf 2008/01/15 v2.10 (rcs-revision 1.12)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/basiclayer/pgfcore.sty::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/systemlayer/pgfsys.sty::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex::0::0::pgfsys 2010/06/30 v2.10 (rcs-revision 1.37)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/utilities/pgfkeysfiltered.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/systemlayer/pgf.cfg::0::0::Input File
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/systemlayer/pgfsys.code.tex::900::0::Driver file for pgf: pgfsys-pdftex.def. (pgfsys)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-pdftex.def::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/systemlayer/pgfsys-common-pdf.def::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/systemlayer/pgfsyssoftpath.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/systemlayer/pgfsysprotocol.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/xcolor/xcolor.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/xcolor/xcolor.sty::0::0::xcolor 2007/01/21 v2.11 LaTeX color extensions (UK)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/latexconfig/color.cfg::0::0::Input File
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/xcolor/xcolor.sty::225::0::Driver file: pdftex.def. (xcolor)
+LaTeX Info::/usr/local/texlive/2013/texmf-dist/tex/latex/xcolor/xcolor.sty::702::0::Redefining \color.
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/xcolor/xcolor.sty::1337::0::Model `cmy' substituted by `cmy0'. (xcolor)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/xcolor/xcolor.sty::1341::0::Model `hsb' substituted by `rgb'. (xcolor)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/xcolor/xcolor.sty::1353::0::Model `RGB' extended. (xcolor)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/xcolor/xcolor.sty::1355::0::Model `HTML' substituted by `rgb'. (xcolor)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/xcolor/xcolor.sty::1356::0::Model `Hsb' substituted by `hsb'. (xcolor)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/xcolor/xcolor.sty::1357::0::Model `tHsb' substituted by `hsb'. (xcolor)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/xcolor/xcolor.sty::1358::0::Model `HSB' substituted by `hsb'. (xcolor)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/xcolor/xcolor.sty::1359::0::Model `Gray' substituted by `gray'. (xcolor)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/xcolor/xcolor.sty::1360::0::Model `wave' substituted by `hsb'. (xcolor)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcore.code.tex::0::0::pgfcore 2010/04/11 v2.10 (rcs-revision 1.7)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmath.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathcalc.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathutil.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathparser.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.basic.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.trigonometric.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.random.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.comparison.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.base.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.round.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfunctions.misc.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/math/pgfmathfloat.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathusage.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransformations.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorequick.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreobjects.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepathprocessing.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorearrows.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcoreexternal.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorelayers.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcoretransparency.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/basiclayer/pgfcorepatterns.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/modules/pgfmoduleshapes.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/modules/pgfmoduleplot.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty::0::0::pgfcomp-version-0-65 2007/07/03 v2.10 (rcs-revision 1.7)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/compatibility/pgfcomp-version-1-18.sty::0::0::pgfcomp-version-1-18 2007/07/23 v2.10 (rcs-revision 1.1)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/utilities/pgffor.sty::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/pgf/utilities/pgfkeys.sty::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/utilities/pgfkeys.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/utilities/pgffor.code.tex::0::0::pgffor 2010/03/23 v2.10 (rcs-revision 1.18)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/frontendlayer/tikz/tikz.code.tex::0::0::tikz 2010/10/13 v2.10 (rcs-revision 1.76)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/libraries/pgflibraryplothandlers.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/modules/pgfmodulematrix.code.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/pgf/frontendlayer/tikz/libraries/tikzlibrarytopaths.code.tex::0::0::Input File
+Input File::/home/pascal/ownCloud/MA/Code/tex/header_algs.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/algorithms/algorithm.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/algorithms/algorithm.sty::0::0::algorithm 2009/08/24 v0.1 Document Style `algorithm' - floating environment
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/algorithms/algorithmic.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/algorithms/algorithmic.sty::0::0::algorithmic 2009/08/24 v0.1 Document Style `algorithmic'
+Input File::/home/pascal/ownCloud/MA/Code/tex/header_listing.tex::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/relsize/relsize.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/relsize/relsize.sty::0::0::relsize 2013/03/29 ver 4.1
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/bera/beramono.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/bera/beramono.sty::0::0::beramono 2004/01/31 (WaS)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/listings/listings.sty::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/listings/lstmisc.sty::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/listings/listings.cfg::0::0::Input File
+Input Package::/home/pascal/ownCloud/MA/Code/tex/header_listing.tex::0::0::listings 2013/08/26 1.5b (Carsten Heinz)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/base/inputenc.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/base/inputenc.sty::0::0::inputenc 2008/03/30 v1.1d Input encoding file
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/utf8x.def::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/ucs.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/ucs.sty::0::0::ucs 2013/05/11 v2.2 UCS: Unicode input support
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/data/uni-global.def::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/placeins/placeins.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/placeins/placeins.sty::0::0::placeins 2005/04/18  v 2.2
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/microtype/microtype.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/microtype/microtype.sty::0::0::microtype 2013/05/23 v2.5a Micro-typographical refinements (RS)
+LaTeX Info::/usr/local/texlive/2013/texmf-dist/tex/latex/microtype/microtype.sty::766::0::Redefining \textls.
+LaTeX Info::/usr/local/texlive/2013/texmf-dist/tex/latex/microtype/microtype.sty::1285::0::Redefining \textmicrotypecontext.
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/microtype/microtype-pdftex.def::0::0::Input File
+LaTeX Info::/usr/local/texlive/2013/texmf-dist/tex/latex/microtype/microtype-pdftex.def::915::0::Redefining \lsstyle.
+LaTeX Info::/usr/local/texlive/2013/texmf-dist/tex/latex/microtype/microtype-pdftex.def::915::0::Redefining \lslig.
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/microtype/microtype.sty::0::0::Loading configuration file microtype.cfg. (microtype)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/microtype/microtype.cfg::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/fncychap/fncychap.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/fncychap/fncychap.sty::0::0::fncychap 2007/07/30 v1.34 LaTeX package (Revised chapters)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::35::0::Option `colorlinks' set `true'. (hyperref)
+Input File::/home/pascal/ownCloud/MA/Code/tex/main.aux::0::0::Input File
+LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.aux::0::0::Label `ssub:Second derivatives of the distance function' multiply defined.
+LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.aux::0::0::Label `ssub:Second derivatives of the distance function' multiply defined.
+LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.aux::0::0::Label `code:tut_data' multiply defined.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::   Checking defaults for OML/cmm/m/it.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::   ... okay.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::   Checking defaults for T1/cmr/m/n.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::   ... okay.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::   Checking defaults for OT1/cmr/m/n.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::   ... okay.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::   Checking defaults for OMS/cmsy/m/n.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::   ... okay.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::   Checking defaults for OMX/cmex/m/n.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::   ... okay.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::   Checking defaults for U/cmr/m/n.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::   ... okay.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::   Checking defaults for PD1/pdf/m/n.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::   ... okay.
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::Link coloring ON. (hyperref)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/nameref.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/hyperref/nameref.sty::0::0::nameref 2012/10/27 v2.43 Cross-referencing by name of section
+Input File::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/gettitlestring.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/gettitlestring.sty::0::0::gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
+LaTeX Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::Redefining \ref.
+LaTeX Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::Redefining \pageref.
+LaTeX Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::Redefining \nameref.
+Input File::/home/pascal/ownCloud/MA/Code/tex/main.out::0::0::Input File
+Input File::/home/pascal/ownCloud/MA/Code/tex/main.out::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/context/base/supp-pdf.mkii::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty::0::0::epstopdf-base 2010/02/09 v2.5 Base part for package epstopdf
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/oberdiek/grfext.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/oberdiek/grfext.sty::0::0::grfext 2010/08/19 v1.1 Manage graphics extensions (HO)
+Package Info::/usr/local/texlive/2013/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty::452::0::Graphics extension search list: [.png,.pdf,.jpg,.mps,.jpeg,.jbig2,.jb2,.PNG,.PDF,.JPG,.JPEG,.JBIG2,.JB2,.eps] \AppendGraphicsExtensions. (grfext)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg::0::0::Input File
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::Begin \AtBeginDocument code. (caption)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::subfig package v1.3 is loaded. (caption)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::listings package is loaded. (caption)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::End \AtBeginDocument code. (caption)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/ucs/ucsencs.def::0::0::Input File
+LaTeX Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::56::0::Redefining \microtypecontext.
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::Generating PDF output. (microtype)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::Character protrusion enabled (level 2). (microtype)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::Using default protrusion set `alltext'. (microtype)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::Automatic font expansion enabled (level 2), stretch: 20, shrink: 20, step: 1, non-selected. (microtype)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::Using default expansion set `basictext'. (microtype)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::No adjustment of tracking. (microtype)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::No adjustment of interword spacing. (microtype)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::No adjustment of character kerning. (microtype)
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/microtype/mt-cmr.cfg::0::0::Input File
+Input File::/home/pascal/ownCloud/MA/Code/tex/title.tex::0::0::Input File
+Input File::/home/pascal/ownCloud/MA/Code/tex/main.toc::0::0::Input File
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.toc::2::0::   Try loading font information for U+msa.
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/umsa.fd::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/microtype/mt-msa.cfg::0::0::Input File
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.toc::2::0::   Try loading font information for U+msb.
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/umsb.fd::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/microtype/mt-msb.cfg::0::0::Input File
+Input File::/home/pascal/ownCloud/MA/Code/tex/main.lof::0::0::Input File
+Input File::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::0::0::Input File
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::1::0::   Try loading font information for OT1+phv.
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/psnfss/ot1phv.fd::0::0::Input File
+Package Info::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::0::0::Loading generic settings for font family `phv' (encoding: OT1). For optimal results, create family-specific settings. See the microtype manual for details. (microtype)
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::1::0::   Try loading font information for OT1+ptm.
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/psnfss/ot1ptm.fd::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/microtype/mt-ptm.cfg::0::0::Input File
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::3::0::Underfull \hbox (badness 10000) in paragraph at lines 3--7
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::8::0::Underfull \hbox (badness 10000) in paragraph at lines 8--11
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::12::0::Citation `RudinOsher' on page 5 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::26::0::Citation `ChambolleLions' on page 5 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::35::0::Underfull \hbox (badness 10000) in paragraph at lines 35--36
+Input File::pdftex.def::0::0::Input File
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::65::0::Citation `ChangKuang' on page 6 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::76::0::Citation `SprecherIRLS' on page 7 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::77::0::Citation `WeinmannPRPT' on page 7 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::75::0::Underfull \hbox (badness 10000) in paragraph at lines 75--79
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::80::0::Underfull \hbox (badness 10000) in paragraph at lines 80--84
+Input File::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::0::0::Input File
+Package Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::32::0::Token not allowed in a PDF string (PDFDocEncoding): removing `math shift'. (hyperref package)
+Package Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::32::0::Token not allowed in a PDF string (PDFDocEncoding): removing `superscript'. (hyperref package)
+Package Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::32::0::Token not allowed in a PDF string (PDFDocEncoding): removing `math shift'. (hyperref package)
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::42::0::Citation `magnus' on page 8 undefined.
+Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::44::0::Reference `appendix' on page 8 undefined.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::48::0::   Try loading font information for U+bbm.
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/bbm-macros/ubbm.fd::0::0::Input File
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::49::0::Underfull \hbox (badness 10000) in paragraph at lines 49--51
+Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::58::0::Reference `seq:frechetderivatives' on page 8 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::83::0::Overfull \hbox (54.50844pt too wide) in paragraph at lines 83--83
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::116::0::Underfull \hbox (badness 10000) in paragraph at lines 116--117
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::118::0::Citation `absil_GR' on page 9 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::208::0::Underfull \hbox (badness 10000) in paragraph at lines 208--211
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::212::0::Underfull \hbox (badness 10000) in paragraph at lines 212--216
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::224::0::Citation `almohy_frechetlog' on page 10 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::228::0::Underfull \hbox (badness 10000) in paragraph at lines 228--230
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::243::0::Underfull \hbox (badness 10000) in paragraph at lines 243--245
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::246::0::Citation `highham_pade' on page 11 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::250::0::Underfull \hbox (badness 10000) in paragraph at lines 250--252
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::263::0::Citation `almohy_frechetlog' on page 11 undefined.
+Input File::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::0::0::Input File
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::11::0::   Try loading font information for OMS+cmr.
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd::0::0::Input File
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::11::0::   Font shape `OMS/cmr/m/n' in size <10> not available Font shape `OMS/cmsy/m/n' tried instead.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::25::0::Citation `nifti' on page 12 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::66::0::Citation `SprecherIRLS' on page 13 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::66::0::Citation `mt' on page 13 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::66::0::Citation `bt' on page 13 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::66::0::Underfull \hbox (badness 10000) in paragraph at lines 66--71
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::72::0::Underfull \hbox (badness 10000) in paragraph at lines 72--75
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::76::0::Underfull \hbox (badness 10000) in paragraph at lines 76--84
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::85::0::Underfull \hbox (badness 10000) in paragraph at lines 85--89
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::93::0::   Try loading font information for OT1+fvm.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::93::0::   No file OT1fvm.fd..
+LaTeX Font Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::93::0::Font shape `OT1/fvm/m/n' undefined using `OT1/cmr/m/n' instead.
+Package Info::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::0::0::Loading generic settings for font family `fvm' (encoding: OT1). For optimal results, create family-specific settings. See the microtype manual for details. (microtype)
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::92::0::Underfull \hbox (badness 10000) in paragraph at lines 92--95
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::96::0::Underfull \hbox (badness 10000) in paragraph at lines 96--100
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::103::0::Citation `opticalflow' on page 14 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::101::0::Underfull \hbox (badness 10000) in paragraph at lines 101--104
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::112::0::Underfull \hbox (badness 10000) in paragraph at lines 112--117
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::118::0::Underfull \hbox (badness 10000) in paragraph at lines 118--122
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/listings/lstlang1.sty::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/listings/lstlang1.sty::0::0::Input File
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/listings/lstmisc.sty::0::0::Input File
+Package Info::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::124::0::bookmark level for unknown lstlisting defaults to 0. (hyperref)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::0::0::Loading generic settings for font family `cmss' (encoding: OT1). For optimal results, create family-specific settings. See the microtype manual for details. (microtype)
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::124::0::Overfull \hbox (17.0pt too wide) in paragraph at lines 124--124
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::125::0::   Font shape `OMS/cmr/m/n' in size <7> not available Font shape `OMS/cmsy/m/n' tried instead.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::131::0::Underfull \hbox (badness 10000) in paragraph at lines 131--134
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::135::0::Underfull \hbox (badness 10000) in paragraph at lines 135--140
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::154::0::Underfull \hbox (badness 10000) in paragraph at lines 154--157
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::159::0::Overfull \hbox (17.0pt too wide) in paragraph at lines 159--159
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::161::0::   Try loading font information for OML+cmr.
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/base/omlcmr.fd::0::0::Input File
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::161::0::   Font shape `OML/cmr/m/n' in size <7> not available Font shape `OML/cmm/m/it' tried instead.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::186::0::Underfull \hbox (badness 10000) in paragraph at lines 186--190
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::192::0::Overfull \hbox (17.0pt too wide) in paragraph at lines 192--192
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::228::0::Underfull \hbox (badness 10000) in paragraph at lines 228--230
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::231::0::Underfull \hbox (badness 10000) in paragraph at lines 231--236
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::237::0::Underfull \hbox (badness 10000) in paragraph at lines 237--239
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::253::0::Underfull \hbox (badness 10000) in paragraph at lines 253--256
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::288::0::Underfull \hbox (badness 10000) in paragraph at lines 288--290
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::301::0::Underfull \hbox (badness 10000) in paragraph at lines 301--303
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::316::0::Underfull \hbox (badness 10000) in paragraph at lines 316--318
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::331::0::Underfull \hbox (badness 10000) in paragraph at lines 331--333
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::365::0::Citation `vpp_paper' on page 18 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::364::0::Underfull \hbox (badness 10000) in paragraph at lines 364--366
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::367::0::Underfull \hbox (badness 10000) in paragraph at lines 367--370
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::411::0::Underfull \hbox (badness 10000) in paragraph at lines 411--416
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::468::0::Underfull \hbox (badness 10000) in paragraph at lines 468--470
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::477::0::Underfull \hbox (badness 10000) in paragraph at lines 477--482
+Input File::pdftex.def::0::0::Input File
+Input File::pdftex.def::0::0::Input File
+LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::0::0::`!h' float specifier changed to `!ht'.
+Input File::pdftex.def::0::0::Input File
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::587::0::Underfull \hbox (badness 10000) in paragraph at lines 587--592
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::622::0::Underfull \hbox (badness 10000) in paragraph at lines 622--625
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::628::0::Underfull \hbox (badness 10000) in paragraph at lines 628--631
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::631::0::Overfull \hbox (17.0pt too wide) in paragraph at lines 631--631
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::638::0::Underfull \hbox (badness 10000) in paragraph at lines 638--639
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::641::0::Overfull \hbox (17.0pt too wide) in paragraph at lines 641--641
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::646::0::Underfull \hbox (badness 10000) in paragraph at lines 646--648
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::650::0::Overfull \hbox (17.0pt too wide) in paragraph at lines 650--650
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::655::0::Underfull \hbox (badness 10000) in paragraph at lines 655--658
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::660::0::Overfull \hbox (17.0pt too wide) in paragraph at lines 660--660
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::667::0::Underfull \hbox (badness 10000) in paragraph at lines 667--669
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::671::0::Overfull \hbox (17.0pt too wide) in paragraph at lines 671--671
+Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::683::0::Reference `ap:example_listings' on page 23 undefined.
+Input File::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::0::0::Input File
+Input File::/home/pascal/ownCloud/MA/Code/tex/ch_outlook.tex::0::0::Input File
+Input File::/home/pascal/ownCloud/MA/Code/tex/main.bbl::0::0::Input File
+Input File::/home/pascal/ownCloud/MA/Code/tex/.tmp/LgLOQb/main.brf::0::0::Input File
+ LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.bbl::3::0::Empty `thebibliography' environment.
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::96::0::Empty hook `BeforeClearDocument'. (atveryend)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::96::0::Empty hook `AfterLastShipout'. (atveryend)
+Input File::/home/pascal/ownCloud/MA/Code/tex/main.aux::0::0::Input File
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::96::0::Executing hook `AtVeryEndDocument'. (atveryend)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::96::0::Executing hook `AtEndAfterFileList'. (atveryend)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::File `main.out' has not changed. Checksum: 859E6B2E93CDEC1429985394D90B1A6D;4309. (rerunfilecheck)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::File `main.brf' has not changed. Checksum: <no file>. (rerunfilecheck)
+LaTeX Font Warning::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::Some font shapes were not available, defaults substituted.
+LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::There were undefined references.
+LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::There were multiply-defined labels.
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::96::0::Empty hook `AtVeryVeryEnd'. (atveryend)

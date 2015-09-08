@@ -29,7 +29,6 @@ struct Manifold< SPD, N> {
 	static const bool non_isometric_embedding;
 	
 	// Scalar type of manifold
-	//typedef double scalar_type;
 	typedef double scalar_type;
 	typedef double dist_type;
 	typedef std::complex<double> complex_type;
@@ -41,8 +40,6 @@ struct Manifold< SPD, N> {
 	typedef const value_type&						cref_type;
 	typedef std::vector<value_type, Eigen::aligned_allocator<value_type> >	value_list; 
 	
-
-
 	// Tangent space typedefs
 	typedef Eigen::Matrix <scalar_type, N * N, N * (N + 1) / 2>   tm_base_type;
 	typedef tm_base_type&					    tm_base_ref_type;

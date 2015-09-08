@@ -1,5 +1,7 @@
 \documentclass[a4paper,10pt]{report}
 
+\usepackage[a4paper, margin=3cm]{geometry}
+
 % Load ``float'' before ``hyperref`` before ''algorithm``
 % Note: ''algorithm`` would load ''float`` by itself
 \usepackage{float}
@@ -11,10 +13,12 @@
 \input{./header_listing.tex}
 
 \usepackage[utf8x]{inputenc}
-\usepackage{cancel}
 \usepackage{url}
 \usepackage{placeins}
 \usepackage{microtype}
+
+% Design of chapter pages
+\usepackage[Lenny]{fncychap}
 
 % Links in pdf
 \usepackage{color}
@@ -57,7 +61,7 @@ urlcolor=linkcol
 
 \tableofcontents
 \listoffigures
-%\listofalgorithms
+\listofalgorithms
 
 \clearemptydoublepage
 
@@ -69,17 +73,17 @@ urlcolor=linkcol
 
 \clearemptydoublepage
 
-%\input{./ch_analytic_solution.tex}
+\input{./ch_library.tex}
 
-%\clearemptydoublepage
+\clearemptydoublepage
 
-%\input{./ch_ladder_operators.tex}
+\input{./ch_numerical_experiments.tex}
 
-%\clearemptydoublepage
+\clearemptydoublepage
 
-%\input{./ch_parameters.tex}
+\input{./ch_outlook.tex}
 
-%\clearemptydoublepage
+\clearemptydoublepage
 
 \appendix
 %\input{./ap_integrals.tex}

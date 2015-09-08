@@ -1,0 +1,73 @@
+Input File::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::0::0::Input File
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::1::0::Environment chapter undefined. |\begin{chapter} {Theory} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::1::0::Missing \begin{document}. |\begin{chapter}{T heory} 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::1::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 1--3
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::4::0::Undefined control sequence. |\section {Riemannian Newton Method} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::4::0::Missing \begin{document}. |\section{R iemannian Newton Method} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::4::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 4--6
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::9::0::Undefined control sequence. |\section {Algorithms} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::9::0::Missing \begin{document}. |\section{A lgorithms} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::9::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 9--11
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::12::0::Undefined control sequence. |\subsection {IRLS} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::12::0::Missing \begin{document}. |\subsection{I RLS} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::12::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 12--14
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::17::0::Undefined control sequence. |\subsection {Proximal Point} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::17::0::Missing \begin{document}. |\subsection{P roximal Point} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::17::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 17--19
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::24::0::Undefined control sequence. |\section {Manifolds} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::24::0::Missing \begin{document}. |\section{M anifolds} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::24::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 24--26
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::27::0::Undefined control sequence. |\subsection {Euclidian} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::27::0::Missing \begin{document}. |\subsection{E uclidian} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::27::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 27--29
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::32::0::Undefined control sequence. |\subsection {Sphere $S^n$} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::32::0::Missing \begin{document}. |\subsection{S phere $S^n$} % (fold) 
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::32::0::   External font `cmex10' loaded for size <7>.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::32::0::   External font `cmex10' loaded for size <5>.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::32::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 32--34
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::32::0::Overfull \hbox (12.15164pt too wide) in paragraph at lines 32--34
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::37::0::Undefined control sequence. |\subsection {Special Orthogonal Group SO(N)} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::37::0::Missing \begin{document}. |\subsection{S pecial Orthogonal Group SO(N)} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::37::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 37--39
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::40::0::Undefined control sequence. |\subsubsection {Second derivatives of the distance function} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::40::0::Missing \begin{document}. |\subsubsection{S econd derivatives of the distance function} % (fold) 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::42::0::Undefined control sequence. |...roach and notation of Magnus \cite{magnus} . | <write> ...: Citation `\@citeb ' on page \thepage  \space undefined\on@line .
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::42::0::Citation `magnus' on page  undefined.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::44::0::Undefined control sequence. |...an be found in the appendix \ref{appendix} while here we only repres... | <write> ... Reference `appendix' on page \thepage  \space undefined\on@line .
+Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::44::0::Reference `appendix' on page  undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::40::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 40--46
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::40::0::Overfull \hbox (5.43053pt too wide) in paragraph at lines 40--46
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::40::0::Overfull \hbox (10.86105pt too wide) in paragraph at lines 40--46
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::48::0::Undefined control sequence. |...eft(\left(\log X^TY\right)^T\otimes\mathbm {1}_n\right) + \left(X\oti...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::48::0::Undefined control sequence. |...athbm{1}_n\right) + \left(X\otimes\mathbbm {1}_n \right)\operatorname...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::48::0::Undefined control sequence. |...X\otimes\mathbbm{1}_n \right)\operatorname {D}\log(X^TY) \left(Y^T\ot...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::48::0::Undefined control sequence. |...name{D}\log(X^TY) \left(Y^T\otimes\mathbbm {1}_n \right) K_{nn}\right],
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::49::0::Overfull \hbox (357.0176pt too wide) detected at line 49
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::49::0::Overfull \hbox (18.87971pt too wide) in paragraph at lines 49--51
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::49::0::Overfull \hbox (7.50002pt too wide) in paragraph at lines 49--51
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::49::0::Overfull \hbox (13.79967pt too wide) in paragraph at lines 49--51
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::52::0::Missing \begin{document}. |T he mixed derivative is given by 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::52::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 52--53
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::55::0::Undefined control sequence. |...}{\partial X\partial Y} = -2\left(\mathbbm {1}_n\otimes X \right)\ope...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::55::0::Undefined control sequence. |...mathbbm{1}_n\otimes X \right)\operatorname {D}\log(X^TY) \left(\mathb...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::55::0::Undefined control sequence. |...)\operatorname{D}\log(X^TY) \left(\mathbbm {1}_n\otimes X^T \right),
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::56::0::Overfull \hbox (227.78981pt too wide) detected at line 56
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::58::0::Undefined control sequence. |...ned to section \ref{seq:numerical_frechet} . | <write> ...eq:numerical_frechet' on page \thepage  \space undefined\on@line .
+Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::58::0::Reference `seq:numerical_frechet' on page  undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::56::0::Overfull \hbox (10.86105pt too wide) in paragraph at lines 56--59
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::65::0::Undefined control sequence. |\subsection {Symmetric Positive Definite Matrices SPD(N)} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::65::0::Missing \begin{document}. |\subsection{S ymmetric Positive Definite Matrices SPD(N)} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::65::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 65--67
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::68::0::Undefined control sequence. |\subsubsection {Second derivatives of the distance function} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::68::0::Missing \begin{document}. |\subsubsection{S econd derivatives of the distance function} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::68::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 68--70
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::71::0::Missing \begin{document}. |\begin{equation}  
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::71::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 71--71
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::73::0::Undefined control sequence. |...times X^{-\frac{1}{2}}\right)\operatorname {D}\log\left(X^{-\frac{1}{...
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::74::0::Overfull \hbox (305.16241pt too wide) detected at line 74
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::80::0::Undefined control sequence. |\subsection {Grassmanian Gr(N,P)} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::80::0::Missing \begin{document}. |\subsection{G rassmanian Gr(N,P)} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::80::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 80--82
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::90::0::\begin{document} ended by \end{chapter}. |\end{chapter}  
+LaTeX Error::...e/pascal/ownCloud/MA/Code/tex/ch_theory.tex::0::0::Emergency stop. (job aborted, no legal \end found)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::0::0:: ==> Fatal error occurred, no output PDF file produced! 

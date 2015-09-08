@@ -1,5 +1,276 @@
 \begin{chapter}{Theory}
 \label{ch:theory}
 
+\section{Riemannian Newton Method} % (fold)
+\label{sec:Riemannian Newton Method}
+
+% section Riemannian Newton Method (end)
+
+\section{Algorithms} % (fold)
+\label{sec:Algorithms}
+
+\subsection{IRLS} % (fold)
+\label{sub:IRLS}
+
+% subsection IRLS (end)
+
+\subsection{Proximal Point} % (fold)
+\label{sub:Proximal Point}
+
+% subsection Proximal Point (end)
+
+% section Algorithms (end)
+
+\section{Manifolds} % (fold)
+\label{sec:Manifolds}
+
+\subsection{Euclidian} % (fold)
+\label{sub:Euclidian}
+
+% subsection Euclidian (end)
+
+\subsection{Sphere $S^n$} % (fold)
+\label{sub:Sphere}
+
+% subsection Sphere (end)
+
+\subsection{Special Orthogonal Group SO(n)} % (fold)
+\label{sub:SO(N)}
+
+\subsubsection{Second derivatives of the distance function} % (fold)
+\label{ssub:Second derivatives of the distance function}
+For the computation of the second derivatives we can take the expression obtained using the above theorem as a starting point and follow the approach and notation of Magnus \cite{magnus}. 
+This allows us to express the derivatives as combinations of simple Kronecker product of the arguments which also is very straightforward and compact to implement. 
+The detailed derivations can be found in the appendix \ref{appendix} while here we only represent the final results. \\
+For the second derivative with respect to the first argument one readily arrives at
+\begin{equation}
+    \label{eq:son_xx_der}
+    \frac{\partial^2 d^2(X,Y)}{\partial X\partial X} = -2\left[\left(\left(\log X^TY\right)^T\otimes\mathbbm{1}_n\right) + \left(\mathbbm{1}_n\otimes X \right)\operatorname{D}\log(X^TY) \left(Y^T\otimes\mathbbm{1}_n \right) K_{nn}\right],
+\end{equation}
+where $K_{nn}$ denotes the commutator matrix which transforms the columnwise vectorization of a matrix $A$ to the vectorization of its tranpose $A^T$.\\
+
+The mixed derivative is given by
+\begin{equation}
+    \label{eq:son_xy_der}
+    \frac{\partial^2 d^2(X,Y)}{\partial X\partial Y} = -2\left(\mathbbm{1}_n\otimes X \right)\operatorname{D}\log(X^TY) \left(\mathbbm{1}_n\otimes X^T \right),
+\end{equation}
+These expressions are quasi-analytical: Matrix logarithms, exponentials and the Frechet derivative of the logarithms need to be evaluated numerically. Details concerning the 
+implementation of the latter are postponed to section \ref{seq:frechetderivatives}.
+
+% subsubsection Second derivatives of the distance function (end)
 
 
+% subsection SO(N) (end)
+
+\subsection{Symmetric Positive Definite Matrices SPD(n)} % (fold)
+\label{sub:SPD(N)}
+
+\subsubsection{Second derivatives of the distance function} % (fold)
+\label{ssub:Second derivatives of the distance function}
+For the SPD matrices we proceed in the same way as for the orthogonal group and obtain
+\begin{align}
+    \label{eq:spd_xx_der}
+    T_1 &= \sqrt{X}\\
+    T_2 &= T^{-1}\\
+    T_3 &= T_2YT_2\\
+    T_4 &= \log(T_3) \\
+    \frac{\partial^2 d^2(X,Y)}{\partial X\partial X} &= 
+    2\left[
+	\left(T_2T_4^T\otimes\mathbbm{1}\right)
+	+\left(\mathbbm{1}\otimes T_2T_4\right) 
+	+\left(T_2\otimes T_2\right)\operatorname{D}\log(T_3)\left( \left(T_2Y\otimes\mathbbm{1}\right) + \left(\mathbbm{1}\otimes T_2Y\right)\right)
+    \right]\left(T_2\otimes T_2\right)\operatorname{D}(\sqrt(X))
+\end{align}
+and for the mixed derivatives
+\begin{equation}
+    \label{eq:spd_xy_der}
+    \frac{\partial^2 d^2(X,Y)}{\partial X\partial Y} = -2\left(X^{-\frac{1}{2}}\otimes X^{-\frac{1}{2}}\right)\operatorname{D}\log\left(X^{-\frac{1}{2}}Y X^{-\frac{1}{2}}\right)\left(X^{-\frac{1}{2}}\otimes X^{-\frac{1}{2}}\right)
+\end{equation}
+
+% subsubsection Second derivatives of the distance function (end)
+
+% subsection SPD(N) (end)
+
+\subsection{Grassmanian Gr(N,P)} % (fold)
+\label{sub:Grassmanian Gr(N,P)}
+
+\subsubsection{Distance function} % (fold)
+\label{ssub:Distance function}
+Using the previously defined exponential map, one can easily define a geodesic distance function on the Grassmann manifold which is induced by its Riemannian metric
+\begin{equation}
+    g(X,Y) = \tr X^TY
+\end{equation}
+Then the distance function is given by the principal angles $\theta_i$ between the subspaces 
+\begin{equation}
+    \label{eq:gr_geod_dist}
+    d_g^2(X,Y) = \norm{\theta}_2^2=\sum_{i=1}^p\theta_i^2,
+\end{equation}
+where the the principal angles can be obtained by computing the singular value decomposition of $X^TY$.
+
+\begin{align}
+    X^TY &= U\Sigma V^T = U\cos\Theta V^T\\
+    \Sigma &= \operatorname{diag} (\sigma_1,\cdots,\sigma_p)\\
+    \Theta &= \operatorname{diag} (\theta_1,\cdots,\theta_p) = \operatorname{diag} (\arccos\sigma_1,\cdots,\arccos\sigma_p)
+\end{align}
+
+The distance function (\ref{eq:gr_geod_dist}) has the disadvantage that due to the occurence of the cosine no analytic derivatives can be computed.\\
+
+To avoid this problem, we follow Absil's \cite{absil_GR} approach and choose an equivalent norm, the so-called projection Frobenius norm, given by
+
+\begin{equation}
+    d_P^2(X,Y) = \frac{1}{2}\norm{XX^T-YY^T}_{F}^{2} = \sum_{i=1}^p\sin^2\theta_i
+\end{equation}
+
+
+% subsubsection Distance function (end)
+
+
+\subsubsection{First derivatives of the distance function} % (fold)
+\label{ssub:First derivatives of the distance function}
+
+\begin{equation}
+    \label{eq:gr_x_der}
+    \frac{\partial d^2(X,Y)}{\partial X} = 2\left(XX^T-YY^T\right)X
+\end{equation}
+
+
+% subsubsection First derivatives of the distance function (end)
+
+\subsubsection{Second derivatives of the distance function} % (fold)
+\label{ssub:Second derivatives of the distance function}
+
+\begin{equation}
+    \label{eq:gr_xx_der}
+    \frac{\partial^2 d^2(X,Y)}{\partial X\partial X} = 2
+    \left[
+	\left(X^TX\otimes \mathbbm{1}_{n}\right) 
+	+ \left(\mathbbm{1}_p\otimes (XX^T-YY^T)\right)
+	+ \left(X^T\otimes X\right)K_{np}
+    \right]
+\end{equation}
+
+The mixed derivative is given by
+\begin{equation}
+    \label{eq:gr_xy_der}
+    \frac{\partial^2 d^2(X,Y)}{\partial X\partial Y} = -2\left[\left(X^TY\otimes \mathbbm{1}_{n}\right) + \left(X^T\otimes Y\right)K_{np}\right]
+\end{equation}
+
+
+% subsubsection Second derivatives of the distance function (end)
+
+
+% subsection Grassmanian Gr(N,P) (end)
+
+% section Manifolds (end)
+
+\section{Fr\'{e}chet derivatives of matrix logarithm and square root} % (fold)
+\label{sec:frechetderivatives}
+To use the derivative expression computed above we need the so called Kronecker form of the Fr\'{e}chet derivative. The Fr\'{e}chet derivative
+of a matrix valued function $f:\mathbb{R}^{n\times n}\to\mathbb{R}^{n\times n}$ at a point $X\in\mathbb{R}^{n\times n}$ is a linear function mapping $E\in\mathbb{R}^{n\times n}$
+to $L_f(X,E)\in \mathbb{R}^{n\times n}$ such that
+\begin{equation}
+    f(X+E) - f(X) - L_f(X,E) = \mathcal{o}(\norm{E}).
+\end{equation}
+Chain rule and inverse function theorem also hold for the Fr\'{e}chet derivative:
+\begin{align}
+    L_{f\circ g}(X, E) &= L_{f}(g(X)),L_{g}(X,E))\\
+    L_{f}(X, L_{f^{-1}}(f(X),E)) &= E
+\end{align}
+
+As we did in our formulation of the derivatives of the distance function, it can also be represented in the Kronecker form in which is represented as map
+$K_f:\mathbb{R}^{n^2}\to\mathbb{R}^{n^2}$, such that $K_f(X)\in \mathbb{R}^{n^2\times n^2}$ is defined by
+\begin{equation}
+    \label{eq:kronckerform}
+    \operatorname{vec}(L_f(X,E))=K_f(X)\operatorname{vec}(E)
+\end{equation}
+where $\operatorname{vec}:\mathbb{R}^{n\times n}\to\mathbb{R}^{n^2}$ denotes the columnwise vectorization operator.
+
+\subsection{Derivative of the matrix square root} % (fold)
+\label{sub:Derivative of the matrix square root}
+We start by considering the Fr\'{e}chet derivative of $f(X)=X^2$, which is given by
+\begin{equation}
+    L_{X^2}(X,E) = XE + EX.
+\end{equation}
+Applying the inverse function theorem consequently leads to
+\begin{equation}
+    L_{X^2}(X^{\frac{1}{2}},L_{X^{\frac{1}{2}}}(X,E))=X^{\frac{1}{2}}L_{X^{\frac{1}{2}}}(X,E) + L_{X^{\frac{1}{2}}}(X,E)X^{\frac{1}{2}} = E,
+\end{equation}
+where the last equality shows that the Fr\'{e}chet derivative of the matrix square root $L_{X^{\frac{1}{2}}}(X,E)$ satisfies the Sylvester equation 
+\begin{equation}
+    \label{eq:sylvester}
+    X^{\frac{1}{2}}L + LX^{\frac{1}{2}} = E,\quad L:=L_{X^{\frac{1}{2}}}(X,E).
+\end{equation}
+
+The Kronecker representation $K_{X^{\frac{1}{2}}}$ can now be obtained be using the vectorization operator on both sides of the equation and rearrange the term
+to the form (\ref{eq:kronckerform}) which leads to
+\begin{equation}
+    K_{X^{\frac{1}{2}}}(X)=\left[\left(\mathbbm{1}\otimes X^{\frac{1}{2}}\right)+\left(X^{\frac{1}{2}T}\otimes \mathbbm{1}\right) \right]^{-1}.
+\end{equation}
+However, this straightforward approach has the disadvantage that the inverse of a $n^2\times n^2$ matrix need to be computed which has complexity
+$\mathcal{O}((n^2)^3)=\mathcal{O}(n^6)$. In addition to that, the inverse needs to be found explicitly which is not numerically stable in general.\\
+
+The Sylvester equation (\ref{eq:sylvester}), on the other hand, can be solved with $\mathcal{O}(n^3)$ operations via Schur transformation. We choose $E^{ij}$, the single-entry
+matrices having 1 at $(i,j)$ and zero everywhere else, as a basis for $\mathbb{R}^{n\times n}$ and solve the Sylvester equation for each of the $n^2$ 
+basis matrix elements. By that, the total complexity can be reduced to $n^2\mathcal{O}(n^3)=\mathcal{O}(n^5)$ and we avoid the 
+potentially problematic explicit computation of inverses altogether.\\
+
+We then obtain the final Kronecker form of the derivative by constructing its rows from the vectorized, tranposed Fr\'{e}chet derivatives:
+\begin{equation}
+    \left(K_{X^{\frac{1}{2}}}\right)_{in + j,\cdot} = \operatorname{vec}\left(L_{X^{\frac{1}{2}}}(X,E^{ij})^T\right) 
+\end{equation}
+
+\subsection{Derivative of the matrix logarithm} % (fold)
+\label{sub:Derivative of the matrix logarithm}
+For the logarithm we follow the approach described by Al-Mohy et al \cite{almohy_frechetlog} which is based on the differentiation of the Pad\'{e} approximant to $\log(1+X)$.
+Since this is only applicable if the norm of $X$ is sufficiently small, the  use of an inverse scaling and squaring technique based on the relation
+\begin{equation}
+    \log(X) = 2\log(X^{\frac{1}{2}})
+\end{equation}
+is necessary.\\
+
+Application of the chain rule leads to
+\begin{equation}
+    L_{\log}(X,E_0) = 2\log\left(X^{\frac{1}{2}},L_{X^{\frac{1}{2}}}(X,E_0)\right).
+\end{equation}
+The second argument on the right hand side can again be written as solution $E_1:=L_{X^{\frac{1}{2}}}(A,E_0)$ of an Sylvester-type equation
+\begin{equation}
+    X^{\frac{1}{2}}E_1+E_{1}X^{\frac{1}{2}}=E_0.
+\end{equation}
+Repeating the procedure $s$ times results in
+\begin{align}
+    L_{\log}(X,E_0)&=2^sL_{\log}\left(X^{\frac{1}{2^s}},E_s\right)\\
+    X^{\frac{1}{2^{i}}}E_i+E_iX^{\frac{1}{2^{i}}}&=E_{i-1},\quad i=1,\ldots,s
+\end{align}
+where $E_s$ is obtained by successivly solving the set of Sylvester equations defined in the second line.\\
+
+Finally, the Pad\'{e} approximant of order $m$ in its partial fraction form \cite{highham_pade} is given by
+\begin{equation}
+    \label{eq:pade_log}
+    r_m(X) = \sum_{j=1}^{m}\alpha_j^{(m)}(\mathbbm{1}+\beta_j^{(m)}X)^{-1}X
+\end{equation}
+where $\alpha_{j}^{(m)},\beta_{j}^{(m)}\in (0,1)$ are the $m$-point Gauss-Legendre quadrature weights and nodes.\\
+
+The derivative of (\ref{eq:pade_log}) is then easily computed as 
+\begin{equation}
+    L_{r_m}(X,E) = \sum_{j=1}^m\alpha_j^{(m)}(\mathbbm{1}+\beta_j^{(m)}X)^{-1}E(\mathbbm{1}+\beta_j^{(m)}X)^{-1}
+\end{equation}
+which leads to the final approximation of the matrix logarithm derivative, 
+\begin{equation}
+    \label{eq:dlog_approx}
+    L_{\log}(X,E)\approx 2^{s}L_{r_m}\left(X^{\frac{1}{2^s}}-\mathbbm{1},E_s \right).
+\end{equation}
+
+For the implementation of (\ref{eq:dlog_approx}) we use algorithm 5.1 from \cite{almohy_frechetlog} with fixed $m=7$.
+The Kronecker representation is then constructed as in the square root case.
+% subsection Derivative of the matrix logarithm (end)
+
+
+
+
+% subsection Derivative of the matrix square root (end)
+
+
+% section Frechet derivative of the matrix logarithm and square root (end)
+
+
+\end{chapter}
