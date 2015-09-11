@@ -1,0 +1,313 @@
+Input File::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::0::0::Input File
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::1::0::Environment chapter undefined. |\begin{chapter} {Numerical Experiments} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::1::0::Missing \begin{document}. |\begin{chapter}{N umerical Experiments} 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::1::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 1--3
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::4::0::Undefined control sequence. |\section {Color image denoising} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::4::0::Missing \begin{document}. |\section{C olor image denoising} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::4::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 4--6
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::7::0::Undefined control sequence. |\subsection {Grayscale} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::7::0::Missing \begin{document}. |\subsection{G rayscale} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::7::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 7--10
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::11::0::Undefined control sequence. |\subsection {Color} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::11::0::Missing \begin{document}. |\subsection{C olor} % (fold) 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::14::0::Environment figure undefined. |\begin{figure} [h!] 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::16::0::Undefined control sequence. |    \subfloat [][Original]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::18::0::Undefined control sequence. |	\includegraphics [width=0.325\linewidth]{./figures/experiments/Lena.jpg}
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::18::0::Missing number, treated as zero. |	\includegraphics[width=0.325\linewidth] {./figures/experiments/Lena.jpg}
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::18::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.325\linewidth] {./figures/experiments/Lena.jpg}
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::20::0::Undefined control sequence. |    \subfloat [][Noised]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::22::0::Undefined control sequence. |	\includegraphics [width=0.325\linewidth]{./figures/experiments/Lena_noi...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::22::0::Missing number, treated as zero. |	\includegraphics[width=0.325\linewidth] {./figures/experiments/Lena_noi...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::22::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.325\linewidth] {./figures/experiments/Lena_noi...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::22::0::Missing $ inserted.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::22::0::   External font `cmex10' loaded for size <7>.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::22::0::   External font `cmex10' loaded for size <5>.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::22::0::Extra }, or forgotten $. |...dth]{./figures/experiments/Lena_noise.jpg} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::23::0::Extra }, or forgotten $. |    } 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::24::0::Undefined control sequence. |    \subfloat [][Denoised]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::26::0::Undefined control sequence. |	\includegraphics [width=0.325\linewidth]{./figures/experiments/denoised...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::26::0::Missing number, treated as zero. |	\includegraphics[width=0.325\linewidth] {./figures/experiments/denoised...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::26::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.325\linewidth] {./figures/experiments/denoised...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::27::0::There's no line here to end. |    }\\  
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::27::0::Missing $ inserted.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::11::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 11--27
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::11::0::Overfull \hbox (370.54759pt too wide) in paragraph at lines 11--27
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::28::0::\caption outside float. |    \caption [Denoising linear vectorial]{Denoising of a color images us... 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::28::0::Missing \begin{document}. |    \caption[ Denoising linear vectorial]{Denoising of a color images us... 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::28::0::Undefined control sequence. |...which corresponds to the manifold $\mathbb {R}^3$
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::29::0::Undefined control sequence. |	\subref {fig:application_color1_orig} Original image "Lena.jpg", $361\t...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::29::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::29::0::Extra }, or forgotten $. |	\subref{fig:application_color1_orig} Original image "Lena.jpg", $361\t...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::29::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::30::0::Undefined control sequence. |	\subref {fig:application_color1_noise} Componentwise gaussian noise $\m...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::30::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::30::0::Extra }, or forgotten $. |	\subref{fig:application_color1_noise} Componentwise gaussian noise $\m...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::30::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::31::0::Undefined control sequence. |	\subref {fig:application_color1_denoised} Denoised, IRLS with $\lambda=...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::31::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::31::0::Extra }, or forgotten $. |	\subref{fig:application_color1_denoised} Denoised, IRLS with $\lambda=...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::31::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::34::0::\begin{document} ended by \end{figure}. |\end{figure}  
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::34::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::34::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::34::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::34::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::34::0::Missing } inserted. |\end{figure} 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::28::0::Overfull \hbox (12.15628pt too wide) in paragraph at lines 28--35
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::28::0::Overfull \hbox (186.9604pt too wide) in paragraph at lines 28--35
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::28::0::Overfull \hbox (202.14194pt too wide) in paragraph at lines 28--35
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::28::0::Overfull \hbox (5.00002pt too wide) in paragraph at lines 28--35
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::28::0::Overfull \hbox (16.62842pt too wide) in paragraph at lines 28--35
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::28::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 28--35
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::28::0::Overfull \hbox (174.40112pt too wide) in paragraph at lines 28--35
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::28::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 28--35
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::28::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 28--35
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::28::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 28--35
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::36::0::Undefined control sequence. |\subsection {Inpainting} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::36::0::Missing \begin{document}. |\subsection{I npainting} % (fold) 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::38::0::Environment figure undefined. |\begin{figure} [h!] 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::40::0::Undefined control sequence. |    \subfloat [][Original]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::42::0::Undefined control sequence. |	\includegraphics [width=0.25\linewidth]{./figures/experiments/Pepper.jpg}
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::42::0::Missing number, treated as zero. |	\includegraphics[width=0.25\linewidth] {./figures/experiments/Pepper.jpg}
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::42::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.25\linewidth] {./figures/experiments/Pepper.jpg}
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::44::0::Undefined control sequence. |    \subfloat [][Damaged]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::46::0::Undefined control sequence. |	\includegraphics [width=0.25\linewidth]{./figures/experiments/Pepper_da...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::46::0::Missing number, treated as zero. |	\includegraphics[width=0.25\linewidth] {./figures/experiments/Pepper_da...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::46::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.25\linewidth] {./figures/experiments/Pepper_da...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::46::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::46::0::Extra }, or forgotten $. |...dth]{./figures/experiments/Pepper_dam.png} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::47::0::Extra }, or forgotten $. |    } 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::48::0::Undefined control sequence. |    \subfloat [][First guess]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::50::0::Undefined control sequence. |	\includegraphics [width=0.25\linewidth]{./figures/experiments/firstgues...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::50::0::Missing number, treated as zero. |	\includegraphics[width=0.25\linewidth] {./figures/experiments/firstgues...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::50::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.25\linewidth] {./figures/experiments/firstgues...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::52::0::Undefined control sequence. |    \subfloat [][Restored]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::54::0::Undefined control sequence. |	\includegraphics [width=0.25\linewidth]{./figures/experiments/denoised_...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::54::0::Missing number, treated as zero. |	\includegraphics[width=0.25\linewidth] {./figures/experiments/denoised_...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::54::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.25\linewidth] {./figures/experiments/denoised_...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::55::0::There's no line here to end. |    }\\  
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::55::0::Missing $ inserted.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::36::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 36--55
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::36::0::Overfull \hbox (712.45071pt too wide) in paragraph at lines 36--55
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::56::0::\caption outside float. |    \caption [Denoising linear vectorial]{Denoising of a color images us... 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::56::0::Missing \begin{document}. |    \caption[ Denoising linear vectorial]{Denoising of a color images us... 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::56::0::Undefined control sequence. |...which corresponds to the manifold $\mathbb {R}^3$
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::57::0::Undefined control sequence. |	\subref {fig:application_colorinpaint1_orig} Original image "Pepper.png...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::57::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::57::0::Extra }, or forgotten $. |	\subref{fig:application_colorinpaint1_orig} Original image "Pepper.png...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::57::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::58::0::Undefined control sequence. |	\subref {fig:application_colorinpaint1_dam} Damaged by overpainting wit...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::58::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::58::0::Extra }, or forgotten $. |	\subref{fig:application_colorinpaint1_dam} Damaged by overpainting wit...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::59::0::Undefined control sequence. |	\subref {fig:application_colorinpaint1_guess} First guess via component...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::60::0::Undefined control sequence. |	\subref {fig:application_colorinpaint1_restored} Restored, IRLS with $\...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::60::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::63::0::\begin{document} ended by \end{figure}. |\end{figure}  
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::63::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::63::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::63::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::63::0::Missing } inserted. |\end{figure} 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::56::0::Overfull \hbox (12.15628pt too wide) in paragraph at lines 56--64
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::56::0::Overfull \hbox (229.76328pt too wide) in paragraph at lines 56--64
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::56::0::Overfull \hbox (912.08853pt too wide) in paragraph at lines 56--64
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::56::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 56--64
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::56::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 56--64
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::56::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 56--64
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::67::0::Undefined control sequence. |\subsection {Recolorization} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::67::0::Missing \begin{document}. |\subsection{R ecolorization} % (fold) 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::69::0::Environment figure undefined. |\begin{figure} [h!] 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::71::0::Undefined control sequence. |    \subfloat [][Original]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::73::0::Undefined control sequence. |	\includegraphics [width=0.25\linewidth]{./figures/experiments/Basil.jpg}
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::73::0::Missing number, treated as zero. |	\includegraphics[width=0.25\linewidth] {./figures/experiments/Basil.jpg}
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::73::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.25\linewidth] {./figures/experiments/Basil.jpg}
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::75::0::Undefined control sequence. |    \subfloat [][Colors removed]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::77::0::Undefined control sequence. |	\includegraphics [width=0.25\linewidth]{./figures/experiments/colorless...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::77::0::Missing number, treated as zero. |	\includegraphics[width=0.25\linewidth] {./figures/experiments/colorless...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::77::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.25\linewidth] {./figures/experiments/colorless...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::77::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::77::0::Extra }, or forgotten $. |..../figures/experiments/colorless_Basil.jpg} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::78::0::Extra }, or forgotten $. |    } 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::79::0::Undefined control sequence. |    \subfloat [][First guess]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::81::0::Undefined control sequence. |	\includegraphics [width=0.25\linewidth]{./figures/experiments/recolored...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::81::0::Missing number, treated as zero. |	\includegraphics[width=0.25\linewidth] {./figures/experiments/recolored...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::81::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.25\linewidth] {./figures/experiments/recolored...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::83::0::Undefined control sequence. |    \subfloat [][Recolored]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::85::0::Undefined control sequence. |	\includegraphics [width=0.25\linewidth]{./figures/experiments/recolored...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::85::0::Missing number, treated as zero. |	\includegraphics[width=0.25\linewidth] {./figures/experiments/recolored...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::85::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.25\linewidth] {./figures/experiments/recolored...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::86::0::There's no line here to end. |    }\\  
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::86::0::Missing $ inserted.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::67::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 67--86
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::67::0::Overfull \hbox (672.17987pt too wide) in paragraph at lines 67--86
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::87::0::\caption outside float. |    \caption [Recolorization]{Recolorization using color inpainting in t... 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::87::0::Missing \begin{document}. |    \caption[ Recolorization]{Recolorization using color inpainting in t... 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::87::0::Undefined control sequence. |... model, corresponding to $S^2\times\mathbb {R}$
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::88::0::Undefined control sequence. |	\subref {fig:application_colorinpaint1_orig} Original image "Basil.jpg"...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::88::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::88::0::Extra }, or forgotten $. |	\subref{fig:application_colorinpaint1_orig} Original image "Basil.jpg"...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::88::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::89::0::Undefined control sequence. |	\subref {fig:application_colorinpaint1_colorless} Image with a ration o...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::89::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::89::0::Extra }, or forgotten $. |...f{fig:application_colorinpaint1_colorless} Image with a ration of ap...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::90::0::Undefined control sequence. |	\subref {fig:application_colorinpaint1_guess} First guess via component...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::91::0::Undefined control sequence. |	\subref {fig:application_colorinpaint1_restored} Recolored, IRLS with $...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::91::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::94::0::\begin{document} ended by \end{figure}. |\end{figure}  
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::94::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::94::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::94::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::94::0::Missing } inserted. |\end{figure} 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::87::0::Overfull \hbox (18.97224pt too wide) in paragraph at lines 87--96
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::87::0::Overfull \hbox (7.67015pt too wide) in paragraph at lines 87--96
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::87::0::Overfull \hbox (221.71944pt too wide) in paragraph at lines 87--96
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::87::0::Overfull \hbox (1030.76195pt too wide) in paragraph at lines 87--96
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::87::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 87--96
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::87::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 87--96
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::87::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 87--96
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::97::0::Undefined control sequence. |\subsection {Volume images} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::97::0::Missing \begin{document}. |\subsection{V olume images} % (fold) 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::99::0::Environment figure undefined. |\begin{figure} [h!] 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::101::0::Undefined control sequence. |    \subfloat [][Original]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::103::0::Undefined control sequence. |	\includegraphics [width=0.325\linewidth]{./figures/experiments/VolumeI...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::103::0::Missing number, treated as zero. |	\includegraphics[width=0.325\linewidth] {./figures/experiments/VolumeI...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::103::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.325\linewidth] {./figures/experiments/VolumeI...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::105::0::Undefined control sequence. |    \subfloat [][Noised]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::107::0::Undefined control sequence. |	\includegraphics [width=0.325\linewidth]{./figures/experiments/noisyVo...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::107::0::Missing number, treated as zero. |	\includegraphics[width=0.325\linewidth] {./figures/experiments/noisyVo...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::107::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.325\linewidth] {./figures/experiments/noisyVo...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::109::0::Undefined control sequence. |    \subfloat [][Denoised]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::111::0::Undefined control sequence. |	\includegraphics [width=0.325\linewidth]{./figures/experiments/denoise...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::111::0::Missing number, treated as zero. |	\includegraphics[width=0.325\linewidth] {./figures/experiments/denoise...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::111::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.325\linewidth] {./figures/experiments/denoise...
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::97::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 97--112
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::113::0::\caption outside float. |    \caption [Denoising 3D Grayscale Volume Data]{Denoising a 3D graysc... 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::113::0::Missing \begin{document}. |    \caption[ Denoising 3D Grayscale Volume Data]{Denoising a 3D graysc... 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::114::0::Undefined control sequence. |	\subref {fig:application_volume1_orig} Original image "BostonTeapot.ra...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::114::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::114::0::Extra }, or forgotten $. |	\subref{fig:application_volume1_orig} Original image "BostonTeapot.ra...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::114::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::115::0::Undefined control sequence. |	\subref {fig:application_volume1_noise} Componentwise gaussian noise $...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::115::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::115::0::Extra }, or forgotten $. |	\subref{fig:application_volume1_noise} Componentwise gaussian noise $...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::115::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::116::0::Undefined control sequence. |	\subref {fig:application_volume1_denoised} Denoised, Proximal point wi...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::116::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::116::0::Extra }, or forgotten $. |	\subref{fig:application_volume1_denoised} Denoised, Proximal point wi...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::116::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::119::0::\begin{document} ended by \end{figure}. |\end{figure}  
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::119::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::119::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::119::0::Missing } inserted. |\end{figure} 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::113::0::Overfull \hbox (247.58989pt too wide) in paragraph at lines 113--121
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::113::0::Overfull \hbox (15.00005pt too wide) in paragraph at lines 113--121
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::113::0::Overfull \hbox (212.34377pt too wide) in paragraph at lines 113--121
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::113::0::Overfull \hbox (5.00002pt too wide) in paragraph at lines 113--121
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::113::0::Overfull \hbox (16.62842pt too wide) in paragraph at lines 113--121
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::113::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 113--121
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::113::0::Overfull \hbox (225.02808pt too wide) in paragraph at lines 113--121
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::113::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 113--121
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::113::0::Overfull \hbox (10.00003pt too wide) in paragraph at lines 113--121
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::124::0::Undefined control sequence. |\section {SO(2) and SO(3) images data} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::124::0::Missing \begin{document}. |\section{S O(2) and SO(3) images data} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::124::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 124--126
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::127::0::Undefined control sequence. |\subsection {Synthetic data} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::127::0::Missing \begin{document}. |\subsection{S ynthetic data} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::127::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 127--130
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::131::0::Undefined control sequence. |\subsection {Fingerprint orientation data} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::131::0::Missing \begin{document}. |\subsection{F ingerprint orientation data} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::131::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 131--134
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::135::0::Undefined control sequence. |\subsection {Calculation of a dense flow field} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::135::0::Missing \begin{document}. |\subsection{C alculation of a dense flow field} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::135::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 135--138
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::142::0::Undefined control sequence. |\section {SPD(3) image data} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::142::0::Missing \begin{document}. |\section{S PD(3) image data} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::142::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 142--144
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::145::0::Undefined control sequence. |\subsection {Diffusion Tensor MRI images} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::145::0::Missing \begin{document}. |\subsection{D iffusion Tensor MRI images} % (fold) 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::148::0::Environment figure undefined. |\begin{figure} [h!] 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::150::0::Undefined control sequence. |    \subfloat [][Noisy]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::152::0::Undefined control sequence. |	\includegraphics [width=0.5\linewidth]{./figures/experiments/noisy_dti...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::152::0::Missing number, treated as zero. |	\includegraphics[width=0.5\linewidth] {./figures/experiments/noisy_dti...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::152::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.5\linewidth] {./figures/experiments/noisy_dti...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::152::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::152::0::Extra }, or forgotten $. |..../figures/experiments/noisy_dti32x32.png} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::153::0::Extra }, or forgotten $. |    } 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::154::0::Undefined control sequence. |    \subfloat [][Denoised]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::156::0::Undefined control sequence. |	\includegraphics [width=0.5\linewidth]{./figures/experiments/denoised_...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::156::0::Missing number, treated as zero. |	\includegraphics[width=0.5\linewidth] {./figures/experiments/denoised_...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::156::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.5\linewidth] {./figures/experiments/denoised_...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::157::0::There's no line here to end. |    }\\  
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::157::0::Missing $ inserted.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::145::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 145--157
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::145::0::Overfull \hbox (369.95062pt too wide) in paragraph at lines 145--157
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::158::0::\caption outside float. |    \caption [Denoising DT-MRI data]{Denoising a DT-MRI image with pixe... 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::158::0::Missing \begin{document}. |    \caption[ Denoising DT-MRI data]{Denoising a DT-MRI image with pixe... 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::159::0::Undefined control sequence. |	\subref {fig:application_dti1_noise} Componentwise gaussian noise $\mu...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::159::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::159::0::Extra }, or forgotten $. |	\subref{fig:application_dti1_noise} Componentwise gaussian noise $\mu...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::159::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::160::0::Undefined control sequence. |	\subref {fig:application_dti1_denoised} Denoised, IRLS with $\lambda=?...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::160::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::160::0::Extra }, or forgotten $. |	\subref{fig:application_dti1_denoised} Denoised, IRLS with $\lambda=?...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::160::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::163::0::\begin{document} ended by \end{figure}. |\end{figure}  
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::163::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::163::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::163::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::163::0::Missing } inserted. |\end{figure} 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::158::0::Overfull \hbox (192.12291pt too wide) in paragraph at lines 158--164
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::158::0::Overfull \hbox (5.00002pt too wide) in paragraph at lines 158--164
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::158::0::Overfull \hbox (16.62842pt too wide) in paragraph at lines 158--164
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::158::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 158--164
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::158::0::Overfull \hbox (164.3821pt too wide) in paragraph at lines 158--164
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::158::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 158--164
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::158::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 158--164
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::158::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 158--164
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::167::0::Undefined control sequence. |\subsection {3D DT MRI data} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::167::0::Missing \begin{document}. |\subsection{3 D DT MRI data} % (fold) 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::170::0::Environment figure undefined. |\begin{figure} [h!] 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::172::0::Undefined control sequence. |    \subfloat [][Noisy]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::174::0::Undefined control sequence. |	\includegraphics [width=0.5\linewidth]{./figures/experiments/noisy_dti...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::174::0::Missing number, treated as zero. |	\includegraphics[width=0.5\linewidth] {./figures/experiments/noisy_dti...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::174::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.5\linewidth] {./figures/experiments/noisy_dti...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::174::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::174::0::Extra }, or forgotten $. |...gures/experiments/noisy_dti3d8x16x16.png} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::175::0::Extra }, or forgotten $. |    } 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::176::0::Undefined control sequence. |    \subfloat [][Denoised]{
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::178::0::Undefined control sequence. |	\includegraphics [width=0.5\linewidth]{./figures/experiments/denoised_...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::178::0::Missing number, treated as zero. |	\includegraphics[width=0.5\linewidth] {./figures/experiments/denoised_...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::178::0::Illegal unit of measure (pt inserted). |	\includegraphics[width=0.5\linewidth] {./figures/experiments/denoised_...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::179::0::There's no line here to end. |    }\\  
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::179::0::Missing $ inserted.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::167::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 167--179
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::167::0::Overfull \hbox (411.79095pt too wide) in paragraph at lines 167--179
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::180::0::\caption outside float. |    \caption [Denoising 3D DTI-MRI data]{Denoising a 3D DT-MRI image wi... 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::180::0::Missing \begin{document}. |    \caption[ Denoising 3D DTI-MRI data]{Denoising a 3D DT-MRI image wi... 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::181::0::Undefined control sequence. |	\subref {fig:application_dti2_noise} Componentwise gaussian noise $\mu...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::181::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::181::0::Extra }, or forgotten $. |	\subref{fig:application_dti2_noise} Componentwise gaussian noise $\mu...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::181::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::182::0::Undefined control sequence. |	\subref {fig:application_dti2_denoised} Denoised, Proximal point with ...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::182::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::182::0::Extra }, or forgotten $. |	\subref{fig:application_dti2_denoised} Denoised, Proximal point with ...
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::182::0::Missing $ inserted.
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::185::0::\begin{document} ended by \end{figure}. |\end{figure}  
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::185::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::185::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::185::0::Missing } inserted. |\end{figure} 
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::185::0::Missing } inserted. |\end{figure} 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::180::0::Overfull \hbox (192.12291pt too wide) in paragraph at lines 180--186
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::180::0::Overfull \hbox (5.00002pt too wide) in paragraph at lines 180--186
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::180::0::Overfull \hbox (16.62842pt too wide) in paragraph at lines 180--186
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::180::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 180--186
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::180::0::Overfull \hbox (204.80722pt too wide) in paragraph at lines 180--186
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::180::0::Overfull \hbox (4.72223pt too wide) in paragraph at lines 180--186
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::189::0::Undefined control sequence. |\section {Comparison IRLS and Proximal Point minimizers} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::189::0::Missing \begin{document}. |\section{C omparison IRLS and Proximal Point minimizers} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::189::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 189--191
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::194::0::Undefined control sequence. |\section {Sensitivity to variations of the starting value} % (fold)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::194::0::Missing \begin{document}. |\section{S ensitivity to variations of the starting value} % (fold) 
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::194::0::Overfull \hbox (20.0pt too wide) in paragraph at lines 194--196
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::199::0::\begin{document} ended by \end{chapter}. |\end{chapter}  
+LaTeX Error::...ud/MA/Code/tex/ch_numerical_experiments.tex::0::0::Emergency stop. (job aborted, no legal \end found)
+LaTeX Error::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::0::0:: ==> Fatal error occurred, no output PDF file produced! 

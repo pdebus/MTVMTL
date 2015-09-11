@@ -118,15 +118,26 @@ time of writing, this unfortunately also includes 3D images, such that we implem
 The alternative to the above described tensor product implementation is to use pixel-wise kernels to parallelize any operation to requires iteration over an image container.
 For most computations, in the case of computing derivatives, we only need the pixel and its next neighbor in a given dimension. For calculating the forward derivatives we just 
 to have call the pixel-wise kernel with two subimages of our current working image: One with the last slice (of the given dimension) missing and one with the first slice missing.
-This is illustrated by the following short listing \ref{code:pixelwise_demo}:\\
+This is demonstrated by the following short listing \ref{code:pixelwise_demo} and further illustrated in \ref{fig:pixelwise_kernel}:\\
 
 \cppinline
 \begin{lstlisting}[label=code:pixelwise_demo,caption={Pixel-wise forward derivative computation}]
 auto calc_first_arg_deriv = [&] (value_type& x, const weights_type& w, const value_type& i, const value_type& n) { MANIFOLD::deriv1x_dist_squared(i, n, x); x *= w; }; 
 
-img_type XD1 = img_type(without_last_col);
-vpp::pixel_wise(XD1, weightsX_ | without_last_col, data_.img_ | without_last_col, data_.img_ | without_first_col) | calc_first_arg_deriv;
+img_type YD1 = img_type(without_last_row);
+vpp::pixel_wise(YD1, weightsY_ | without_last_row, data_.img_ | without_last_row, data_.img_ | without_first_row) | calc_first_arg_deriv;
 \end{lstlisting}
+
+\begin{figure}[h!]
+        \centering
+	    \includegraphics[width=1.0\linewidth]{./figures/library/pixelwise_kernel.pdf}
+	\caption[Calculation using pixel-wise kernels]{Parallel calculation of derivatives in $y$-direction and weighting using pixel-wise kernels.
+	    For each pixel position $(i,j)$ in the three input pictures, \circnum{1}, \circnum{2} and \circnum{3}, as well as the output picture
+	    \circnum{R} the pixel-wise kernel creates a tuple $(R_{ij}, 2_{ij}, 1_{ij}, 3_{ij})=(\text{YD1}_{i,j},\text{weightY}_{i,j},\text{Image}_{i,j},\text{Image}_{i,j+1})$
+	    which is than used to call the specified lambda function. Depending on the row number of the pixel, the calls are executed by different CPU cores.
+	}
+	\label{fig:pixelwise_kernel}
+\end{figure}
 
 The advantage is that even though we evaluate some function for a pair of neighboring pixels which are not adjacent in memory, the parallel processing is still
 always row-wise. Since rows in row major languages like C++ are contiguous in memory we can avoid frequent memory access on distant locations and consequently avoid cache thrashing to a
@@ -135,8 +146,16 @@ certain degree.\\
 The second level of parallelization is instruction level parallelism, also known as \textit{Single Instruction Multiple Data} (SIMD), which uses the
 processor's vector extensions (e.g. SSE, AVX, NEON).
 The CPU provides some additional special SIMD registers with increased size of usually 128 bits to 512 bits such that multiple integer or floating point variables fit inside.
-Then an arithmatic operation is simultaneously applied to all variables in the register such that theoretically the amount of floating point operations is multiplied by the number
+Then an arithmatic operation is simultaneously applied to all variables in the register (see figure \ref{fig:simd}) such that theoretically the amount of floating point operations is multiplied by the number
 of variables fitting in the registers. \\
+
+\begin{figure}[h!]
+        \centering
+	    \includegraphics[width=0.7\linewidth]{./figures/library/simd.jpg}
+	\caption[SIMD parallelization]{Instruction level parellelism using SIMD registers.
+	}
+	\label{fig:simd}
+\end{figure}
 
 In order to really achieve this speedup the data must be aligned in memory which means the adress of pixels in memory must always be multiple of the SIMD register size. Fortunately,
 that issue is handeld by the VPP and Eigen libraries enabling the compiler to perform the necessary vectorization optimizations.
@@ -444,7 +463,7 @@ The functions in lines 2, 3 and 5 merely trigger a recomputation while the last 
 
 \subsection{TV Minimizer class} % (fold)
 \label{sub:TVMinimizer class}
-For the TV Minimizer class it makes sense to consider the IRLS and proximal point implementation separately. 
+For the TV Minimizer class it makes sense to consider the IRLS and proximal point implementation separately. The primary template is shown in the following code snippet.
 \cppinline
 \begin{lstlisting}
 //Primary Template 
@@ -452,6 +471,36 @@ template <enum ALGORITHM AL, class FUNCTIONAL, class MANIFOLD, class DATA, enum 
 class TV_Minimizer{ 
 };
 \end{lstlisting}
+As in the previous cases we have to provide fully specialized manifold, data and also functional types. Again, the last parameter speciefies the dimension of the data. Of the
+remaining to \texttt{PAR} has the default value OMP which specifies the method of parellization, in this case the OpenMP language extensions. Other methods including just serial
+execution could be added later. The remaining template parameter, \texttt{AL} specifies the minimizer to be used and can take the values \texttt{IRLS} or \texttt{PRPT} (Proximal point).\\
+
+For IRLS, we have the following user interface\\
+\cppinline
+\begin{lstlisting}
+void first_guess();		    // First guess for inpainting
+void smoothening(int smooth_steps); // Simple averaging box filter
+newton_error_type newton_step();    // perform one newton step
+void minimize();		    // full minimization
+\end{lstlisting}
+
+while for proximal point we have\\
+\cppinline
+\begin{lstlisting}
+use_approximate_mean(bool u) { use_approximate_mean_ = u; } // turn mean approximation on/off
+void first_guess();					    // First gues for inpainting
+ 
+void updateFidelity(double muk);			    // Update Fidelity part
+void updateTV(double muk, int dim, const weights_mat& W);   // Update TV part
+
+void geod_mean();	    // Calculate geodesic mean
+void approx_mean();	    // approximate mean using convex combinations
+
+void prpt_step(double muk); // perform one proximal point step
+void minimize();	    // full minimization
+\end{lstlisting}
+
+
 % subsection TVMinimizer class (end)
 
 \subsection{Visualization class} % (fold)
@@ -518,10 +567,32 @@ similar orientations can be more easily visually distinguished.
 \end{figure}
 
 In the case of 3D SPD images the rendering window also provides some controls over the view. The up and down arrays keys can be used to zoom in and out of the picture, left and right keys
-pivot the camera and with the s key the image is saved using the filename specified before.//
+pivot the camera and with the s key the image is saved using the filename specified before.
+\begin{figure}[h!]
+    \centering
+    \subfloat[][Side View]{
+	\label{fig:helix_side}
+	\includegraphics[width=0.25\linewidth]{./figures/library/helixAngled1.png}
+    }
+    \subfloat[][Top View]{
+	\label{fig:helix_top}
+	\includegraphics[width=0.25\linewidth]{./figures/library/helixTop1.png}
+    }
+    \subfloat[][Closeup]{
+	\label{fig:helix_close}
+	\includegraphics[width=0.25\linewidth]{./figures/library/helixTop2.png}
+    }
+    \subfloat[][Inside]{
+	\label{fig:helix_inside}
+	\includegraphics[width=0.25\linewidth]{./figures/library/helixTop3.png}
+    }\\
+    \caption[3D SPD(3) Volume Visualization of a helix]{Example of the 3D data Visulization of SPD(3) images from different viewpoints.
+	\label{fig:helix}
+    }
+\end{figure}
 
 % subsubsection SPD(3) Visualization (end)
-
+\FloatBarrier
 \subsubsection{3D Volume image rendering} % (fold)
 \label{ssub:3D Volume image rendering}
 The volume image renderer just transforms the data to a 3d texture which is then mapped onto cube rotating about the z-axis.
@@ -672,10 +743,10 @@ sets the value of $\epsilon^2$ for the reweighting computation. In case of the p
 \begin{lstlisting}[label=code:tut_data,caption={Choosing the minimizer, smoothing and minimization}]
 typedef TV_Minimizer< IRLS, func_t, mf_t, data_t, OMP, 2> tvmin_t;
 
-tvmin_t myTVMin(myFunc, myData); // Creation of minimizer object
+tvmin_t myTVMin(myFunc, myData);// Creation of minimizer object
 
-myTVMin.smoothening(5); // smoothing to obtain better starting value
-myTVMin.minimize(); // Starts the minimization
+myTVMin.smoothening(5);		// smoothing to obtain better starting value
+myTVMin.minimize();		// Starts the minimization
 \end{lstlisting}
 
 Finally we choose the minimizer we want to use, in this case IRLS, and pass functional, manifold and data types as template parameters. The OMP paramater is not fully implemented yet 
@@ -686,11 +757,206 @@ The complete listing of this example can be found in \ref{ap:example_listings}.
 
 \subsubsection{Colorization using color inpainting} % (fold)
 \label{ssub:Color inpainting}
+In the following we show a more complicated example: Recolorization of an image where most($\approx$99\%) \textit{color} information has been removed. This means that this
+problem is defined on the product manifold $S^2\times \mathbb{R}$, optimization however will only take place on $S^2$ while the $\mathbb{R}$ data part is only needed to obtain
+edge information. We also three auxiliary functions (\texttt{removeColor}, \texttt{DisplayImage}, \texttt{recombineAndShow}) here that are not shown in the code snippets but
+will be included in the full listing in the appedix \ref{ap:example_listing}. This time, we start by also obtaining some of the minimization parameters from the command line:\\
+
+\cppinline
+\begin{lstlisting}[label=code:tut2_init,caption={Include library files and read parameters from standard input}]
+#include <iostream>
+#include <string>
+#include <cmath>
+
+#include <opencv2/highgui/highgui.hpp>
+#include "../core/algo_traits.hpp"
+#include "../core/data.hpp"
+#include "../core/functional.hpp"
+#include "../core/tvmin.hpp"
+
+#include <vpp/vpp.hh>
+#include <vpp/utils/opencv_bridge.hh>
+
+using namespace tvmtl;
+
+int main(int argc, const char *argv[])
+{
+    if (argc < 3){
+	std::cerr << "Usage : " << argv[0] << " image [lambda] [threshold]" << std::endl;
+	return 1;
+    }
+
+    double lam=0.01;
+    double threshold=0.01;
+
+    if(argc == 4){
+	lam=atof(argv[2]);
+	threshold=atof(argv[3]);
+    }   
+
+    std::string fname(argv[1]);
+
+    //...
+
+}
+\end{lstlisting}
+Here \texttt{threshhold} defines the percentage of color information that remains in the picture.\\
+In the next step, we again define the necessary type definitions for manifold and data classes and create our data objects.
+
+\cppinline
+\begin{lstlisting}[label=code:tut2_mfdata,caption={Manifold and Data class type definitions and instantiation}]
+// typdefs
+typedef Manifold< SPHERE, 3 > spheremf_t;  // S^2
+typedef Manifold< EUCLIDIAN, 1 > eucmf_t;  // R
+ 
+typedef Data< spheremf_t, 2> chroma_t;	// Chromaticity part
+typedef Data< eucmf_t, 2> bright_t;	// Brightness part
+
+// Instantiation
+chroma_t myChroma=chroma_t();
+bright_t myBright=bright_t();
+\end{lstlisting}
+
+When the data containers are ready we need to read the input picture, extract color and brightness information and store it in the respective objects.
+This problem is basically a color inpainting problem but we do not want the reconstructed color to blur across edges in the picture. This can be solved
+by making use of the edge weights array that is stored together with the image. We will detect edged in the brightness part of the picture and and
+use those edges in the Chromaticity denoising procedure.\\
+Finally, we will remove the color in the following way: Create a random inpainting matrix where the probability a certain pixel is set to false is given
+by the \texttt{threshold} variable and then replace every RGB pixel by the mean of its three color components (those pixels are basically grat scale then).\\
+The necessary steps are shown in the next listing
+
+\cppinline
+\begin{lstlisting}[label=code:tut2_edgeandcolorremoval,caption={Color and brightness input, edge detection and color removal}]
+myBright.rgb_readBrightness(argv[1]);	// Extract brightness from filename argv[1]
+myBright.findEdgeWeights();		// Detect edges and store in matrix
+
+myChroma.rgb_readChromaticity(argv[1]); // Extract chromaticity from filename argv[1]
+myChroma.inpaint_=true;			// Turn inpainting on
+myChroma.setEdgeWeights(myBright.edge_weights_); // Initiliaze chromaticity part edges with brightness part edges
+myChroma.createRandInpWeights(threshold);   // Create random inpainting matrix
+removeColor(myChroma, myBright);	    // Remove color
+
+// Recombine chromaticity and brightness and show the colorless image
+recombineAndShow(myChroma, myBright, "colorless_"+fname, "Colors removed Picture");
+\end{lstlisting}
+
+The next part works almost exactly as in the last example. We define functional, set its parameters, then define the minimizer. The only difference is that
+we have to run \texttt{first\_guess} before the minimization.\\
+
+\cppinline
+\begin{lstlisting}[label=code:tut2_functionalmin,caption={Functional and minimizer definition, first guess and minimization}]
+typedef Functional<FIRSTORDER, ISO, spheremf_t, chroma_t> cfunc_t;
+typedef TV_Minimizer< IRLS, cfunc_t, spheremf_t, chroma_t, OMP > ctvmin_t;
+
+cfunc_t cFunc(lam, myChroma);	    // create functional object
+cFunc.seteps2(1e-10);		    // set eps^2 parameter
+
+ctvmin_t cTVMin(cFunc, myChroma);   // create minimizer object
+cTVMin.first_guess();		    // first guess
+
+std::cout << "Start TV minimization..." << std::endl;
+cTVMin.minimize();		    
+
+// Recombine Brightness and Chromaticity parts of recolored Picture
+recombineAndShow(myChroma, myBright, "recolored_"+fname, "Recolored Picture");
+\end{lstlisting}
+
+Some visual results of the above code are also shown in section \ref{sub:colorinpainting}.
+
+
 
 % subsubsection Color inpainting (end)
 
-\subsubsection{DT-MRI data denoising and visualization} % (fold)
+\subsubsection{3D DT-MRI data denoising and visualization} % (fold)
 \label{ssub:dti_tut}
+As a final example we choose a more complicated manifold, SPD(3) in this case, as well as 3D data to also demonstrate the use of the visualization classes. Moreover, we use
+the proximal point algorithm in this example. The CSV reader just reads a list of pixels where the numerical values comprising the pixel are stored comma-separated one pixel
+per line. The CSV files has no header such that we provide the dimensions as command line parameters.
+
+\cppinline
+\begin{lstlisting}[label=code:tut3_init,caption={Initialization}]
+#include <iostream>
+#include <cstdlib>
+#include <string>
+#include <sstream>
+
+#include "../core/algo_traits.hpp"
+#include "../core/data.hpp"
+#include "../core/functional.hpp"
+#include "../core/tvmin.hpp"
+#include "../core/visualization.hpp"
+
+int main(int argc, const char *argv[])
+{       
+    int nz, ny, nx;
+    nz = std::atoi(argv[2]);
+    ny = std::atoi(argv[3]);
+    nx = std::atoi(argv[4]);
+
+    std::stringstream fname;
+    std::string nfname;
+    fname << "dti3d" << nz << "x" << ny << "x" << ny << ".png";
+    nfname = "noisy_" + fname.str();
+    
+    // ...
+
+    return 0;    
+}
+\end{lstlisting}
+	
+Since the meaning of the individual components should be clear by now by do all the necessary type definitions at once in the next listing\\
+\cppinline
+\begin{lstlisting}[label=code:tut3_typdefinitions,caption={Type definitions, Visualization type}]
+using namespace tvmtl;
+
+typedef Manifold< SPD, 3 > mf_t;
+typedef Data< mf_t, 3> data_t;
+typedef Functional<FIRSTORDER, ANISO, mf_t, data_t, 3> func_t;
+typedef TV_Minimizer< PRPT, func_t, mf_t, data_t, OMP, 3 > tvmin_t;
+typedef Visualization<SPD, 3, data_t, 3> visual_t;
+\end{lstlisting}
+
+The only innovation is the aforementioned Visualization class. The first $3$ in its template parameter list is the embedding dimension of the manifold 
+and the last $3$ denotes the dimension of the data. Note that we needed to specify it for the functional and minimizer classes as well because the default value is $2$. 
+The remaining parameters specify the manifold type via an enumeration constant (in the same way one specifies it for the Manifold class) and the data type via a fully
+specialized data class type.\\
+Before we start the minimization we want to display the original noisy data and eventually save it to a file once we have found a nice viewing angle in the rendering window.
+The necessary steps are as follows:\\
+
+\cppinline
+\begin{lstlisting}[label=code:tut3_rendernoisyimg,caption={Data input and displaying the noisy data}]
+data_t myData = data_t();   // Create data object
+myData.readMatrixDataFromCSV(argv[1], nz, ny, nx); // Read from CSV file
+
+visual_t myVisual(myData);  // Create visualization object
+myVisual.saveImage(nfname); // Specify file name to save a screenshot
+
+std::cout << "Starting OpenGL-Renderer..." << std::endl;
+myVisual.GLInit("SPD(3) Ellipsoid Visualization"); // Start the Rendering
+\end{lstlisting}
+
+In the last step we create functional and minimizer class, perform the minimization and display the denoised data again.
+
+\cppinline
+\begin{lstlisting}[label=code:tut3_rendernoisyimg,caption={Minimization and final rendering}]
+double lam=0.7;
+func_t myFunc(lam, myData); // Functional object
+myFunc.seteps2(0);  // eps^2 should be 0 for PRPT
+
+tvmin_t myTVMin(myFunc, myData); // Minimizer object
+
+std::cout << "Start TV minimization.." << std::endl;
+myTVMin.minimize();
+
+std::string dfname = "denoised(prpt)_" + fname.str();
+myVisual.saveImage(dfname); // Specify name for denoised image
+
+std::cout << "Starting OpenGL-Renderer..." << std::endl;
+myVisual.GLInit("SPD(3) Ellipsoid Visualization"); // Render
+\end{lstlisting}
+
+The resulting picture for this example are also shown in \ref{sub:3DDTMRIdata}.
+
 
 % subsubsection DT-MRI data denoising and visualization (end)
 

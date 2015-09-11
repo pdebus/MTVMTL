@@ -70,16 +70,14 @@ implementation of the latter are postponed to section \ref{seq:frechetderivative
 For the SPD matrices we proceed in the same way as for the orthogonal group and obtain
 \begin{align}
     \label{eq:spd_xx_der}
-    T_1 &= \sqrt{X}\\
-    T_2 &= T^{-1}\\
-    T_3 &= T_2YT_2\\
-    T_4 &= \log(T_3) \\
     \frac{\partial^2 d^2(X,Y)}{\partial X\partial X} &= 
-    2\left[
-	\left(T_2T_4^T\otimes\mathbbm{1}\right)
-	+\left(\mathbbm{1}\otimes T_2T_4\right) 
-	+\left(T_2\otimes T_2\right)\operatorname{D}\log(T_3)\left( \left(T_2Y\otimes\mathbbm{1}\right) + \left(\mathbbm{1}\otimes T_2Y\right)\right)
-    \right]\left(T_2\otimes T_2\right)\operatorname{D}(\sqrt(X))
+    2\Bigg[
+	\left(X^{-\frac{1}{2}}\log\left(X^{-\frac{1}{2}}YX^{-\frac{1}{2}}\right)^T\otimes\mathbbm{1}_n\right)
+	+\left(\mathbbm{1}_n\otimes X^{-\frac{1}{2}}\log\left(X^{-\frac{1}{2}}YX^{-\frac{1}{2}}\right)\right) \\
+    &	+\left(X^{-\frac{1}{2}}\otimes X^{-\frac{1}{2}}\right)\operatorname{D}\log(X^{-\frac{1}{2}}YX^{-\frac{1}{2}})\left( \left(X^{-\frac{1}{2}}Y\otimes\mathbbm{1}_n\right)
+	+ \left(\mathbbm{1}_n\otimes X^{-\frac{1}{2}}Y\right)\right) 
+    \Bigg] \times\cdots \nonumber \\
+    & \cdots\times\left(X^{-\frac{1}{2}}\otimes X^{-\frac{1}{2}}\right)\operatorname{D}(X^{\frac{1}{2}})\nonumber
 \end{align}
 and for the mixed derivatives
 \begin{equation}
@@ -91,8 +89,135 @@ and for the mixed derivatives
 
 % subsection SPD(N) (end)
 
-\subsection{Grassmanian Gr(N,P)} % (fold)
-\label{sub:Grassmanian Gr(N,P)}
+\subsection{Grassmanian Gr(n,p)} % (fold)
+\label{sub:Grassmanian}
+The Grassmann manifold is special among the manifolds so far considered due to the fact that it is a quotient manifold. 
+As such, there are different possbilieties for choosing equivalence classes and representatives thereof from some matrix space that need to be addressed
+before an implementation.\\
+
+For positive integers $n$ and $p\leq n$ the Grassmann manifold is defined as the set of $p$-dimensional linear subspaces of $\mathbb{R}^n$. 
+Since a linear subspace $\mathcal{Y}\in Gr(n,p)$ can be specified using a basis, we can arrange its basis vectors as columns of
+a matrix $Y\in\mathbb{R^{n\times p}}$ such that its column space spans $\mathcal{Y}$. The rank of $Y$ must necessarily be full and equal to $p$ because of the linear independence
+of its columns. Hence, elements of $Gr(n,p)$ can be represented using elements of the \emph{non-compact Stiefel manifold}
+\begin{equation}
+    \tilde St(n,p) := \left\lbrace Y\in\mathbb{R}^{n\times p}:\; \operatorname{rank}Y=p\right\rbrace.
+\end{equation}
+
+\subsubsection{Quotient representations} % (fold)
+\label{ssub:Quotient representations}
+Observing now that post-multiplication by any invertible $G\in Gl(p)$ does not change the span of $Y$, we can form the equivalence classes
+\begin{equation}
+    Y\,GL(p) := \left\lbrace YG: G\in Gl(p)\right\rbrace
+\end{equation}
+consisting of all matrices having the same span as $Y$. These equivalence classes can be thought of as the distinct elements of the Grassmannian which
+leads to the following quotient manifold representation.\\
+\begin{equation}
+    Gr(n,p):=\tilde St(n,p) / Gl(p)
+\end{equation}
+
+This representation used by Absil et al\cite{AbsilGrasmman} which is very general because only the rank is specified. In the next steps of presenting the relavant quantities for the
+algorithm we will follow Absil's derivation and notation but choose the quotient representation used by Edelman et al \cite{EAS} which is based on the orthogonal group. This will simplify the
+most expressions and is also desirable from an algorithmic point of view as it removes more degrees of freedom in the choice of possbily unique representatives.\\
+
+For the sake of completeness we also mention a completely different approach by Sato and Iwai \cite{SatoIwai} who choose $\mathbb{R}^{n\times n}$ as embedding space
+where elements of $Gr(n,p)$ are given by rank $p$ orthogonal projection matrices. The presented application are, however, mostly eigenvalue problems while in the case
+of image denoising the increased memory requirements are disadvantageous.\\
+
+The orthogonal group quotient represenation of the Grassmann manifold is given by
+\begin{equation}
+    Gr(n,p) = St(n,p) / O(p) %= O(n) / (O(p) \times O(n-p)),
+\end{equation}
+where we denote by $St(n,p)=\left\lbrace Y\in\mathbb{R}^{n\times p}:\; Y^TY=\mathbbm{1}_p,\right\rbrace$ the \emph{compact} Stiefel manifold with the additional
+requirement that the basis spanning the subspace $\mathcal{Y}$ be orthonormal now. The canoncial quotient projection map is then given by
+\begin{equation}
+    \pi : St(n,p)\ni Y \mapsto \operatorname{span} Y=\mathcal{Y} \in Gr(n, p)
+\end{equation}
+% subsubsection Quotient representations (end)
+
+\subsubsection{Locally unique representatives} % (fold)
+\label{ssub:Locally unique Representative}
+Let $U\in St(n,p)$ and define the local affine cross section through $U$ and orthogonal to the fiber $U[O(p)]=\pi^{-1}(\mathcal{U})\subset St(n,p)$ by
+\begin{equation}
+    S_U := \left\lbrace V\in St(n,p): U^T(V-U)=0 \right\rbrace\subset St(n,p).
+\end{equation}
+
+The equivalence class of $V\in St(n,p)$ is equal to $\pi^{-1}(\pi(V))=V\,O(p)$ and to calculate its intersection with $S_U$ we choose $R\in O(p)$ such that
+$VR\in VO(p)$ and obtain
+\begin{align}
+    VR\in S_U\;\Leftrightarrow\; U^T(VR-U)=0 \;\Leftrightarrow\; R = (U^TV)^{-1}
+\end{align}
+which leads to the intersection
+\begin{align}
+    S_U \cap V[O(p)] = \left\lbrace VR = V(U^{T}V)^{-1} \right\rbrace .
+\end{align}
+which can be also empty if $U^{T}S$ is not invertible. Finally, we define a \emph{cross-section mapping} $\sigma_U$ restricted to the set
+\begin{equation}
+    \mathcal{U}_U := \left\lbrace\mathcal{V}=\operatorname{span}V:\; U^TV\in GL(p) \right\rbrace
+\end{equation}
+by 
+\begin{equation}
+    \sigma_U: Gr(n,p)\supset \mathcal{U}_U\ni\mathcal{V}=\operatorname{span}V\mapsto V(U^{T}V)^{-1} \in S_U \subset St(n,p).
+\end{equation}
+which is a diffeomorphism providing the differentiable structure considering the embedding of $St(n,p)$ in Euclidian space.\\
+
+The above considerations are important for the design of algorithms for two reasons.\\
+Firstly, it provides the means to give well-defined expressions for various quantities we want to compute using arbitrary representatives.
+For the case of an average for instance, we can take representatives $Y_1,\ldots,Y_n\in St(n,p)$ for $\mathcal{Y}_1,\ldots,\mathcal{Y}_n\in Gr(n,p)$
+and find a $U\in St(n,p)$ such that $S_U$ has non-zero intersection with all the $Y_i$'s equivalence classes, which is equivalent
+to $U^TY_i\in Gl(p)$. The average $\mathcal{A}$ can then be written as
+\begin{equation}
+    \mathcal{A} := \pi\left(\sum_{i=1}^{n}\sigma_U(Y_i)\right)=\pi\left(\sum_{i=1}^{n}Y_i(U^{T}Y_i)^{-1}\right).
+\end{equation}
+
+Secondly, it allows us to find a parametrization of $Gr(n,p)$ in terms of $\mathbb{R}^{n\times p}$ matrices. This is necessary to construct a local basis of the tangent base
+and make the dimension of the sparse linear system a function of the intrinsic manifold dimension $(n-p)p$ instead of the embedding dimension $np$.
+% subsubsection Locally unique Representative (end)
+
+\subsubsection{Tangent space} % (fold)
+\label{ssub:Tangent space}
+Due to the quotient structure which forces us to work with representatives we cannot just use the usual method for finding the tangent space by differentiating
+curves on the manifold but have to start with "numerator" of the quotient $St(n,p)$ instead. For the Grassmann manifolds only tangent vectors of a special subspace of $T_YSt(n,p)$,
+the horizontal space, can modify the span of subspace and exactly those belong to the tangent space of $Gr(n,p)$. \\
+
+Let $Y\in St(n,p)\subset\mathbb{R}^{n\times p}$. Then tangent space at $Y$ (\cite{AbsilOptim} for details of the derivation) to the compact Stiefel manifold is given by
+\begin{align}
+    \label{eq:stiefel_tangentspace}
+   T_YSt(n,p)	&= \left\lbrace Z\in\mathbb{R}^{n\times p}: Y^TZ+Z^TY=0 \right\rbrace\\
+   &=  \left\lbrace Y\Omega + Y_{\bot}K: \Omega\in\operatorname{Skew}(p),\, K\in\mathbb{R}^{(n-p)\times p} \right\rbrace\nonumber
+\end{align}
+where $Y_{\bot}\in\mathbb{R}^{(n\times (n-p)}$ is defined such that $[Y,Y_{\bot}]\in O(n)$. The second representation of (\ref{stiefel_tangentspace})
+already implies the decomposition into vertical and horizontal spaces we are going to perform next.
+
+The vertical space at $Y$ is by definition the tangent space to the fiber $\pi^{-1}(\pi(Y))$
+\begin{equation}
+    \label{eq:stiefel_horizontalspace}
+    V_Y = T_Y\pi^{-1}(\pi(Y))=T_YY[O(p)]=Y[\operatorname{Skew}(p)],
+\end{equation}
+while the horizontal space is defined as its orthogonal complement with respect to (\ref{eq:stiefel_tangentspace})
+\begin{equation}
+    \label{eq:stiefel_verticalspace}
+    H_Y=V_Y^{\bot} =\left\lbrace H\in T_Y St(n,p):Y^TH=0 \right\rbrace \simeq Y_{\bot}[\mathbb{R}^{(n-p)\times p}].
+\end{equation}
+
+Using this, the tangent space to $Gr(n,p)$ at $\pi(Y)=\mathcal{Y}$, along with its projector is given by 
+\begin{align}
+    \label{eq:grassmann_tangentspace}
+    T_{\mathcal{Y}}Gr(n,p)&\simeq  H_YSt(n,p)\simeq Y_{\bot}[\mathbb{R}^{(n-p)\times p}]\\
+    \pi_{Y_{\bot}}&:=\mathbbm{1}_n-YY^T
+\end{align}
+
+
+% subsubsection Tangent space (end)
+
+\subsubsection{Exponential map} % (fold)
+\label{ssub:Exponential map}
+Let $X, Y$ span $\mathcal{X}, \mathcal{Y}$, respectively and let $U\Sigma V^{T}$ denote the compact singular value decomposition of $Y$. Then
+\begin{equation}
+    \operatorname{Exp}_{\mathcal{X}}(\mathcal{Y})=\operatorname{span}\left( XV\cos\Sigma + U\sin\Sigma\right).
+\end{equation}
+% subsubsection Exponential map (end)
+
+
 
 \subsubsection{Distance function} % (fold)
 \label{ssub:Distance function}

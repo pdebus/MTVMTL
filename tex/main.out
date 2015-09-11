@@ -14,7 +14,7 @@
 \BOOKMARK [2][-]{subsection.2.3.2}{Sphere Sn}{section.2.3}% 14
 \BOOKMARK [2][-]{subsection.2.3.3}{Special Orthogonal Group SO\(n\)}{section.2.3}% 15
 \BOOKMARK [2][-]{subsection.2.3.4}{Symmetric Positive Definite Matrices SPD\(n\)}{section.2.3}% 16
-\BOOKMARK [2][-]{subsection.2.3.5}{Grassmanian Gr\(N,P\)}{section.2.3}% 17
+\BOOKMARK [2][-]{subsection.2.3.5}{Grassmanian Gr\(n,p\)}{section.2.3}% 17
 \BOOKMARK [1][-]{section.2.4}{Fr\351chet derivatives of matrix logarithm and square root}{chapter.2}% 18
 \BOOKMARK [2][-]{subsection.2.4.1}{Derivative of the matrix square root}{section.2.4}% 19
 \BOOKMARK [2][-]{subsection.2.4.2}{Derivative of the matrix logarithm}{section.2.4}% 20
@@ -42,21 +42,23 @@
 \BOOKMARK [2][-]{subsection.3.4.2}{Installation}{section.3.4}% 42
 \BOOKMARK [2][-]{subsection.3.4.3}{Compilation of own projects using CMake}{section.3.4}% 43
 \BOOKMARK [2][-]{subsection.3.4.4}{Tutorial and typical use cases}{section.3.4}% 44
-\BOOKMARK [0][-]{chapter.4}{Numerical Experiments}{}% 45
+\BOOKMARK [0][-]{chapter.4}{Applications and Numerical Experiments}{}% 45
 \BOOKMARK [1][-]{section.4.1}{Color image denoising}{chapter.4}% 46
 \BOOKMARK [2][-]{subsection.4.1.1}{Grayscale}{section.4.1}% 47
 \BOOKMARK [2][-]{subsection.4.1.2}{Color}{section.4.1}% 48
-\BOOKMARK [2][-]{subsection.4.1.3}{Color inpainting}{section.4.1}% 49
-\BOOKMARK [2][-]{subsection.4.1.4}{Volume images}{section.4.1}% 50
-\BOOKMARK [1][-]{section.4.2}{SO\(2\) and SO\(3\) images data}{chapter.4}% 51
-\BOOKMARK [2][-]{subsection.4.2.1}{Synthetic data}{section.4.2}% 52
-\BOOKMARK [2][-]{subsection.4.2.2}{Fingerprint orientation data}{section.4.2}% 53
-\BOOKMARK [2][-]{subsection.4.2.3}{Calculation of a dense flow field}{section.4.2}% 54
-\BOOKMARK [1][-]{section.4.3}{SPD\(3\) image data}{chapter.4}% 55
-\BOOKMARK [2][-]{subsection.4.3.1}{Diffusion Tensor MRI images}{section.4.3}% 56
-\BOOKMARK [2][-]{subsection.4.3.2}{3D DT MRI data}{section.4.3}% 57
-\BOOKMARK [1][-]{section.4.4}{Comparison IRLS and Proximal Point minimizers}{chapter.4}% 58
-\BOOKMARK [1][-]{section.4.5}{Sensitivity to variations of the starting value}{chapter.4}% 59
-\BOOKMARK [0][-]{chapter.5}{Outlook}{}% 60
-\BOOKMARK [1][-]{section.5.1}{Extensions}{chapter.5}% 61
-\BOOKMARK [1][-]{section.5.2}{Recursive computation on subdomains}{chapter.5}% 62
+\BOOKMARK [2][-]{subsection.4.1.3}{Inpainting}{section.4.1}% 49
+\BOOKMARK [2][-]{subsection.4.1.4}{Recolorization}{section.4.1}% 50
+\BOOKMARK [2][-]{subsection.4.1.5}{Volume images}{section.4.1}% 51
+\BOOKMARK [1][-]{section.4.2}{SO\(2\) and SO\(3\) images data}{chapter.4}% 52
+\BOOKMARK [2][-]{subsection.4.2.1}{Synthetic data}{section.4.2}% 53
+\BOOKMARK [2][-]{subsection.4.2.2}{Fingerprint orientation data}{section.4.2}% 54
+\BOOKMARK [2][-]{subsection.4.2.3}{Reconstruction of a dense optical flow field}{section.4.2}% 55
+\BOOKMARK [1][-]{section.4.3}{SPD\(3\) image data}{chapter.4}% 56
+\BOOKMARK [2][-]{subsection.4.3.1}{Synthetic data}{section.4.3}% 57
+\BOOKMARK [2][-]{subsection.4.3.2}{Diffusion Tensor MRI images}{section.4.3}% 58
+\BOOKMARK [2][-]{subsection.4.3.3}{3D DT MRI data}{section.4.3}% 59
+\BOOKMARK [1][-]{section.4.4}{Comparison IRLS and Proximal Point minimizers}{chapter.4}% 60
+\BOOKMARK [1][-]{section.4.5}{Sensitivity to variations of the starting value}{chapter.4}% 61
+\BOOKMARK [0][-]{chapter.5}{Outlook}{}% 62
+\BOOKMARK [1][-]{section.5.1}{Extensions}{chapter.5}% 63
+\BOOKMARK [1][-]{section.5.2}{Recursive computation on subdomains}{chapter.5}% 64

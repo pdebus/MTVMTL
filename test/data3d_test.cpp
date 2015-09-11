@@ -207,7 +207,7 @@ int main(int argc, const char *argv[])
 	    
 	    data_t myData6=data_t();
 	    myData6.readRawVolumeData(fname, nz, ny, nx);
-	    myData6.add_gaussian_noise(0.1);
+	    //myData6.add_gaussian_noise(0.1);
 
 	    typedef Visualization<EUCLIDIAN, 1, data_t, 3> visual_t2;
 

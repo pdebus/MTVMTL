@@ -3,7 +3,7 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: main.aux
 The style file: plain.bst
 I couldn't open database file mt.bib
----line 268 of file main.aux
+---line 411 of file main.aux
  : \bibdata{mt
  :            }
 I'm skipping whatever remains of this command
@@ -14,6 +14,10 @@ Warning--I didn't find a database entry for "ChangKuang"
 Warning--I didn't find a database entry for "SprecherIRLS"
 Warning--I didn't find a database entry for "WeinmannPRPT"
 Warning--I didn't find a database entry for "magnus"
+Warning--I didn't find a database entry for "AbsilGrasmman"
+Warning--I didn't find a database entry for "EAS"
+Warning--I didn't find a database entry for "SatoIwai"
+Warning--I didn't find a database entry for "Absilbook"
 Warning--I didn't find a database entry for "absil_GR"
 Warning--I didn't find a database entry for "almohy_frechetlog"
 Warning--I didn't find a database entry for "highham_pade"
@@ -22,9 +26,11 @@ Warning--I didn't find a database entry for "mt"
 Warning--I didn't find a database entry for "bt"
 Warning--I didn't find a database entry for "opticalflow"
 Warning--I didn't find a database entry for "vpp_paper"
+Warning--I didn't find a database entry for "sali"
+Warning--I didn't find a database entry for "LucasKanade"
 You've used 0 entries,
             2118 wiz_defined-function locations,
-            516 strings with 4177 characters,
+            527 strings with 4269 characters,
 and the built_in function-call counts, 18 in all, are:
 = -- 0
 > -- 0

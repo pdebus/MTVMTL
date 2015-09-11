@@ -28,6 +28,12 @@ int main(int argc, const char *argv[])
 	    myData.readMatrixDataFromCSV("dti_image.csv", 8, 16, 8);
 	}
 
+	auto setInpaint = [] (const auto& i, auto& inp){
+	    inp = ((i - 0.5 * mf_t::value_type::Identity()).norm() < 1e-3);
+	};
+	myData.inpaint_ = true;
+	pixel_wise3d(setInpaint, myData.img_, myData.inp_);
+
 	visual_t myVisual(myData);
 	myVisual.saveImage("3Ddti_img.png");
 
