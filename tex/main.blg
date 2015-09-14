@@ -3,34 +3,38 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: main.aux
 The style file: plain.bst
 I couldn't open database file mt.bib
----line 411 of file main.aux
+---line 460 of file main.aux
  : \bibdata{mt
  :            }
 I'm skipping whatever remains of this command
 I found no database files---while reading file main.aux
 Warning--I didn't find a database entry for "RudinOsher"
 Warning--I didn't find a database entry for "ChambolleLions"
-Warning--I didn't find a database entry for "ChangKuang"
+Warning--I didn't find a database entry for "Kang"
+Warning--I didn't find a database entry for "Grohssprecher"
+Warning--I didn't find a database entry for "Weinmann"
+Warning--I didn't find a database entry for "CombettesPesque"
+Warning--I didn't find a database entry for "ParikhBoyd"
+Warning--I didn't find a database entry for "Karcher"
+Warning--I didn't find a database entry for "Rodriguez"
 Warning--I didn't find a database entry for "SprecherIRLS"
-Warning--I didn't find a database entry for "WeinmannPRPT"
-Warning--I didn't find a database entry for "magnus"
-Warning--I didn't find a database entry for "AbsilGrasmman"
+Warning--I didn't find a database entry for "Magnus"
+Warning--I didn't find a database entry for "AbsilGrassmann"
 Warning--I didn't find a database entry for "EAS"
-Warning--I didn't find a database entry for "SatoIwai"
-Warning--I didn't find a database entry for "Absilbook"
-Warning--I didn't find a database entry for "absil_GR"
-Warning--I didn't find a database entry for "almohy_frechetlog"
-Warning--I didn't find a database entry for "highham_pade"
+Warning--I didn't find a database entry for "Sato2014"
+Warning--I didn't find a database entry for "Absil2009"
+Warning--I didn't find a database entry for "AlmohyFrechet"
+Warning--I didn't find a database entry for "HighamPade"
 Warning--I didn't find a database entry for "nifti"
-Warning--I didn't find a database entry for "mt"
-Warning--I didn't find a database entry for "bt"
+Warning--I didn't find a database entry for "manuel"
+Warning--I didn't find a database entry for "mara"
 Warning--I didn't find a database entry for "opticalflow"
-Warning--I didn't find a database entry for "vpp_paper"
+Warning--I didn't find a database entry for "VPP"
 Warning--I didn't find a database entry for "sali"
 Warning--I didn't find a database entry for "LucasKanade"
 You've used 0 entries,
             2118 wiz_defined-function locations,
-            527 strings with 4269 characters,
+            540 strings with 4371 characters,
 and the built_in function-call counts, 18 in all, are:
 = -- 0
 > -- 0

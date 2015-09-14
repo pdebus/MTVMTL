@@ -18,6 +18,7 @@
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \citation{RudinOsher}
 \citation{ChambolleLions}
+\citation{RudinOsher}
 \@writefile{toc}{\contentsline {chapter}{\numberline {1}Introduction}{5}{chapter.1}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -27,388 +28,433 @@
 \newlabel{osher_opt}{{1.1}{5}{Grayscale images}{equation.1.1.1}{}}
 \@writefile{brf}{\backcite{ChambolleLions}{{5}{1.1}{equation.1.1.2}}}
 \newlabel{osher_func}{{1.3}{5}{Grayscale images}{equation.1.1.3}{}}
-\citation{ChangKuang}
+\citation{RudinOsher}
 \@writefile{toc}{\contentsline {subsection}{\numberline {1.1.1}Edge preservation}{6}{subsection.1.1.1}}
 \newlabel{sub:Edge preservation}{{1.1.1}{6}{Edge preservation}{subsection.1.1.1}{}}
+\@writefile{brf}{\backcite{RudinOsher}{{6}{1.1.1}{subsection.1.1.1}}}
 \@writefile{lof}{\contentsline {figure}{\numberline {1.1}{\ignorespaces Comparison total variation}}{6}{figure.caption.1}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{fig:tv12comparison}{{1.1}{6}{Comparison total variation}{figure.caption.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {1.2}Color Images}{6}{section.1.2}}
-\@writefile{brf}{\backcite{ChangKuang}{{6}{1.2}{section.1.2}}}
-\citation{SprecherIRLS}
-\citation{WeinmannPRPT}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1.2}Discretization}{6}{subsection.1.1.2}}
+\newlabel{sub:Discretization}{{1.1.2}{6}{Discretization}{subsection.1.1.2}{}}
+\newlabel{eq:original_isofunctional}{{1.5}{6}{Discretization}{equation.1.1.5}{}}
+\citation{Kang}
+\citation{Grohssprecher}
+\citation{Weinmann}
+\@writefile{brf}{\backcite{RudinOsher}{{7}{1.1.2}{equation.1.1.5}}}
+\newlabel{eq:original_anisofunctional}{{1.6}{7}{Discretization}{equation.1.1.6}{}}
+\newlabel{eq:original_functional}{{1.7}{7}{Discretization}{equation.1.1.7}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {1.2}Color Images}{7}{section.1.2}}
+\@writefile{brf}{\backcite{Kang}{{7}{1.2}{section.1.2}}}
 \@writefile{toc}{\contentsline {section}{\numberline {1.3}Manifold-valued Images}{7}{section.1.3}}
 \newlabel{sec:Manifold-valued Images}{{1.3}{7}{Manifold-valued Images}{section.1.3}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {1.4}Objective and Outline of this work}{7}{section.1.4}}
-\@writefile{brf}{\backcite{SprecherIRLS}{{7}{1.4}{section.1.4}}}
-\@writefile{brf}{\backcite{WeinmannPRPT}{{7}{1.4}{section.1.4}}}
-\citation{magnus}
+\@writefile{brf}{\backcite{Grohssprecher}{{7}{1.4}{section.1.4}}}
+\@writefile{brf}{\backcite{Weinmann}{{7}{1.4}{section.1.4}}}
+\citation{Weinmann}
+\citation{CombettesPesque}
 \@writefile{toc}{\contentsline {chapter}{\numberline {2}Theory}{8}{chapter.2}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{ch:theory}{{2}{8}{Theory}{chapter.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.1}Riemannian Newton Method}{8}{section.2.1}}
-\newlabel{sec:Riemannian Newton Method}{{2.1}{8}{Riemannian Newton Method}{section.2.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}Generalization of the functional}{8}{section.2.1}}
+\newlabel{sec:Generalization of the functional}{{2.1}{8}{Generalization of the functional}{section.2.1}{}}
+\newlabel{eq:general_functional}{{2.3}{8}{Generalization of the functional}{equation.2.1.3}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.2}Algorithms}{8}{section.2.2}}
 \newlabel{sec:Algorithms}{{2.2}{8}{Algorithms}{section.2.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}IRLS}{8}{subsection.2.2.1}}
-\newlabel{sub:IRLS}{{2.2.1}{8}{IRLS}{subsection.2.2.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Proximal Point}{8}{subsection.2.2.2}}
-\newlabel{sub:Proximal Point}{{2.2.2}{8}{Proximal Point}{subsection.2.2.2}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Manifolds}{8}{section.2.3}}
-\newlabel{sec:Manifolds}{{2.3}{8}{Manifolds}{section.2.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Euclidian}{8}{subsection.2.3.1}}
-\newlabel{sub:Euclidian}{{2.3.1}{8}{Euclidian}{subsection.2.3.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Sphere $S^n$}{8}{subsection.2.3.2}}
-\newlabel{sub:Sphere}{{2.3.2}{8}{Sphere $S^n$}{subsection.2.3.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Special Orthogonal Group SO(n)}{8}{subsection.2.3.3}}
-\newlabel{sub:SO(N)}{{2.3.3}{8}{Special Orthogonal Group SO(n)}{subsection.2.3.3}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Second derivatives of the distance function}{8}{section*.3}}
-\newlabel{ssub:Second derivatives of the distance function}{{2.3.3}{8}{Second derivatives of the distance function}{section*.3}{}}
-\@writefile{brf}{\backcite{magnus}{{8}{2.3.3}{section*.3}}}
-\newlabel{eq:son_xx_der}{{2.1}{8}{Second derivatives of the distance function}{equation.2.3.1}{}}
-\newlabel{eq:son_xy_der}{{2.2}{8}{Second derivatives of the distance function}{equation.2.3.2}{}}
-\citation{AbsilGrasmman}
-\citation{EAS}
-\citation{SatoIwai}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Symmetric Positive Definite Matrices SPD(n)}{9}{subsection.2.3.4}}
-\newlabel{sub:SPD(N)}{{2.3.4}{9}{Symmetric Positive Definite Matrices SPD(n)}{subsection.2.3.4}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Second derivatives of the distance function}{9}{section*.4}}
-\newlabel{ssub:Second derivatives of the distance function}{{2.3.4}{9}{Second derivatives of the distance function}{section*.4}{}}
-\newlabel{eq:spd_xx_der}{{2.3}{9}{Second derivatives of the distance function}{equation.2.3.3}{}}
-\newlabel{eq:spd_xy_der}{{2.4}{9}{Second derivatives of the distance function}{equation.2.3.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.5}Grassmanian Gr(n,p)}{9}{subsection.2.3.5}}
-\newlabel{sub:Grassmanian}{{2.3.5}{9}{Grassmanian Gr(n,p)}{subsection.2.3.5}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Quotient representations}{9}{section*.5}}
-\newlabel{ssub:Quotient representations}{{2.3.5}{9}{Quotient representations}{section*.5}{}}
-\@writefile{brf}{\backcite{AbsilGrasmman}{{9}{2.3.5}{equation.2.3.7}}}
-\@writefile{brf}{\backcite{EAS}{{9}{2.3.5}{equation.2.3.7}}}
-\@writefile{brf}{\backcite{SatoIwai}{{9}{2.3.5}{equation.2.3.7}}}
-\citation{AbsilOptim}
-\@writefile{toc}{\contentsline {subsubsection}{Locally unique representatives}{10}{section*.6}}
-\newlabel{ssub:Locally unique Representative}{{2.3.5}{10}{Locally unique representatives}{section*.6}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Tangent space}{10}{section*.7}}
-\newlabel{ssub:Tangent space}{{2.3.5}{10}{Tangent space}{section*.7}{}}
-\@writefile{brf}{\backcite{AbsilOptim}{{10}{2.3.5}{section*.7}}}
-\newlabel{eq:stiefel_tangentspace}{{2.16}{10}{Tangent space}{equation.2.3.16}{}}
-\citation{absil_GR}
-\newlabel{eq:stiefel_horizontalspace}{{2.17}{11}{Tangent space}{equation.2.3.17}{}}
-\newlabel{eq:stiefel_verticalspace}{{2.18}{11}{Tangent space}{equation.2.3.18}{}}
-\newlabel{eq:grassmann_tangentspace}{{2.19}{11}{Tangent space}{equation.2.3.19}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Exponential map}{11}{section*.8}}
-\newlabel{ssub:Exponential map}{{2.3.5}{11}{Exponential map}{section*.8}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Distance function}{11}{section*.9}}
-\newlabel{ssub:Distance function}{{2.3.5}{11}{Distance function}{section*.9}{}}
-\newlabel{eq:gr_geod_dist}{{2.23}{11}{Distance function}{equation.2.3.23}{}}
-\@writefile{brf}{\backcite{absil_GR}{{11}{2.3.5}{equation.2.3.26}}}
-\@writefile{toc}{\contentsline {subsubsection}{First derivatives of the distance function}{11}{section*.10}}
-\newlabel{ssub:First derivatives of the distance function}{{2.3.5}{11}{First derivatives of the distance function}{section*.10}{}}
-\newlabel{eq:gr_x_der}{{2.28}{11}{First derivatives of the distance function}{equation.2.3.28}{}}
-\citation{almohy_frechetlog}
-\@writefile{toc}{\contentsline {subsubsection}{Second derivatives of the distance function}{12}{section*.11}}
-\newlabel{ssub:Second derivatives of the distance function}{{2.3.5}{12}{Second derivatives of the distance function}{section*.11}{}}
-\newlabel{eq:gr_xx_der}{{2.29}{12}{Second derivatives of the distance function}{equation.2.3.29}{}}
-\newlabel{eq:gr_xy_der}{{2.30}{12}{Second derivatives of the distance function}{equation.2.3.30}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.4}Fr\'{e}chet derivatives of matrix logarithm and square root}{12}{section.2.4}}
-\newlabel{sec:frechetderivatives}{{2.4}{12}{Fr\'{e}chet derivatives of matrix logarithm and square root}{section.2.4}{}}
-\newlabel{eq:kronckerform}{{2.34}{12}{Fr\'{e}chet derivatives of matrix logarithm and square root}{equation.2.4.34}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Derivative of the matrix square root}{12}{subsection.2.4.1}}
-\newlabel{sub:Derivative of the matrix square root}{{2.4.1}{12}{Derivative of the matrix square root}{subsection.2.4.1}{}}
-\newlabel{eq:sylvester}{{2.37}{12}{Derivative of the matrix square root}{equation.2.4.37}{}}
-\citation{highham_pade}
-\citation{almohy_frechetlog}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Derivative of the matrix logarithm}{13}{subsection.2.4.2}}
-\newlabel{sub:Derivative of the matrix logarithm}{{2.4.2}{13}{Derivative of the matrix logarithm}{subsection.2.4.2}{}}
-\@writefile{brf}{\backcite{almohy_frechetlog}{{13}{2.4.2}{subsection.2.4.2}}}
-\@writefile{brf}{\backcite{highham_pade}{{13}{2.4.2}{equation.2.4.44}}}
-\newlabel{eq:pade_log}{{2.45}{13}{Derivative of the matrix logarithm}{equation.2.4.45}{}}
-\newlabel{eq:dlog_approx}{{2.47}{13}{Derivative of the matrix logarithm}{equation.2.4.47}{}}
-\@writefile{brf}{\backcite{almohy_frechetlog}{{13}{2.4.2}{equation.2.4.47}}}
-\citation{nifti}
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}The TVMT Library}{14}{chapter.3}}
-\@writefile{lof}{\addvspace {10\p@ }}
-\@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{ch:library}{{3}{14}{The TVMT Library}{chapter.3}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.1}Capabilities}{14}{section.3.1}}
-\newlabel{sec:Capabilities}{{3.1}{14}{Capabilities}{section.3.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}Supported Manifolds}{14}{subsection.3.1.1}}
-\newlabel{sub:Supported Manifolds}{{3.1.1}{14}{Supported Manifolds}{subsection.3.1.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}Data}{14}{subsection.3.1.2}}
-\newlabel{sub:Data}{{3.1.2}{14}{Data}{subsection.3.1.2}{}}
-\@writefile{brf}{\backcite{nifti}{{14}{3.1.2}{subsection.3.1.2}}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.3}Functionals}{14}{subsection.3.1.3}}
-\newlabel{sub:Functionals}{{3.1.3}{14}{Functionals}{subsection.3.1.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.4}Minimizer}{14}{subsection.3.1.4}}
-\newlabel{sub:Minimizer}{{3.1.4}{14}{Minimizer}{subsection.3.1.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Proximal Point}{8}{subsection.2.2.1}}
+\newlabel{sub:ProximalPoint}{{2.2.1}{8}{Proximal Point}{subsection.2.2.1}{}}
+\@writefile{brf}{\backcite{Weinmann}{{8}{2.2.1}{subsection.2.2.1}}}
+\citation{ParikhBoyd}
+\citation{Weinmann}
+\citation{Karcher}
+\@writefile{brf}{\backcite{CombettesPesque}{{9}{2.2.1}{subsection.2.2.1}}}
+\newlabel{eq:real_proximity}{{2.5}{9}{Proximal Point}{equation.2.2.5}{}}
+\@writefile{brf}{\backcite{ParikhBoyd}{{9}{2.2.1}{equation.2.2.5}}}
+\@writefile{toc}{\contentsline {subsubsection}{Application to manifolds}{9}{section*.3}}
+\newlabel{ssub:Application to manifolds}{{2.2.1}{9}{Application to manifolds}{section*.3}{}}
+\newlabel{eq:real_proximity}{{2.10}{9}{Application to manifolds}{equation.2.2.10}{}}
+\@writefile{brf}{\backcite{Weinmann}{{9}{2.2.1}{equation.2.2.10}}}
+\@writefile{brf}{\backcite{Karcher}{{9}{2.2.1}{equation.2.2.15}}}
+\citation{Rodriguez}
 \citation{SprecherIRLS}
-\citation{mt}
-\citation{bt}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.5}Visualizations}{15}{subsection.3.1.5}}
-\newlabel{sub:Visualizations}{{3.1.5}{15}{Visualizations}{subsection.3.1.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.2}Design concepts}{15}{section.3.2}}
-\newlabel{sec:Design}{{3.2}{15}{Design concepts}{section.3.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Goals}{15}{subsection.3.2.1}}
-\newlabel{sub:Goals}{{3.2.1}{15}{Goals}{subsection.3.2.1}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Performance}{15}{section*.12}}
-\newlabel{ssub:Performance}{{3.2.1}{15}{Performance}{section*.12}{}}
-\@writefile{brf}{\backcite{SprecherIRLS}{{15}{3.2.1}{section*.12}}}
-\@writefile{brf}{\backcite{mt}{{15}{3.2.1}{section*.12}}}
-\@writefile{brf}{\backcite{bt}{{15}{3.2.1}{section*.12}}}
-\@writefile{toc}{\contentsline {subsubsection}{Modularization and Extendability}{15}{section*.13}}
-\newlabel{ssub:Modularization}{{3.2.1}{15}{Modularization and Extendability}{section*.13}{}}
-\citation{opticalflow}
-\@writefile{brf}{\backcite{opticalflow}{{16}{3.2.1}{section*.13}}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Levels of parallelization}{16}{subsection.3.2.2}}
-\newlabel{sub:Levels of parallelization}{{3.2.2}{16}{Levels of parallelization}{subsection.3.2.2}{}}
-\newlabel{code:pixelwise_demo}{{3.1}{16}{Pixel-wise forward derivative computation}{lstlisting.3.1}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.1}Pixel-wise forward derivative computation}{16}{lstlisting.3.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Calculation using pixel-wise kernels}}{17}{figure.caption.14}}
-\newlabel{fig:pixelwise_kernel}{{3.1}{17}{Calculation using pixel-wise kernels}{figure.caption.14}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces SIMD parallelization}}{17}{figure.caption.15}}
-\newlabel{fig:simd}{{3.2}{17}{SIMD parallelization}{figure.caption.15}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}C++ techniques}{18}{subsection.3.2.3}}
-\newlabel{sub:C++ techniques}{{3.2.3}{18}{C++ techniques}{subsection.3.2.3}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Lambda functions}{18}{section*.16}}
-\newlabel{ssub:Lambda functions}{{3.2.3}{18}{Lambda functions}{section*.16}{}}
-\newlabel{code:lambdafun}{{3.2}{18}{Lambda functions}{lstlisting.3.2}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.2}Lambda functions}{18}{lstlisting.3.2}}
-\@writefile{toc}{\contentsline {subsubsection}{Variadic templates}{18}{section*.17}}
-\newlabel{ssub:Variadic templates}{{3.2.3}{18}{Variadic templates}{section*.17}{}}
-\newlabel{code:variadic}{{3.3}{18}{Variadic template example}{lstlisting.3.3}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.3}Variadic template example}{18}{lstlisting.3.3}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.3}Components}{19}{section.3.3}}
-\newlabel{sec:Components}{{3.3}{19}{Components}{section.3.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Manifold classes}{19}{subsection.3.3.1}}
-\newlabel{sub:Manifold classes}{{3.3.1}{19}{Manifold classes}{subsection.3.3.1}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Static constants}{19}{section*.18}}
-\newlabel{ssub:Static constants}{{3.3.1}{19}{Static constants}{section*.18}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Type definitions}{19}{section*.19}}
-\newlabel{ssub:Type definitions}{{3.3.1}{19}{Type definitions}{section*.19}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Static methods}{20}{section*.20}}
-\newlabel{ssub:Static methods}{{3.3.1}{20}{Static methods}{section*.20}{}}
-\citation{vpp_paper}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Data class}{21}{subsection.3.3.2}}
-\newlabel{sub:Data class}{{3.3.2}{21}{Data class}{subsection.3.3.2}{}}
-\@writefile{brf}{\backcite{vpp_paper}{{21}{3.3.2}{lstnumber.-8.4}}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Functional class}{22}{subsection.3.3.3}}
-\newlabel{sub:Functional class}{{3.3.3}{22}{Functional class}{subsection.3.3.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.4}TV Minimizer class}{22}{subsection.3.3.4}}
-\newlabel{sub:TVMinimizer class}{{3.3.4}{22}{TV Minimizer class}{subsection.3.3.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.5}Visualization class}{23}{subsection.3.3.5}}
-\newlabel{sub:Visualization class}{{3.3.5}{23}{Visualization class}{subsection.3.3.5}{}}
-\@writefile{toc}{\contentsline {subsubsection}{SO(3) Visualization}{23}{section*.21}}
-\newlabel{ssub:SO(3) Visualization}{{3.3.5}{23}{SO(3) Visualization}{section*.21}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces SO(3) cube visualization}}{23}{figure.caption.22}}
-\newlabel{fig:cube_visualization}{{3.3}{23}{SO(3) cube visualization}{figure.caption.22}{}}
-\@writefile{toc}{\contentsline {subsubsection}{SPD(3) Visualization}{24}{section*.23}}
-\newlabel{ssub:SPD(3) Visualization}{{3.3.5}{24}{SPD(3) Visualization}{section*.23}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces SPD(3) ellipsoid visualization}}{24}{figure.caption.24}}
-\newlabel{fig:ellipsoid_visualization}{{3.4}{24}{SPD(3) ellipsoid visualization}{figure.caption.24}{}}
-\newlabel{fig:helix_side}{{3.5a}{24}{Subfigure 3 3.5a}{subfigure.3.5.1}{}}
-\newlabel{sub@fig:helix_side}{{(a)}{a}{Subfigure 3 3.5a\relax }{subfigure.3.5.1}{}}
-\newlabel{fig:helix_top}{{3.5b}{24}{Subfigure 3 3.5b}{subfigure.3.5.2}{}}
-\newlabel{sub@fig:helix_top}{{(b)}{b}{Subfigure 3 3.5b\relax }{subfigure.3.5.2}{}}
-\newlabel{fig:helix_close}{{3.5c}{24}{Subfigure 3 3.5c}{subfigure.3.5.3}{}}
-\newlabel{sub@fig:helix_close}{{(c)}{c}{Subfigure 3 3.5c\relax }{subfigure.3.5.3}{}}
-\newlabel{fig:helix_inside}{{3.5d}{24}{Subfigure 3 3.5d}{subfigure.3.5.4}{}}
-\newlabel{sub@fig:helix_inside}{{(d)}{d}{Subfigure 3 3.5d\relax }{subfigure.3.5.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces 3D SPD(3) Volume Visualization of a helix}}{24}{figure.caption.25}}
-\newlabel{fig:helix}{{3.5}{24}{3D SPD(3) Volume Visualization of a helix}{figure.caption.25}{}}
-\@writefile{toc}{\contentsline {subsubsection}{3D Volume image rendering}{24}{section*.26}}
-\newlabel{ssub:3D Volume image rendering}{{3.3.5}{24}{3D Volume image rendering}{section*.26}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces 3D Volume image renderer}}{25}{figure.caption.27}}
-\newlabel{fig:volume_visualization}{{3.6}{25}{3D Volume image renderer}{figure.caption.27}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.6}Utility functions}{25}{subsection.3.3.6}}
-\newlabel{sub:Utility function}{{3.3.6}{25}{Utility functions}{subsection.3.3.6}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Matrix functions}{25}{section*.28}}
-\newlabel{ssub:Matrix functions}{{3.3.6}{25}{Matrix functions}{section*.28}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Function pointers utilities}{25}{section*.29}}
-\newlabel{ssub:Function pointers}{{3.3.6}{25}{Function pointers utilities}{section*.29}{}}
-\@writefile{toc}{\contentsline {subsubsection}{3D pixel-wise kernels}{25}{section*.30}}
-\newlabel{ssub:3D pixel-wise kernels}{{3.3.6}{25}{3D pixel-wise kernels}{section*.30}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.7}External Components}{25}{subsection.3.3.7}}
-\newlabel{sub:External Components}{{3.3.7}{25}{External Components}{subsection.3.3.7}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Linear algebra handler: Eigen}{25}{section*.31}}
-\newlabel{ssub:Eigen}{{3.3.7}{25}{Linear algebra handler: Eigen}{section*.31}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Data storage and processing: Video++}{25}{section*.32}}
-\newlabel{ssub:Video++}{{3.3.7}{25}{Data storage and processing: Video++}{section*.32}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {3.4}Using TVTML}{25}{section.3.4}}
-\newlabel{sec:Using TVTML}{{3.4}{25}{Using TVTML}{section.3.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Prerequisites}{25}{subsection.3.4.1}}
-\newlabel{sub:Prerequisites}{{3.4.1}{25}{Prerequisites}{subsection.3.4.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Installation}{26}{subsection.3.4.2}}
-\newlabel{sub:Installation}{{3.4.2}{26}{Installation}{subsection.3.4.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Compilation of own projects using CMake}{26}{subsection.3.4.3}}
-\newlabel{sub:CMakeCompilation}{{3.4.3}{26}{Compilation of own projects using CMake}{subsection.3.4.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.4}Tutorial and typical use cases}{26}{subsection.3.4.4}}
-\newlabel{sub:Tutorial and typical use cases}{{3.4.4}{26}{Tutorial and typical use cases}{subsection.3.4.4}{}}
-\@writefile{toc}{\contentsline {subsubsection}{Image denoising, vectorial color model}{26}{section*.33}}
-\newlabel{ssub:Image denoising, vectorial color model}{{3.4.4}{26}{Image denoising, vectorial color model}{section*.33}{}}
-\newlabel{code:tut_include}{{3.4}{26}{Inclusion of library headers}{lstlisting.3.4}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.4}Inclusion of library headers}{26}{lstlisting.3.4}}
-\newlabel{code:tut_typedef}{{3.5}{26}{Specification of manifold and data type}{lstlisting.3.5}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.5}Specification of manifold and data type}{26}{lstlisting.3.5}}
-\newlabel{code:tut_data}{{3.6}{26}{Initialization and input of image data}{lstlisting.3.6}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.6}Initialization and input of image data}{26}{lstlisting.3.6}}
-\newlabel{code:tut_func}{{3.7}{26}{Defining the functional and setting parameters}{lstlisting.3.7}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.7}Defining the functional and setting parameters}{26}{lstlisting.3.7}}
-\newlabel{code:tut_data}{{3.8}{27}{Choosing the minimizer, smoothing and minimization}{lstlisting.3.8}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.8}Choosing the minimizer, smoothing and minimization}{27}{lstlisting.3.8}}
-\@writefile{toc}{\contentsline {subsubsection}{Colorization using color inpainting}{27}{section*.34}}
-\newlabel{ssub:Color inpainting}{{3.4.4}{27}{Colorization using color inpainting}{section*.34}{}}
-\newlabel{code:tut2_init}{{3.9}{27}{Include library files and read parameters from standard input}{lstlisting.3.9}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.9}Include library files and read parameters from standard input}{27}{lstlisting.3.9}}
-\newlabel{code:tut2_mfdata}{{3.10}{27}{Manifold and Data class type definitions and instantiation}{lstlisting.3.10}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.10}Manifold and Data class type definitions and instantiation}{27}{lstlisting.3.10}}
-\newlabel{code:tut2_edgeandcolorremoval}{{3.11}{28}{Color and brightness input, edge detection and color removal}{lstlisting.3.11}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.11}Color and brightness input, edge detection and color removal}{28}{lstlisting.3.11}}
-\newlabel{code:tut2_functionalmin}{{3.12}{28}{Functional and minimizer definition, first guess and minimization}{lstlisting.3.12}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.12}Functional and minimizer definition, first guess and minimization}{28}{lstlisting.3.12}}
-\@writefile{toc}{\contentsline {subsubsection}{3D DT-MRI data denoising and visualization}{28}{section*.35}}
-\newlabel{ssub:dti_tut}{{3.4.4}{28}{3D DT-MRI data denoising and visualization}{section*.35}{}}
-\newlabel{code:tut3_init}{{3.13}{28}{Initialization}{lstlisting.3.13}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.13}Initialization}{28}{lstlisting.3.13}}
-\newlabel{code:tut3_typdefinitions}{{3.14}{29}{Type definitions, Visualization type}{lstlisting.3.14}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.14}Type definitions, Visualization type}{29}{lstlisting.3.14}}
-\newlabel{code:tut3_rendernoisyimg}{{3.15}{29}{Data input and displaying the noisy data}{lstlisting.3.15}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.15}Data input and displaying the noisy data}{29}{lstlisting.3.15}}
-\newlabel{code:tut3_rendernoisyimg}{{3.16}{29}{Minimization and final rendering}{lstlisting.3.16}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.16}Minimization and final rendering}{29}{lstlisting.3.16}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}Applications and Numerical Experiments}{31}{chapter.4}}
+\citation{Karcher}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}IRLS}{10}{subsection.2.2.2}}
+\newlabel{sub:IRLS}{{2.2.2}{10}{IRLS}{subsection.2.2.2}{}}
+\newlabel{eq:regulzarized_tv}{{2.16}{10}{IRLS}{equation.2.2.16}{}}
+\@writefile{brf}{\backcite{Rodriguez}{{10}{2.2.2}{equation.2.2.16}}}
+\@writefile{brf}{\backcite{SprecherIRLS}{{10}{2.2.2}{equation.2.2.20}}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Riemannian Newton method}{10}{section.2.3}}
+\newlabel{sec:Riemannian Newton method}{{2.3}{10}{Riemannian Newton method}{section.2.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Gradient and Hessian}{10}{subsection.2.3.1}}
+\newlabel{sub:Gradient and Hessian}{{2.3.1}{10}{Gradient and Hessian}{subsection.2.3.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Retractions}{10}{subsection.2.3.2}}
+\newlabel{sub:Retractions}{{2.3.2}{10}{Retractions}{subsection.2.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Newton equation for the TV functional}{10}{subsection.2.3.3}}
+\newlabel{sub:Newton equation for the TV functional}{{2.3.3}{10}{Newton equation for the TV functional}{subsection.2.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Tangent space restriction}{10}{subsection.2.3.4}}
+\newlabel{sub:Tangent space restriction}{{2.3.4}{10}{Tangent space restriction}{subsection.2.3.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Manifolds}{10}{section.2.4}}
+\newlabel{sec:Manifolds}{{2.4}{10}{Manifolds}{section.2.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Euclidian}{10}{subsection.2.4.1}}
+\newlabel{sub:Euclidian}{{2.4.1}{10}{Euclidian}{subsection.2.4.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Sphere $S^n$}{10}{subsection.2.4.2}}
+\newlabel{sub:Sphere}{{2.4.2}{10}{Sphere $S^n$}{subsection.2.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}Special Orthogonal Group SO(n)}{10}{subsection.2.4.3}}
+\newlabel{sub:SO(N)}{{2.4.3}{10}{Special Orthogonal Group SO(n)}{subsection.2.4.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{First derivatives of the distance function}{10}{section*.4}}
+\newlabel{ssub:First derivatives of the distance function}{{2.4.3}{10}{First derivatives of the distance function}{section*.4}{}}
+\@writefile{brf}{\backcite{Karcher}{{10}{2.4.3}{section*.4}}}
+\citation{Magnus}
+\newlabel{thm:karcher_theorem}{{2.1}{11}{Karcher}{theorem.2.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Second derivatives of the distance function}{11}{section*.5}}
+\newlabel{ssub:Second derivatives of the distance function}{{2.4.3}{11}{Second derivatives of the distance function}{section*.5}{}}
+\@writefile{brf}{\backcite{Magnus}{{11}{2.4.3}{section*.5}}}
+\newlabel{eq:son_xx_der}{{2.22}{11}{Second derivatives of the distance function}{equation.2.4.22}{}}
+\newlabel{eq:son_xy_der}{{2.23}{11}{Second derivatives of the distance function}{equation.2.4.23}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.4}Symmetric Positive Definite Matrices SPD(n)}{11}{subsection.2.4.4}}
+\newlabel{sub:SPD(N)}{{2.4.4}{11}{Symmetric Positive Definite Matrices SPD(n)}{subsection.2.4.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Second derivatives of the distance function}{11}{section*.6}}
+\newlabel{ssub:Second derivatives of the distance function}{{2.4.4}{11}{Second derivatives of the distance function}{section*.6}{}}
+\newlabel{eq:spd_xx_der}{{2.24}{11}{Second derivatives of the distance function}{equation.2.4.24}{}}
+\newlabel{eq:spd_xy_der}{{2.25}{11}{Second derivatives of the distance function}{equation.2.4.25}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.5}Grassmanian Gr(n,p)}{11}{subsection.2.4.5}}
+\newlabel{sub:Grassmanian}{{2.4.5}{11}{Grassmanian Gr(n,p)}{subsection.2.4.5}{}}
+\citation{AbsilGrassmann}
+\citation{EAS}
+\citation{Sato2014}
+\@writefile{toc}{\contentsline {subsubsection}{Quotient representations}{12}{section*.7}}
+\newlabel{ssub:Quotient representations}{{2.4.5}{12}{Quotient representations}{section*.7}{}}
+\@writefile{brf}{\backcite{AbsilGrassmann}{{12}{2.4.5}{equation.2.4.28}}}
+\@writefile{brf}{\backcite{EAS}{{12}{2.4.5}{equation.2.4.28}}}
+\@writefile{brf}{\backcite{Sato2014}{{12}{2.4.5}{equation.2.4.28}}}
+\@writefile{toc}{\contentsline {subsubsection}{Locally unique representatives}{12}{section*.8}}
+\newlabel{ssub:Locally unique Representative}{{2.4.5}{12}{Locally unique representatives}{section*.8}{}}
+\citation{Absil2009}
+\@writefile{toc}{\contentsline {subsubsection}{Tangent space}{13}{section*.9}}
+\newlabel{ssub:Tangent space}{{2.4.5}{13}{Tangent space}{section*.9}{}}
+\@writefile{brf}{\backcite{Absil2009}{{13}{2.4.5}{section*.9}}}
+\newlabel{eq:stiefel_tangentspace}{{2.37}{13}{Tangent space}{equation.2.4.37}{}}
+\newlabel{eq:stiefel_horizontalspace}{{2.38}{13}{Tangent space}{equation.2.4.38}{}}
+\newlabel{eq:stiefel_verticalspace}{{2.39}{13}{Tangent space}{equation.2.4.39}{}}
+\newlabel{eq:grassmann_tangentspace}{{2.40}{13}{Tangent space}{equation.2.4.40}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Exponential map}{13}{section*.10}}
+\newlabel{ssub:Exponential map}{{2.4.5}{13}{Exponential map}{section*.10}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Logarithm map}{13}{section*.11}}
+\newlabel{ssub:Logarithm map}{{2.4.5}{13}{Logarithm map}{section*.11}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Distance function}{13}{section*.12}}
+\newlabel{ssub:Distance function}{{2.4.5}{13}{Distance function}{section*.12}{}}
+\citation{AbsilGrassmann}
+\newlabel{eq:gr_geod_dist}{{2.45}{14}{Distance function}{equation.2.4.45}{}}
+\@writefile{brf}{\backcite{AbsilGrassmann}{{14}{2.4.5}{equation.2.4.48}}}
+\@writefile{toc}{\contentsline {subsubsection}{First derivatives of the distance function}{14}{section*.13}}
+\newlabel{ssub:First derivatives of the distance function}{{2.4.5}{14}{First derivatives of the distance function}{section*.13}{}}
+\newlabel{eq:gr_x_der}{{2.50}{14}{First derivatives of the distance function}{equation.2.4.50}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Second derivatives of the distance function}{14}{section*.14}}
+\newlabel{ssub:Second derivatives of the distance function}{{2.4.5}{14}{Second derivatives of the distance function}{section*.14}{}}
+\newlabel{eq:gr_xx_der}{{2.51}{14}{Second derivatives of the distance function}{equation.2.4.51}{}}
+\newlabel{eq:gr_xy_der}{{2.52}{14}{Second derivatives of the distance function}{equation.2.4.52}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.5}Fr\'{e}chet derivatives of matrix logarithm and square root}{14}{section.2.5}}
+\newlabel{sec:frechetderivatives}{{2.5}{14}{Fr\'{e}chet derivatives of matrix logarithm and square root}{section.2.5}{}}
+\newlabel{eq:kronckerform}{{2.56}{14}{Fr\'{e}chet derivatives of matrix logarithm and square root}{equation.2.5.56}{}}
+\citation{AlmohyFrechet}
+\citation{HighamPade}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.1}Derivative of the matrix square root}{15}{subsection.2.5.1}}
+\newlabel{sub:Derivative of the matrix square root}{{2.5.1}{15}{Derivative of the matrix square root}{subsection.2.5.1}{}}
+\newlabel{eq:sylvester}{{2.59}{15}{Derivative of the matrix square root}{equation.2.5.59}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}Derivative of the matrix logarithm}{15}{subsection.2.5.2}}
+\newlabel{sub:Derivative of the matrix logarithm}{{2.5.2}{15}{Derivative of the matrix logarithm}{subsection.2.5.2}{}}
+\@writefile{brf}{\backcite{AlmohyFrechet}{{15}{2.5.2}{subsection.2.5.2}}}
+\citation{AlmohyFrechet}
+\@writefile{brf}{\backcite{HighamPade}{{16}{2.5.2}{equation.2.5.66}}}
+\newlabel{eq:pade_log}{{2.67}{16}{Derivative of the matrix logarithm}{equation.2.5.67}{}}
+\newlabel{eq:dlog_approx}{{2.69}{16}{Derivative of the matrix logarithm}{equation.2.5.69}{}}
+\@writefile{brf}{\backcite{AlmohyFrechet}{{16}{2.5.2}{equation.2.5.69}}}
+\citation{nifti}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}The TVMT Library}{17}{chapter.3}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{ch:numericalexperiments}{{4}{31}{Applications and Numerical Experiments}{chapter.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.1}Color image denoising}{31}{section.4.1}}
-\newlabel{sec:Color image denoising}{{4.1}{31}{Color image denoising}{section.4.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Grayscale}{31}{subsection.4.1.1}}
-\newlabel{sub:Grayscale}{{4.1.1}{31}{Grayscale}{subsection.4.1.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Color}{31}{subsection.4.1.2}}
-\newlabel{sub:Color}{{4.1.2}{31}{Color}{subsection.4.1.2}{}}
-\newlabel{fig:application_color1_orig}{{4.1a}{31}{Subfigure 4 4.1a}{subfigure.4.1.1}{}}
+\newlabel{ch:library}{{3}{17}{The TVMT Library}{chapter.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Capabilities}{17}{section.3.1}}
+\newlabel{sec:Capabilities}{{3.1}{17}{Capabilities}{section.3.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.1}Supported Manifolds}{17}{subsection.3.1.1}}
+\newlabel{sub:Supported Manifolds}{{3.1.1}{17}{Supported Manifolds}{subsection.3.1.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.2}Data}{17}{subsection.3.1.2}}
+\newlabel{sub:Data}{{3.1.2}{17}{Data}{subsection.3.1.2}{}}
+\@writefile{brf}{\backcite{nifti}{{17}{3.1.2}{subsection.3.1.2}}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.3}Functionals}{17}{subsection.3.1.3}}
+\newlabel{sub:Functionals}{{3.1.3}{17}{Functionals}{subsection.3.1.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.4}Minimizer}{17}{subsection.3.1.4}}
+\newlabel{sub:Minimizer}{{3.1.4}{17}{Minimizer}{subsection.3.1.4}{}}
+\citation{SprecherIRLS}
+\citation{manuel}
+\citation{mara}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1.5}Visualizations}{18}{subsection.3.1.5}}
+\newlabel{sub:Visualizations}{{3.1.5}{18}{Visualizations}{subsection.3.1.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Design concepts}{18}{section.3.2}}
+\newlabel{sec:Design}{{3.2}{18}{Design concepts}{section.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Goals}{18}{subsection.3.2.1}}
+\newlabel{sub:Goals}{{3.2.1}{18}{Goals}{subsection.3.2.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Performance}{18}{section*.15}}
+\newlabel{ssub:Performance}{{3.2.1}{18}{Performance}{section*.15}{}}
+\@writefile{brf}{\backcite{SprecherIRLS}{{18}{3.2.1}{section*.15}}}
+\@writefile{brf}{\backcite{manuel}{{18}{3.2.1}{section*.15}}}
+\@writefile{brf}{\backcite{mara}{{18}{3.2.1}{section*.15}}}
+\@writefile{toc}{\contentsline {subsubsection}{Modularization and Extendability}{18}{section*.16}}
+\newlabel{ssub:Modularization}{{3.2.1}{18}{Modularization and Extendability}{section*.16}{}}
+\citation{opticalflow}
+\@writefile{brf}{\backcite{opticalflow}{{19}{3.2.1}{section*.16}}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Levels of parallelization}{19}{subsection.3.2.2}}
+\newlabel{sub:Levels of parallelization}{{3.2.2}{19}{Levels of parallelization}{subsection.3.2.2}{}}
+\newlabel{code:pixelwise_demo}{{3.1}{19}{Pixel-wise forward derivative computation}{lstlisting.3.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.1}Pixel-wise forward derivative computation}{19}{lstlisting.3.1}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Calculation using pixel-wise kernels}}{20}{figure.caption.17}}
+\newlabel{fig:pixelwise_kernel}{{3.1}{20}{Calculation using pixel-wise kernels}{figure.caption.17}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces SIMD parallelization}}{20}{figure.caption.18}}
+\newlabel{fig:simd}{{3.2}{20}{SIMD parallelization}{figure.caption.18}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}C++ techniques}{21}{subsection.3.2.3}}
+\newlabel{sub:C++ techniques}{{3.2.3}{21}{C++ techniques}{subsection.3.2.3}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Lambda functions}{21}{section*.19}}
+\newlabel{ssub:Lambda functions}{{3.2.3}{21}{Lambda functions}{section*.19}{}}
+\newlabel{code:lambdafun}{{3.2}{21}{Lambda functions}{lstlisting.3.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.2}Lambda functions}{21}{lstlisting.3.2}}
+\@writefile{toc}{\contentsline {subsubsection}{Variadic templates}{21}{section*.20}}
+\newlabel{ssub:Variadic templates}{{3.2.3}{21}{Variadic templates}{section*.20}{}}
+\newlabel{code:variadic}{{3.3}{21}{Variadic template example}{lstlisting.3.3}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.3}Variadic template example}{21}{lstlisting.3.3}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Components}{22}{section.3.3}}
+\newlabel{sec:Components}{{3.3}{22}{Components}{section.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Manifold classes}{22}{subsection.3.3.1}}
+\newlabel{sub:Manifold classes}{{3.3.1}{22}{Manifold classes}{subsection.3.3.1}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Static constants}{22}{section*.21}}
+\newlabel{ssub:Static constants}{{3.3.1}{22}{Static constants}{section*.21}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Type definitions}{22}{section*.22}}
+\newlabel{ssub:Type definitions}{{3.3.1}{22}{Type definitions}{section*.22}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Static methods}{23}{section*.23}}
+\newlabel{ssub:Static methods}{{3.3.1}{23}{Static methods}{section*.23}{}}
+\citation{VPP}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Data class}{24}{subsection.3.3.2}}
+\newlabel{sub:Data class}{{3.3.2}{24}{Data class}{subsection.3.3.2}{}}
+\@writefile{brf}{\backcite{VPP}{{24}{3.3.2}{lstnumber.-8.4}}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Functional class}{25}{subsection.3.3.3}}
+\newlabel{sub:Functional class}{{3.3.3}{25}{Functional class}{subsection.3.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.4}TV Minimizer class}{25}{subsection.3.3.4}}
+\newlabel{sub:TVMinimizer class}{{3.3.4}{25}{TV Minimizer class}{subsection.3.3.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.5}Visualization class}{26}{subsection.3.3.5}}
+\newlabel{sub:Visualization class}{{3.3.5}{26}{Visualization class}{subsection.3.3.5}{}}
+\@writefile{toc}{\contentsline {subsubsection}{SO(3) Visualization}{26}{section*.24}}
+\newlabel{ssub:SO(3) Visualization}{{3.3.5}{26}{SO(3) Visualization}{section*.24}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces SO(3) cube visualization}}{26}{figure.caption.25}}
+\newlabel{fig:cube_visualization}{{3.3}{26}{SO(3) cube visualization}{figure.caption.25}{}}
+\@writefile{toc}{\contentsline {subsubsection}{SPD(3) Visualization}{27}{section*.26}}
+\newlabel{ssub:SPD(3) Visualization}{{3.3.5}{27}{SPD(3) Visualization}{section*.26}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces SPD(3) ellipsoid visualization}}{27}{figure.caption.27}}
+\newlabel{fig:ellipsoid_visualization}{{3.4}{27}{SPD(3) ellipsoid visualization}{figure.caption.27}{}}
+\newlabel{fig:helix_side}{{3.5a}{27}{Subfigure 3 3.5a}{subfigure.3.5.1}{}}
+\newlabel{sub@fig:helix_side}{{(a)}{a}{Subfigure 3 3.5a\relax }{subfigure.3.5.1}{}}
+\newlabel{fig:helix_top}{{3.5b}{27}{Subfigure 3 3.5b}{subfigure.3.5.2}{}}
+\newlabel{sub@fig:helix_top}{{(b)}{b}{Subfigure 3 3.5b\relax }{subfigure.3.5.2}{}}
+\newlabel{fig:helix_close}{{3.5c}{27}{Subfigure 3 3.5c}{subfigure.3.5.3}{}}
+\newlabel{sub@fig:helix_close}{{(c)}{c}{Subfigure 3 3.5c\relax }{subfigure.3.5.3}{}}
+\newlabel{fig:helix_inside}{{3.5d}{27}{Subfigure 3 3.5d}{subfigure.3.5.4}{}}
+\newlabel{sub@fig:helix_inside}{{(d)}{d}{Subfigure 3 3.5d\relax }{subfigure.3.5.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces 3D SPD(3) Volume Visualization of a helix}}{27}{figure.caption.28}}
+\newlabel{fig:helix}{{3.5}{27}{3D SPD(3) Volume Visualization of a helix}{figure.caption.28}{}}
+\@writefile{toc}{\contentsline {subsubsection}{3D Volume image rendering}{27}{section*.29}}
+\newlabel{ssub:3D Volume image rendering}{{3.3.5}{27}{3D Volume image rendering}{section*.29}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces 3D Volume image renderer}}{28}{figure.caption.30}}
+\newlabel{fig:volume_visualization}{{3.6}{28}{3D Volume image renderer}{figure.caption.30}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.6}Utility functions}{28}{subsection.3.3.6}}
+\newlabel{sub:Utility function}{{3.3.6}{28}{Utility functions}{subsection.3.3.6}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Matrix functions}{28}{section*.31}}
+\newlabel{ssub:Matrix functions}{{3.3.6}{28}{Matrix functions}{section*.31}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Function pointers utilities}{28}{section*.32}}
+\newlabel{ssub:Function pointers}{{3.3.6}{28}{Function pointers utilities}{section*.32}{}}
+\@writefile{toc}{\contentsline {subsubsection}{3D pixel-wise kernels}{28}{section*.33}}
+\newlabel{ssub:3D pixel-wise kernels}{{3.3.6}{28}{3D pixel-wise kernels}{section*.33}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.7}External Components}{28}{subsection.3.3.7}}
+\newlabel{sub:External Components}{{3.3.7}{28}{External Components}{subsection.3.3.7}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Linear algebra handler: Eigen}{28}{section*.34}}
+\newlabel{ssub:Eigen}{{3.3.7}{28}{Linear algebra handler: Eigen}{section*.34}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Data storage and processing: Video++}{28}{section*.35}}
+\newlabel{ssub:Video++}{{3.3.7}{28}{Data storage and processing: Video++}{section*.35}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Using TVTML}{28}{section.3.4}}
+\newlabel{sec:Using TVTML}{{3.4}{28}{Using TVTML}{section.3.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Prerequisites}{28}{subsection.3.4.1}}
+\newlabel{sub:Prerequisites}{{3.4.1}{28}{Prerequisites}{subsection.3.4.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Installation}{29}{subsection.3.4.2}}
+\newlabel{sub:Installation}{{3.4.2}{29}{Installation}{subsection.3.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Compilation of own projects using CMake}{29}{subsection.3.4.3}}
+\newlabel{sub:CMakeCompilation}{{3.4.3}{29}{Compilation of own projects using CMake}{subsection.3.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.4}Tutorial and typical use cases}{29}{subsection.3.4.4}}
+\newlabel{sub:Tutorial and typical use cases}{{3.4.4}{29}{Tutorial and typical use cases}{subsection.3.4.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Image denoising, vectorial color model}{29}{section*.36}}
+\newlabel{ssub:Image denoising, vectorial color model}{{3.4.4}{29}{Image denoising, vectorial color model}{section*.36}{}}
+\newlabel{code:tut_include}{{3.4}{29}{Inclusion of library headers}{lstlisting.3.4}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.4}Inclusion of library headers}{29}{lstlisting.3.4}}
+\newlabel{code:tut_typedef}{{3.5}{29}{Specification of manifold and data type}{lstlisting.3.5}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.5}Specification of manifold and data type}{29}{lstlisting.3.5}}
+\newlabel{code:tut_data}{{3.6}{29}{Initialization and input of image data}{lstlisting.3.6}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.6}Initialization and input of image data}{29}{lstlisting.3.6}}
+\newlabel{code:tut_func}{{3.7}{29}{Defining the functional and setting parameters}{lstlisting.3.7}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.7}Defining the functional and setting parameters}{29}{lstlisting.3.7}}
+\newlabel{code:tut_data}{{3.8}{30}{Choosing the minimizer, smoothing and minimization}{lstlisting.3.8}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.8}Choosing the minimizer, smoothing and minimization}{30}{lstlisting.3.8}}
+\@writefile{toc}{\contentsline {subsubsection}{Colorization using color inpainting}{30}{section*.37}}
+\newlabel{ssub:Color inpainting}{{3.4.4}{30}{Colorization using color inpainting}{section*.37}{}}
+\newlabel{code:tut2_init}{{3.9}{30}{Include library files and read parameters from standard input}{lstlisting.3.9}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.9}Include library files and read parameters from standard input}{30}{lstlisting.3.9}}
+\newlabel{code:tut2_mfdata}{{3.10}{30}{Manifold and Data class type definitions and instantiation}{lstlisting.3.10}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.10}Manifold and Data class type definitions and instantiation}{30}{lstlisting.3.10}}
+\newlabel{code:tut2_edgeandcolorremoval}{{3.11}{31}{Color and brightness input, edge detection and color removal}{lstlisting.3.11}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.11}Color and brightness input, edge detection and color removal}{31}{lstlisting.3.11}}
+\newlabel{code:tut2_functionalmin}{{3.12}{31}{Functional and minimizer definition, first guess and minimization}{lstlisting.3.12}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.12}Functional and minimizer definition, first guess and minimization}{31}{lstlisting.3.12}}
+\@writefile{toc}{\contentsline {subsubsection}{3D DT-MRI data denoising and visualization}{31}{section*.38}}
+\newlabel{ssub:dti_tut}{{3.4.4}{31}{3D DT-MRI data denoising and visualization}{section*.38}{}}
+\newlabel{code:tut3_init}{{3.13}{31}{Initialization}{lstlisting.3.13}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.13}Initialization}{31}{lstlisting.3.13}}
+\newlabel{code:tut3_typdefinitions}{{3.14}{32}{Type definitions, Visualization type}{lstlisting.3.14}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.14}Type definitions, Visualization type}{32}{lstlisting.3.14}}
+\newlabel{code:tut3_rendernoisyimg}{{3.15}{32}{Data input and displaying the noisy data}{lstlisting.3.15}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.15}Data input and displaying the noisy data}{32}{lstlisting.3.15}}
+\newlabel{code:tut3_rendernoisyimg}{{3.16}{32}{Minimization and final rendering}{lstlisting.3.16}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.16}Minimization and final rendering}{32}{lstlisting.3.16}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Applications and Numerical Experiments}{34}{chapter.4}}
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{ch:numericalexperiments}{{4}{34}{Applications and Numerical Experiments}{chapter.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Color image denoising}{34}{section.4.1}}
+\newlabel{sec:Color image denoising}{{4.1}{34}{Color image denoising}{section.4.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Grayscale}{34}{subsection.4.1.1}}
+\newlabel{sub:Grayscale}{{4.1.1}{34}{Grayscale}{subsection.4.1.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Color}{34}{subsection.4.1.2}}
+\newlabel{sub:Color}{{4.1.2}{34}{Color}{subsection.4.1.2}{}}
+\newlabel{fig:application_color1_orig}{{4.1a}{34}{Subfigure 4 4.1a}{subfigure.4.1.1}{}}
 \newlabel{sub@fig:application_color1_orig}{{(a)}{a}{Subfigure 4 4.1a\relax }{subfigure.4.1.1}{}}
-\newlabel{fig:application_color1_noise}{{4.1b}{31}{Subfigure 4 4.1b}{subfigure.4.1.2}{}}
+\newlabel{fig:application_color1_noise}{{4.1b}{34}{Subfigure 4 4.1b}{subfigure.4.1.2}{}}
 \newlabel{sub@fig:application_color1_noise}{{(b)}{b}{Subfigure 4 4.1b\relax }{subfigure.4.1.2}{}}
-\newlabel{fig:application_color1_denoised}{{4.1c}{31}{Subfigure 4 4.1c}{subfigure.4.1.3}{}}
+\newlabel{fig:application_color1_denoised}{{4.1c}{34}{Subfigure 4 4.1c}{subfigure.4.1.3}{}}
 \newlabel{sub@fig:application_color1_denoised}{{(c)}{c}{Subfigure 4 4.1c\relax }{subfigure.4.1.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Denoising linear vectorial}}{31}{figure.caption.36}}
-\newlabel{fig:application_color1}{{4.1}{31}{Denoising linear vectorial}{figure.caption.36}{}}
-\newlabel{fig:application_color2_orig}{{4.2a}{32}{Subfigure 4 4.2a}{subfigure.4.2.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Denoising linear vectorial}}{34}{figure.caption.39}}
+\newlabel{fig:application_color1}{{4.1}{34}{Denoising linear vectorial}{figure.caption.39}{}}
+\newlabel{fig:application_color2_orig}{{4.2a}{35}{Subfigure 4 4.2a}{subfigure.4.2.1}{}}
 \newlabel{sub@fig:application_color2_orig}{{(a)}{a}{Subfigure 4 4.2a\relax }{subfigure.4.2.1}{}}
-\newlabel{fig:application_color2_noise}{{4.2b}{32}{Subfigure 4 4.2b}{subfigure.4.2.2}{}}
+\newlabel{fig:application_color2_noise}{{4.2b}{35}{Subfigure 4 4.2b}{subfigure.4.2.2}{}}
 \newlabel{sub@fig:application_color2_noise}{{(b)}{b}{Subfigure 4 4.2b\relax }{subfigure.4.2.2}{}}
-\newlabel{fig:application_color2_denoised}{{4.2c}{32}{Subfigure 4 4.2c}{subfigure.4.2.3}{}}
+\newlabel{fig:application_color2_denoised}{{4.2c}{35}{Subfigure 4 4.2c}{subfigure.4.2.3}{}}
 \newlabel{sub@fig:application_color2_denoised}{{(c)}{c}{Subfigure 4 4.2c\relax }{subfigure.4.2.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Denoising linear vectorial}}{32}{figure.caption.37}}
-\newlabel{fig:application_color2}{{4.2}{32}{Denoising linear vectorial}{figure.caption.37}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}Inpainting}{32}{subsection.4.1.3}}
-\newlabel{sub:Inpainting}{{4.1.3}{32}{Inpainting}{subsection.4.1.3}{}}
-\newlabel{fig:application_colorinpaint1_orig}{{4.3a}{32}{Subfigure 4 4.3a}{subfigure.4.3.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.2}{\ignorespaces Denoising linear vectorial}}{35}{figure.caption.40}}
+\newlabel{fig:application_color2}{{4.2}{35}{Denoising linear vectorial}{figure.caption.40}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.3}Inpainting}{35}{subsection.4.1.3}}
+\newlabel{sub:Inpainting}{{4.1.3}{35}{Inpainting}{subsection.4.1.3}{}}
+\newlabel{fig:application_colorinpaint1_orig}{{4.3a}{35}{Subfigure 4 4.3a}{subfigure.4.3.1}{}}
 \newlabel{sub@fig:application_colorinpaint1_orig}{{(a)}{a}{Subfigure 4 4.3a\relax }{subfigure.4.3.1}{}}
-\newlabel{fig:application_colorinpaint1_dam}{{4.3b}{32}{Subfigure 4 4.3b}{subfigure.4.3.2}{}}
+\newlabel{fig:application_colorinpaint1_dam}{{4.3b}{35}{Subfigure 4 4.3b}{subfigure.4.3.2}{}}
 \newlabel{sub@fig:application_colorinpaint1_dam}{{(b)}{b}{Subfigure 4 4.3b\relax }{subfigure.4.3.2}{}}
-\newlabel{fig:application_colorinpaint1_guess}{{4.3c}{32}{Subfigure 4 4.3c}{subfigure.4.3.3}{}}
+\newlabel{fig:application_colorinpaint1_guess}{{4.3c}{35}{Subfigure 4 4.3c}{subfigure.4.3.3}{}}
 \newlabel{sub@fig:application_colorinpaint1_guess}{{(c)}{c}{Subfigure 4 4.3c\relax }{subfigure.4.3.3}{}}
-\newlabel{fig:application_colorinpaint1_restored}{{4.3d}{32}{Subfigure 4 4.3d}{subfigure.4.3.4}{}}
+\newlabel{fig:application_colorinpaint1_restored}{{4.3d}{35}{Subfigure 4 4.3d}{subfigure.4.3.4}{}}
 \newlabel{sub@fig:application_colorinpaint1_restored}{{(d)}{d}{Subfigure 4 4.3d\relax }{subfigure.4.3.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Denoising linear vectorial}}{32}{figure.caption.38}}
-\newlabel{fig:application_colorinpaint1}{{4.3}{32}{Denoising linear vectorial}{figure.caption.38}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.4}Recolorization}{32}{subsection.4.1.4}}
-\newlabel{sub:Recolorization}{{4.1.4}{32}{Recolorization}{subsection.4.1.4}{}}
-\newlabel{fig:application_colorization1_orig}{{4.4a}{32}{Subfigure 4 4.4a}{subfigure.4.4.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.3}{\ignorespaces Denoising linear vectorial}}{35}{figure.caption.41}}
+\newlabel{fig:application_colorinpaint1}{{4.3}{35}{Denoising linear vectorial}{figure.caption.41}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.4}Recolorization}{35}{subsection.4.1.4}}
+\newlabel{sub:Recolorization}{{4.1.4}{35}{Recolorization}{subsection.4.1.4}{}}
+\newlabel{fig:application_colorization1_orig}{{4.4a}{35}{Subfigure 4 4.4a}{subfigure.4.4.1}{}}
 \newlabel{sub@fig:application_colorization1_orig}{{(a)}{a}{Subfigure 4 4.4a\relax }{subfigure.4.4.1}{}}
-\newlabel{fig:application_colorization1_colorless}{{4.4b}{32}{Subfigure 4 4.4b}{subfigure.4.4.2}{}}
+\newlabel{fig:application_colorization1_colorless}{{4.4b}{35}{Subfigure 4 4.4b}{subfigure.4.4.2}{}}
 \newlabel{sub@fig:application_colorization1_colorless}{{(b)}{b}{Subfigure 4 4.4b\relax }{subfigure.4.4.2}{}}
-\newlabel{fig:application_colorization1_guess}{{4.4c}{32}{Subfigure 4 4.4c}{subfigure.4.4.3}{}}
+\newlabel{fig:application_colorization1_guess}{{4.4c}{35}{Subfigure 4 4.4c}{subfigure.4.4.3}{}}
 \newlabel{sub@fig:application_colorization1_guess}{{(c)}{c}{Subfigure 4 4.4c\relax }{subfigure.4.4.3}{}}
-\newlabel{fig:application_colorization1_restored}{{4.4d}{32}{Subfigure 4 4.4d}{subfigure.4.4.4}{}}
+\newlabel{fig:application_colorization1_restored}{{4.4d}{35}{Subfigure 4 4.4d}{subfigure.4.4.4}{}}
 \newlabel{sub@fig:application_colorization1_restored}{{(d)}{d}{Subfigure 4 4.4d\relax }{subfigure.4.4.4}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces Recolorization}}{32}{figure.caption.39}}
-\newlabel{fig:application_colorinpaint1}{{4.4}{32}{Recolorization}{figure.caption.39}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.5}Volume images}{32}{subsection.4.1.5}}
-\newlabel{sub:Volume images}{{4.1.5}{32}{Volume images}{subsection.4.1.5}{}}
-\newlabel{fig:application_volume1_orig}{{4.5a}{33}{Subfigure 4 4.5a}{subfigure.4.5.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.4}{\ignorespaces Recolorization}}{35}{figure.caption.42}}
+\newlabel{fig:application_colorization1}{{4.4}{35}{Recolorization}{figure.caption.42}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.5}Volume images}{35}{subsection.4.1.5}}
+\newlabel{sub:Volume images}{{4.1.5}{35}{Volume images}{subsection.4.1.5}{}}
+\newlabel{fig:application_volume1_orig}{{4.5a}{36}{Subfigure 4 4.5a}{subfigure.4.5.1}{}}
 \newlabel{sub@fig:application_volume1_orig}{{(a)}{a}{Subfigure 4 4.5a\relax }{subfigure.4.5.1}{}}
-\newlabel{fig:application_volume1_noise}{{4.5b}{33}{Subfigure 4 4.5b}{subfigure.4.5.2}{}}
+\newlabel{fig:application_volume1_noise}{{4.5b}{36}{Subfigure 4 4.5b}{subfigure.4.5.2}{}}
 \newlabel{sub@fig:application_volume1_noise}{{(b)}{b}{Subfigure 4 4.5b\relax }{subfigure.4.5.2}{}}
-\newlabel{fig:application_volume1_denoised}{{4.5c}{33}{Subfigure 4 4.5c}{subfigure.4.5.3}{}}
+\newlabel{fig:application_volume1_denoised}{{4.5c}{36}{Subfigure 4 4.5c}{subfigure.4.5.3}{}}
 \newlabel{sub@fig:application_volume1_denoised}{{(c)}{c}{Subfigure 4 4.5c\relax }{subfigure.4.5.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces Denoising 3D Grayscale Volume Data}}{33}{figure.caption.40}}
-\newlabel{fig:application_volume1}{{4.5}{33}{Denoising 3D Grayscale Volume Data}{figure.caption.40}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}SO(2) and SO(3) images data}{33}{section.4.2}}
-\newlabel{sec:SO images data}{{4.2}{33}{SO(2) and SO(3) images data}{section.4.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Synthetic data}{33}{subsection.4.2.1}}
-\newlabel{sub:Synthetic data}{{4.2.1}{33}{Synthetic data}{subsection.4.2.1}{}}
-\newlabel{fig:application_so1_orig}{{4.6a}{33}{Subfigure 4 4.6a}{subfigure.4.6.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.5}{\ignorespaces Denoising 3D Grayscale Volume Data}}{36}{figure.caption.43}}
+\newlabel{fig:application_volume1}{{4.5}{36}{Denoising 3D Grayscale Volume Data}{figure.caption.43}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}SO(2) and SO(3) images data}{36}{section.4.2}}
+\newlabel{sec:SO images data}{{4.2}{36}{SO(2) and SO(3) images data}{section.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Synthetic data}{36}{subsection.4.2.1}}
+\newlabel{sub:Synthetic data}{{4.2.1}{36}{Synthetic data}{subsection.4.2.1}{}}
+\newlabel{fig:application_so1_orig}{{4.6a}{36}{Subfigure 4 4.6a}{subfigure.4.6.1}{}}
 \newlabel{sub@fig:application_so1_orig}{{(a)}{a}{Subfigure 4 4.6a\relax }{subfigure.4.6.1}{}}
-\newlabel{fig:application_so1_dam}{{4.6b}{33}{Subfigure 4 4.6b}{subfigure.4.6.2}{}}
+\newlabel{fig:application_so1_dam}{{4.6b}{36}{Subfigure 4 4.6b}{subfigure.4.6.2}{}}
 \newlabel{sub@fig:application_so1_dam}{{(b)}{b}{Subfigure 4 4.6b\relax }{subfigure.4.6.2}{}}
-\newlabel{fig:application_so1_inp}{{4.6c}{33}{Subfigure 4 4.6c}{subfigure.4.6.3}{}}
+\newlabel{fig:application_so1_inp}{{4.6c}{36}{Subfigure 4 4.6c}{subfigure.4.6.3}{}}
 \newlabel{sub@fig:application_so1_inp}{{(c)}{c}{Subfigure 4 4.6c\relax }{subfigure.4.6.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.6}{\ignorespaces Inpainting of synthetic SO(3) picture}}{33}{figure.caption.41}}
-\newlabel{fig:application_so1}{{4.6}{33}{Inpainting of synthetic SO(3) picture}{figure.caption.41}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Fingerprint orientation data}{33}{subsection.4.2.2}}
-\newlabel{sub:Fingerprint orientation data}{{4.2.2}{33}{Fingerprint orientation data}{subsection.4.2.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.6}{\ignorespaces Inpainting of synthetic SO(3) picture}}{36}{figure.caption.44}}
+\newlabel{fig:application_so1}{{4.6}{36}{Inpainting of synthetic SO(3) picture}{figure.caption.44}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Fingerprint orientation data}{36}{subsection.4.2.2}}
+\newlabel{sub:Fingerprint orientation data}{{4.2.2}{36}{Fingerprint orientation data}{subsection.4.2.2}{}}
 \citation{sali}
 \citation{LucasKanade}
-\newlabel{fig:application_fingerprint1_orig}{{4.7a}{34}{Subfigure 4 4.7a}{subfigure.4.7.1}{}}
+\newlabel{fig:application_fingerprint1_orig}{{4.7a}{37}{Subfigure 4 4.7a}{subfigure.4.7.1}{}}
 \newlabel{sub@fig:application_fingerprint1_orig}{{(a)}{a}{Subfigure 4 4.7a\relax }{subfigure.4.7.1}{}}
-\newlabel{fig:application_fingerprint1_noise}{{4.7b}{34}{Subfigure 4 4.7b}{subfigure.4.7.2}{}}
+\newlabel{fig:application_fingerprint1_noise}{{4.7b}{37}{Subfigure 4 4.7b}{subfigure.4.7.2}{}}
 \newlabel{sub@fig:application_fingerprint1_noise}{{(b)}{b}{Subfigure 4 4.7b\relax }{subfigure.4.7.2}{}}
-\newlabel{fig:application_fingerprint1_denoised}{{4.7c}{34}{Subfigure 4 4.7c}{subfigure.4.7.3}{}}
+\newlabel{fig:application_fingerprint1_denoised}{{4.7c}{37}{Subfigure 4 4.7c}{subfigure.4.7.3}{}}
 \newlabel{sub@fig:application_fingerprint1_denoised}{{(c)}{c}{Subfigure 4 4.7c\relax }{subfigure.4.7.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.7}{\ignorespaces Fingerprint orientation denoising}}{34}{figure.caption.42}}
-\newlabel{fig:application_fingerprint1}{{4.7}{34}{Fingerprint orientation denoising}{figure.caption.42}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Reconstruction of a dense optical flow field}{34}{subsection.4.2.3}}
-\newlabel{sub:reconstructionDenseOpticalFlow}{{4.2.3}{34}{Reconstruction of a dense optical flow field}{subsection.4.2.3}{}}
-\@writefile{brf}{\backcite{sali}{{34}{4.2.3}{subsection.4.2.3}}}
-\@writefile{brf}{\backcite{LucasKanade}{{34}{4.2.3}{subsection.4.2.3}}}
-\newlabel{fig:application_flowfield1_orig}{{4.8a}{35}{Subfigure 4 4.8a}{subfigure.4.8.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.7}{\ignorespaces Fingerprint orientation denoising}}{37}{figure.caption.45}}
+\newlabel{fig:application_fingerprint1}{{4.7}{37}{Fingerprint orientation denoising}{figure.caption.45}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Reconstruction of a dense optical flow field}{37}{subsection.4.2.3}}
+\newlabel{sub:reconstructionDenseOpticalFlow}{{4.2.3}{37}{Reconstruction of a dense optical flow field}{subsection.4.2.3}{}}
+\@writefile{brf}{\backcite{sali}{{37}{4.2.3}{subsection.4.2.3}}}
+\@writefile{brf}{\backcite{LucasKanade}{{37}{4.2.3}{subsection.4.2.3}}}
+\newlabel{fig:application_flowfield1_orig}{{4.8a}{38}{Subfigure 4 4.8a}{subfigure.4.8.1}{}}
 \newlabel{sub@fig:application_flowfield1_orig}{{(a)}{a}{Subfigure 4 4.8a\relax }{subfigure.4.8.1}{}}
-\newlabel{fig:application_flowfield1_noise}{{4.8b}{35}{Subfigure 4 4.8b}{subfigure.4.8.2}{}}
+\newlabel{fig:application_flowfield1_noise}{{4.8b}{38}{Subfigure 4 4.8b}{subfigure.4.8.2}{}}
 \newlabel{sub@fig:application_flowfield1_noise}{{(b)}{b}{Subfigure 4 4.8b\relax }{subfigure.4.8.2}{}}
-\newlabel{fig:application_flowfield1_denoised}{{4.8c}{35}{Subfigure 4 4.8c}{subfigure.4.8.3}{}}
+\newlabel{fig:application_flowfield1_denoised}{{4.8c}{38}{Subfigure 4 4.8c}{subfigure.4.8.3}{}}
 \newlabel{sub@fig:application_flowfield1_denoised}{{(c)}{c}{Subfigure 4 4.8c\relax }{subfigure.4.8.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.8}{\ignorespaces Dense optical flow reconstruction}}{35}{figure.caption.43}}
-\newlabel{fig:application_flowfield1}{{4.8}{35}{Dense optical flow reconstruction}{figure.caption.43}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}SPD(3) image data}{35}{section.4.3}}
-\newlabel{sec:SPD(3) image data}{{4.3}{35}{SPD(3) image data}{section.4.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Synthetic data}{35}{subsection.4.3.1}}
-\newlabel{sub:Synthetic data}{{4.3.1}{35}{Synthetic data}{subsection.4.3.1}{}}
-\newlabel{fig:application_spd1_orig}{{4.9a}{35}{Subfigure 4 4.9a}{subfigure.4.9.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.8}{\ignorespaces Dense optical flow reconstruction}}{38}{figure.caption.46}}
+\newlabel{fig:application_flowfield1}{{4.8}{38}{Dense optical flow reconstruction}{figure.caption.46}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}SPD(3) image data}{38}{section.4.3}}
+\newlabel{sec:SPD(3) image data}{{4.3}{38}{SPD(3) image data}{section.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Synthetic data}{38}{subsection.4.3.1}}
+\newlabel{sub:Synthetic data}{{4.3.1}{38}{Synthetic data}{subsection.4.3.1}{}}
+\newlabel{fig:application_spd1_orig}{{4.9a}{38}{Subfigure 4 4.9a}{subfigure.4.9.1}{}}
 \newlabel{sub@fig:application_spd1_orig}{{(a)}{a}{Subfigure 4 4.9a\relax }{subfigure.4.9.1}{}}
-\newlabel{fig:application_spd1_noise}{{4.9b}{35}{Subfigure 4 4.9b}{subfigure.4.9.2}{}}
+\newlabel{fig:application_spd1_noise}{{4.9b}{38}{Subfigure 4 4.9b}{subfigure.4.9.2}{}}
 \newlabel{sub@fig:application_spd1_noise}{{(b)}{b}{Subfigure 4 4.9b\relax }{subfigure.4.9.2}{}}
-\newlabel{fig:application_spd1_denoised}{{4.9c}{35}{Subfigure 4 4.9c}{subfigure.4.9.3}{}}
+\newlabel{fig:application_spd1_denoised}{{4.9c}{38}{Subfigure 4 4.9c}{subfigure.4.9.3}{}}
 \newlabel{sub@fig:application_spd1_denoised}{{(c)}{c}{Subfigure 4 4.9c\relax }{subfigure.4.9.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.9}{\ignorespaces Denoising of synthetic SPD(3) picture}}{35}{figure.caption.44}}
-\newlabel{fig:application_spd1}{{4.9}{35}{Denoising of synthetic SPD(3) picture}{figure.caption.44}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Diffusion Tensor MRI images}{35}{subsection.4.3.2}}
-\newlabel{sub:Diffusion Tensor MRI images}{{4.3.2}{35}{Diffusion Tensor MRI images}{subsection.4.3.2}{}}
-\newlabel{fig:application_dti1_noise}{{4.10a}{36}{Subfigure 4 4.10a}{subfigure.4.10.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.9}{\ignorespaces Denoising of synthetic SPD(3) picture}}{38}{figure.caption.47}}
+\newlabel{fig:application_spd1}{{4.9}{38}{Denoising of synthetic SPD(3) picture}{figure.caption.47}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Diffusion Tensor MRI images}{38}{subsection.4.3.2}}
+\newlabel{sub:Diffusion Tensor MRI images}{{4.3.2}{38}{Diffusion Tensor MRI images}{subsection.4.3.2}{}}
+\newlabel{fig:application_dti1_noise}{{4.10a}{39}{Subfigure 4 4.10a}{subfigure.4.10.1}{}}
 \newlabel{sub@fig:application_dti1_noise}{{(a)}{a}{Subfigure 4 4.10a\relax }{subfigure.4.10.1}{}}
-\newlabel{fig:application_dti1_denoised}{{4.10b}{36}{Subfigure 4 4.10b}{subfigure.4.10.2}{}}
+\newlabel{fig:application_dti1_denoised}{{4.10b}{39}{Subfigure 4 4.10b}{subfigure.4.10.2}{}}
 \newlabel{sub@fig:application_dti1_denoised}{{(b)}{b}{Subfigure 4 4.10b\relax }{subfigure.4.10.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.10}{\ignorespaces Denoising DT-MRI data}}{36}{figure.caption.45}}
-\newlabel{fig:application_dti1}{{4.10}{36}{Denoising DT-MRI data}{figure.caption.45}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}3D DT MRI data}{36}{subsection.4.3.3}}
-\newlabel{sub:3DDTMRIdata}{{4.3.3}{36}{3D DT MRI data}{subsection.4.3.3}{}}
-\newlabel{fig:application_dti2_noise}{{4.11a}{37}{Subfigure 4 4.11a}{subfigure.4.11.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.10}{\ignorespaces Denoising DT-MRI data}}{39}{figure.caption.48}}
+\newlabel{fig:application_dti1}{{4.10}{39}{Denoising DT-MRI data}{figure.caption.48}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}3D DT MRI data}{39}{subsection.4.3.3}}
+\newlabel{sub:3DDTMRIdata}{{4.3.3}{39}{3D DT MRI data}{subsection.4.3.3}{}}
+\newlabel{fig:application_dti2_noise}{{4.11a}{40}{Subfigure 4 4.11a}{subfigure.4.11.1}{}}
 \newlabel{sub@fig:application_dti2_noise}{{(a)}{a}{Subfigure 4 4.11a\relax }{subfigure.4.11.1}{}}
-\newlabel{fig:application_dti2_denoised}{{4.11b}{37}{Subfigure 4 4.11b}{subfigure.4.11.2}{}}
+\newlabel{fig:application_dti2_denoised}{{4.11b}{40}{Subfigure 4 4.11b}{subfigure.4.11.2}{}}
 \newlabel{sub@fig:application_dti2_denoised}{{(b)}{b}{Subfigure 4 4.11b\relax }{subfigure.4.11.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4.11}{\ignorespaces Denoising 3D DTI-MRI data}}{37}{figure.caption.46}}
-\newlabel{fig:application_dti2}{{4.11}{37}{Denoising 3D DTI-MRI data}{figure.caption.46}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.4}Comparison IRLS and Proximal Point minimizers}{37}{section.4.4}}
-\newlabel{sec:Comparison IRLS and Proximal Point minimizers}{{4.4}{37}{Comparison IRLS and Proximal Point minimizers}{section.4.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.5}Sensitivity to variations of the starting value}{37}{section.4.5}}
-\newlabel{sec:Sensitivity to variations of the starting value}{{4.5}{37}{Sensitivity to variations of the starting value}{section.4.5}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Outlook}{38}{chapter.5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.11}{\ignorespaces Denoising 3D DTI-MRI data}}{40}{figure.caption.49}}
+\newlabel{fig:application_dti2}{{4.11}{40}{Denoising 3D DTI-MRI data}{figure.caption.49}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}Comparison IRLS and Proximal Point minimizers}{40}{section.4.4}}
+\newlabel{sec:Comparison IRLS and Proximal Point minimizers}{{4.4}{40}{Comparison IRLS and Proximal Point minimizers}{section.4.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}Sensitivity to variations of the starting value}{40}{section.4.5}}
+\newlabel{sec:Sensitivity to variations of the starting value}{{4.5}{40}{Sensitivity to variations of the starting value}{section.4.5}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Outlook}{41}{chapter.5}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{ch:outlook}{{5}{38}{Outlook}{chapter.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}Extensions}{38}{section.5.1}}
-\newlabel{sec:Extensions}{{5.1}{38}{Extensions}{section.5.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}Recursive computation on subdomains}{38}{section.5.2}}
-\newlabel{sec:Recursive computation on subdomains}{{5.2}{38}{Recursive computation on subdomains}{section.5.2}{}}
+\newlabel{ch:outlook}{{5}{41}{Outlook}{chapter.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Extensions}{41}{section.5.1}}
+\newlabel{sec:Extensions}{{5.1}{41}{Extensions}{section.5.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}Recursive computation on subdomains}{41}{section.5.2}}
+\newlabel{sec:Recursive computation on subdomains}{{5.2}{41}{Recursive computation on subdomains}{section.5.2}{}}
 \bibstyle{plain}
 \bibdata{mt}

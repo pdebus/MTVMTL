@@ -2,22 +2,22 @@
 \contentsline {figure}{\numberline {1.1}{\ignorespaces Comparison total variation}}{6}{figure.caption.1}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Calculation using pixel-wise kernels}}{17}{figure.caption.14}
-\contentsline {figure}{\numberline {3.2}{\ignorespaces SIMD parallelization}}{17}{figure.caption.15}
-\contentsline {figure}{\numberline {3.3}{\ignorespaces SO(3) cube visualization}}{23}{figure.caption.22}
-\contentsline {figure}{\numberline {3.4}{\ignorespaces SPD(3) ellipsoid visualization}}{24}{figure.caption.24}
-\contentsline {figure}{\numberline {3.5}{\ignorespaces 3D SPD(3) Volume Visualization of a helix}}{24}{figure.caption.25}
-\contentsline {figure}{\numberline {3.6}{\ignorespaces 3D Volume image renderer}}{25}{figure.caption.27}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Calculation using pixel-wise kernels}}{20}{figure.caption.17}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces SIMD parallelization}}{20}{figure.caption.18}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces SO(3) cube visualization}}{26}{figure.caption.25}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces SPD(3) ellipsoid visualization}}{27}{figure.caption.27}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces 3D SPD(3) Volume Visualization of a helix}}{27}{figure.caption.28}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces 3D Volume image renderer}}{28}{figure.caption.30}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Denoising linear vectorial}}{31}{figure.caption.36}
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Denoising linear vectorial}}{32}{figure.caption.37}
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Denoising linear vectorial}}{32}{figure.caption.38}
-\contentsline {figure}{\numberline {4.4}{\ignorespaces Recolorization}}{32}{figure.caption.39}
-\contentsline {figure}{\numberline {4.5}{\ignorespaces Denoising 3D Grayscale Volume Data}}{33}{figure.caption.40}
-\contentsline {figure}{\numberline {4.6}{\ignorespaces Inpainting of synthetic SO(3) picture}}{33}{figure.caption.41}
-\contentsline {figure}{\numberline {4.7}{\ignorespaces Fingerprint orientation denoising}}{34}{figure.caption.42}
-\contentsline {figure}{\numberline {4.8}{\ignorespaces Dense optical flow reconstruction}}{35}{figure.caption.43}
-\contentsline {figure}{\numberline {4.9}{\ignorespaces Denoising of synthetic SPD(3) picture}}{35}{figure.caption.44}
-\contentsline {figure}{\numberline {4.10}{\ignorespaces Denoising DT-MRI data}}{36}{figure.caption.45}
-\contentsline {figure}{\numberline {4.11}{\ignorespaces Denoising 3D DTI-MRI data}}{37}{figure.caption.46}
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Denoising linear vectorial}}{34}{figure.caption.39}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Denoising linear vectorial}}{35}{figure.caption.40}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Denoising linear vectorial}}{35}{figure.caption.41}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Recolorization}}{35}{figure.caption.42}
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Denoising 3D Grayscale Volume Data}}{36}{figure.caption.43}
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Inpainting of synthetic SO(3) picture}}{36}{figure.caption.44}
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Fingerprint orientation denoising}}{37}{figure.caption.45}
+\contentsline {figure}{\numberline {4.8}{\ignorespaces Dense optical flow reconstruction}}{38}{figure.caption.46}
+\contentsline {figure}{\numberline {4.9}{\ignorespaces Denoising of synthetic SPD(3) picture}}{38}{figure.caption.47}
+\contentsline {figure}{\numberline {4.10}{\ignorespaces Denoising DT-MRI data}}{39}{figure.caption.48}
+\contentsline {figure}{\numberline {4.11}{\ignorespaces Denoising 3D DTI-MRI data}}{40}{figure.caption.49}
 \addvspace {10\p@ }

@@ -108,6 +108,8 @@ Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/amssymb.sty
 Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/amsfonts.sty::0::0::Input File
 Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/amsfonts.sty::0::0::amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 LaTeX Font Info::/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/amsfonts.sty::106::0::   Overwriting math alphabet `\mathfrak' in version `bold' U/euf/m/n --> U/euf/b/n.
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/amscls/amsthm.sty::0::0::Input File
+Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/amscls/amsthm.sty::0::0::amsthm 2004/08/06 v2.20
 Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/braket/braket.sty::0::0::Input File
 Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/bbm-macros/bbm.sty::0::0::Input File
 Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/bbm-macros/bbm.sty::0::0::bbm 1999/03/15 V 1.2 provides fonts for set symbols - TH
@@ -262,11 +264,12 @@ Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/fncychap/fncychap.sty::
 Input Package::/usr/local/texlive/2013/texmf-dist/tex/latex/fncychap/fncychap.sty::0::0::fncychap 2007/07/30 v1.34 LaTeX package (Revised chapters)
 Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::35::0::Option `colorlinks' set `true'. (hyperref)
 Input File::/home/pascal/ownCloud/MA/Code/tex/main.aux::0::0::Input File
+LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.aux::0::0::Label `eq:real_proximity' multiply defined.
 LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.aux::0::0::Label `ssub:Second derivatives of the distance function' multiply defined.
+LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.aux::0::0::Label `ssub:First derivatives of the distance function' multiply defined.
 LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.aux::0::0::Label `ssub:Second derivatives of the distance function' multiply defined.
 LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.aux::0::0::Label `code:tut_data' multiply defined.
 LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.aux::0::0::Label `code:tut3_rendernoisyimg' multiply defined.
-LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.aux::0::0::Label `fig:application_colorinpaint1' multiply defined.
 LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.aux::0::0::Label `sub:Synthetic data' multiply defined.
 LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::58::0::   Checking defaults for OML/cmm/m/it.
 LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::58::0::   ... okay.
@@ -334,50 +337,65 @@ hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::3::0::Under
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::8::0::Underfull \hbox (badness 10000) in paragraph at lines 8--11
 Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::12::0::Citation `RudinOsher' on page 5 undefined.
 Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::26::0::Citation `ChambolleLions' on page 5 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::35::0::Citation `RudinOsher' on page 5 undefined.
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::35::0::Underfull \hbox (badness 10000) in paragraph at lines 35--36
 Input File::pdftex.def::0::0::Input File
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::65::0::Citation `ChangKuang' on page 6 undefined.
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::76::0::Citation `SprecherIRLS' on page 7 undefined.
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::77::0::Citation `WeinmannPRPT' on page 7 undefined.
-hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::75::0::Underfull \hbox (badness 10000) in paragraph at lines 75--79
-hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::80::0::Underfull \hbox (badness 10000) in paragraph at lines 80--84
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::85::0::Citation `RudinOsher' on page 6 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::108::0::Citation `Kang' on page 7 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::119::0::Citation `Grohssprecher' on page 7 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::120::0::Citation `Weinmann' on page 7 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::118::0::Underfull \hbox (badness 10000) in paragraph at lines 118--122
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_introduction.tex::123::0::Underfull \hbox (badness 10000) in paragraph at lines 123--127
 Input File::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::0::0::Input File
-Package Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::32::0::Token not allowed in a PDF string (PDFDocEncoding): removing `math shift'. (hyperref package)
-Package Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::32::0::Token not allowed in a PDF string (PDFDocEncoding): removing `superscript'. (hyperref package)
-Package Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::32::0::Token not allowed in a PDF string (PDFDocEncoding): removing `math shift'. (hyperref package)
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::42::0::Citation `magnus' on page 8 undefined.
-Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::44::0::Reference `appendix' on page 8 undefined.
-LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::48::0::   Try loading font information for U+bbm.
-Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/bbm-macros/ubbm.fd::0::0::Input File
-hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::49::0::Underfull \hbox (badness 10000) in paragraph at lines 49--51
-Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::58::0::Reference `seq:frechetderivatives' on page 8 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::6::0::Underfull \hbox (badness 10000) in paragraph at lines 6--9
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::40::0::Citation `Weinmann' on page 8 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::41::0::Citation `CombettesPesque' on page 8 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::55::0::Citation `ParikhBoyd' on page 9 undefined.
+Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::59::0::Reference `sub:discretization' on page 9 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::73::0::Citation `Weinmann' on page 9 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::73::0::Underfull \hbox (badness 10000) in paragraph at lines 73--74
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::91::0::Underfull \hbox (badness 10000) in paragraph at lines 91--93
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::95::0::Citation `Karcher' on page 9 undefined.
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::94::0::Underfull \hbox (badness 10000) in paragraph at lines 94--97
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::118::0::Citation `AbsilGrasmman' on page 9 undefined.
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::119::0::Citation `EAS' on page 9 undefined.
-hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::118::0::Underfull \hbox (badness 10000) in paragraph at lines 118--121
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::122::0::Citation `SatoIwai' on page 9 undefined.
-hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::122::0::Underfull \hbox (badness 10000) in paragraph at lines 122--125
-hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::160::0::Underfull \hbox (badness 10000) in paragraph at lines 160--162
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::179::0::Citation `Absilbook' on page 10 undefined.
-hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::184::0::Underfull \hbox (badness 10000) in paragraph at lines 184--186
-hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::231::0::Underfull \hbox (badness 10000) in paragraph at lines 231--232
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::233::0::Citation `absil_GR' on page 11 undefined.
-hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::323::0::Underfull \hbox (badness 10000) in paragraph at lines 323--326
-hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::327::0::Underfull \hbox (badness 10000) in paragraph at lines 327--331
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::339::0::Citation `almohy_frechetlog' on page 12 undefined.
-hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::343::0::Underfull \hbox (badness 10000) in paragraph at lines 343--345
-hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::358::0::Underfull \hbox (badness 10000) in paragraph at lines 358--360
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::361::0::Citation `highham_pade' on page 13 undefined.
-hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::365::0::Underfull \hbox (badness 10000) in paragraph at lines 365--367
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::378::0::Citation `almohy_frechetlog' on page 13 undefined.
+Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::124::0::Reference `eq:regularized_tv' on page 10 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::126::0::Citation `Rodriguez' on page 10 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::139::0::Citation `SprecherIRLS' on page 10 undefined.
+Package Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::181::0::Token not allowed in a PDF string (PDFDocEncoding): removing `math shift'. (hyperref package)
+Package Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::181::0::Token not allowed in a PDF string (PDFDocEncoding): removing `superscript'. (hyperref package)
+Package Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::181::0::Token not allowed in a PDF string (PDFDocEncoding): removing `math shift'. (hyperref package)
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::191::0::Citation `Karcher' on page 10 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::209::0::Citation `Magnus' on page 11 undefined.
+Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::211::0::Reference `appendix' on page 11 undefined.
+LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::215::0::   Try loading font information for U+bbm.
+Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/bbm-macros/ubbm.fd::0::0::Input File
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::216::0::Underfull \hbox (badness 10000) in paragraph at lines 216--218
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::261::0::Underfull \hbox (badness 10000) in paragraph at lines 261--264
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::285::0::Citation `AbsilGrassmann' on page 12 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::286::0::Citation `EAS' on page 12 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::285::0::Underfull \hbox (badness 10000) in paragraph at lines 285--288
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::289::0::Citation `Sato2014' on page 12 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::289::0::Underfull \hbox (badness 10000) in paragraph at lines 289--292
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::327::0::Underfull \hbox (badness 10000) in paragraph at lines 327--329
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::347::0::Underfull \hbox (badness 10000) in paragraph at lines 347--350
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::351::0::Citation `Absil2009' on page 13 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::419::0::Underfull \hbox (badness 10000) in paragraph at lines 419--420
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::421::0::Citation `AbsilGrassmann' on page 14 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::511::0::Underfull \hbox (badness 10000) in paragraph at lines 511--514
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::515::0::Underfull \hbox (badness 10000) in paragraph at lines 515--519
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::527::0::Citation `AlmohyFrechet' on page 15 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::531::0::Underfull \hbox (badness 10000) in paragraph at lines 531--533
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::546::0::Underfull \hbox (badness 10000) in paragraph at lines 546--548
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::549::0::Citation `HighamPade' on page 15 undefined.
+hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::553::0::Underfull \hbox (badness 10000) in paragraph at lines 553--555
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_theory.tex::566::0::Citation `AlmohyFrechet' on page 16 undefined.
 Input File::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::0::0::Input File
 LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::11::0::   Try loading font information for OMS+cmr.
 Input File::/usr/local/texlive/2013/texmf-dist/tex/latex/base/omscmr.fd::0::0::Input File
 LaTeX Font Info::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::11::0::   Font shape `OMS/cmr/m/n' in size <10> not available Font shape `OMS/cmsy/m/n' tried instead.
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::25::0::Citation `nifti' on page 14 undefined.
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::66::0::Citation `SprecherIRLS' on page 15 undefined.
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::66::0::Citation `mt' on page 15 undefined.
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::66::0::Citation `bt' on page 15 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::25::0::Citation `nifti' on page 17 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::66::0::Citation `SprecherIRLS' on page 18 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::66::0::Citation `manuel' on page 18 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::66::0::Citation `mara' on page 18 undefined.
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::66::0::Underfull \hbox (badness 10000) in paragraph at lines 66--71
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::72::0::Underfull \hbox (badness 10000) in paragraph at lines 72--75
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::76::0::Underfull \hbox (badness 10000) in paragraph at lines 76--84
@@ -388,7 +406,7 @@ LaTeX Font Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::93::0::Fon
 Package Info::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::0::0::Loading generic settings for font family `fvm' (encoding: OT1). For optimal results, create family-specific settings. See the microtype manual for details. (microtype)
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::92::0::Underfull \hbox (badness 10000) in paragraph at lines 92--95
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::96::0::Underfull \hbox (badness 10000) in paragraph at lines 96--100
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::103::0::Citation `opticalflow' on page 16 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::103::0::Citation `opticalflow' on page 19 undefined.
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::101::0::Underfull \hbox (badness 10000) in paragraph at lines 101--104
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::112::0::Underfull \hbox (badness 10000) in paragraph at lines 112--117
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::118::0::Underfull \hbox (badness 10000) in paragraph at lines 118--122
@@ -419,7 +437,7 @@ hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::307::0::Underful
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::320::0::Underfull \hbox (badness 10000) in paragraph at lines 320--322
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::335::0::Underfull \hbox (badness 10000) in paragraph at lines 335--337
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::350::0::Underfull \hbox (badness 10000) in paragraph at lines 350--352
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::384::0::Citation `vpp_paper' on page 21 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::384::0::Citation `VPP' on page 24 undefined.
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::383::0::Underfull \hbox (badness 10000) in paragraph at lines 383--385
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::386::0::Underfull \hbox (badness 10000) in paragraph at lines 386--389
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::430::0::Underfull \hbox (badness 10000) in paragraph at lines 430--435
@@ -449,15 +467,15 @@ hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::727::0::Underful
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::732::0::Overfull \hbox (17.0pt too wide) in paragraph at lines 732--732
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::739::0::Underfull \hbox (badness 10000) in paragraph at lines 739--741
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::743::0::Overfull \hbox (17.0pt too wide) in paragraph at lines 743--743
-Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::755::0::Reference `ap:example_listings' on page 27 undefined.
-Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::763::0::Reference `ap:example_listing' on page 27 undefined.
+Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::755::0::Reference `ap:example_listings' on page 30 undefined.
+Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::763::0::Reference `ap:example_listing' on page 30 undefined.
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::760::0::Underfull \hbox (badness 10000) in paragraph at lines 760--764
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::766::0::Overfull \hbox (17.0pt too wide) in paragraph at lines 766--766
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::807::0::Overfull \hbox (17.0pt too wide) in paragraph at lines 807--807
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::829::0::Overfull \hbox (17.0pt too wide) in paragraph at lines 829--829
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::843::0::Underfull \hbox (badness 10000) in paragraph at lines 843--845
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::847::0::Overfull \hbox (17.0pt too wide) in paragraph at lines 847--847
-Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::864::0::Reference `sub:colorinpainting' on page 28 undefined.
+Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::864::0::Reference `sub:colorinpainting' on page 31 undefined.
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::877::0::Overfull \hbox (17.0pt too wide) in paragraph at lines 877--877
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::907::0::Underfull \hbox (badness 10000) in paragraph at lines 907--909
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_library.tex::909::0::Overfull \hbox (17.0pt too wide) in paragraph at lines 909--909
@@ -484,8 +502,6 @@ Input File::pdftex.def::0::0::Input File
 Input File::pdftex.def::0::0::Input File
 Input File::pdftex.def::0::0::Input File
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::101::0::Overfull \hbox (26.6666pt too wide) in paragraph at lines 101--113
-Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::120::0::Reference `sub@fig:application_colorinpaint1_colorless' on page 32 undefined.
-Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::120::0::Reference `sub@fig:application_colorinpaint1_colorless' on page 32 undefined.
 Input File::pdftex.def::0::0::Input File
 Input File::pdftex.def::0::0::Input File
 Input File::pdftex.def::0::0::Input File
@@ -503,8 +519,8 @@ Input File::pdftex.def::0::0::Input File
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::199::0::Overfull \hbox (9.32623pt too wide) in paragraph at lines 199--207
 LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::0::0::`!h' float specifier changed to `!ht'.
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::219::0::Underfull \hbox (badness 10000) in paragraph at lines 219--223
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::225::0::Citation `sali' on page 34 undefined.
-Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::226::0::Citation `LucasKanade' on page 34 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::225::0::Citation `sali' on page 37 undefined.
+Citation LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::226::0::Citation `LucasKanade' on page 37 undefined.
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::224::0::Underfull \hbox (badness 10000) in paragraph at lines 224--231
 Input File::pdftex.def::0::0::Input File
 Input File::pdftex.def::0::0::Input File
@@ -515,8 +531,6 @@ Input File::pdftex.def::0::0::Input File
 Input File::pdftex.def::0::0::Input File
 Input File::pdftex.def::0::0::Input File
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::289::0::Overfull \hbox (9.32623pt too wide) in paragraph at lines 289--297
-Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::303::0::Reference `sub@fig:application_spd1_denoise' on page 35 undefined.
-Reference LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::303::0::Reference `sub@fig:application_spd1_denoise' on page 35 undefined.
 Input File::pdftex.def::0::0::Input File
 Input File::pdftex.def::0::0::Input File
 hbox Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::317::0::Overfull \hbox (13.33331pt too wide) in paragraph at lines 317--321
@@ -526,15 +540,15 @@ Input File::pdftex.def::0::0::Input File
 LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/ch_numerical_experiments.tex::0::0::`!h' float specifier changed to `!ht'.
 Input File::/home/pascal/ownCloud/MA/Code/tex/ch_outlook.tex::0::0::Input File
 Input File::/home/pascal/ownCloud/MA/Code/tex/main.bbl::0::0::Input File
-Input File::/home/pascal/ownCloud/MA/Code/tex/.tmp/0UfWwX/main.brf::0::0::Input File
+Input File::/home/pascal/ownCloud/MA/Code/tex/main.brf::0::0::Input File
  LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.bbl::3::0::Empty `thebibliography' environment.
 Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::98::0::Empty hook `BeforeClearDocument'. (atveryend)
 Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::98::0::Empty hook `AfterLastShipout'. (atveryend)
 Input File::/home/pascal/ownCloud/MA/Code/tex/main.aux::0::0::Input File
 Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::98::0::Executing hook `AtVeryEndDocument'. (atveryend)
 Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::98::0::Executing hook `AtEndAfterFileList'. (atveryend)
-Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::File `main.out' has not changed. Checksum: D8CA26797321A110185D33EA1DAC8098;4467. (rerunfilecheck)
-Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::File `main.brf' has not changed. Checksum: <no file>. (rerunfilecheck)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::File `main.out' has not changed. Checksum: 8E1EB55A1EDEF08DD1FB0CA7AF5ECCBA;4923. (rerunfilecheck)
+Package Info::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::File `main.brf' has not changed. Checksum: 2AD7C556015DBA2637096A82742B3EAC;1490. (rerunfilecheck)
 LaTeX Font Warning::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::Some font shapes were not available, defaults substituted.
 LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::There were undefined references.
 LaTeX Warning::/home/pascal/ownCloud/MA/Code/tex/main.tex::0::0::There were multiply-defined labels.
