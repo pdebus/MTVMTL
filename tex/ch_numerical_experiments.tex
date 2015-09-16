@@ -1,8 +1,19 @@
 \begin{chapter}{Applications and Numerical Experiments}
 \label{ch:numericalexperiments}
+In the first part of the chapter we apply the algorithms to a variety of problems in image processing, computer vision, medical imaging and related fields.
+The second part will be a comparison of the performance of the two implemented minimizer and close with with an numerical experiment investigating the 
+dependence of the solution on the changes in the original picture. This is a first step in extending the IRLS algorithm towards recursive splitting into subdomain.\\
 
-\section{Color image denoising} % (fold)
-\label{sec:Color image denoising}
+As briefly mentioned in the previous section, the test platform is a linux machine with two hyperthreaded 2.8GHz cores Intel i5-2520 (thus a total of four hardware threads)
+with AVX vector extensions and 8 GB RAM. 
+
+
+\section{Image denoising} % (fold)
+\label{sec:image denoising}
+The very basic application of the algorithm is of course denoising of common 2D grayscale or color pictures.
+For grayscale pictures the TV minimization is performed over the Euclidian manifold $M=\mathbb{R}$, while for color
+picture, as already explained in the introduction, we have either $M=\mathbb{R}^3$ for the linear-vectorial model or
+$M=S^2\times\mathbb{R}$ for the non-linear chromaticity-brightness model.
 
 \subsection{Grayscale} % (fold)
 \label{sub:Grayscale}
@@ -11,6 +22,10 @@
 \FloatBarrier
 \subsection{Color} % (fold)
 \label{sub:Color}
+In this example we perform the TV minimization of color images using the two different color models. In Figure \ref{fig:application_color1}
+the among the image processing community well-known \emph{Lena} picture, which is rather small in size. Minimization in
+the linear-vectorial color model using 5 IRLS iterations with one Newton step per reweighting is completed within $XXX$ seconds.\\
+
 % subsection Color (end)
 \begin{figure}[h!]
     \centering
@@ -18,7 +33,7 @@
 	\label{fig:application_color1_orig}
 	\includegraphics[width=0.325\linewidth]{./figures/experiments/Lena.jpg}
     }
-    \subfloat[][Noised]{
+    \subfloat[][Noisy]{
 	\label{fig:application_color1_noise}
 	\includegraphics[width=0.325\linewidth]{./figures/experiments/Lena_noise.jpg}
     }
@@ -26,13 +41,16 @@
 	\label{fig:application_color1_denoised}
 	\includegraphics[width=0.325\linewidth]{./figures/experiments/denoised_Lena_noise.jpg}
     }\\
-    \caption[Denoising linear vectorial]{Denoising of a color images using the linear vectorial color model which corresponds to the manifold $\mathbb{R}^3$
+    \caption[Color image "Lena" linear vectorial denoising]{Denoising of a color images using the linear vectorial color model which corresponds to the manifold $\mathbb{R}^3$
 	\subref{fig:application_color1_orig} Original image "Lena.jpg", $361\times 361$ px, 8 bit color depth
 	\subref{fig:application_color1_noise} Componentwise gaussian noise $\mu=0$, $\sigma=?$ added
-	\subref{fig:application_color1_denoised} Denoised, IRLS with $\lambda=?$, $?$ IRLS steps, $?$ newton steps per IRLS step
+	\subref{fig:application_color1_denoised} Denoised, IRLS with $\lambda=?$, $5$ IRLS steps, $1$ newton steps per IRLS step
 	\label{fig:application_color1}
     }
 \end{figure}
+
+Next, using the same model and parameters we denoise a different image with a size already in the megapixel range. The needed
+time, however, is with $XXX$ seconds quite high. The result can be seen in Figure \ref{fig:application_color2}.\\
 
 \begin{figure}[h!]
     \centering
@@ -40,7 +58,7 @@
 	\label{fig:application_color2_orig}
 	\includegraphics[width=0.325\linewidth]{./figures/experiments/mathematicians.jpg}
     }
-    \subfloat[][Noised]{
+    \subfloat[][Noisy]{
 	\label{fig:application_color2_noise}
 	\includegraphics[width=0.325\linewidth]{./figures/experiments/noisy_mathematicians.jpg}
     }
@@ -48,7 +66,7 @@
 	\label{fig:application_color2_denoised}
 	\includegraphics[width=0.325\linewidth]{./figures/experiments/denoised_noisy_mathematicians.jpg}
     }\\
-    \caption[Denoising linear vectorial]{Denoising of a color images using the linear vectorial color model which corresponds to the manifold $\mathbb{R}^3$
+    \caption[Large image "mathematicians" linear-vectorial denoising]{Denoising of a color images using the linear vectorial color model which corresponds to the manifold $\mathbb{R}^3$
 	\subref{fig:application_color2_orig} Original image "mathematicians.jpg", $1280\times 1024$ px, 8 bit color depth
 	\subref{fig:application_color2_noise} Componentwise gaussian noise $\mu=0$, $\sigma=?$ added
 	\subref{fig:application_color2_denoised} Denoised, IRLS with $\lambda=?$, $?$ IRLS steps, $?$ newton steps per IRLS step
@@ -56,9 +74,19 @@
     }
 \end{figure}
 
+Finally, in Figure \ref{fig:application_color3} we denoise a third picture using the chromaticity-brightness model. Here minimization over the product manifold
+$S^2\times \mathbb{R}$ is performed by denoising the chromaticity($S^2$) and the brightness($\mathbb{R}$) separately, which has the added advantage of more 
+fine-grained control over the process because two $\lambda$ parameters can be chosen separately for each part, too.
+
 
 \FloatBarrier
 \subsection{Inpainting} % (fold)
+We consider a damaged picture were a considerable part of the picture has been overpainted with blue color. In the first step we detect the damaged region which in this
+case is done via a simple color selector (e.g. all pixels with a blue value larger than 0.95). In principle many other selection methods known from common raster graphic editors
+could be implemented here as well. \\
+Next, the a first guess is calculated using scattered linear interpolation and lastly the TV minimization itself is performed. The process is summarized in Figure 
+\ref{fig:application_colorinpaint1}.
+
 \label{sub:Inpainting}
 \begin{figure}[h!]
     \centering
@@ -92,6 +120,15 @@
 
 \FloatBarrier
 \subsection{Recolorization} % (fold)
+Colarization, also known is color inpainting, because it is basically just a special of inpainting is performed in the next example.
+Here the picture is not necessarily noisy but we assume only the brightness of each pixel is known, while the chromaticity is known only for a low ratio $r=0.01$ of all pixels.
+Note that this splitting implies that inpainting and TV minimization takes place only $S^2$.\\
+
+As in the previous example, we first have to detect all damaged, i.e. non-colored, pixels to inpaint. Again we use scattered interpolation to obtain the first guess which is depcited
+in Figure \ref{fig:application_colorinpaint1} \subref{fig:application_colorinpaint1_guess}. One can observe that the color runs over the edges of leafes. To avoid this we need to
+detect the edges in the brightness part using the Canny edge detector \cite{Canny}, for example, and set the edge weights for the chromaticity part accordingly. As a result, we indeed
+obtain sharp and clear edges in the final result \ref{fig:application_colorinpaint1} \subref{fig:application_colorinpaint1_restored}.
+
 \label{sub:Recolorization}
 \begin{figure}[h!]
     \centering
@@ -113,7 +150,7 @@
     }\\
     \caption[Recolorization]{Recolorization using color inpainting in the Chromaticity-Brightness color model, corresponding to $S^2\times\mathbb{R}$
 	\subref{fig:application_colorization1_orig} Original image "Basil.jpg", $300\times 179$ px, 8 bit color depth
-	\subref{fig:application_colorization1_colorless} Image with a ration of approximately $0.01$ remaining colored pixels
+	\subref{fig:application_colorization1_colorless} Image with a ratio of approximately $0.01$ remaining colored pixels
 	\subref{fig:application_colorization1_guess} First guess via componentwise scattered interpolation
 	\subref{fig:application_colorization1_restored} Recolored, IRLS with $\lambda=?$, $?$ IRLS steps, $?$ newton steps per IRLS step
 	\label{fig:application_colorization1}
@@ -124,13 +161,24 @@
 \FloatBarrier
 \subsection{Volume images} % (fold)
 \label{sub:Volume images}
+We conclude the picture section with an example of a 3D volume image as they might occur in medical imaging from magnetic resonance imaging (MRI) or
+computed tomography. In this demonstration, however, we chose the example of the so-called \emph{Boston teapot}, taken a volume image library \cite{volumeLib}
+and added componentwise gaussian noise. The image represents only intensity values, hence minimization is performed over $\mathbb{R}$. The result are shown
+in Figure \ref{fig:application_volume1_orig}.\\
+
+For this picture we used the proximal point algorithm, because the memory and computational requirements of the IRLS for a picture of this size are very high:
+In section \label{sub:NewtonequationfortheTVfunctional} it was shown that the dimension of the sparse linear system is $\operatorname{dim}(M)XYZ$ which
+in this case amounts to $1.1\times 10^{7}$, which is the length of the gradient while the Hessian will contain $7.7\times 10^{7}$ non-zero-entries.
+The solution of a sparse linear system of that size is computationally very demanding while in comparison the geodesic averaging and karcher mean calculations
+simplify to mostly vectorized addition and subtraction operations on a simple manifold like $\mathbb{R}$.
+
 \begin{figure}[h!]
     \centering
     \subfloat[][Original]{
 	\label{fig:application_volume1_orig}
 	\includegraphics[width=0.325\linewidth]{./figures/experiments/VolumeImg.png}
     }
-    \subfloat[][Noised]{
+    \subfloat[][Noisy]{
 	\label{fig:application_volume1_noise}
 	\includegraphics[width=0.325\linewidth]{./figures/experiments/noisyVolumeImg.png}
     }
@@ -155,6 +203,24 @@
 
 \subsection{Synthetic data} % (fold)
 \label{sub:Synthetic data}
+The following synthetic $SO(3)$ image is constructed in the following way. Let $\Omega=\lbrace 1,\ldots,30 \rbrace^2$ and define for every $(i,j)\in\Omega$
+a rotation axis
+\begin{equation}
+	v = \begin{cases}
+	    (2x,y,0)^{T}, & x>0.5\\
+	    (0,2x,0.5)^{T}, & \text{ else}
+	\end{cases},
+\end{equation}
+where $x=\frac{j}{30}, y=\frac{i}{30}$ and a rotation angle
+\begin{equation}
+    \alpha = \begin{cases}
+	   x + y, & x > y\\
+	   \frac{\pi}{2} + x - y, \text{ else}
+    \end{cases}.
+\end{equation}
+Then assign the corresponding $SO(3)$ element representing a rotation by $\alpha$ and about $v$. Noise is added componentwise and the noisy matrix is
+then projected back to $SO(3)$ using a the projector $P_{SO(n)}(A)=UV^{T}$ where $A=U\Sigma V^T$ is the singular value decomposition of $A$.
+
 \begin{figure}[h!]
     \centering
     \subfloat[][Original]{
@@ -222,8 +288,7 @@ A \emph{dense} optical flow field can be interpreted as a vector field where eac
 the set of points is retricted to only a few points of interest, a sparse feature set, we have \emph{sparse} optical flow.\\
 
 In the following example, we only use a sparse feature set for tracking and flow computation in a short video sequence. The traffic scene was taken from a crowds/high density moving object data 
-set provided by \cite{sali} (http://www.cs.ucf.edu/~sali/Projects/CrowdSegmentation/, Saad Ali and Mubarak Shah, A Lagrangian Particle Dynamics Approach for Crowd Flow Segmentation and )
-(MOVE TO BIBTEX). At first, we compute the sparse optical flow using the Lucas-Kanade algorithm \cite{LucasKanade} implemented in the OpenCV library. \\
+set provided by \cite{AliShah}. At first, we compute the sparse optical flow using the Lucas-Kanade algorithm \cite{LucasKanade} implemented in the OpenCV library. \\
 For the set of tracked features 
 $\mathcal{F}_1:=\lbrace{F^{(1)}_i\rbrace}_{i=1}^{400}\subset\Omega\subset\mathbb{R}^2$ in the first frame the algorithm tries to identify each feature in the second frame resulting in a set of
 identified features $\mathcal{F}_2:=\lbrace{F^{(2)}_i\rbrace}_{i=1}^{N<400}\subset\Omega\subset\mathbb{R}^2$ and corresponding displacement vectors 
@@ -280,7 +345,24 @@ section \ref{sec:Extensions}
 
 \subsection{Synthetic data} % (fold)
 \label{sub:Synthetic data}
-
+For the construction of the synthetic $SPD(3)$ image in Figure \ref{fig:application_spd1}, let $\Omega=\lbrace 1,\ldots,n \rbrace^2$ and define for every $(i,j)\in\Omega$
+a rotation axis
+\begin{equation}
+	v = \begin{cases}
+	    (x,y,2)^{T}, & x+y<1\\
+	    (y,-x,1)^{T}, & \text{ else}
+	\end{cases},
+\end{equation}
+where $x=\frac{j}{n}, y=\frac{i}{n}$ and a rotation angle
+\begin{equation}
+    \alpha = \begin{cases}
+	   x+2y, & x+y<1\\
+	   y+2x, \text{ else}
+    \end{cases}.
+\end{equation}
+Let $R$ be the corresponding $SO(3)$ element representing a rotation by $\alpha$ and about $v$. Then define a diagonal matrix $D=\operatorname{diag}(x+0.2,y+0.2,0.5)$
+and finally assign the matrix $A=R^{T}DR$ to the pixel.\\
+Noise is then added by taking the matrix logarithm of every pixel, adding gaussian componentwise noise and apply the matrix exponential again.
 \begin{figure}[h!]
     \centering
     \subfloat[][Original]{
@@ -306,8 +388,31 @@ section \ref{sec:Extensions}
 % subsection Synthetic data (end)
 
 \FloatBarrier
-\subsection{Diffusion Tensor MRI images} % (fold)
+\subsection{Diffusion Tensor Magnetic Resonance Imaging} % (fold)
 \label{sub:Diffusion Tensor MRI images}
+Diffusion Tensor Magnetic Resonance Imaging (DT-MRI) is a medical imaging method which is able to non-invasively measure diffusion coefficients of water molecules
+in living biological tissues. DT-MRI goes beyond CT or normal MR imaging methods which are only able to provide a single intensity value per voxel. Since water molecules
+can move easier along, for example axons, connecting the neurons in the brain, than they can move across it, the resulting anisotropic diffusion pattern can provide a
+lot of information about the structure of the brain.\\
+
+DTI data sets are usually calculated from a set of diffusion weighted magnetic resonance imaging (DW-MRI) pictures.The basic magnetic resonance imaging works by applying an external magnetic along
+the $z$-axis such that the proton spins in the tissue align either parallel or antiparallel to it, however, while still preceding around the $z$-axis with the so-called Lamor frequency.
+An electromagnetic wave packet(HF-pulse) with that frequency leads to a collective state transition to a resonance state such that spin moments will be phase-synchronous before relaxing
+back to their original orientation with respect to the external field. The magnetic field created by having synchronized moments can be measured by a coil where an electric potential will be created.
+From the different relaxation times of different materials one can make conclusions about the structure of the tissue.\\
+By applying an additional magnetic gradient field, the Lamor frequency of different layers of the probe can be modified such that only one layer of the material will resonate to the pulse.
+This provides an additional positional resolution of the imaging process.\\
+
+The DTI image is finally computed using the \emph{Stejskal-Tanner-equation} given by
+\begin{equation}
+    A(\mathbf{g})=A(0)\exp(-b\mathbf{g}^T\mathbf{D}\mathbf{g})
+\end{equation}
+where $A(\mathbf{g})$ denotes the signal strength, $\mathbf{g}$ the magnetic gradient field and $b$ some measurement related parameters. Solving this equation for $\mathbf{D}$ finally
+leads to desired $SPD(3)$ matrix describing the diffusion coefficents and directions.\\
+
+In Figure \ref{fig:application_dti1} the IRLS minimizer is applied to DTI data set provided by Barmpoutis \cite{barmpoutis}.
+On clearly identify regions of high anistropy in the picture, where the molecules are forced to diffuse in one preferred direction.
+
 % subsection Diffusion Tensor MRI images (end)
 \begin{figure}[h!]
     \centering
@@ -320,7 +425,7 @@ section \ref{sec:Extensions}
 	\includegraphics[width=0.5\linewidth]{./figures/experiments/denoised_dti32x32.png}
     }\\
     \caption[Denoising DT-MRI data]{Denoising a DT-MRI image with pixel in SPD(3)
-	\subref{fig:application_dti1_noise} Componentwise gaussian noise $\mu=0$, $\sigma=?$ added
+	\subref{fig:application_dti1_noise} Original DTI data, 32x32 pixel
 	\subref{fig:application_dti1_denoised} Denoised, IRLS with $\lambda=?$, $?$ IRLS steps, $?$ newton steps per IRLS step
 	\label{fig:application_dti1}
     }
