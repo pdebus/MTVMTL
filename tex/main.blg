@@ -5,47 +5,46 @@ The style file: plain.bst
 Database file #1: mt.bib
 Warning--I didn't find a database entry for "SprecherIRLS"
 Warning--I didn't find a database entry for "nifti"
-Warning--I didn't find a database entry for "opticalflow"
 Warning--I didn't find a database entry for "volumeLib"
-You've used 26 entries,
+You've used 31 entries,
             2118 wiz_defined-function locations,
-            698 strings with 8597 characters,
-and the built_in function-call counts, 8347 in all, are:
-= -- 814
-> -- 372
+            726 strings with 9402 characters,
+and the built_in function-call counts, 9774 in all, are:
+= -- 950
+> -- 435
 < -- 5
-+ -- 149
-- -- 118
-* -- 598
-:= -- 1414
-add.period$ -- 81
-call.type$ -- 26
-change.case$ -- 131
++ -- 174
+- -- 138
+* -- 690
+:= -- 1661
+add.period$ -- 97
+call.type$ -- 31
+change.case$ -- 153
 chr.to.int$ -- 0
-cite$ -- 26
-duplicate$ -- 313
-empty$ -- 674
-format.name$ -- 118
-if$ -- 1749
+cite$ -- 31
+duplicate$ -- 371
+empty$ -- 796
+format.name$ -- 138
+if$ -- 2050
 int.to.chr$ -- 0
-int.to.str$ -- 26
-missing$ -- 29
-newline$ -- 133
-num.names$ -- 54
-pop$ -- 124
+int.to.str$ -- 31
+missing$ -- 37
+newline$ -- 158
+num.names$ -- 64
+pop$ -- 153
 preamble$ -- 1
-purify$ -- 108
+purify$ -- 128
 quote$ -- 0
-skip$ -- 207
+skip$ -- 241
 stack$ -- 0
-substring$ -- 537
-swap$ -- 47
+substring$ -- 610
+swap$ -- 52
 text.length$ -- 5
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 94
+type$ -- 108
 warning$ -- 0
-while$ -- 75
-width$ -- 28
-write$ -- 291
-(There were 4 warnings)
+while$ -- 87
+width$ -- 33
+write$ -- 346
+(There were 3 warnings)

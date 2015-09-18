@@ -63,7 +63,7 @@ The library which was developed in the course of this work is an easy-to-use, fa
 
 \subsubsection{Performance} % (fold)
 \label{ssub:Performance}
-Since the core parts of the implementation are originally based on a matlab prototype by Sprecher \cite{SprecherIRLS}, \cite{manuel} and \cite{mara}, one of the most important
+Since the core parts of the implementation are originally based on a Matlab prototype by Sprecher \cite{SprecherIRLS}, \cite{manuel} and \cite{mara}, one of the most important
 goals was of course a faster implementation with a smaller memory footprint. On the test platform with two hyperthreaded 2.8GHz cores Intel i5-2520 with AVX vector extensions
 the Matlab implementation froze for images larger than one Megapixel(MP). Hence, the C++ implementation should enable the algorithm to be tested in a much broader scope which is
 also closer to common picture sizes in image processing, especially since even smartphones today easily produce pictures in the Megapixel range.
@@ -91,16 +91,17 @@ the time to solve the sparse linear system.\\
 \label{ssub:Modularization}
 In principle the programming paradigm in Matlab is still procedural resulting in a hierarchy of functions for the various tasks. Handling different types of manifolds
 then usually requires \texttt{switch} expressions in all functions that use manifold-specific functionality. Adding a support for a new manifold to the algorithm or modifying
-existing manifold functionalty makes a modification of all \texttt{switch} cases necessary. There is no single point of change but many source files need to edited.\\
+existing manifold functionality makes a modification of all \texttt{switch} cases necessary. There is no single point of change but many source files need to edited.\\
 
 For the TVMT Library an object oriented and generic programming approach was chosen, which tries to model each variable component of the algorithm in a separate class, as 
-independent of the other components as possible. Differences in each class are represented by specializations of their primary class template. The best example for that is the
+independent of the other components as possible. For general information on C++ design paradigm see, for example \cite{CPPTemplateMP} ot \cite{CPPGeneric}.
+Differences in each class are represented by specializations of their primary class template. The best example for that is the
 manifold class which has a specialization for every supported manifold type and due to the fact that the functions implemented in those class specializations are generally
 just functions of one or two elements of the manifold, they could also be used in other projects which require the same functionality.\\
 
 Interfaces between classes are provided by giving classes higher in the hierarchy template parameters corresponding to lower classes: The class modelling the functional, for instance,
 has a manifold type template parameter, as described in more detail in the section \ref{sec:Components}. Like all other component classes, also the functional class can be extended
-by adding further specializations for other types of functionals, that include for example higher order terms or have different fidelity terms \cite{opticalflow}.\\
+by adding further specializations for other types of functionals, that include for example higher order terms or have different fidelity terms \cite{SceneFlow}.\\
 
 Those specializations also have the advantage that the code is just in one file, a single point of change to increase readability and maintainability.
 % subsubsection Modularization (end)
@@ -167,6 +168,7 @@ that issue is handled by the VPP and Eigen libraries enabling the compiler to pe
 \label{sub:C++ techniques}
 The TVMT Library tries to take advantage of new C++11 and C++14 language features in order to speed up computations via compile-time optimizations and also make the code
 more compact and readable. The most important tools in that regard are lambda functions and variadic templates which are shortly described in the following section.
+For more details check for example \cite{CPPEleven}.
 
 \subsubsection{Lambda functions} % (fold)
 \label{ssub:Lambda functions}
@@ -686,6 +688,34 @@ Recommended are also the following packages. They are needed if any of the descr
 
 \subsection{Compilation of own projects using CMake} % (fold)
 \label{sub:CMakeCompilation}
+\begin{lstlisting}
+cmake_minimum_required(VERSION 2.8)
+
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
+
+find_package(OpenGL REQUIRED)
+find_package(GLUT REQUIRED)
+find_package(GLEW REQUIRED)
+include_directories( ${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS} )
+
+find_package(OpenCV REQUIRED)
+find_package(CGAL REQUIRED)
+include(${CGAL_USE_FILE})
+
+find_package(Cholmod REQUIRED)
+find_package(SuperLU REQUIRED)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/.. /usr/include/superlu /usr/include/eigen3 $ENV{HOME}/projects/iod)
+add_definitions(-std=c++14 -g -fopenmp)
+add_definitions(-Ofast -march=native)
+add_definitions(-DNDEBUG)
+
+add_executable(tvmin_test_irls3d tvmin_test_irls3d.cpp)
+add_test(tvmin_test_irls3d tvmin_test_irls3d)
+target_link_libraries(tvmin_test_irls3d ${OpenCV_LIBS} ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARIES} gomp)
+\end{lstlisting}
+
+
 
 % subsection Compilation of own projects using CMake (end)
 

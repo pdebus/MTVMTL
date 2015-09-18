@@ -6,6 +6,12 @@ A.~Barmpoutis A., B.~C. Vemuri, T.~M. Shepherd, and J.~R. Forder.
   applications to segmentation of isolated rat hippocampi.
 \newblock {\em IEEE Trans Med Imaging}, 26(11):1537--1546, 2007.
 
+\bibitem{CPPTemplateMP}
+David Abrahams and Aleksey Gurtovoy.
+\newblock {\em C++ Template Metaprogramming: Concepts, Tools, and Techniques
+  from Boost and Beyond (C++ in Depth Series)}.
+\newblock Addison-Wesley Professional, 2004.
+
 \bibitem{AbsilOptim}
 Absil.
 \newblock {\em Optimatization on Matrix Manifolds}.
@@ -28,6 +34,12 @@ Awad~H. Al-Mohy, Nicholas~J. Higham, and Samuel~D. Relton.
   estimating the condition number.
 \newblock {\em SIAM Journal on Scientific Computing}, 35(4):C394--C410, 2013.
 
+\bibitem{CPPGeneric}
+Andrei Alexandrescu.
+\newblock {\em Modern C++ Design: Generic Programming and Design Patterns
+  Applied}.
+\newblock Addison-Wesley Longman Publishing Co., Inc., Boston, MA, USA, 2001.
+
 \bibitem{AliShah}
 Saad Ali and Mubarak Shah.
 \newblock A lagrangian particle dynamics approach for crowd flow segmentation
@@ -38,6 +50,13 @@ Saad Ali and Mubarak Shah.
 V.~Arsigny, P.~Fillard, X.~Pennec, and N.~Ayache.
 \newblock Geometric means in a novel vector space structure on symmetric
   positive definite matrices.
+\newblock {\em SIAM Journal on Matrix Analysis and Applications},
+  29(1):328--347, 2007.
+
+\bibitem{LogEuclidian}
+Vincent Arsigny, Pierre Fillard, Xavier Pennec, and Nicholas Ayache.
+\newblock Geometric means in a novel vector space structure on symmetric
+  positive‐definite matrices.
 \newblock {\em SIAM Journal on Matrix Analysis and Applications},
   29(1):328--347, 2007.
 
@@ -74,7 +93,7 @@ Alan Edelman, Tom\'{a}s~A. Arias, and Steven~T. Smith.
 
 \bibitem{VPP}
 Matthieu Garrigues and Antoine Manzanera.
-\newblock Video++, a modern image and video processing c++ framework.
+\newblock Video++, a modern image and video processing {C++} framework.
 \newblock Technical report, ENSTA-ParisTech, France, 2014.
 
 \bibitem{Grohssprecher}
@@ -101,10 +120,22 @@ H.~Karcher.
 \newblock {\em Communications on Pure and Applied Mathematics}, 30(5):509--541,
   1977.
 
+\bibitem{manifoldFlow}
+Julien Lefevre and Sylvain Baillet.
+\newblock Optical flow and advection on 2-riemannian manifolds: A common
+  framework.
+\newblock {\em IEEE Trans. Pattern Anal. Mach. Intell.}, 30(6):1081--1092,
+  2008.
+
 \bibitem{RudinOsher}
 Stanley~Osher Leonid I.~Rudin and Emad Fatemi.
 \newblock {Nonlinear total variation based noise removal algorithms}.
 \newblock {\em Physica D}, 60:259--168, 1992.
+
+\bibitem{CPPEleven}
+Ray Lischner.
+\newblock {\em Exploring {C++}11}.
+\newblock Expert's voice in C++. Apress, New York, 2013.
 
 \bibitem{LucasKanade}
 Bruce~D. Lucas and Takeo Kanade.

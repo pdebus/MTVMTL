@@ -83,8 +83,8 @@
 \contentsline {subsection}{\numberline {3.3.4}TV Minimizer class}{31}{subsection.3.3.4}
 \contentsline {subsection}{\numberline {3.3.5}Visualization class}{32}{subsection.3.3.5}
 \contentsline {subsubsection}{SO(3) Visualization}{32}{section*.45}
-\contentsline {subsubsection}{SPD(3) Visualization}{33}{section*.47}
-\contentsline {subsubsection}{3D Volume image rendering}{33}{section*.50}
+\contentsline {subsubsection}{SPD(3) Visualization}{32}{section*.47}
+\contentsline {subsubsection}{3D Volume image rendering}{34}{section*.50}
 \contentsline {subsection}{\numberline {3.3.6}Utility functions}{34}{subsection.3.3.6}
 \contentsline {subsubsection}{Matrix functions}{34}{section*.52}
 \contentsline {subsubsection}{Function pointers utilities}{34}{section*.53}
@@ -99,7 +99,7 @@
 \contentsline {subsection}{\numberline {3.4.4}Tutorial and typical use cases}{35}{subsection.3.4.4}
 \contentsline {subsubsection}{Image denoising, vectorial color model}{35}{section*.57}
 \contentsline {subsubsection}{Colorization using color inpainting}{36}{section*.58}
-\contentsline {subsubsection}{3D DT-MRI data denoising and visualization}{37}{section*.59}
+\contentsline {subsubsection}{3D DT-MRI data denoising and visualization}{38}{section*.59}
 \contentsline {chapter}{\numberline {4}Applications and Numerical Experiments}{40}{chapter.4}
 \contentsline {section}{\numberline {4.1}Image denoising}{40}{section.4.1}
 \contentsline {subsection}{\numberline {4.1.1}Grayscale}{40}{subsection.4.1.1}
@@ -116,7 +116,8 @@
 \contentsline {subsection}{\numberline {4.3.2}Diffusion Tensor Magnetic Resonance Imaging}{46}{subsection.4.3.2}
 \contentsline {subsection}{\numberline {4.3.3}3D DT MRI data}{47}{subsection.4.3.3}
 \contentsline {section}{\numberline {4.4}Comparison IRLS and Proximal Point minimizers}{48}{section.4.4}
-\contentsline {section}{\numberline {4.5}Sensitivity to variations of the starting value}{48}{section.4.5}
-\contentsline {chapter}{\numberline {5}Outlook}{49}{chapter.5}
-\contentsline {section}{\numberline {5.1}Extensions}{49}{section.5.1}
-\contentsline {section}{\numberline {5.2}Recursive computation on subdomains}{49}{section.5.2}
+\contentsline {section}{\numberline {4.5}Sensitivity to variations of the original data}{48}{section.4.5}
+\contentsline {chapter}{\numberline {5}Outlook}{50}{chapter.5}
+\contentsline {section}{\numberline {5.1}Extensions}{50}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}Functionals}{50}{subsection.5.1.1}
+\contentsline {section}{\numberline {5.2}Recursive computation on subdomains}{50}{section.5.2}

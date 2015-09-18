@@ -400,6 +400,7 @@ the $z$-axis such that the proton spins in the tissue align either parallel or a
 An electromagnetic wave packet(HF-pulse) with that frequency leads to a collective state transition to a resonance state such that spin moments will be phase-synchronous before relaxing
 back to their original orientation with respect to the external field. The magnetic field created by having synchronized moments can be measured by a coil where an electric potential will be created.
 From the different relaxation times of different materials one can make conclusions about the structure of the tissue.\\
+
 By applying an additional magnetic gradient field, the Lamor frequency of different layers of the probe can be modified such that only one layer of the material will resonate to the pulse.
 This provides an additional positional resolution of the imaging process.\\
 
@@ -409,10 +410,6 @@ The DTI image is finally computed using the \emph{Stejskal-Tanner-equation} give
 \end{equation}
 where $A(\mathbf{g})$ denotes the signal strength, $\mathbf{g}$ the magnetic gradient field and $b$ some measurement related parameters. Solving this equation for $\mathbf{D}$ finally
 leads to desired $SPD(3)$ matrix describing the diffusion coefficents and directions.\\
-
-In Figure \ref{fig:application_dti1} the IRLS minimizer is applied to DTI data set provided by Barmpoutis \cite{barmpoutis}.
-On clearly identify regions of high anistropy in the picture, where the molecules are forced to diffuse in one preferred direction.
-
 % subsection Diffusion Tensor MRI images (end)
 \begin{figure}[h!]
     \centering
@@ -431,12 +428,19 @@ On clearly identify regions of high anistropy in the picture, where the molecule
     }
 \end{figure}
 
+In Figure \ref{fig:application_dti1} the IRLS minimizer is applied to DTI data set provided by Barmpoutis \cite{barmpoutis}.
+On clearly identify regions of high anistropy in the picture, where the molecules are forced to diffuse in one preferred direction.
+The areas dominated mainly by green spheres correspond to approximately isotropic diffusion which means that there are no obstacles like axons in the brain in the 
+immediate proximity of the water molecules.\\
 
 
 \FloatBarrier
 \subsection{3D DT MRI data} % (fold)
 \label{sub:3DDTMRIdata}
 % subsection 3D DT MRI data (end)
+
+Finally, in Figure \ref{fig:application_dti2_noise} we show a 3D DTI image.
+
 \begin{figure}[h!]
     \centering
     \subfloat[][Noisy]{
@@ -462,9 +466,55 @@ On clearly identify regions of high anistropy in the picture, where the molecule
 
 % section Comparison IRLS and Proximal Point minimizers (end)
 
+
 \FloatBarrier
-\section{Sensitivity to variations of the starting value} % (fold)
-\label{sec:Sensitivity to variations of the starting value}
+\section{Sensitivity to variations of the original data} % (fold)
+\label{sec:Sensitivity}
+%In section \ref{sub:Volume images} it was already mentioned that the computational and memory requirements become very demanding for increasing pixel numbers.
+%If $N=XYZ$ denotes the number of pixels in the picture than the the number of non-zero entries in the Hessian is still $\mathcal{O}(N)$\\
+In this section we perform a numerical experiment to see how changes of the noisy original picture influence the global solution found by the IRLS algorithm.
+For that purpose we consider only the Brightness part of the Lena picture. In this grayscale image we pick a single non-zero pixel far enough in the inside of
+the picture and set this pixel to zero, i.e. black color. This leads to two different original pictures
+\begin{align}
+    u_0,\hat{u}_0:\Omega &\to\mathbb{R}\\
+    (\hat{u}_0)_{ij}&=\begin{cases}
+	0, & \text{ if } i=i_0:=100,j=j_0:=10\\
+	(u_0)_{ij}, &\text{else}
+    \end{cases}.
+\end{align}
+
+Then for the original $u_0$ and the modified image $\hat{u}_0$ an IRLS minimization with $\lambda=0.1$, 5 iterations and one Newton step per reweighting is
+performed to compare the two the solutions $u$ and $\hat{u}$. We take the absolute differences $e_{ij}=|u_{ij}-\hat{u}_{ij}|$ between the solutions
+which leads to the error cone shown in Figure \ref{fig:experiment_sensitivity}\label{fig:experiment_sensitivity_plot}. This already suggests that the
+error caused by changing the orginal data decays exponentially with distance $r=\sqrt{(i-i_0)^{2}+(j-j_0)^{2}}$.\\
+
+After fitting a cone to the data, which is shown in \ref{fig:experiment_sensitivity}\label{fig:experiment_sensitivity_fit}
+one finds that the aperture half-angle corresponds to a slope of $c=1.XXX$ such that the error will decay as
+\begin{equation}
+    e_{ij}=e^{-cr}.
+\end{equation}
+
+\begin{figure}[h!]
+    \centering
+    \subfloat[][Error cone]{
+	\label{fig:experiment_sensitivity_plot}
+	\includegraphics[width=0.4\linewidth]{./figures/experiments/cone.pdf}
+    }
+    \subfloat[][Fitted cone]{
+	\label{fig:experiment_sensitivity_fit}
+	\includegraphics[width=0.4\linewidth]{./figures/experiments/fitted_cone.pdf}
+    }\\
+    \caption[Sensitivity to variation]{Sensitivity to change in original data
+	\subref{fig:experiment_sensitivity_plot} Logarithmic plot of absolut differences $e_{ij}=|u_{ij}-\hat{u}_{ij}|$
+	\subref{fig:experiment_sensitivity_fit} Cone fitted to the data, resulting in aperture half-angle of $\alpha=XXX$
+	\label{fig:experiment_sensitivity}
+    }
+\end{figure}
+
+The most important conclusion one can draw from this is that a pixel in the global minimizer depends practically only on a local neighborhood of that pixel
+in the original picture, not on pixels far away from that neighborhood. We will discuss possible applications of this in section \label{sec:Recursivecomputationonsubdomains}.\\
+
+Of course these findings should be verified analytically by providing sufficiently precise error bounds, which is, however, unfortunately out of the scope of this work.
 
 % section Sensitivity to variations of the starting value (end)
 

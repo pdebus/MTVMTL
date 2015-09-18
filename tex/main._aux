@@ -369,32 +369,32 @@
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {3.4}Inclusion of library headers}{35}{lstlisting.3.4}}
 \newlabel{code:tut_typedef}{{3.5}{35}{Specification of manifold and data type}{lstlisting.3.5}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {3.5}Specification of manifold and data type}{35}{lstlisting.3.5}}
-\newlabel{code:tut_data}{{3.6}{35}{Initialization and input of image data}{lstlisting.3.6}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.6}Initialization and input of image data}{35}{lstlisting.3.6}}
-\newlabel{code:tut_func}{{3.7}{35}{Defining the functional and setting parameters}{lstlisting.3.7}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.7}Defining the functional and setting parameters}{35}{lstlisting.3.7}}
+\newlabel{code:tut_data}{{3.6}{36}{Initialization and input of image data}{lstlisting.3.6}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.6}Initialization and input of image data}{36}{lstlisting.3.6}}
+\newlabel{code:tut_func}{{3.7}{36}{Defining the functional and setting parameters}{lstlisting.3.7}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.7}Defining the functional and setting parameters}{36}{lstlisting.3.7}}
 \newlabel{code:tut_data}{{3.8}{36}{Choosing the minimizer, smoothing and minimization}{lstlisting.3.8}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {3.8}Choosing the minimizer, smoothing and minimization}{36}{lstlisting.3.8}}
 \@writefile{toc}{\contentsline {subsubsection}{Colorization using color inpainting}{36}{section*.58}}
 \newlabel{ssub:Color inpainting}{{3.4.4}{36}{Colorization using color inpainting}{section*.58}{}}
 \newlabel{code:tut2_init}{{3.9}{36}{Include library files and read parameters from standard input}{lstlisting.3.9}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {3.9}Include library files and read parameters from standard input}{36}{lstlisting.3.9}}
-\newlabel{code:tut2_mfdata}{{3.10}{36}{Manifold and Data class type definitions and instantiation}{lstlisting.3.10}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.10}Manifold and Data class type definitions and instantiation}{36}{lstlisting.3.10}}
+\newlabel{code:tut2_mfdata}{{3.10}{37}{Manifold and Data class type definitions and instantiation}{lstlisting.3.10}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.10}Manifold and Data class type definitions and instantiation}{37}{lstlisting.3.10}}
 \newlabel{code:tut2_edgeandcolorremoval}{{3.11}{37}{Color and brightness input, edge detection and color removal}{lstlisting.3.11}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {3.11}Color and brightness input, edge detection and color removal}{37}{lstlisting.3.11}}
 \newlabel{code:tut2_functionalmin}{{3.12}{37}{Functional and minimizer definition, first guess and minimization}{lstlisting.3.12}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {3.12}Functional and minimizer definition, first guess and minimization}{37}{lstlisting.3.12}}
-\@writefile{toc}{\contentsline {subsubsection}{3D DT-MRI data denoising and visualization}{37}{section*.59}}
-\newlabel{ssub:dti_tut}{{3.4.4}{37}{3D DT-MRI data denoising and visualization}{section*.59}{}}
-\newlabel{code:tut3_init}{{3.13}{37}{Initialization}{lstlisting.3.13}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.13}Initialization}{37}{lstlisting.3.13}}
+\@writefile{toc}{\contentsline {subsubsection}{3D DT-MRI data denoising and visualization}{38}{section*.59}}
+\newlabel{ssub:dti_tut}{{3.4.4}{38}{3D DT-MRI data denoising and visualization}{section*.59}{}}
+\newlabel{code:tut3_init}{{3.13}{38}{Initialization}{lstlisting.3.13}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.13}Initialization}{38}{lstlisting.3.13}}
 \newlabel{code:tut3_typdefinitions}{{3.14}{38}{Type definitions, Visualization type}{lstlisting.3.14}{}}
 \@writefile{lol}{\contentsline {lstlisting}{\numberline {3.14}Type definitions, Visualization type}{38}{lstlisting.3.14}}
-\newlabel{code:tut3_rendernoisyimg}{{3.15}{38}{Data input and displaying the noisy data}{lstlisting.3.15}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.15}Data input and displaying the noisy data}{38}{lstlisting.3.15}}
-\newlabel{code:tut3_rendernoisyimg}{{3.16}{38}{Minimization and final rendering}{lstlisting.3.16}{}}
-\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.16}Minimization and final rendering}{38}{lstlisting.3.16}}
+\newlabel{code:tut3_rendernoisyimg}{{3.15}{39}{Data input and displaying the noisy data}{lstlisting.3.15}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.15}Data input and displaying the noisy data}{39}{lstlisting.3.15}}
+\newlabel{code:tut3_rendernoisyimg}{{3.16}{39}{Minimization and final rendering}{lstlisting.3.16}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3.16}Minimization and final rendering}{39}{lstlisting.3.16}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {4}Applications and Numerical Experiments}{40}{chapter.4}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
@@ -511,7 +511,7 @@
 \newlabel{fig:application_spd1}{{4.9}{46}{Denoising of synthetic SPD(3) picture}{figure.caption.68}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Diffusion Tensor Magnetic Resonance Imaging}{46}{subsection.4.3.2}}
 \newlabel{sub:Diffusion Tensor MRI images}{{4.3.2}{46}{Diffusion Tensor Magnetic Resonance Imaging}{subsection.4.3.2}{}}
-\@writefile{brf}{\backcite{barmpoutis}{{46}{4.3.2}{equation.4.3.7}}}
+\@writefile{brf}{\backcite{barmpoutis}{{46}{4.3.2}{figure.caption.69}}}
 \newlabel{fig:application_dti1_noise}{{4.10a}{47}{Subfigure 4 4.10a}{subfigure.4.10.1}{}}
 \newlabel{sub@fig:application_dti1_noise}{{(a)}{a}{Subfigure 4 4.10a\relax }{subfigure.4.10.1}{}}
 \newlabel{fig:application_dti1_denoised}{{4.10b}{47}{Subfigure 4 4.10b}{subfigure.4.10.2}{}}
@@ -528,15 +528,33 @@
 \newlabel{fig:application_dti2}{{4.11}{48}{Denoising 3D DTI-MRI data}{figure.caption.70}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.4}Comparison IRLS and Proximal Point minimizers}{48}{section.4.4}}
 \newlabel{sec:Comparison IRLS and Proximal Point minimizers}{{4.4}{48}{Comparison IRLS and Proximal Point minimizers}{section.4.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.5}Sensitivity to variations of the starting value}{48}{section.4.5}}
-\newlabel{sec:Sensitivity to variations of the starting value}{{4.5}{48}{Sensitivity to variations of the starting value}{section.4.5}{}}
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}Outlook}{49}{chapter.5}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}Sensitivity to variations of the original data}{48}{section.4.5}}
+\newlabel{sec:Sensitivity}{{4.5}{48}{Sensitivity to variations of the original data}{section.4.5}{}}
+\newlabel{fig:experiment_sensitivity_plot}{{4.5}{48}{Sensitivity to variations of the original data}{equation.4.5.9}{}}
+\newlabel{fig:experiment_sensitivity_fit}{{4.5}{48}{Sensitivity to variations of the original data}{equation.4.5.9}{}}
+\newlabel{fig:experiment_sensitivity_plot}{{4.12a}{49}{Subfigure 4 4.12a}{subfigure.4.12.1}{}}
+\newlabel{sub@fig:experiment_sensitivity_plot}{{(a)}{a}{Subfigure 4 4.12a\relax }{subfigure.4.12.1}{}}
+\newlabel{fig:experiment_sensitivity_fit}{{4.12b}{49}{Subfigure 4 4.12b}{subfigure.4.12.2}{}}
+\newlabel{sub@fig:experiment_sensitivity_fit}{{(b)}{b}{Subfigure 4 4.12b\relax }{subfigure.4.12.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4.12}{\ignorespaces Sensitivity to variation}}{49}{figure.caption.71}}
+\newlabel{fig:experiment_sensitivity}{{4.12}{49}{Sensitivity to variation}{figure.caption.71}{}}
+\newlabel{sec:Recursivecomputationonsubdomains}{{4.5}{49}{Sensitivity to variations of the original data}{figure.caption.71}{}}
+\citation{LogEuclidian}
+\citation{SceneFlow}
+\citation{manifoldFlow}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Outlook}{50}{chapter.5}}
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{ch:outlook}{{5}{49}{Outlook}{chapter.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}Extensions}{49}{section.5.1}}
-\newlabel{sec:Extensions}{{5.1}{49}{Extensions}{section.5.1}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}Recursive computation on subdomains}{49}{section.5.2}}
-\newlabel{sec:Recursive computation on subdomains}{{5.2}{49}{Recursive computation on subdomains}{section.5.2}{}}
+\newlabel{ch:outlook}{{5}{50}{Outlook}{chapter.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Extensions}{50}{section.5.1}}
+\newlabel{sec:Extensions}{{5.1}{50}{Extensions}{section.5.1}{}}
+\@writefile{brf}{\backcite{LogEuclidian}{{50}{5.1}{section.5.1}}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}Functionals}{50}{subsection.5.1.1}}
+\newlabel{sub:Functionals}{{5.1.1}{50}{Functionals}{subsection.5.1.1}{}}
+\newlabel{sub:reconstructionDenseOpticalFlow}{{5.1.1}{50}{Functionals}{subsection.5.1.1}{}}
+\@writefile{brf}{\backcite{SceneFlow}{{50}{5.1.1}{subsection.5.1.1}}}
+\@writefile{brf}{\backcite{manifoldFlow}{{50}{5.1.1}{equation.5.1.1}}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}Recursive computation on subdomains}{50}{section.5.2}}
+\newlabel{sec:Recursivecomputationonsubdomains}{{5.2}{50}{Recursive computation on subdomains}{section.5.2}{}}
 \bibstyle{plain}
 \bibdata{mt}
