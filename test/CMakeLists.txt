@@ -137,6 +137,22 @@ add_executable(tvmin_test_irls3d tvmin_test_irls3d.cpp)
 add_test(tvmin_test_irls3d tvmin_test_irls3d)
 target_link_libraries(tvmin_test_irls3d ${OpenCV_LIBS} ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARIES} gomp)
 
+add_executable(error_computation_test_euc error_computation_test_euc.cpp)
+add_test(error_computation_test_euc error_computation_test_euc)
+target_link_libraries(error_computation_test_euc ${OpenCV_LIBS} ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES} gomp)
+
+add_executable(error_computation_test_son error_computation_test_son.cpp)
+add_test(error_computation_test_son error_computation_test_son)
+target_link_libraries(error_computation_test_son ${OpenCV_LIBS} ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES} gomp)
+
+add_executable(error_computation_test_spd error_computation_test_spd.cpp)
+add_test(error_computation_test_spd error_computation_test_spd)
+target_link_libraries(error_computation_test_spd ${OpenCV_LIBS} ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES} gomp)
+
+add_executable(error_computation_test_sphere error_computation_test_sphere.cpp)
+add_test(error_computation_test_sphere error_computation_test_sphere)
+target_link_libraries(error_computation_test_sphere ${OpenCV_LIBS} ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES} gomp)
+
 add_executable(inpaint_test inpaint_test.cpp)
 add_test(inpaint_test inpaint_test)
 target_link_libraries(inpaint_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
@@ -160,6 +176,10 @@ target_link_libraries(son_functional_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${G
 add_executable(son_tvmin_test son_tvmin_test.cpp)
 add_test(son_tvmin_test son_tvmin_test)
 target_link_libraries(son_tvmin_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+
+add_executable(son_tvmin_prpt_test son_tvmin_prpt_test.cpp)
+add_test(son_tvmin_prpt_test son_tvmin_prpt_test)
+target_link_libraries(son_tvmin_prpt_test ${OpenCV_LIBS} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} gomp ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 
 add_executable(spd_tvmin_test spd_tvmin_test.cpp)
 add_test(spd_tvmin_test spd_tvmin_test)

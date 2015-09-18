@@ -23,7 +23,7 @@ struct algo_traits<EUCLIDIAN> {
 	    
     static const int max_runtime = 1000;
     static const int max_irls_steps = 5;
-    static const int max_newtons_steps = 1;
+    static const int max_newton_steps = 1;
     static constexpr double tolerance = 1e-4;
 
     static const bool use_preconditioner = false;
@@ -39,7 +39,7 @@ struct algo_traits<SPHERE> {
 	    
     static const int max_runtime = 1000;
     static const int max_irls_steps = 5;
-    static const int max_newtons_steps = 1;
+    static const int max_newton_steps = 1;
     static constexpr double tolerance = 1e-4;
 
     static const bool use_preconditioner = false;
@@ -54,7 +54,7 @@ struct algo_traits<SO> {
 	    
     static const int max_runtime = 1000;
     static const int max_irls_steps = 5;
-    static const int max_newtons_steps = 1;
+    static const int max_newton_steps = 1;
     static constexpr double tolerance = 1e-4;
 
     static const bool use_preconditioner = false;
@@ -69,7 +69,7 @@ struct algo_traits<SPD> {
 	    
     static const int max_runtime = 1000;
     static const int max_irls_steps = 5;
-    static const int max_newtons_steps = 1;
+    static const int max_newton_steps = 1;
     static constexpr double tolerance = 1e-4;
 
     static const bool use_preconditioner = false;
@@ -84,7 +84,7 @@ struct algo_traits<GRASSMANN> {
 	    
     static const int max_runtime = 1000;
     static const int max_irls_steps = 5;
-    static const int max_newtons_steps = 1;
+    static const int max_newton_steps = 1;
     static constexpr double tolerance = 1e-4;
 
     static const bool use_preconditioner = false;

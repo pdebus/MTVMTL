@@ -200,7 +200,7 @@ inline void Manifold <SO, N>::exp(const Eigen::MatrixBase<DerivedX>& x, const Ei
 
 template <int N>
 inline void Manifold <SO, N>::log(cref_type x, cref_type y, ref_type result){
-    result = x * (x.transpose() * y).exp();
+    result = x * (x.transpose() * y).log();
 }
 
 // Tangent Plane restriction
@@ -274,6 +274,7 @@ inline void Manifold<SO, N>::weighted_karcher_mean(ref_type x, const weight_list
 	}
 	exp(x, 1.0 / v.size() * L , temp);
 	x = temp;
+	projector(x);
 	error = std::abs(x.sum() - m1);
 	++k;
     } while(error > tol && k < maxit);
@@ -296,6 +297,7 @@ inline void Manifold<SO, N>::karcher_mean(V& x, const Args&... args){
 	variadic_karcher_mean_gradient(sum, args...);
 	exp(x, 1.0 / numArgs * sum, temp);
 	x = temp;
+	projector(x);
 	error = std::abs(x.sum() - m1);
 	++k;
     } while(error > tol && k < maxit);

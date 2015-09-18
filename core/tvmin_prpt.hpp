@@ -75,6 +75,14 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 
 	    void prpt_step(double muk);
 	    void minimize();
+
+	    void setMax_runtime(int t) { max_runtime_ = t; }
+	    void setMax_prpt_steps(int n) { max_prpt_steps_ = n; }
+	    void setTolerance(double t) {tolerance_ =t; }
+	    
+	    int max_runtime(int t) const { return max_runtime_; }
+	    int max_prpt_steps(int n) const { return max_prpt_steps_; }
+	    int tolerance(double t) const { return tolerance_; }
 	
 
 	private:

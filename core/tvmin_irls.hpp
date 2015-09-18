@@ -58,6 +58,10 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 		func_(func),
 		data_(dat)
 	    {
+		max_runtime_=AT::max_runtime;
+		max_irls_steps_=AT::max_irls_steps;
+		max_newton_steps_=AT::max_newton_steps;
+		tolerance_=AT::tolerance;
 		sparse_pattern_analyzed_ = false;
 	    }
 
@@ -68,6 +72,15 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 	    void minimize();
 	    void output() { std::cout << "OUTPUT TEST" << std::endl; }
 	
+	    void setMax_runtime(int t) { max_runtime_ = t; }
+	    void setMax_irls_steps(int n) { max_irls_steps_ = n; }
+	    void setMax_newton_steps(int n) { max_newton_steps_ = n; }
+	    void setTolerance(double t) {tolerance_ =t; }
+	    
+	    int max_runtime(int t) const { return max_runtime_; }
+	    int max_irls_steps(int n) const { return max_irls_steps_; }
+	    int max_newton_steps(int n) const { return max_newton_steps_; }
+	    int tolerance(double t) const { return tolerance_; }
 
 	private:
 	    FUNCTIONAL& func_;
@@ -78,6 +91,11 @@ template <class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR>
 
 	    int irls_step_;
 	    int newton_step_;
+
+	    int max_runtime_;
+	    int max_irls_steps_;
+	    int max_newton_steps_;
+	    double tolerance_;
 
 	    std::vector< std::chrono::duration<double> > Ts_;
 	    std::vector< typename FUNCTIONAL::result_type > Js_;
@@ -288,9 +306,9 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::minimize(){
     std::cout << "Starting IRLS Algorithm with..." << std::endl;
     std::cout << "\t Lambda = \t" << func_.getlambda() << std::endl;
     std::cout << "\t eps^2 = \t" << func_.geteps2() << std::endl;
-    std::cout << "\t Tolerance = \t" <<  AT::tolerance << std::endl;
-    std::cout << "\t Max Steps IRLS= \t" << AT::max_irls_steps << std::endl;
-    std::cout << "\t Max Steps Newton = \t" << AT::max_newtons_steps << std::endl;
+    std::cout << "\t Tolerance = \t" <<  tolerance_ << std::endl;
+    std::cout << "\t Max Steps IRLS= \t" << max_irls_steps_ << std::endl;
+    std::cout << "\t Max Steps Newton = \t" << max_newton_steps_ << std::endl;
     
     
     irls_step_ = 0;
@@ -300,7 +318,7 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::minimize(){
     start = std::chrono::system_clock::now();
     
     // IRLS Iteration Loop
-    while(irls_step_ < AT::max_irls_steps && t.count() < AT::max_runtime){
+    while(irls_step_ < max_irls_steps_ && t.count() < max_runtime_){
 	
 	std::cout << "IRLS Step #" << irls_step_+1 << std::endl;
 	// NOTE: evaluation of J automatically calls updateWeights(): separate eventually
@@ -309,10 +327,10 @@ void TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR>::minimize(){
 	std::cout << "\t Value of Functional J: " << J << std::endl;
 	
 	newton_step_ = 0;
-	newton_error_type error = AT::tolerance + 1;
+	newton_error_type error = tolerance_ + 1;
 
 	// Newton Iteration Loop
-	while(AT::tolerance < error && t.count() < AT::max_runtime && newton_step_ < AT::max_newtons_steps){
+	while(tolerance_ < error && t.count() < max_runtime_ && newton_step_ < max_newton_steps_){
 	    std::cout << "\t Newton step #" << newton_step_+1;
 	    error = newton_step();
 	    #ifdef TVMTL_TVMIN_DEBUG
