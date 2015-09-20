@@ -16,7 +16,29 @@ picture, as already explained in the introduction, we have either $M=\mathbb{R}^
 $M=S^2\times\mathbb{R}$ for the non-linear chromaticity-brightness model.
 
 \subsection{Grayscale} % (fold)
+As introductory example  and for the sake of completeness, we show in Figure \ref{fig:application_gray} results from denoising a grayscale image.
 \label{sub:Grayscale}
+\begin{figure}[h!]
+    \centering
+    \subfloat[][Original]{
+	\label{fig:application_gray_orig}
+	\includegraphics[width=0.325\linewidth]{./figures/experiments/Cameraman.jpg}
+    }
+    \subfloat[][Noisy]{
+	\label{fig:application_gray_noise}
+	\includegraphics[width=0.325\linewidth]{./figures/experiments/noisy_Cameraman.jpg}
+    }
+    \subfloat[][Denoised]{
+	\label{fig:application_gray_denoised}
+	\includegraphics[width=0.325\linewidth]{./figures/experiments/denoised_Cameraman.jpg}
+    }\\
+    \caption[Color image "Cameraman" grayscale denoising]{Denoising of a grayscale image taking values in the manifold $\mathbb{R}$
+	\subref{fig:application_color1_orig} Original image "Lena.jpg", $256\times 256$ px, 8 bit depth
+	\subref{fig:application_color1_noise} Componentwise gaussian noise $\mu=0$, $\sigma=0.01$ added
+	\subref{fig:application_color1_denoised} Denoised, IRLS with $\lambda=0.09$, $5$ IRLS steps, $1$ newton steps per IRLS step
+	\label{fig:application_gray}
+    }
+\end{figure}
 % subsection Grayscale (end)
 
 \FloatBarrier
@@ -78,6 +100,27 @@ Finally, in Figure \ref{fig:application_color3} we denoise a third picture using
 $S^2\times \mathbb{R}$ is performed by denoising the chromaticity($S^2$) and the brightness($\mathbb{R}$) separately, which has the added advantage of more 
 fine-grained control over the process because two $\lambda$ parameters can be chosen separately for each part, too.
 
+\begin{figure}[h!]
+    \centering
+    \subfloat[][Original]{
+	\label{fig:application_color3_orig}
+	\includegraphics[width=0.325\linewidth]{./figures/experiments/crayons.jpg}
+    }
+    \subfloat[][Noisy]{
+	\label{fig:application_color3_noise}
+	\includegraphics[width=0.325\linewidth]{./figures/experiments/noisy_crayons.jpg}
+    }
+    \subfloat[][Denoised]{
+	\label{fig:application_color3_denoised}
+	\includegraphics[width=0.325\linewidth]{./figures/experiments/denoised(CBR)_noisy_crayons.jpg}
+    }\\
+    \caption[Large image "crayons" CBR-vectorial denoising]{Denoising of a color images using the linear vectorial color model which corresponds to the manifold $S^2\times\mathbb{R}$
+	\subref{fig:application_color3_orig} Original image "mathematicians.jpg", $284\times 177$ px, 8 bit color depth
+	\subref{fig:application_color3_noise} Componentwise gaussian noise $\mu=0$, $\sigma=?$ added
+	\subref{fig:application_color3_denoised} Denoised, IRLS with $\lambda_{\mathbb{R}}=0.1$, $5$ IRLS steps, $1$ newton steps per IRLS step
+	\label{fig:application_color3}
+    }
+\end{figure}
 
 \FloatBarrier
 \subsection{Inpainting} % (fold)
@@ -120,6 +163,7 @@ Next, the a first guess is calculated using scattered linear interpolation and l
 
 \FloatBarrier
 \subsection{Recolorization} % (fold)
+\label{sub:Recolorization}
 Colarization, also known is color inpainting, because it is basically just a special of inpainting is performed in the next example.
 Here the picture is not necessarily noisy but we assume only the brightness of each pixel is known, while the chromaticity is known only for a low ratio $r=0.01$ of all pixels.
 Note that this splitting implies that inpainting and TV minimization takes place only $S^2$.\\
@@ -129,7 +173,6 @@ in Figure \ref{fig:application_colorinpaint1} \subref{fig:application_colorinpai
 detect the edges in the brightness part using the Canny edge detector \cite{Canny}, for example, and set the edge weights for the chromaticity part accordingly. As a result, we indeed
 obtain sharp and clear edges in the final result \ref{fig:application_colorinpaint1} \subref{fig:application_colorinpaint1_restored}.
 
-\label{sub:Recolorization}
 \begin{figure}[h!]
     \centering
     \subfloat[][Original]{
@@ -252,7 +295,7 @@ Fingerprint matching is  based on extracting a set of particular features, calle
 These features are usually ridge endpoint or ridge bifurkation points that are saved along with their position and orientation. This
 means that prior to minutia detection and extraction the calculation of an orientation field is necessary.\\
 
-For pictures of fingerprint this is just a special form of edge detection which can be done by calculating Sobel derivatives for every pixel.
+For pictures of fingerprints this is just a special form of edge detection which can be done by calculating Sobel derivatives for every pixel.
 Depending on the quality and noise level of the picture the computed orientation field can be very noisy itself which is another application
 for our TV algorithms.\\
 
@@ -367,7 +410,7 @@ Noise is then added by taking the matrix logarithm of every pixel, adding gaussi
     \centering
     \subfloat[][Original]{
 	\label{fig:application_spd1_orig}
-	\includegraphics[width=0.325\linewidth]{./figures/experiments/noisy_spd100x100.png}
+	\includegraphics[width=0.325\linewidth]{./figures/experiments/spd_100x100.png}
     }
     \subfloat[][Damaged]{
 	\label{fig:application_spd1_noise}
@@ -439,34 +482,304 @@ immediate proximity of the water molecules.\\
 \label{sub:3DDTMRIdata}
 % subsection 3D DT MRI data (end)
 
-Finally, in Figure \ref{fig:application_dti2_noise} we show a 3D DTI image.
-
+Finally, in Figure \ref{fig:application_dti2_noise} we show a 3D DTI image. Shown is a $16\times 16\times 16$ cube from a human brain scan and we used the proximal point algorithm for denoising. 
+The brain dataset is a courtesy of Gordon Kindlmann at the Scientific Computing and Imaging Institute, University of Utah, 
+and Andrew Alexander, W. M. Keck Laboratory for Functional Brain Imaging and Behavior, University of Wisconsin-Madison. 
 \begin{figure}[h!]
     \centering
-    \subfloat[][Noisy]{
+    \subfloat[][Original]{
 	\label{fig:application_dti2_noise}
-	\includegraphics[width=0.4\linewidth]{./figures/experiments/noisy_dti3d8x16x16.png}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/noisy_dti3d16x16x16.png}
     }
     \subfloat[][Denoised]{
 	\label{fig:application_dti2_denoised}
-	\includegraphics[width=0.4\linewidth]{./figures/experiments/denoised_dti3d8x16x16.png}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/denoised_dti3d16x16x16.png}
     }\\
     \caption[Denoising 3D DTI-MRI data]{Denoising a 3D DT-MRI image with pixel in SPD(3)
-	\subref{fig:application_dti2_noise} Componentwise gaussian noise $\mu=0$, $\sigma=?$ added
-	\subref{fig:application_dti2_denoised} Denoised, Proximal point with $\lambda=?$, 50 PRPT steps
+	\subref{fig:application_dti2_noise} Original, $16\times 16\times 16$ pixel 
+	\subref{fig:application_dti2_denoised} Denoised, Proximal point with $\lambda=0.7$, 50 PRPT steps
 	\label{fig:application_dti2}
     }
 \end{figure}
 
 % section SPD(3) image data (end)
+\FloatBarrier
+\section{Performance profiling of the library} % (fold)
+\label{sec:Performance profiling of the library}
+In this section we analyze the performance hotspots of the library for the case of the IRLS minimizer. This is done using the Linux tool \emph{perf} which monitors a variety of different
+performance metrics during the execution of a program, like CPU cycles, cache or branch misses. To identify the hotspots, where most of the computation is spent, the number of CPU cycles is
+usually the most suitable metric.\\
+
+Concerning the computational complexity of operations performed on single pixels the Euclidian manifold is certainly the least demanding, because exponential and logarithm map are just 
+addition and subtraction and the second derivative of the distance function is just two times the identity matrix. At the other end of the spectrum is the $SPD$ manifold where
+computations usually involve multiple matrix multiplications, exponential, logarithms and derivatives thereof. For the analysis we thus choose these two representatives and compared
+different image sizes.\\
+
+For the Euclidian manifold we choose the "Lena" and "Mathematicians" pictures already considered in the example above. Minimization in the first case took approximately 9 seconds and 270 seconds in
+the second case. The data is shown in Table \ref{table:perf_euc} where the first column denotes the percentage of CPU cycles spent in the routine specified in the second column 
+while the last column denotes the (external) library to which it belongs. Only the top six routines are shown since the individual share of the others was in most cases less than 1 \%. \\
+
+We can observe that in both cases computation is dominated by the Basic Linear Algebra Subprograms (BLAS) Library. Those in turn are called by the CHOLMOD library which solves the sparse
+linear system using Cholesky factorization. The only contribution that does not belong to the linear system is the multithreading overhead from the OpenMP (OMP) library in the smaller picture.
+We see, however, that for the increased system size the overhead becomes negligibly small such that for both problem sizes more than two thirds of the total computation time is for solving the linear
+system. For the larger picture this share even grows to more than 75\% and could be expected to do so for yet larger images.\\
+
+\begin{table}[h!]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\subfloat[][$361\times 361$]{
+	\label{table:perf_lena}
+	\begin{tabular}{rll}
+	\hline
+	Share & Routine & Library \\
+	\hline
+	25.73& DGEMM(matrix matrix multiply)& BLAS\\
+	20.71& DSYRK(symmetric rank-k update)& BLAS\\
+	13.86& Multihreading overhead& OMP\\
+	11.57& DTRSM(solve triangular system)& BLAS\\
+	3.23& DGEMV(matrix vector multiply)& BLAS\\
+	3.22& cholmod\textunderscore super\textunderscore numeric & CHOLMOD\\
+	\hline
+	\end{tabular}
+}\,
+\subfloat[][$1280\times 1024$]{
+	\label{table:perf_mathematicians}
+	\begin{tabular}{rll}
+	\hline
+	Share & Routine & Library\\
+	\hline
+	30.37& DGEMM(matrix matrix multiply)& BLAS\\
+	27.70& DSYRK(symmetric rank-k update)& BLAS\\
+	14.65& DTRSM(solve triangular sytem)& BLAS\\
+	2.79& set\_rom\_triplets(sparse initialization)& Eigen\\
+	2.18& CreateCoarserGraph & METIS\\
+	1.68& cholmod\_super\_numeric & CHOLMOD\\
+	\hline
+	\end{tabular}
+}
+\caption[]{Share of total CPU cycles for IRLS minimization over $M=\mathbb{R}^3$
+\subref{table:perf_lena}"Lena.jpg", $361\times 361$ pixel
+\subref{table:perf_mathematicians}"Mathematicians.jpg", $1280\times 1024$ pixel
+\label{table:perf_euc}
+}
+\end{table}
+
+For the $SPD(n)$ manifold the situation, shown in Table \ref{table:perf_spd} and Table \ref{table:perf_spd300}, looks a bit different at first. 
+For the smallest problem size of $30\times 30$ pixels, there are dominating parts. The largest contribution is the from multithreading which is to be expected
+for such a small picture and which consequently vanishes for larger images. 
+The next important routine is our implementation of the matrix logarithm Fr\'{e}chet derivative while the remaining Eigen routines in the
+list are auxiliary functions for solving triangular matrix functions which are need for the computation of matrix square roots, logarithms and of course also the
+Fr\'{e}chet derivatives. With increasing problem size, we can again observe how the BLAS routines move to the top of the list, even though their share only amounts 
+to a fifth of all CPU cycles for the $300\times 300$ pixel image. \\
+
+\begin{table}[h!]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\subfloat[][$30\times 30$]{
+	\label{table:perf_spd30}
+	\begin{tabular}{rll}
+	\hline
+	Share & Routine & Library \\
+	\hline
+	11.6& Multithreading overhead& OMP\\
+	7.73& MatrixLogarithmFrechetDerivative& TVMTL\\
+	6.77& reduceToTriangularForm& Eigen\\
+	6.55& gebp\_kernel(matrix blocking)& Eigen\\
+	6.18& triangular\_solve\_matrix& Eigen\\
+	4.55& triangular\_solve\_matrix& Eigen\\
+	\hline
+	\end{tabular}
+}\,
+\subfloat[][$100\times 100$]{
+	\label{table:perf_spd100}
+	\begin{tabular}{rll}
+	\hline
+	Share & Routine & Library\\
+	\hline
+	11.60& MatrixLogarithmFrechetDerivative& TVMTL\\
+	7.72& reduceToTriangularForm& Eigen\\
+	6.77& gebp\_ kernel(matrix blocking)& Eigen\\
+	6.55& triangular\_solve\_matrix& Eigen\\
+	6.18& triangular\_solve\_matrix& Eigen\\
+	4.55& DGEMM(matrix matrix multiply)& BLAS\\
+	\hline
+	\end{tabular}
+}
+\caption[]{Share of total CPU cycles for IRLS minimization over $M=SPD(3)$
+\subref{table:perf_spd30} Synthetic $SPD(3)$ , $30\times 30$
+\subref{table:perf_spd100} Synthetic $SPD(3)$ , $100\times 100$
+\label{table:perf_spd}
+}
+\end{table}
+
+
+\begin{table}[h!]
+\centering
+\footnotesize
+\begin{tabular}{rll}
+\hline
+Share & Routine & Library\\
+\hline
+11.31& DGEMM(matrix matrix multiply)& BLAS\\
+9.73& MatrixLogarithmFrechetDerivative& TVMTL\\
+9.19& DSYRK(symmetric rank-k update)& BLAS\\
+6.60& reduceToTriangularForm& Eigen\\
+5.73& gebp\_kernel(matrix blocking)& Eigen\\
+5.55& triangular\_solve\_matrix& Eigen\\
+\hline
+\end{tabular}
+\caption{Share of total CPU cycles for IRLS minimization of synthetic $SPD(3)$ , $300\times 300$ pixel, $M=SPD(3)$
+\label{table:perf_spd300}
+}
+\end{table}
+
+We can conclude that solving the linear system is the most performance relevant aspect of the IRLS minimizer. The share is even higher for $SO(n)$ and $S^n$, where the SuperLU library is used, 
+since the corresponding sparse Hessian is not symmetric resulting in a further increased operations count. If a good preconditioner is found, iterative solvers might speed up the computation, 
+the standard diagonal and incomplete LU preconditioner provided by the Eigen library, however, performed worse than the direct solvers from the SparseSuite library collection. Finally, for
+the matrix-valued manifolds, the implementation of the Fr\'{e}chet derivative could potentially be improved.
+
+
+% section Performance profiling of the library (end)
+
 
 \FloatBarrier
 \section{Comparison IRLS and Proximal Point minimizers} % (fold)
 \label{sec:Comparison IRLS and Proximal Point minimizers}
 
+To make a comparison with the tests performed in \cite{SprecherIRLS} using the original Matlab implementation to a certain degree possible, we choose 
+almost the same set of test images (Figure \ref{fig:comparison_testimages}) but additionally also some larger versions of the pictures for the more interesting 
+case of the matrix manifolds $SO(3)$ and $SPD(3)$. Both, the IRLS and the proximal point minimizers are implemented using the same manifold classes and utilize the
+same pixel-wise parellelization techniques such that there is no obvious bias in this comparison.\\
+
+The synthetic images are created using the formulas already described in the examples above. To each picture we add component-wise gaussian noise with zero mean and
+standard deviation of $\sigma=0.2$. With that noise level no smoothing is needed for the IRLS algorithm to converge. 
+For each picture we compute the value of the functional after each iteration and the error relative to an approximate minimizer $u^*$
+which is computed using the IRLS algorithm with $\lambda=0.2$, 20 IRLS steps and one newton step per reweighting. This error is defined as
+\begin{equation}
+e^{(k)}=\sum_{i,j}\;d^2(u^{(k)}_{ij},u^*_{ij})
+\end{equation}
+where $d^2(\cdot,\cdot)$ denotes the squared Riemannian distance function of the appropriate manifold. For the iterations itself we use 15 iterations for IRLS and 500 for proximal point with
+the sequence $\mu_k=3k^{-0.95}$ (see \cite{Weinmann} for details on this sequence) for all experiments. \\
+
+\begin{figure}[h!]
+    \centering
+    \subfloat[][$\mathbb{R}^3$]{
+	\label{fig:comparison_eucimg}
+	\includegraphics[width=0.2\linewidth]{./figures/experiments/Lena.jpg}
+    }
+    \subfloat[][$S^2$]{
+	\label{fig:comparison_s2img}
+	\includegraphics[width=0.2\linewidth]{./figures/experiments/chroma_Lena.jpg}
+    }
+    \subfloat[][$SO(3)$]{
+	\label{fig:comparison_sonimg}
+	\includegraphics[width=0.3\linewidth]{./figures/experiments/son30x30original.png}
+    }
+    \subfloat[][$SPD(3)$]{
+	\label{fig:comparison_spdimg}
+	\includegraphics[width=0.3\linewidth]{./figures/experiments/spd_30x30.png}
+    }\\
+    \caption[Test images]{ Test images for the IRLS \& PRPT comparison
+	\subref{fig:comparison_eucimg}  "Lena.jpg", $361\times 361$ px, $\mathbb{R}^3$-valued
+	\subref{fig:comparison_s2img} Chromaticity part of "Lena.jpg", $S^2$-valued
+	\subref{fig:comparison_sonimg} Synthetic $30\times30$ and $100\times100$ image, $SO(3)$-valued
+	\subref{fig:comparison_spdimg} Synthetic $30\times30$ and $100\times100$ image, $SPD(3)$-valued
+	\label{fig:comparison_testimages}
+    }
+\end{figure}
+
+
+\begin{figure}[h!]
+    \centering
+    \subfloat[][Euclidian $\mathbb{R}^3$ - Functional]{
+	\label{fig:comparison_eucJ}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/Lena_361x361_J.pdf}
+    }
+    \subfloat[][Euclidian $\mathbb{R}^3$ - Error]{
+	\label{fig:comparison_eucE}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/Lena_361x361_Err.pdf}
+    }\\
+    \subfloat[][Sphere $S^2$ - Functional]{
+	\label{fig:comparison_s2J}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/Lena_361x361CBR_J.pdf}
+    }
+    \subfloat[][Sphere $S^2$ - Error]{
+	\label{fig:comparison_s2E}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/Lena_361x361CBR_Err.pdf}
+    }\\
+    \caption[Comparison IRLS \& PRPT for Euclidian $\mathbb{R}^3$ and $S^2$]{Comparison of functional value and errors for IRLS and PRPT minimizers.
+	The red circles correspond to IRLS iterations while the line without any markers belongs to the proximal point iterations.
+	\subref{fig:comparison_eucJ} Functional values for "Lena" minimized over $\mathbb{R}^3$
+	\subref{fig:comparison_eucE} Errors relative to minimizer for "Lena"
+	\subref{fig:comparison_s2J} Functional values for color part of "Lena" minimized over $\mathbb{S}^2$
+	\subref{fig:comparison_s2E} Errors relative to minimizer for color part "Lena"
+	\label{fig:comparison_euc_s2}
+    }
+\end{figure}
+
+Figure \ref{fig:comparison_euc_s2} shows the results for Euclidian space $\mathbb{R}^3$ and the sphere $S^2$. IRLS needs only five iterations where proximal point needs more than 200
+but nevertheless proximal wins in terms of speed. This result can be interpreted with respect the performance analysis conducted in the previous section. Most manifold quantities can
+be computed using only addition and subtraction and which includes the geodesic interpolation that proximal point has to perform in every direction as well as the computation for derivatives
+for IRLS. The effort of doing these two task seems intuitively similar. At the end for that process, however, proximal point only has to compute simple arithmetic means while IRLS has to 
+solve the sparse system which was shown to be the dominant part of the computation and thus probably more time consuming than the averaging procedure. For $S^2$, in comparison, one
+can already see IRLS catching up.\\
+
+\begin{figure}[h!]
+    \centering
+    \subfloat[][$SO(3)$ (30$\times$30) - Functional]{
+	\label{fig:comparison_son30J}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/SON_30x30_J.pdf}
+    }
+    \subfloat[][$SO(3)$ (30$\times$30) - Error]{
+	\label{fig:comparison_son30E}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/SON_30x30_Err.pdf}
+    }\\
+    \subfloat[][$SO(3)$  (100$\times$100) - Functional]{
+	\label{fig:comparison_son100J}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/SON_100x100_J.pdf}
+
+    }
+    \subfloat[][$SO(3)$ (100$\times$100 - Error]{
+	\label{fig:comparison_son100E}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/SON_100x100_Err.pdf}
+    }\\
+    \caption[Comparison IRLS \& PRPT for Euclidian $SO(3)$]{$SO(3)$: Comparison of functional value and errors for IRLS and PRPT minimizers.
+	The red circles correspond to IRLS iterations while the line without any markers belongs to the proximal point iterations.
+	\subref{fig:comparison_son30J} Functional values for synthetic 30$\times$30 $SO(3)$
+	\subref{fig:comparison_son30E}  Errors relative to minimizer for synthetic 30$\times$30 $SO(3)$
+	\subref{fig:comparison_son100J}  Functional values for synthetic 100$\times$100 $SO(3)$
+	\subref{fig:comparison_son100E}  Errors relative to minimizer synthetic 100$\times$100 $SO(3)$
+	\label{fig:comparison_son}
+    }
+\end{figure}
+
+For $SO(3)$, shown in \label{fig:comparison_son}, the difference again becomes much smaller, with both plots being very close and coinciding already after the second iteration. 
+Next, in the case of $SPD(3)$, shown in \label{fig:comparison_spd}, IRLS falls back to the niveau of $S^2$. One reason for that might the particularly complicated form of the second
+derivative of the square distance function. This could be eventually optimized by improving the implementation of the Fr\'{e}chet derivative. At this time it is based on
+the computation of a complex Schur decomposition which then, in turn, needs complex arithmetic. Switching to a block-based, but real Schur decomposition might provide an additional speed-up.
+
+\begin{figure}[h!]
+    \centering
+    \subfloat[][$SPD(3)$ (30$\times$30) - Functional]{
+	\label{fig:comparison_spd30J}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/SPD_30x30_J.pdf}
+    }
+    \subfloat[][$SPD(3)$ (30$\times$30) - Error]{
+	\label{fig:comparison_spd30E}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/SPD_30x30_Err.pdf}
+    }\\
+    \caption[Comparison IRLS \& PRPT for Euclidian $SPD(3)$]{$SPD(3)$: Comparison of functional value and errors for IRLS and PRPT minimizers.
+	The red circles correspond to IRLS iterations while the line without any markers belongs to the proximal point iterations.
+	\subref{fig:comparison_spd30J} Functional values for synthetic 30$\times$30 $SPD(3)$ image
+	\subref{fig:comparison_spd30E}  Error relative to minimizer for synthetic 30$\times$30 $SPD(3)$ image
+	\label{fig:comparison_spd}
+    }
+\end{figure}
+
+
 % section Comparison IRLS and Proximal Point minimizers (end)
-
-
 \FloatBarrier
 \section{Sensitivity to variations of the original data} % (fold)
 \label{sec:Sensitivity}

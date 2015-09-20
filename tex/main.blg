@@ -3,48 +3,48 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: main.aux
 The style file: plain.bst
 Database file #1: mt.bib
-Warning--I didn't find a database entry for "SprecherIRLS"
 Warning--I didn't find a database entry for "nifti"
 Warning--I didn't find a database entry for "volumeLib"
-You've used 31 entries,
+Warning--to sort, need author or key in teem
+You've used 32 entries,
             2118 wiz_defined-function locations,
-            726 strings with 9402 characters,
-and the built_in function-call counts, 9774 in all, are:
-= -- 950
-> -- 435
-< -- 5
-+ -- 174
-- -- 138
-* -- 690
-:= -- 1661
-add.period$ -- 97
-call.type$ -- 31
-change.case$ -- 153
+            728 strings with 9532 characters,
+and the built_in function-call counts, 9959 in all, are:
+= -- 971
+> -- 442
+< -- 6
++ -- 177
+- -- 140
+* -- 697
+:= -- 1688
+add.period$ -- 100
+call.type$ -- 32
+change.case$ -- 157
 chr.to.int$ -- 0
-cite$ -- 31
-duplicate$ -- 371
-empty$ -- 796
-format.name$ -- 138
-if$ -- 2050
+cite$ -- 33
+duplicate$ -- 375
+empty$ -- 812
+format.name$ -- 140
+if$ -- 2092
 int.to.chr$ -- 0
-int.to.str$ -- 31
-missing$ -- 37
-newline$ -- 158
+int.to.str$ -- 32
+missing$ -- 35
+newline$ -- 163
 num.names$ -- 64
-pop$ -- 153
+pop$ -- 159
 preamble$ -- 1
-purify$ -- 128
+purify$ -- 131
 quote$ -- 0
-skip$ -- 241
+skip$ -- 246
 stack$ -- 0
-substring$ -- 610
-swap$ -- 52
-text.length$ -- 5
+substring$ -- 615
+swap$ -- 53
+text.length$ -- 6
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 108
-warning$ -- 0
+type$ -- 114
+warning$ -- 1
 while$ -- 87
-width$ -- 33
-write$ -- 346
+width$ -- 34
+write$ -- 356
 (There were 3 warnings)

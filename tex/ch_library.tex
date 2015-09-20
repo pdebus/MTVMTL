@@ -11,8 +11,8 @@ The library which was developed in the course of this work is an easy-to-use, fa
     \item Real Euclidian space $\mathbb{R}^n$
     \item Sphere $S^n=\left\lbrace x\in\mathbb{R}^{n+1}:\; \norm{x}=1\right\rbrace$
     \item Special orthogonal group $SO(n)=\left\lbrace R\in\mathbb{R}^{n\times n}:\; RR^T=\mathbbm{1}, \operatorname{det}(R)=1 \right\rbrace$
-    \item Symmetric positive definite matrices $SPD(n)=\left\lbrace S\in\mathbb{R}^{n\times n}:\; S=S^T, x^TSx>0\; \forall x\in\mathbb{R}^n \right\rbrace$
-    \item Grasmann manifold $Gr(n,p)=$
+    \item Symmetric positive definite matrices $SPD(n)=\left\lbrace S\in\mathbb{R}^{n\times n}:\; S=S^T, x^TSx>0\; \forall x\in\mathbb{R}^n\setminus\lbrace 0\rbrace \right\rbrace$
+    \item Grassmann manifold $Gr(n,p) = St(n,p) / O(p)$ (untested)
 \end{itemize}
 % subsection Supported Manifolds (end)
 
@@ -64,7 +64,7 @@ The library which was developed in the course of this work is an easy-to-use, fa
 \subsubsection{Performance} % (fold)
 \label{ssub:Performance}
 Since the core parts of the implementation are originally based on a Matlab prototype by Sprecher \cite{SprecherIRLS}, \cite{manuel} and \cite{mara}, one of the most important
-goals was of course a faster implementation with a smaller memory footprint. On the test platform with two hyperthreaded 2.8GHz cores Intel i5-2520 with AVX vector extensions
+goals was of course a faster implementation with a smaller memory footprint. On the test platform with two hyperthreaded 2.8GHz cores (Intel i5-2520) with AVX vector extensions
 the Matlab implementation froze for images larger than one Megapixel(MP). Hence, the C++ implementation should enable the algorithm to be tested in a much broader scope which is
 also closer to common picture sizes in image processing, especially since even smartphones today easily produce pictures in the Megapixel range.
 In additions to that, also other factors affecting the performance of the algorithm, such as cache locality and memory speed, can be investigated.\\
@@ -75,14 +75,14 @@ maximize cache locality on the loop level and to free memory as soon as possible
 
 In contrast to the original Matlab implementation, the computation of various quantities such as weights, first and second derivatives is not realized with tensor products any more.
 For Matlab, due the low speed of its internal loop constructs, the approach is justified but in a pure C++ implementation other factors are more important.
-One reason for the change is improved readability and maintainability of the code since tensor product usualluay tend to become very convoluted,
+One reason for the change is improved readability and maintainability of the code since tensor product usually tend to become very convoluted,
 especially for the manifolds with matrix representations. Also the modularization of the manifold class is not straightforward any more.\\
 From a performance and parallelization perspective, contractions of tensor products are similar to Matrix products and usually require some sort of blocking scheme for parallelization.
 In addition to that, because certain reshapes of the image container prior to the computation are necessary, the dimensions to be summed over are not necessarily contiguous in memory
 such that a high a cache utilization is more difficult to achieve.\\
 Finally, in order to formulate certain operations as tensor products, temporary tensors of the correct dimensionality need to be created, which are actually not necessary.\\
 
-Another measure that significantly reduces the memory footprint for the IRLS minimizer, especially for manifolds with matrix representations, is to only save gradient and hessian
+Another measure that significantly reduces the memory footprint for the IRLS minimizer, especially for manifolds with matrix representations, is to only save gradient and Hessian
 in their local tangent space basis representation, such that the degrees of freedom correspond the intrinsic manifold dimension not the dimension of the embedding space. This also reduces
 the time to solve the sparse linear system.\\
 % subsubsection Performance (end)
@@ -233,6 +233,15 @@ of the 3D pixel-wise kernels.
 
 \section{Components} % (fold)
 \label{sec:Components}
+In the following section we will briefly describe the different components of the library. For the manifold class this will be done in more detail to enable users to
+also use new or customized manifold classes. A general overview of all the components is provided in Figure \ref{fig:components}.
+\begin{figure}[h!]
+        \centering
+	    \includegraphics[width=1.0\linewidth]{./figures/library/components.pdf}
+	\caption[Overview of library components]{Overview of the class hierarchy and dependencies between the library components and also third party libraries
+	}
+	\label{fig:components}
+\end{figure}
 
 \subsection{Manifold classes} % (fold)
 \label{sub:Manifold classes}
@@ -255,7 +264,7 @@ desired to actually instantiate the class. The methods itself are usually unary 
 Since these methods are called very often, basically for every pair of neighboring pixels, they are all declared \texttt{inline} in order to support the compiler during 
 the code optimization.\\
 
-It is also possible to use these classes in other projects requiring similiar functionality like 
+It is also possible to use these classes in other projects requiring similar functionality like 
 for instance when implementing a geodesic finite element solver.\\
 
 In the following we will look at excerpts of the SPD implementation to illustrate which information and functionality a new manifolds class need to provide and to give an overview
@@ -484,13 +493,24 @@ void first_guess();		    // First guess for inpainting
 void smoothening(int smooth_steps); // Simple averaging box filter
 newton_error_type newton_step();    // perform one newton step
 void minimize();		    // full minimization
+
+// Getters and Setters for parameters
+void setMax_runtime(int t) { max_runtime_ = t; }
+void setMax_irls_steps(int n) { max_irls_steps_ = n; }
+void setMax_newton_steps(int n) { max_newton_steps_ = n; }
+void setTolerance(double t) {tolerance_ =t; }
+	    
+int max_runtime(int t) const { return max_runtime_; }
+int max_irls_steps(int n) const { return max_irls_steps_; }
+int max_newton_steps(int n) const { return max_newton_steps_; }
+int tolerance(double t) const { return tolerance_; }
 \end{lstlisting}
 
 while for proximal point we have\\
 \cppinline
 \begin{lstlisting}
 use_approximate_mean(bool u) { use_approximate_mean_ = u; } // turn mean approximation on/off
-void first_guess();					    // First gues for inpainting
+void first_guess();					    // First guess for inpainting
  
 void updateFidelity(double muk);			    // Update Fidelity part
 void updateTV(double muk, int dim, const weights_mat& W);   // Update TV part
@@ -500,6 +520,13 @@ void approx_mean();	    // approximate mean using convex combinations
 
 void prpt_step(double muk); // perform one proximal point step
 void minimize();	    // full minimization
+
+// Getters and Setters for parameters
+void setMax_runtime(int t) { max_runtime_ = t; }
+void setMax_prpt_steps(int n) { max_prpt_steps_ = n; }
+	    
+int max_runtime(int t) const { return max_runtime_; }
+int max_prpt_steps(int n) const { return max_prpt_steps_; }
 \end{lstlisting}
 
 
@@ -603,7 +630,7 @@ The following \ref{fig:volume_visualization} shows the rendered volume from diff
 \begin{figure}[h!]
         \centering
 	    \includegraphics[width=1.0\linewidth]{./figures/library/3dvol_seq.png}
-	    \caption[3D Volume image renderer]{3D Volume image using texture based rendering }
+	    \caption[3D Volume image renderer]{3D Volume image using texture based rendering. The 'helix' synthetic tensor dataset produced with the \texttt{tend} program in the Teem toolkit\cite{teem}}
 	\label{fig:volume_visualization}
 \end{figure}
 % subsubsection 3D Volume image rendering (end)
@@ -612,6 +639,13 @@ The following \ref{fig:volume_visualization} shows the rendered volume from diff
 
 \subsection{Utility functions} % (fold)
 \label{sub:Utility function}
+
+\subsubsection{Algorithm traits} % (fold)
+\label{ssub:AlgoTraits}
+The algorithm traits class contains standard values for the IRLS algorithm, like the number of IRLS iterations, number of Newton iterations, maximal runtime.
+It also contains the standard solver for the linear system. If the solver needs to be switched it must be changed in this file. All other parameters can
+be changed using the setter functions the TV minimizer class provides.
+
 
 \subsubsection{Matrix functions} % (fold)
 \label{ssub:Matrix functions}
@@ -624,7 +658,7 @@ Kronecker representations.
 \subsubsection{Function pointers utilities} % (fold)
 \label{ssub:Function pointers}
 Located in the file \texttt{func\_ptr\_utils.hpp} are some auxiliary functions needed to transform pointers to class member functions
-to plain C function pointers requiered by the OpenGL and GLUT library API.
+to plain C function pointers required by the OpenGL and GLUT library API.
 % subsubsection Function pointers (end)
 
 \subsubsection{3D pixel-wise kernels} % (fold)
@@ -633,23 +667,6 @@ The 3D version of the pixel-wise kernels along with useful tools based on them, 
 % subsubsection 3D pixel-wise kernels (end)
 
 % subsection Utility function (end)
-
-
-\subsection{External Components} % (fold)
-\label{sub:External Components}
-Maybe put somewhere else...
-\subsubsection{Linear algebra handler: Eigen} % (fold)
-\label{ssub:Eigen}
-
-% subsubsection Eigen (end)
-
-\subsubsection{Data storage and processing: Video++} % (fold)
-\label{ssub:Video++}
-
-% subsubsection Video++ (end)
-
-% subsection External Components (end)
-
 % section Components (end)
 
 
@@ -679,6 +696,9 @@ Recommended are also the following packages. They are needed if any of the descr
     \item OpenGL ($\geq 7.0$), for visualizations of SPD, SO and any 3D data
     \item SuiteSparse ($\geq 4.2.1$), faster parallel sparse solver for the linear system in the IRLS algorithm
 \end{itemize}
+Some care must be taken with the version recommendations. Usually there are no compatibility issues if only the minor software is update changes but for major version updates it must
+be checked whether the new version's API is still backwards compatible.
+
 % subsection Prerequisites (end)
 
 \subsection{Installation} % (fold)
@@ -688,7 +708,17 @@ Recommended are also the following packages. They are needed if any of the descr
 
 \subsection{Compilation of own projects using CMake} % (fold)
 \label{sub:CMakeCompilation}
-\begin{lstlisting}
+For the compilation of user code using CMake a file with the name \texttt{CMakeLists.txt} must be provided in the directory same directory as the user code. 
+This file contains all the information about the locations of header files and external library code as well as compiler optimization flags. In listing \ref{code:cmake_example} 
+an example is provided for the compilation of a user application \texttt{my\_executable} with a single source file \texttt{mysource.cpp}. 
+The example is minimal in the sense that it is only for the compilation of a single executable and maximal in the sense that it
+links the executable against any possible external library used by TVMTL.\\
+
+The most important lines for the user are the last two. In the first of these we first add an executable by providing its name (\texttt{my\_executable}) and the source file(s) it depends on 
+(\texttt{mysource.cpp}). Next on must specify the external libraries our executable is linked against using the \texttt{target\_link\_libraries()} command. It expects the executables
+as the first parameters an then a space-separated list of all relevant libraries. \\
+
+\begin{lstlisting}[language=bash,label=code:cmake_example,caption={Example CMakeLists.txt}]
 cmake_minimum_required(VERSION 2.8)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
@@ -710,12 +740,60 @@ add_definitions(-std=c++14 -g -fopenmp)
 add_definitions(-Ofast -march=native)
 add_definitions(-DNDEBUG)
 
-add_executable(tvmin_test_irls3d tvmin_test_irls3d.cpp)
-add_test(tvmin_test_irls3d tvmin_test_irls3d)
-target_link_libraries(tvmin_test_irls3d ${OpenCV_LIBS} ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARIES} gomp)
+add_executable(my_executable_mysource.cpp)
+target_link_libraries(my_executable  gomp ${OpenCV_LIBS} ${CGAL_LIBRARIES} ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARIES})
 \end{lstlisting}
 
+For the actual compilation, we create a separate directory called \texttt{build} and change to this directory.
+\begin{lstlisting}[language=bash]
+mkdir build
+cd build
+\end{lstlisting}
 
+Next we call \texttt{cmake} providing the source directory which also contains the \texttt{CMakeLists.txt} file as argument.
+\begin{lstlisting}[language=bash]
+cmake ../src/
+\end{lstlisting}
+
+If everything was configured correctly, the output should look similar to the following.\\
+\begin{lstlisting}
+-- The C compiler identification is GNU 4.9.2
+-- The CXX compiler identification is GNU 4.9.2
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found OpenGL: /usr/lib64/libGL.so  
+-- Found GLUT: /usr/lib64/libglut.so  
+-- Found GLEW: /usr/include  
+-- Build type: Release
+-- USING CXXFLAGS = '-march=corei7 -mtune=native -O2 -pipe -msse3 -msse4 -mcx16 -msahf -mpopcnt  -frounding-math -O3 -DNDEBUG'
+-- USING EXEFLAGS = ' -Wl,-O1 -Wl,--as-needed '
+-- Targetting Unix Makefiles
+-- Using /usr/bin/c++ compiler.
+-- Requested component: MPFR
+-- Requested component: GMPXX
+-- Requested component: GMP
+-- Found CHOLMOD: /usr/include  
+-- Found SUPERLU: /usr/include/superlu  
+-- Configuring done
+-- Generating done
+-- Build files have been written to: [path-to-build-folder]/build
+\end{lstlisting}
+
+Finally, we can type
+\begin{lstlisting}[language=bash]
+make my_executable
+\end{lstlisting}
+to build the program.
 
 % subsection Compilation of own projects using CMake (end)
 

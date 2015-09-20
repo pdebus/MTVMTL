@@ -8,6 +8,7 @@
 #include <Eigen/Sparse>
 #include <Eigen/CholmodSupport>
 #include <Eigen/SuperLUSupport>
+#include <Eigen/IterativeLinearSolvers>
 //#include <Eigen/PaStiXSupport>
 
 namespace tvmtl {
@@ -30,6 +31,7 @@ struct algo_traits<EUCLIDIAN> {
     
     template <typename H>
     using solver = Eigen::CholmodSupernodalLLT<H, Eigen::Upper>;
+    //using solver = Eigen::ConjugateGradient<H, Eigen::Upper>;
     //using solver = Eigen::PastixLLT<H, Eigen::Lower>;
     //using solver = Eigen::SimplicialLLT<H, Eigen::Upper>;
 };

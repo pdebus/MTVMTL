@@ -125,6 +125,9 @@ add_executable(tvmin_test tvmin_test.cpp)
 add_test(tvmin_test tvmin_test)
 target_link_libraries(tvmin_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 
+add_executable(grayscale_tvmin_test grayscale_tvmin_test.cpp)
+target_link_libraries(grayscale_tvmin_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+
 add_executable(tvmin_test_prpt tvmin_test_prpt.cpp)
 add_test(tvmin_test_prpt tvmin_test_prpt)
 target_link_libraries(tvmin_test_prpt ${OpenCV_LIBS} gomp)

@@ -5,12 +5,16 @@
 \label{sec:Extensions}
 The first thing that can easily be extended is the support for additional manifolds. Possibilities are, for instance, the Stiefel manifold that
 was briefly introduced in section \ref{sub:Grassmanian} or an alternative implementation of the $SPD(n)$ manifold using the Log-Euclidian metric
-based on \cite{LogEuclidian}.
+based on \cite{LogEuclidian}.\\
+
+Also new minimizers could be added. It would be straightforward to utilize the gradient evaluation function already implemented in the functional to
+add some gradient descent based algorithm and compare again with IRLS-Newton and proximal point. For new functionals we provide a more detailed suggestion
+in the next section.
 
 \subsection{Functionals} % (fold)
 \label{sub:Functionals}
 So far isotropic and anisotropic first order TV functionals are implemented in the library. Extensions can be made with respect to the TV part or the fidelity
-part of the functional. In the first case this would mean to also include a second order TV term $\mu\int_{\omega}|\nabla^2u|\mathop{d}x$ in the functional.
+part of the functional. In the first case this would mean to also include a second order TV term $\mu\int_{\omega}|\nabla^2u|\mathop{dx}$ in the functional.
 This prevents the formation of numerical artifacts like the so-called staircasing effects, that might occur in first order TV. Of also higher orders than second
 can be added to the functional. As long as also methods for the evaluation of the functionals gradient and Hessian are provided, the IRLS minimizer class will
 work without any changes. \\

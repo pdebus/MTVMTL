@@ -1,5 +1,10 @@
 \begin{thebibliography}{10}
 
+\bibitem{teem}
+{Teem} toolkit.
+\newblock \url{http://teem.sourceforge.net/}.
+\newblock Accessed: 2015-09-20.
+
 \bibitem{barmpoutis}
 A.~Barmpoutis A., B.~C. Vemuri, T.~M. Shepherd, and J.~R. Forder.
 \newblock Tensor splines for interpolation and approximation of dt-mri with
@@ -11,11 +16,6 @@ David Abrahams and Aleksey Gurtovoy.
 \newblock {\em C++ Template Metaprogramming: Concepts, Tools, and Techniques
   from Boost and Beyond (C++ in Depth Series)}.
 \newblock Addison-Wesley Professional, 2004.
-
-\bibitem{AbsilOptim}
-Absil.
-\newblock {\em Optimatization on Matrix Manifolds}.
-\newblock Butterworth-Heinemann, 3 edition, January 1981.
 
 \bibitem{AbsilGrassmann}
 P.~A. Absil, R.~Mahony, and R.~Sepulchre.
@@ -30,7 +30,7 @@ P.~A. Absil, R.~Mahony, and R.~Sepulchre.
 
 \bibitem{AlmohyFrechet}
 Awad~H. Al-Mohy, Nicholas~J. Higham, and Samuel~D. Relton.
-\newblock Computing the fréchet derivative of the matrix logarithm and
+\newblock Computing the fr\'{e}chet derivative of the matrix logarithm and
   estimating the condition number.
 \newblock {\em SIAM Journal on Scientific Computing}, 35(4):C394--C410, 2013.
 
@@ -95,6 +95,13 @@ Alan Edelman, Tom\'{a}s~A. Arias, and Steven~T. Smith.
 Matthieu Garrigues and Antoine Manzanera.
 \newblock Video++, a modern image and video processing {C++} framework.
 \newblock Technical report, ENSTA-ParisTech, France, 2014.
+
+\bibitem{SprecherIRLS}
+P.~Grohs and M.~Sprecher.
+\newblock Total variation regularization by iteratively reweighted least
+  squares on hadamard spaces and the sphere.
+\newblock Technical Report 2014-39, Seminar for Applied Mathematics, ETH
+  Z\"urich, Switzerland, 2014.
 
 \bibitem{Grohssprecher}
 P.~Grohs, M.~Sprecher, and T.~Yu.
