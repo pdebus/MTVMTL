@@ -27,13 +27,66 @@ void arrowedLine(cv::Mat img, cv::Point pt1, cv::Point pt2, const cv::Scalar& co
 } 
 
 
+void thinningIteration(cv::Mat& im, int iter)
+{
+    cv::Mat marker = cv::Mat::zeros(im.size(), CV_8UC1);
+
+    for (int i = 1; i < im.rows-1; i++)
+    {
+            for (int j = 1; j < im.cols-1; j++)
+            {
+	                uchar p2 = im.at<uchar>(i-1, j);
+	                uchar p3 = im.at<uchar>(i-1, j+1);
+	                uchar p4 = im.at<uchar>(i, j+1);
+	                uchar p5 = im.at<uchar>(i+1, j+1);
+	                uchar p6 = im.at<uchar>(i+1, j);
+	                uchar p7 = im.at<uchar>(i+1, j-1);
+	                uchar p8 = im.at<uchar>(i, j-1);
+	                uchar p9 = im.at<uchar>(i-1, j-1);
+	    
+	                int A  = (p2 == 0 && p3 == 1) + (p3 == 0 && p4 == 1) + 
+	                         (p4 == 0 && p5 == 1) + (p5 == 0 && p6 == 1) + 
+	                         (p6 == 0 && p7 == 1) + (p7 == 0 && p8 == 1) +
+	                         (p8 == 0 && p9 == 1) + (p9 == 0 && p2 == 1);
+	                int B  = p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9;
+	                int m1 = iter == 0 ? (p2 * p4 * p6) : (p2 * p4 * p8);
+	                int m2 = iter == 0 ? (p4 * p6 * p8) : (p2 * p6 * p8);
+	    
+	                if (A == 1 && (B >= 2 && B <= 6) && m1 == 0 && m2 == 0)
+	                    marker.at<uchar>(i,j) = 1;
+	            }
+        }
+
+    im &= ~marker;
+}
+
+
+void thinning(cv::Mat& im)
+{
+    im /= 255;
+
+    cv::Mat prev = cv::Mat::zeros(im.size(), CV_8UC1);
+    cv::Mat diff;
+
+    do {
+            thinningIteration(im, 0);
+            thinningIteration(im, 1);
+            cv::absdiff(im, prev, diff);
+            im.copyTo(prev);
+        } 
+    while (cv::countNonZero(diff) > 0);
+
+    im *= 255;
+}
+
+
 
 int main(int argc, const char *argv[])
 {
 	using namespace tvmtl;
 
-	if (argc != 2){
-	    std::cerr << "Usage : " << argv[0] << " image" << std::endl;
+	if (argc != 2 && argc!= 3){
+	    std::cerr << "Usage : " << argv[0] << " image" << " [lambda]" << std::endl;
 	    return 1;
 	}
 	
@@ -46,30 +99,62 @@ int main(int argc, const char *argv[])
 	//typedef algo_traits< mf_t>;
 	typedef Visualization<SO, 2, data_t> visual_t;
 
-	vpp::image2d<unsigned char> img = vpp::from_opencv<unsigned char>(cv::imread(argv[1]));
-	vpp::image2d<unsigned char> blur_img(img.domain(), vpp::_border = 3);
-	cv::GaussianBlur(vpp::to_opencv(img), vpp::to_opencv(blur_img), cv::Size(3,3), 9, 9, cv::BORDER_DEFAULT);
+	cv::Mat src = cv::imread(argv[1]);
+	    if (src.empty())
+		        return -1;
+
+        cv::Mat bw;
+        cv::cvtColor(src, bw, CV_BGR2GRAY);
+        cv::threshold(bw, bw, 10, 255, CV_THRESH_BINARY);
+
+        thinning(bw);
+	cv::imshow("dst", bw);
+	cv::imwrite("skeleton_" + fname, bw);
+
+	vpp::image2d<unsigned char> img = vpp::from_opencv<unsigned char>(bw);
+	//vpp::image2d<unsigned char> blur_img(img.domain(), vpp::_border = 3);
+	//cv::GaussianBlur(vpp::to_opencv(img), vpp::to_opencv(blur_img), cv::Size(3,3), 9, 9, cv::BORDER_DEFAULT);
 
 	vpp::image2d<vpp::vdouble2> gradient(img.domain());
-	vpp::scharr(blur_img, gradient);	
+	//vpp::scharr(blur_img, gradient);	
+	vpp::scharr(img, gradient);	
     
 	vpp::image2d<double> angles(img.domain());
 	vpp::block_wise(vpp::vint2{5,5}, gradient, angles) | [&] (const auto G, auto A) {
 	    double local_block_orientationX = vpp::sum(vpp::pixel_wise(G) | [&] (const auto& g) { return 2.0 * g(1) * g(0); });
 	    double local_block_orientationY = vpp::sum(vpp::pixel_wise(G) | [&] (const auto& g) { return g(1) * g(1) - g(0) * g(0); });
-	    double a = 0.5 * std::atan2(local_block_orientationX, local_block_orientationY);  
+	    double a = 0.5 * std::atan2(local_block_orientationX, local_block_orientationY);
+	    a += 0.5 * M_PI;
 	    vpp::fill(A, a);
 	};
-
 	data_t myData = data_t();
-
 	myData.noise_img_ = typename data_t::storage_type(gradient.domain());
 	vpp::pixel_wise(angles, myData.noise_img_) | [&] (const auto& a, mf_t::value_type& v){
 	    double s = std::sin(a);
 	    double c = std::cos(a);
 		v << c, -s, s, c;
 	};
+/*	
+	data_t myData = data_t();
+	myData.noise_img_ = typename data_t::storage_type(gradient.domain());
+	myData.initInp();
+	myData.inpaint_ = true;
+	vpp::fill(myData.inp_, true);
 
+	vpp::image2d<double> angles(img.domain());
+
+	vpp::pixel_wise(gradient, myData.noise_img_, myData.inp_, angles) | [&] (const auto& g, mf_t::value_type& i, bool inp, double a){
+	    if(g.norm()>1e4){
+	    inp = false;
+	    a = std::atan2(g(0),g(1));
+	    double s = std::sin(a);
+	    double c = std::cos(a);
+		i << c, -s, s, c;
+	    }
+	    else
+		a=0;
+	};
+*/
 	myData.img_ = vpp::clone(myData.noise_img_, vpp::_border = 1);
 	fill_border_closest(myData.img_);
 
@@ -82,8 +167,8 @@ int main(int argc, const char *argv[])
 	original = cv::imread(argv[1]);
 	copy = original.clone();
 
-	double length = 7.0;
-	int step = 10;
+	double length = 10.0;
+	int step = 15;
 	
 	int ny = angles.nrows();
 	int nx = angles.ncols();
@@ -96,7 +181,7 @@ int main(int argc, const char *argv[])
 
 		cv::Point source(x, y);
 		cv::Point target(x + length * cosa, y + length * sina);
-		arrowedLine(original, source, target, cv::Scalar( 255, 0, 0 ));
+		arrowedLine(original, source, target, cv::Scalar( 0, 0, 255 ));
 	}   
 
 	cv::namedWindow( "Input Picture", cv::WINDOW_NORMAL ); 
@@ -104,14 +189,19 @@ int main(int argc, const char *argv[])
 	cv::imwrite("input_" + fname, original);
 	cv::waitKey(0);
 
-	double lam=0.01;
+	double lam=1.5;
+	if(argc==3)
+	    lam=atof(argv[2]);
+
 	func_t myFunc(lam, myData);
-	myFunc.seteps2(1e-10);
+	myFunc.seteps2(1e-16);
 
 	tvmin_t myTVMin(myFunc, myData);
 
-//	std::cout << "Smoothen picture to obtain initial state for Newton iteration..." << std::endl;
-//	myTVMin.smoothening(5);
+//	myTVMin.first_guess();
+
+	std::cout << "Smoothen picture to obtain initial state for Newton iteration..." << std::endl;
+	myTVMin.smoothening(5);
 
 	std::cout << "Start TV minimization..." << std::endl;
 	myTVMin.minimize();

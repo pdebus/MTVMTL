@@ -65,7 +65,7 @@ the linear-vectorial color model using 5 IRLS iterations with one Newton step pe
     \caption[Color image "Lena" linear vectorial denoising]{Denoising of a color images using the linear vectorial color model which corresponds to the manifold $\mathbb{R}^3$
 	\subref{fig:application_color1_orig} Original image "Lena.jpg", $361\times 361$ px, 8 bit color depth
 	\subref{fig:application_color1_noise} Component-wise Gaussian noise $\mu=0$, $\sigma=?$ added
-	\subref{fig:application_color1_denoised} Denoised, IRLS with $\lambda=?$, $5$ IRLS steps, $1$ newton steps per IRLS step
+	\subref{fig:application_color1_denoised} Denoised, IRLS with $\lambda=0.1$, $5$ IRLS steps, $1$ newton steps per IRLS step
 	\label{fig:application_color1}
     }
 \end{figure}
@@ -152,7 +152,7 @@ Next, the a first guess is calculated using scattered linear interpolation and l
 	\subref{fig:application_colorinpaint1_orig} Original image "Pepper.png", $359\times 361$ px, 8 bit color depth
 	\subref{fig:application_colorinpaint1_dam} Damaged by overpainting with blue color
 	\subref{fig:application_colorinpaint1_guess} First guess via component-wise scattered interpolation
-	\subref{fig:application_colorinpaint1_restored} Restored, IRLS with $\lambda=?$, $5$ IRLS steps, $1$ newton steps per IRLS step
+	\subref{fig:application_colorinpaint1_restored} Restored, IRLS with $\lambda=0.1$, $5$ IRLS steps, $1$ newton steps per IRLS step
 	\label{fig:application_colorinpaint1}
     }
 \end{figure}
@@ -194,7 +194,7 @@ obtain sharp and clear edges in the final result \ref{fig:application_colorizati
 	\subref{fig:application_colorization1_orig} Original image "Basil.jpg", $300\times 179$ px, 8 bit color depth
 	\subref{fig:application_colorization1_colorless} Image with a ratio of approximately $0.01$ remaining colored pixels
 	\subref{fig:application_colorization1_guess} First guess via component-wise scattered interpolation
-	\subref{fig:application_colorization1_restored} Recolored, IRLS with $\lambda=?$, $5$ IRLS steps, $1$ newton steps per IRLS step
+	\subref{fig:application_colorization1_restored} Recolored, IRLS with $\lambda=0.01$, $5$ IRLS steps, $1$ newton steps per IRLS step
 	\label{fig:application_colorization1}
     }
 \end{figure}
@@ -230,8 +230,8 @@ simplify to mostly vectorized addition and subtraction operations on a simple ma
     }\\
     \caption[Denoising 3D Grayscale Volume Data]{Denoising a 3D grayscale volume image
 	\subref{fig:application_volume1_orig} Original image "BostonTeapot.raw", $256\times 256 \times 178$ px, 8 bit color depth
-	\subref{fig:application_volume1_noise} Component-wise Gaussian noise $\mu=0$, $\sigma=?$ added
-	\subref{fig:application_volume1_denoised} Denoised, Proximal point with $\lambda=?$, $50$ PRPT steps
+	\subref{fig:application_volume1_noise} Component-wise Gaussian noise $\mu=0$, $\sigma=0.1$ added
+	\subref{fig:application_volume1_denoised} Denoised, Proximal point with $\lambda=0.1$, $50$ PRPT steps
 	\label{fig:application_volume1}
     }
 \end{figure}
@@ -279,8 +279,8 @@ then projected back to $SO(3)$ using the projector $P_{SO(n)}(A)=UV^{T}$ where $
     }\\
     \caption[Inpainting of synthetic SO(3) picture]{Inpainting of synthetic SO(3) picture
 	\subref{fig:application_so1_orig} Original image: Synthetic, non-smooth SO(3), $30\times 30$ px
-	\subref{fig:application_so1_dam} Threshold $p=?$
-	\subref{fig:application_so1_inp} Denoised, IRLS with $\lambda=?$, 5 IRLS steps, 1 Newton step per IRLS
+	\subref{fig:application_so1_dam} Threshold $p=0.4$
+	\subref{fig:application_so1_inp} Denoised, IRLS with $\lambda=0.1$, 5 IRLS steps, 1 Newton step per IRLS
 	\label{fig:application_so1}
     }
 \end{figure}
@@ -294,29 +294,37 @@ Fingerprint matching is  based on extracting a set of particular features, calle
 These features are usually ridge endpoints or ridge bifurcation points that are saved along with their position and orientation. This
 means that prior to minutia detection and extraction the calculation of an orientation field is necessary.\\
 
-For pictures of fingerprints this is just a special form of edge detection which can be done by calculating Sobel derivatives for every pixel.
+For pictures of fingerprints this is just a special form of edge detection which can be done by calculating discrete derivatives for every pixel using a Sobel or Scharr operator. The ridges in the original fingerprint, however, are usually too thick resulting in gradient values close to zero within the ridge and
+consequently ill-defined orientations. For that reason, we first employ the Zhang-Suen thinning algorithm \cite{zhangsuen} to obtain only the ridge skeleton
+for which the derivatives are then computed.\\
+
 Depending on the quality and noise level of the picture the computed orientation field can be very noisy itself which is another application
-for our TV algorithms.\\
+for our TV algorithms. An example is provided in Figure \ref{fig:application_fingerprint1}. 
 
 % subsection Fingerprint orientation data (end)
 \begin{figure}[h!]
     \centering
     \subfloat[][Original]{
 	\label{fig:application_fingerprint1_orig}
-	\includegraphics[width=0.325\linewidth]{./figures/experiments/fingerprint4.jpg}
+	\includegraphics[width=0.25\linewidth]{./figures/experiments/fingerprint4.jpg}
+    }
+    \subfloat[][Ridge Skeleton]{
+	\label{fig:application_fingerprint1_skeleton}
+	\includegraphics[width=0.25\linewidth]{./figures/experiments/skeleton_fingerprint4.jpg}
     }
     \subfloat[][Computed Orientation field]{
 	\label{fig:application_fingerprint1_noise}
-	\includegraphics[width=0.325\linewidth]{./figures/experiments/input_fingerprint4.jpg}
+	\includegraphics[width=0.25\linewidth]{./figures/experiments/input_fingerprint4.jpg}
     }
     \subfloat[][Denoised Orientation field]{
 	\label{fig:application_fingerprint1_denoised}
-	\includegraphics[width=0.325\linewidth]{./figures/experiments/denoised_fingerprint4.jpg}
+	\includegraphics[width=0.25\linewidth]{./figures/experiments/denoised_fingerprint4.jpg}
     }\\
     \caption[Fingerprint orientation denoising]{Denoising a orientation field from a fingerprint, orientations represented by SO(2) elements
 	\subref{fig:application_fingerprint1_orig} Original fingerprint 
-	\subref{fig:application_fingerprint1_noise} Orientation field computed using Sobel derivatives PLACEHOLDER
-	\subref{fig:application_fingerprint1_denoised} Denoised, IRLS with $\lambda=?$, $?$ IRLS steps, $?$ Newton steps per IRLS step PLACEHOLDER
+	\subref{fig:application_fingerprint1_orig} Ridge skeleton computed using a thinning algorithm
+	\subref{fig:application_fingerprint1_noise} Orientation field computed using Scharr derivatives
+	\subref{fig:application_fingerprint1_denoised} Denoised, IRLS with $\lambda=2.1$, $5$ IRLS steps, $1$ Newton steps per IRLS step
 	\label{fig:application_fingerprint1}
     }
 \end{figure}
@@ -355,20 +363,20 @@ Figure \ref{fig:application_flowfield1}.
     \centering
     \subfloat[][Original]{
 	\label{fig:application_flowfield1_orig}
-	\includegraphics[width=0.325\linewidth]{./figures/experiments/reconstructed_optical_flow.jpg}
+	\includegraphics[width=0.325\linewidth]{./figures/experiments/original_optical_flow.jpg}
     }
     \subfloat[][Computed Sparse Flow field]{
 	\label{fig:application_flowfield1_noise}
-	\includegraphics[width=0.325\linewidth]{./figures/experiments/reconstructed_optical_flow.jpg}
+	\includegraphics[width=0.325\linewidth]{./figures/experiments/sparse_optical_flow.jpg}
     }
     \subfloat[][Reconstructed orientation field]{
 	\label{fig:application_flowfield1_denoised}
 	\includegraphics[width=0.325\linewidth]{./figures/experiments/reconstructed_optical_flow.jpg}
     }\\
     \caption[Dense optical flow reconstruction]{Reconstructing a dense flow from sparse feature tracking, orientations represented by SO(2) elements
-	\subref{fig:application_flowfield1_orig} Frame of original video scene PLACEHOLDER
+	\subref{fig:application_flowfield1_orig} Frame of original video scene 
 	\subref{fig:application_flowfield1_noise} Sparse features tracked using Lucas-Kanade
-	\subref{fig:application_flowfield1_denoised} Reconstructed, IRLS with $\lambda=?$, $?$ IRLS steps, $?$ Newton steps per IRLS step
+	\subref{fig:application_flowfield1_denoised} Reconstructed, IRLS with $\lambda=0.05$, $5$ IRLS steps, $1$ Newton steps per IRLS step
 	\label{fig:application_flowfield1}
     }
 \end{figure}
@@ -465,7 +473,7 @@ leads to desired $SPD(3)$ matrix describing the diffusion coefficients and direc
     }\\
     \caption[Denoising DT-MRI data]{Denoising a DT-MRI image with pixel in SPD(3)
 	\subref{fig:application_dti1_noise} Original DTI data, 32x32 pixel
-	\subref{fig:application_dti1_denoised} Denoised, IRLS with $\lambda=?$, $?$ IRLS steps, $?$ newton steps per IRLS step
+	\subref{fig:application_dti1_denoised} Denoised, IRLS with $\lambda=0.7$, $5$ IRLS steps, $1$ newton steps per IRLS step
 	\label{fig:application_dti1}
     }
 \end{figure}
@@ -541,7 +549,7 @@ system. For the larger picture this share even grows to more than 75\% and could
 	3.22& cholmod\textunderscore super\textunderscore numeric & CHOLMOD\\
 	\hline
 	\end{tabular}
-}\,
+}
 \subfloat[][$1280\times 1024$]{
 	\label{table:perf_mathematicians}
 	\begin{tabular}{rll}

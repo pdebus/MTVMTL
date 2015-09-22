@@ -191,4 +191,9 @@ A.~Weinmann, L.~Demaret, and M.~Storath.
 \newblock Total variation regularization for manifold-valued data.
 \newblock {\em SIAM Journal on Imaging Sciences}, 7(4):2226--2257, 2014.
 
+\bibitem{zhangsuen}
+T.~Y. Zhang and C.~Y. Suen.
+\newblock A fast parallel algorithm for thinning digital patterns.
+\newblock {\em Commun. ACM}, 27(3):236--239, March 1984.
+
 \end{thebibliography}

@@ -6,45 +6,45 @@ Database file #1: mt.bib
 Warning--I didn't find a database entry for "nifti"
 Warning--I didn't find a database entry for "volumeLib"
 Warning--to sort, need author or key in teem
-You've used 32 entries,
+You've used 33 entries,
             2118 wiz_defined-function locations,
-            728 strings with 9532 characters,
-and the built_in function-call counts, 9959 in all, are:
-= -- 971
-> -- 442
+            737 strings with 9669 characters,
+and the built_in function-call counts, 10296 in all, are:
+= -- 1006
+> -- 455
 < -- 6
-+ -- 177
-- -- 140
-* -- 697
-:= -- 1688
-add.period$ -- 100
-call.type$ -- 32
-change.case$ -- 157
++ -- 183
+- -- 144
+* -- 725
+:= -- 1743
+add.period$ -- 103
+call.type$ -- 33
+change.case$ -- 162
 chr.to.int$ -- 0
-cite$ -- 33
-duplicate$ -- 375
-empty$ -- 812
-format.name$ -- 140
-if$ -- 2092
+cite$ -- 34
+duplicate$ -- 386
+empty$ -- 839
+format.name$ -- 144
+if$ -- 2160
 int.to.chr$ -- 0
-int.to.str$ -- 32
-missing$ -- 35
-newline$ -- 163
-num.names$ -- 64
-pop$ -- 159
+int.to.str$ -- 33
+missing$ -- 36
+newline$ -- 168
+num.names$ -- 66
+pop$ -- 162
 preamble$ -- 1
-purify$ -- 131
+purify$ -- 135
 quote$ -- 0
-skip$ -- 246
+skip$ -- 254
 stack$ -- 0
-substring$ -- 615
-swap$ -- 53
+substring$ -- 646
+swap$ -- 54
 text.length$ -- 6
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 114
+type$ -- 118
 warning$ -- 1
-while$ -- 87
-width$ -- 34
-write$ -- 356
+while$ -- 91
+width$ -- 35
+write$ -- 367
 (There were 3 warnings)

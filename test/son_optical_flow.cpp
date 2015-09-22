@@ -51,8 +51,8 @@ void drawOptFlowMap(const cv::Mat& flow, cv::Mat& cflowmap, int step,
 int main(int argc, const char *argv[])
 {
 
-	if (argc != 2){
-	    std::cerr << "Usage : " << argv[0] << "videofile" << std::endl;
+	if (argc != 2 && argc != 3){
+	    std::cerr << "Usage : " << argv[0] << "videofile" << " [lambda]" <<std::endl;
 	    return 1;
 	}
 	
@@ -95,6 +95,7 @@ int main(int argc, const char *argv[])
 	cv::calcOpticalFlowPyrLK(prevgray, gray, features[0], features[1], status, err, winSize, 3, termcrit, 0, 0.001);
 
 	cvtColor(prevgray, cflow, CV_GRAY2BGR);
+	cv::imwrite("original_optical_flow.jpg", cflow);
 	
 	for(int i = 0; i < features[1].size(); ++i){
 		if( status[i] != 1 )
@@ -103,6 +104,7 @@ int main(int argc, const char *argv[])
 	}
 
 	cv::imshow("flow", cflow);
+	cv::imwrite("sparse_optical_flow.jpg", cflow);
 	cv::waitKey(0);
 
 	int ny = prevgray.rows;
@@ -139,8 +141,11 @@ int main(int argc, const char *argv[])
 	myData.output_matval_img("son_optical_flow_img.csv");
 
 	double lam=0.01;
+	if(argc==3)
+	    lam=atof(argv[2]);
+
 	func_t myFunc(lam, myData);
-	myFunc.seteps2(1e-10);
+	myFunc.seteps2(1e-12);
 
 	tvmin_t myTVMin(myFunc, myData);
 
@@ -154,8 +159,8 @@ int main(int argc, const char *argv[])
 
 	myData.output_matval_img("son_optical_flow_img_FINAL.csv");
 
-	double length = 7.0;
-	int step = 16;
+	double length = 10.0;
+	int step = 18;
 
 	for(int y = 0; y < ny; y += step)
 	    for(int x = 0; x < nx; x += step){
@@ -165,7 +170,7 @@ int main(int argc, const char *argv[])
 		double sina = std::sqrt(1.0 - cosa2);
 
 		cv::Point source(x, y);
-		cv::Point target(x + length * cosa, y + length * sina);
+		cv::Point target(x - length * cosa, y - length * sina);
 		arrowedLine(cflow, source, target, cv::Scalar( 0, 255, 0 ));
 	}
 
