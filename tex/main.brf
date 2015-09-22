@@ -1,6 +1,5 @@
 \backcite {RudinOsher}{{5}{1}{chapter.1}}
 \backcite {ChambolleLions}{{5}{1.1}{equation.1.1.2}}
-\backcite {RudinOsher}{{6}{1.1.1}{subsection.1.1.1}}
 \backcite {SceneFlow}{{6}{1.1.1}{subsection.1.1.1}}
 \backcite {RudinOsher}{{7}{1.1.2}{equation.1.1.5}}
 \backcite {Kang}{{7}{1.2}{section.1.2}}
@@ -25,10 +24,10 @@
 \backcite {EAS}{{18}{2.4.5}{equation.2.4.74}}
 \backcite {Sato2014}{{18}{2.4.5}{equation.2.4.74}}
 \backcite {Absil2009}{{19}{2.4.5}{section*.30}}
-\backcite {AbsilGrassmann}{{20}{2.4.5}{equation.2.4.96}}
+\backcite {AbsilGrassmann}{{21}{2.4.5}{equation.2.4.97}}
 \backcite {AlmohyFrechet}{{22}{2.5.2}{subsection.2.5.2}}
-\backcite {HighamPade}{{22}{2.5.2}{equation.2.5.114}}
-\backcite {AlmohyFrechet}{{22}{2.5.2}{equation.2.5.117}}
+\backcite {HighamPade}{{22}{2.5.2}{equation.2.5.115}}
+\backcite {AlmohyFrechet}{{22}{2.5.2}{equation.2.5.118}}
 \backcite {nifti}{{23}{3.1.2}{subsection.3.1.2}}
 \backcite {SprecherIRLS}{{24}{3.2.1}{section*.36}}
 \backcite {manuel}{{24}{3.2.1}{section*.36}}
@@ -46,6 +45,6 @@
 \backcite {barmpoutis}{{49}{4.3.2}{figure.caption.71}}
 \backcite {SprecherIRLS}{{52}{4.5}{section.4.5}}
 \backcite {Weinmann}{{52}{4.5}{equation.4.5.8}}
-\backcite {LogEuclidian}{{57}{5.1}{section.5.1}}
-\backcite {SceneFlow}{{57}{5.1.1}{subsection.5.1.1}}
-\backcite {manifoldFlow}{{57}{5.1.1}{equation.5.1.1}}
+\backcite {LogEuclidian}{{56}{5.1}{section.5.1}}
+\backcite {SceneFlow}{{56}{5.1.1}{subsection.5.1.1}}
+\backcite {manifoldFlow}{{56}{5.1.1}{equation.5.1.1}}

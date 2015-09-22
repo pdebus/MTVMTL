@@ -4,7 +4,7 @@
 \BOOKMARK [2][-]{subsection.1.1.2}{Discretization}{section.1.1}% 4
 \BOOKMARK [1][-]{section.1.2}{Color Images}{chapter.1}% 5
 \BOOKMARK [1][-]{section.1.3}{Manifold-valued Images}{chapter.1}% 6
-\BOOKMARK [1][-]{section.1.4}{Objective and Outline of this work}{chapter.1}% 7
+\BOOKMARK [1][-]{section.1.4}{Objective and Outline of this thesis}{chapter.1}% 7
 \BOOKMARK [0][-]{chapter.2}{Theory}{}% 8
 \BOOKMARK [1][-]{section.2.1}{Generalization of the functional}{chapter.2}% 9
 \BOOKMARK [2][-]{subsection.2.1.1}{The Riemannian distance}{section.2.1}% 10
@@ -18,15 +18,15 @@
 \BOOKMARK [2][-]{subsection.2.3.4}{Newton equation for the TV functional}{section.2.3}% 18
 \BOOKMARK [2][-]{subsection.2.3.5}{Tangent space restriction}{section.2.3}% 19
 \BOOKMARK [1][-]{section.2.4}{Manifolds}{chapter.2}% 20
-\BOOKMARK [2][-]{subsection.2.4.1}{Euclidian}{section.2.4}% 21
+\BOOKMARK [2][-]{subsection.2.4.1}{Euclidean}{section.2.4}% 21
 \BOOKMARK [2][-]{subsection.2.4.2}{Sphere Sn}{section.2.4}% 22
 \BOOKMARK [2][-]{subsection.2.4.3}{Special Orthogonal Group SO\(n\)}{section.2.4}% 23
 \BOOKMARK [2][-]{subsection.2.4.4}{Symmetric Positive Definite Matrices SPD\(n\)}{section.2.4}% 24
-\BOOKMARK [2][-]{subsection.2.4.5}{Grassmanian Gr\(n,p\)}{section.2.4}% 25
+\BOOKMARK [2][-]{subsection.2.4.5}{Grassmannian Gr\(n,p\)}{section.2.4}% 25
 \BOOKMARK [1][-]{section.2.5}{Fr\351chet derivatives of matrix logarithm and square root}{chapter.2}% 26
 \BOOKMARK [2][-]{subsection.2.5.1}{Derivative of the matrix square root}{section.2.5}% 27
 \BOOKMARK [2][-]{subsection.2.5.2}{Derivative of the matrix logarithm}{section.2.5}% 28
-\BOOKMARK [0][-]{chapter.3}{The TVMT Library}{}% 29
+\BOOKMARK [0][-]{chapter.3}{The MTVMT Library}{}% 29
 \BOOKMARK [1][-]{section.3.1}{Capabilities}{chapter.3}% 30
 \BOOKMARK [2][-]{subsection.3.1.1}{Supported Manifolds}{section.3.1}% 31
 \BOOKMARK [2][-]{subsection.3.1.2}{Data}{section.3.1}% 32
@@ -38,13 +38,13 @@
 \BOOKMARK [2][-]{subsection.3.2.2}{Levels of parallelization}{section.3.2}% 38
 \BOOKMARK [2][-]{subsection.3.2.3}{C++ techniques}{section.3.2}% 39
 \BOOKMARK [1][-]{section.3.3}{Components}{chapter.3}% 40
-\BOOKMARK [2][-]{subsection.3.3.1}{Manifold classes}{section.3.3}% 41
+\BOOKMARK [2][-]{subsection.3.3.1}{Manifold class}{section.3.3}% 41
 \BOOKMARK [2][-]{subsection.3.3.2}{Data class}{section.3.3}% 42
 \BOOKMARK [2][-]{subsection.3.3.3}{Functional class}{section.3.3}% 43
 \BOOKMARK [2][-]{subsection.3.3.4}{TV Minimizer class}{section.3.3}% 44
 \BOOKMARK [2][-]{subsection.3.3.5}{Visualization class}{section.3.3}% 45
 \BOOKMARK [2][-]{subsection.3.3.6}{Utility functions}{section.3.3}% 46
-\BOOKMARK [1][-]{section.3.4}{Using TVTML}{chapter.3}% 47
+\BOOKMARK [1][-]{section.3.4}{Using MTVMTL}{chapter.3}% 47
 \BOOKMARK [2][-]{subsection.3.4.1}{Prerequisites}{section.3.4}% 48
 \BOOKMARK [2][-]{subsection.3.4.2}{Installation}{section.3.4}% 49
 \BOOKMARK [2][-]{subsection.3.4.3}{Compilation of own projects using CMake}{section.3.4}% 50
@@ -67,7 +67,7 @@
 \BOOKMARK [1][-]{section.4.4}{Performance profiling of the library}{chapter.4}% 67
 \BOOKMARK [1][-]{section.4.5}{Comparison IRLS and Proximal Point minimizers}{chapter.4}% 68
 \BOOKMARK [1][-]{section.4.6}{Sensitivity to variations of the original data}{chapter.4}% 69
-\BOOKMARK [0][-]{chapter.5}{Outlook}{}% 70
+\BOOKMARK [0][-]{chapter.5}{Conclusion and Outlook}{}% 70
 \BOOKMARK [1][-]{section.5.1}{Extensions}{chapter.5}% 71
 \BOOKMARK [2][-]{subsection.5.1.1}{Functionals}{section.5.1}% 72
 \BOOKMARK [1][-]{section.5.2}{Recursive computation on subdomains}{chapter.5}% 73

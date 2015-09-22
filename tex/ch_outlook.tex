@@ -1,10 +1,10 @@
-\begin{chapter}{Outlook}
+\begin{chapter}{Conclusion and Outlook}
 \label{ch:outlook}
 
 \section{Extensions} % (fold)
 \label{sec:Extensions}
 The first thing that can easily be extended is the support for additional manifolds. Possibilities are, for instance, the Stiefel manifold that
-was briefly introduced in section \ref{sub:Grassmanian} or an alternative implementation of the $SPD(n)$ manifold using the Log-Euclidian metric
+was briefly introduced in section \ref{sub:Grassmanian} or an alternative implementation of the $SPD(n)$ manifold using the Log-Euclidean metric
 based on \cite{LogEuclidian}.\\
 
 Also new minimizers could be added. It would be straightforward to utilize the gradient evaluation function already implemented in the functional to
@@ -15,21 +15,21 @@ in the next section.
 \label{sub:Functionals}
 So far isotropic and anisotropic first order TV functionals are implemented in the library. Extensions can be made with respect to the TV part or the fidelity
 part of the functional. In the first case this would mean to also include a second order TV term $\mu\int_{\omega}|\nabla^2u|\mathop{dx}$ in the functional.
-This prevents the formation of numerical artifacts like the so-called staircasing effects, that might occur in first order TV. Of also higher orders than second
+This prevents the formation of numerical artifacts like the so-called staircasing effects, that might occur in first order TV. Of course also higher orders than second
 can be added to the functional. As long as also methods for the evaluation of the functionals gradient and Hessian are provided, the IRLS minimizer class will
 work without any changes. \\
 
 The second possibility is the addition of new or different fidelity terms. The purpose of the fidelity term during the minimization is to penalize a TV
-regularization that moves too far away from the original picture. However, one can also utilize it for direct calculation of a dense optical flow field, for
-example. This was also done in the application shown in \label{sub:reconstructionDenseOpticalFlow} but it must be noted that the procedure we chose to compute 
+regularization that moves too far away from the original picture. However, one can also utilize it for a direct calculation of a dense optical flow field, for
+example. This was also done in the application shown in \ref{sub:reconstructionDenseOpticalFlow} but it must be noted that the procedure we chose to compute 
 the dense flow was rather complicated and indirect.\\
 
 For the direct TV approach, as presented in \cite{SceneFlow}, consider a 2D video sequence $I:\Omega\times [0,T]\to\mathbb{R}$.
 Let now $u:\Omega\to\mathbb{R}^2$ denote the displacement vector of the of the pixel $x\in\Omega$. The functional is then given by
 \begin{equation}
-    J(u)=\int_{\Omega}\left\vert|\frac{\partial I}{\partial t}+\nabla I\cdot u\right\vert\mathop{dx}+\lambda TV(u),
+    J(u)=\int_{\Omega}\left\vert\frac{\partial I}{\partial t}+\nabla I\cdot u\right\vert\mathop{dx}+\lambda TV(u),
 \end{equation}
-where first term is the new data term, which implements the so-called optical flow constraint that could be interpreted as a continuity equation for pixels.
+where the first term is the new data term, which implements the so-called optical flow constraint that could be interpreted as a continuity equation for pixels.
 Finally, as Lef\'{e}vre and Baillet show in \cite{manifoldFlow}, the functional can be generalized also to flows on some classes of manifolds.
 % subsection Functionals (end)
 
@@ -37,8 +37,8 @@ Finally, as Lef\'{e}vre and Baillet show in \cite{manifoldFlow}, the functional 
 
 \section{Recursive computation on subdomains} % (fold)
 \label{sec:Recursivecomputationonsubdomains}
-From the numerical experiment in \ref{sec:Sensitivity} we can conclude the a local neighborhood of the original picture only affects the form of the minimizer of the function
-in its immediate neighborhood. The magnitude of the variation in the minimizer due to the variation of a single pixel in the orginal data seems to decay exponentially with the
+From the numerical experiment in Section \ref{sec:Sensitivity} we can conclude that a local neighborhood of the original picture only affects the form of the minimizer of the function
+in its immediate neighborhood. The magnitude of the variation in the minimizer due to the variation of a single pixel in the original data seems to decay exponentially with the
 distance from that pixel. \\
 
 This could in principle be exploited by dividing the image into subdomains with a specific small overlap, determined by the error boundaries, and solve each of the smaller 
@@ -46,8 +46,8 @@ subproblems individually. Depending on the size of the necessary overlap this co
 are solved the subpictures are recombined just by cropping all overlapping regions to arrive at the global solution.\\
 
 The advantages of this procedure are firstly, that even though there is some overhead from this procedure, a collection of smaller subproblems can be usually faster solved than one big
-problem and has a lower memory cosumptions. Secondly, this splitting scheme would also to introduce an additional layer of paralellism in the from of distributed memory, many core
-parelellization. Each subproblem can be assigned to a different node that in turn locally applies multi-threading.
+problem and has a lower memory consumption. Secondly, this splitting scheme would also to introduce an additional layer of parallelism in the from of distributed memory, many core
+parallelization. Each subproblem can be assigned to a different node that in turn locally applies multi-threading.
 % section Recursive computation on subdomains (end)
 
 \end{chapter}

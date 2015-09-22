@@ -3,16 +3,16 @@
 
 \section{Generalization of the functional} % (fold)
 \label{sec:Generalization of the functional}
-The functional defined in (\ref{eq:original_functional}) needs a vector space structure in order for differences to make sense. Hence, the functional
+The functional defined in (\ref{eq:original_functional}) needs a vector space structure for differences to make sense. Hence, the functional
 needs to be transformed to be still valid in the more general setting of manifold-valued pixels. Since on $\mathbb{R}$ we have $|x-y|=d(x,y)$ for the 
-Euclidian distance, the generalization to metric spaces $(X,d)$ is the appropriate way.\\
+Euclidean distance, the generalization to metric spaces $(X,d)$ is the appropriate way to proceed.\\
 
 To also include the case of 3D pictures and shorten the notation we will use a graph $G$ to specify over which pairs of pixels the sums in (\ref{eq:original_functional})
 are taken. Let $V$ be an index set of all pixels in our picture. Denote by $E\subset V\times V$ the set of directed edges in $G$ and by 
 $n(i):=\lbrace j\in V: (i,j)\in E\rbrace$ the set of $i$'s neighbors. Then
 \begin{align}
     TV_{iso}(u) &= \sum_{i\in V}\sqrt{\sum_{j\in n(i)}d^{2}(u_i,u_j)}\\
-    TV_{aniso}(u) &= \sum_{(i,j\in E)}d^{2}(u_i,u_j).
+    TV_{aniso}(u) &= \sum_{(i,j\in E)}d{2}(u_i,u_j).
 \end{align}
 
 Since we used forward discretization, $n(i)$ just contains the next grid neighbors in each dimension, i.e. for $u_i=u((j,k,l))$, the neighbors are 
@@ -28,22 +28,22 @@ where the pixels of the (noisy) original image $u_0$ are known. Our generalized 
 \subsection{The Riemannian distance} % (fold)
 \label{sub:RiemannianDistance}
 The metric $d$ that is going to be used will of course depend on the manifold. Distances on Riemannian manifolds can be measured using smooth curves
-$\gamma [a,b]\to M$ on the manifold. The length of this curve is
+$\gamma: [a,b]\to M$ on the manifold. The length of this curve is
 \begin{equation}
     L(\gamma) =\int_{a}^b\sqrt{\braket{\dot{\gamma}(t),\dot{\gamma}(t)}_{\gamma(t)}}\mathop{dt}
 \end{equation}
-and the Riemannian distance can consequently be defined as
+and the distance can consequently be defined as
 \begin{equation}
     d: M\times M\to \mathbb{R},\quad dist(x,y)=\operatorname{inf}_{\Gamma}L(\gamma)
 \end{equation}
 where $\Gamma$ denotes the set of smooth curves connecting $x,y\in M$ and $\braket{\cdot,\cdot}_x$ denotes the inner product on $T_xM$.\\
 
-This rather general definition is used by \cite{Absil2009} wheras for our
+This rather general definition is used by \cite{Absil2009} whereas for our
 case Pennec et al's \cite{Arsigny} approach using Riemannian exponential and logarithm map is more convenient. Their definitions are based on
 \emph{geodesics} because they are precisely the curves that realize the above minimum.\\
 
 Let $M$ be a connected, geodesically complete Riemannian manifold. The exponential mapping $\exp_x:T_xM\to M$ is defined by $\exp_x(\nu):=\gamma(1)$
-where $\gamma:\mathbb{R}\to M$ is the unit geodesic with $\gamma(0)=x$ and $\dot{\gamma}(0)=\nu$.
+where $\gamma:\mathbb{R}\to M$ is the unique geodesic with $\gamma(0)=x$ and $\dot{\gamma}(0)=\nu$.
 Thus, the function maps the tangent vector $\nu$ to the point $y$ on the manifold reached after moving along $\gamma$ for $t=1$.
 The logarithm map is its inverse and hence provides us with the tangent vector $\nu$ that belongs to the geodesic connecting $x$ and $y$. \\
 
@@ -66,34 +66,35 @@ Distance    & $\operatorname{dist}(x,y)=\norm{y-x}$	& $ \operatorname{dist}(x,y)
 
 \section{Algorithms} % (fold)
 \label{sec:Algorithms}
-The next topic that must be adressed is the minimization of the above defined functional which brings about another challenge in the form of its non-differentiability.
+The next topic that must be addressed is the minimization of the above defined functional which brings about another challenge in the form of its non-differentiability.
 In the implementation, this problem is solved using two different methods. They are based on either working with a regularized version of the functional or by so called
-proximal mappings. The latter is used by the so-called proximal point algorithm which will be shortly summarized in the next section before proceeding to
+proximal mappings. The latter is used by the proximal point algorithm which will be shortly summarized in the next section before proceeding to
 the iteratively reweighted least squares (IRLS) algorithm.
 
 
 \subsection{Proximal Point} % (fold)
 \label{sub:ProximalPoint}
-The proximal point algorithm for manifold valued data which is implemented in the TVMT library is based on the work of Weinmann et al\cite{Weinmann} and belongs to the class
-of proximal splitting methods. A survey on these methods for Euclidian space data is provided in \cite{CombettesPequet}. The general scope in the real case are convex
+The proximal point algorithm for manifold valued data which is implemented in the MTVMT library is based on the work of Weinmann et al\cite{Weinmann} and belongs to the class
+of proximal splitting methods. A survey on these methods for Euclidean space data is provided in \cite{CombettesPequet}. The general scope in the real case are convex
 optimization problems of the form
 \begin{equation}
     \text{minimize}_{x\in \mathbb{R}^n} f_1(x) + \cdots +f_m(x)
 \end{equation}
 where the $f_i:\mathbb{R}^n\to]-\infty,\infty]$ are convex functions but not necessarily differentiable. As we can see this is also true for the functional (\ref{eq:general_functional}),
-even for the simple Euclidian case were the summands are given by $d(x,y)=|x-y|$. \\
+even for the simple Euclidean case were the summands are given by $d(x,y)=|x-y|$. \\
 Splitting means considering every summand $f_i$ individually and minimize it using its proximal mapping
 \begin{equation}
     \label{eq:real_proximity}
     \operatorname{prox}_{f_i}x=\operatorname{argmin}_{y\in\mathbb{R}^n}\left(f_i(y) + \frac{1}{2}\norm{x-y}^2_{2} \right).
 \end{equation}
-For the case of a differentiable function $f$ the minimization problem (\ref{eq:real_proximity}) is trivial and we see that $\operatorname{prox}_f x = x-\nabla f$, which 
+For the case of a differentiable function $f$ the minimization problem (\ref{eq:real_proximity}) 
+can be written in a explicit form and we see that $\operatorname{prox}_f x = x-\nabla f$, which 
 can be interpreted as a gradient descent step.\\
 In addition to that, one can show that the minimizers of $f$ are exactly the fixed points of the proximal mapping (See \cite{ParikhBoyd}, \S 2.3).
 
 \subsubsection{Application to manifolds} % (fold)
 \label{ssub:Application to manifolds}
-Let $M$ be a Riemannian manifold and $\Omega$ as defined in \label{sub:Discretization}. Due to the square root involved in the isotropic case,
+Let $M$ be a Riemannian manifold and $\Omega$ as defined in \ref{sub:Discretization}. Due to the square root involved in the isotropic case,
 the method can only be applied to the anisotropic version of the functional (\ref{eq:general_functional}) and leads in the 2D case to the following splitting
 \begin{align}
     J(u)	&= \sum_{i,j}F_{ij}(u)+\lambda\sum_{i,j}G_{ij}(u)+\lambda\sum_{i,j}H_{ij}(u)\\
@@ -107,13 +108,13 @@ and proximal mappings of the form
 \operatorname{prox}_{\lambda G_{ij}}x=\operatorname{argmin}_{y\in M^{m\times n}}\left(\lambda G_{ij}(y) +\frac{1}{2}d^2(x,y) \right).
 \end{equation}
 
-We now only present the formulae relevant for the implementation and finally the algorithm itself. For details on derivations and convergence and existence proofs consider \cite{Weinmann}.\\
+We now only present the formula relevant for the implementation and finally the algorithm itself. For details on derivations and convergence and existence proofs consider \cite{Weinmann}.\\
 
 The proximal mappings itself can be computed using unit speed geodesics. Here $[x,y]_t$ denotes the point reached by
 following the unit speed geodesic starting at $x$ in direction $y$ for a time $t$.
 \begin{align}
     (\operatorname{prox}_{\lambda G_{ij}}u)_{ij}&=[u_{i,j},u_{i,j+1}]_{t_{TV}} \\
-    (\operatorname{prox}_{\lambda H_{ij}}u)_{ij}&=[u_{i,j},u_{i+1,}]_{t_{TV}} \\
+    (\operatorname{prox}_{\lambda H_{ij}}u)_{ij}&=[u_{i,j},u_{i+1,j}]_{t_{TV}} \\
     (\operatorname{prox}_{\lambda F_{ij}}u)_{ij}&=[u_{i,j},(u_0)_{i,j}]_{t_{l^2}}
 \end{align}
 
@@ -153,26 +154,28 @@ Finally, we can state the algorithm
 
 \subsection{IRLS} % (fold)
 \label{sub:IRLS}
-The IRLS approach to dealing with non-differentiable terms in the functional is by adding addtional terms for regularization. In the continuous (and isotropic) case that means
+The IRLS approach to dealing with non-differentiable terms in the functional is by adding additional terms for regularization. In the continuous (and isotropic) case that means
 \begin{equation}
     \label{eq:regulzarized_tv}
     TV_{\epsilon}=\int_{\Omega}\omega_{\epsilon}|\nabla u|^2 =\int_{\Omega}\frac{|\nabla u|^2}{\sqrt{|\nabla u|^2+\epsilon^2}}
 \end{equation}
-for a small $\epsilon>0$. In this form, the functional becomes differentiable and (\ref{eq:regulzarized_tv}) can be interpreted as weighted $L^2$ norm.
+for a small $\epsilon>0$. In this form, the functional becomes differentiable but directly minimizing a
+regularized functional $J_{\epsilon}$ will not work either.\\
 
 The IRLS algorithm, described in more detail in \cite{Rodriguez}, works by alternating between reweighting and minimization step. First, the weights are computed then 
-the the minimization is performed using the regularized. The steps for the isotropic functional are as follows
+the minimization is performed using the regularized functional with the weights considered constant.
+ The steps for the isotropic functional are as follows
 \begin{align}
     w_{i}^{new} &= W^{\epsilon}_{iso}(u)_i := \left( \sum_{j\in n(i)}d(u_i,u_j)+\epsilon^2\right)^{-\frac{1}{2}}\; \forall\;i\in V \\
-    u^{new} &= U(w) := \operatorname{argmin}_{u\in\Omega}\sum_{i\in V_k}d^2(u_i,(u_0)_{i})+\lambda\sum_{i\in V}w_i\sum_{j\in n(i)}d^2(u_i,u_j)
+    u^{new} &= U(w) := \operatorname{argmin}_{u\in\Omega}\sum_{i\in V_k}d^2(u_i,(u_0)_{i})+\lambda\sum_{i\in V}w_i\sum_{j\in n(i)}d^2(u_i,u_j).
 \end{align}
-while the anisotropic steps are
+The anisotropic steps are
 \begin{align}
     w_{i,j}^{new} &= W^{\epsilon}_{aniso}(u)_{i,j} := \left( d(u_i,u_j)+\epsilon^2\right)^{-\frac{1}{2}},\; \forall\;(i,j)\in E \\
     u^{new} &= U(w) := \operatorname{argmin}_{u\in\Omega}\sum_{i\in V_k}d^2(u_i,(u_0)_{i})+\lambda\sum_{(i,j)\in E}w_{i,j}d^2(u_i,u_j).
 \end{align}
 
-Further details on the derivation and proofs on convergence, existance and uniqueness of solution for different manifold classes, such as Hadamard spaces or the sphere,
+Further details on the derivation and proofs on convergence, existence and uniqueness of solutions for different manifold classes, such as Hadamard spaces or the sphere,
 can be found in \cite{SprecherIRLS}. The minimization can in principle be performed using various methods from smooth optimization theory. Due to its quadratic
 convergence rate, here the Newton method was chosen. Finally, the algorithm is given as 
 
@@ -202,7 +205,7 @@ We define the \emph{Riemannian gradient} $\operatorname{grad} f$ to be the uniqu
     \braket{\operatorname{grad}f(x),\xi}_x=\mathop{Df}(x)[\xi]
 \end{equation}
 where $\mathop{Df}(x)[\xi] = \xi[f]$, when $\xi:\mathcal{C}^{\infty}(M)\to\mathbb{R}$ is interpreted as derivation acting on $f$. The Riemannian gradient
-shares many properties of its Euclidian counterpart, in particular defining the direction of steepest ascent, such that first order methods like
+shares many properties of its Euclidean counterpart, in particular defining the direction of steepest ascent, such that first order methods like
 gradient descent could already be implemented at this point.\\
 % subsection Gradient (end)
 
@@ -219,7 +222,7 @@ where $\nabla$ denotes the Riemannian connection on $M$.\\
 
 \subsection{Newton equation} % (fold)
 \label{sub:Newton equation}
-Now let $x\in M$ and $\gamma:[a,b] \to M$ be a unit geodesic with $\gamma(0)=x$ and $\dot{\gamma}(0)=\nu\in T_xM$ 
+Now let $x\in M$ and $\gamma:[a,b] \to M$ be a unique geodesic with $\gamma(0)=x$ and $\dot{\gamma}(0)=\nu\in T_xM$ 
 passing through $y\in M$. Thus, we can set $y=\exp_x(\nu)$ and $\nu=\log_x(y)$ as suggested in \ref{sub:RiemannianDistance}. Using the
 definitions of gradient and Hessian above one can expand $f$ to second order around $x$ in the following way
 \begin{align}
@@ -228,7 +231,7 @@ definitions of gradient and Hessian above one can expand $f$ to second order aro
     f(y) &= f(x) + \braket{\operatorname{grad}f(x),\log_x(y)}_x + \frac{1}{2}\braket{\operatorname{Hess}f(x)[\log_x(y)],\log_x(y)}_x + \mathcal{O}(\norm{\log_x(y)}_x^3).\nonumber
 \end{align}
 
-The first line of (\ref{eq:manifold_taylor}) suggest that, for given fixed $x$, we can also interpret $f$ as a function of $\nu\in T_xM$ and perform the optimization $f$ on the
+The first line of (\ref{eq:manifold_taylor}) suggests that, for given fixed $x$, we can also interpret $f$ as a function of $\nu\in T_xM$ and perform the optimization $f$ on the
 tangent space, on which $\operatorname{grad}f$ and $\operatorname{Hess}f$ have been defined. This finally leads to the following generalization of the \emph{Newton equation}
 for the correction term $\eta_x \in T_xM$:
 \begin{equation}
@@ -254,7 +257,7 @@ using the exponential map such that $y'=\exp_x(\eta_x)$. The whole iterative pro
 \subsection{Newton equation for the TV functional} % (fold)
 \label{sub:NewtonequationfortheTVfunctional}
 We now show the general form of the linear system defined by (\ref{eq:newtoneq}) in the case of manifold-valued 3D images $u,u_0: \Omega\to M^{Z\times Y\times X}$
-where $\Omega=[1,Z]\times[1,Y]\times[1,X]\cap \mathbb{N}^3$ for $X,Y,Z\in\mathbb{N}$ and a corresponding functional $J:  M^{Z\times Y\times X} \to \mathbb{R}$.
+where $\Omega=\lbrace 1,\ldots, Z\rbrace\times\lbrace 1,\ldots, Y\rbrace\times\lbrace 1,\ldots, X\rbrace$ for $X,Y,Z\in\mathbb{N}$ and a corresponding functional $J:  M^{Z\times Y\times X} \to \mathbb{R}$.
 Furthermore, the forward finite difference scheme described in \ref{sub:Discretization} is used. To simplify notation,
 we also assume the regularization weights obtained from the last IRLS reweighting step to be all equal to $1$ and thus consider only the
 bare $d^2(\cdot,\cdot)$ terms:
@@ -288,7 +291,7 @@ The second derivatives, considering only the terms in the first line of (\ref{eq
 \end{align}
 Considering the pattern of the Kronecker deltas and reshaping the tensor of second partial derivatives into a single matrix, we can see that we 
 obtain a block band matrix, where sums of non-mixed second derivatives of the squared distance function are located on the main diagonal, while all mixed
-derivatives belonging to same gradient component ($x,y$ or $z$) populate subdiagonals of equal distance to the main diagonal.
+derivatives belonging to the same gradient component ($x,y$ or $z$) populate subdiagonals of equal distance to the main diagonal.
 In particular, discretizations in $z$-direction are on the first, in $y$-direction on the $Z$th and in $x$-direction on the $Z\times Y$th subdiagonals.\\
 
 To illustrate this, consider the following schematic of the band structure
@@ -310,16 +313,16 @@ discretization directions.\\
 
 $HJ$ is exactly the matrix representation of the Hessian operator $\operatorname{Hess}J(u)$, while the representation $GJ$ of $\operatorname{grad}J(u)$ is just the vectorized version
 of the tensor of first derivatives (\ref{eq:funcfirstder}). If the embedding space of the manifold is given by $\mathbb{R}^{n\times p}$ then the matrix $HJ$
-will be an element of $\mathbb{R}^{\tilde D\times\tilde D}$ with $\tilde D=np(XYZ)$. $HJ$ is, however, also sparse with approximately $7\tilde D$ non-zero entries.
-Finally, solving the Newton equation (\ref{eq:newtoneq}) corresponds to solving the sparse linear system defined by $HJ$ and $GJ$, which is also the most computationally demanding
+will be an element of $\mathbb{R}^{\tilde D\times\tilde D}$ with $\tilde D=npXYZ$. $HJ$ is, however, also sparse with approximately $7\tilde D$ non-zero entries.
+Finally, solving the Newton equation (\ref{eq:newtoneq}) corresponds to solving the sparse linear system given by $HJ$ and $GJ$, which is also the most computationally demanding
 part of the algorithm.
 
 % subsection Newton equation for the TV functional (end)
 \subsection{Tangent space restriction} % (fold)
 \label{sub:Tangent space restriction}
-To decrease the dimension of the sparse linear system one can choose a basis of the tangent space $T_xM$ for each $x\in M$ and restrict the computed gradient and Hessian
+We can choose a basis of the tangent space $T_xM$ for each $x\in M$ and restrict the computed gradient and Hessian
 to the tangent space by performing a basis transformation. Since $\operatorname{dim}T_xM=\operatorname{dim} M$, this means that we can represent tangent vectors, such as the gradients 
-of the squared distance functions, or tangent space mappings like the Hessian using only $\operatorname{dim} M$ coefficients. We now have $D=\operatorname{dim}M (XYZ)$ such that the 
+of the squared distance function, or tangent space mappings like the Hessian using only $\operatorname{dim} M$ coefficients. We now have $D=\operatorname{dim}M (XYZ)$ such that the 
 prefactor is now the intrinsic manifold dimension and not the dimension of the embedding space any more.
 
 % subsection Tangent space restriction (end)
@@ -333,10 +336,10 @@ exponential and logarithm mapping and the tangent space basis transformation map
 For the Grassmann manifold, due to its quotient manifold nature and because it was not covered in the original implementation based on \cite{SprecherIRLS}
 a more general introduction will be given.
 
-\subsection{Euclidian} % (fold)
+\subsection{Euclidean} % (fold)
 \label{sub:Euclidian}
-The space in question is just $\mathbb{R}^n$, hence trivially a manifold and naturally a vector space such that all expression can be calculated using basic
-multivariable calculus. The exponential and logarithm mappings are not be understood in the sense of $e^x$ but according to \ref{sub:RiemannianDistance} such that
+The space in question is just $\mathbb{R}^n$, hence trivially a manifold and naturally a vector space such that all expressions can be calculated using basic
+multivariable calculus. The exponential and logarithm mappings are not to be understood in the sense of $e^x$ but according to \ref{sub:RiemannianDistance} such that
 they are just addition and subtraction in the vector space.
 
 \subsubsection{Exponential map} % (fold)
@@ -372,6 +375,8 @@ they are just addition and subtraction in the vector space.
 \begin{equation}
     \frac{\partial^2 d^2(x,y)}{\partial x\partial y}=\frac{\partial^2 d^2(x,y)}{\partial x^2}=2\mathbbm{1}_n;
 \end{equation}
+where here and in all following expression $\mathbbm{1}_n$ denotes the identity matrix.
+
 
 % subsubsection Second derivatives of the squared distance function (end)
 \subsubsection{Tangent space restriction map} % (fold)
@@ -385,14 +390,14 @@ they are just addition and subtraction in the vector space.
 
 \subsection{Sphere $S^n$} % (fold)
 \label{sub:Sphere}
-We consider the manifold $S^n:=\lbrace x\in\mathbb{R}^{n+1}: \norm{x}=1\rbrace\subset\mathbb{R}^{n+1}$ and express the maps in terms of vectors $x,y\in\mathbb{R}^{n+1}$ of the Euclidian 
+We consider the manifold $S^n:=\lbrace x\in\mathbb{R}^{n+1}: \norm{x}=1\rbrace\subset\mathbb{R}^{n+1}$ and express the maps in terms of vectors $x,y\in\mathbb{R}^{n+1}$ of the Euclidean 
 embedding space.\\
 The tangent space $T_xS^n$ at $x\in\mathbb{R}$ is, as basic intuition suggests, given by the tangent hyperplane to the sphere at $x$ such that
 \begin{equation}
     \label{eq:sntangentspace}
     T_xS^n:=\lbrace y\in\mathbb{R}^{n+1}: x^Ty=0 \rbrace
 \end{equation}
-The standard Euclidian inner product $\braket{r,s}=r^Ts$, restricted to the tangent space, turns $S^n$ into a Riemannian manifold.
+The standard Euclidean inner product $\braket{r,s}=r^Ts$, restricted to the tangent space, turns $S^n$ into a Riemannian manifold.
 
 \subsubsection{Exponential map} % (fold)
 \label{ssub:ExponentialS2}
@@ -447,7 +452,7 @@ And the mixed derivative:
 \subsubsection{Tangent space restriction map} % (fold)
 \label{ssub:TangentS2}
 As we can see from (\ref{eq:sntangentspace}), the tangent space $T_xS^n$ at $x\in S^n$ is just the orthogonal complement of $x$ in $\mathbb{R}^{n+1}$.
-Thus, constructing a basis of the tangent space just amounts to constructing an orthonormal basis $\lbrace b_0,b_1,\cdots,b_n$ of $\mathbb{R}^{n+1}\rbrace$ with $b_0=x$. Then
+Thus, constructing a basis of the tangent space amounts to constructing an orthonormal basis $\lbrace b_0,b_1,\cdots,b_n$ of $\mathbb{R}^{n+1}\rbrace$ with $b_0=x$. Then
 $\mathcal{B}=\lbrace b_i\rbrace_{i=1}^{n}$ is the basis of the tangent space.\\
 This can be done using the QR algorithm or, in the case of $S^2\subset\mathbb{R}^3$, using the cross product. For our basis transformation mapping this means that
 \begin{align}
@@ -470,6 +475,9 @@ while its tangent space at $X\in SO(n)$ is
     \label{eq:son_tangent_space}
     T_XSO(n):=\left\lbrace XS: S^T=-S \right\rbrace = X[\operatorname{Skew}(n)].
 \end{equation}
+Here, the notation $X[\operatorname{Skew}(n)]$ means the set of all matrices that can be written
+as a product of $X$ and a skew-symmetric matrix.
+
 We equip $T_XSO(n)$ with the standard inner product $\braket{R,S}_X=\operatorname{tr} R^TS$ of its embedding space such that
 $(SO(n),\braket{\cdot,\cdot})$ becomes a Riemannian manifold.
 
@@ -492,7 +500,7 @@ Note that the exponential map on the right hand side denotes the matrix exponent
 
 \subsubsection{First derivatives of the distance function} % (fold)
 \label{ssub:FirstDerSO}
-For the computation of the derivatives of the squared distance function, there exists a general analytical result by Karcher\cite{Karcher} that simplifies further
+For the computation of the derivatives of the squared distance function, there exists a general analytic result by Karcher\cite{Karcher} that simplifies further
 computations considerably:
 \begin{theorem}[Karcher]
 \label{thm:karcher_theorem}
@@ -504,7 +512,7 @@ is differentiable at $x$ and we have
 where $\braket{\cdot,\cdot}$ is the Riemannian metric at $x\in M$.
 \end{theorem}
 
-Since with (\ref{eq:son_log}), we have a closed form expression for for $\log_x(y)$ the first derivative can be expressed as
+Since with (\ref{eq:son_log}), we have a closed form expression for $\log_x(y)$ the first derivative can be expressed as
 \begin{equation}
     \frac{\partial d^2(X,Y)}{\partial X} = -2X\log(X^TY).
 \end{equation}
@@ -513,8 +521,8 @@ Since with (\ref{eq:son_log}), we have a closed form expression for for $\log_x(
 \subsubsection{Second derivatives of the distance function} % (fold)
 \label{ssub:SecondDerSO}
 For the computation of the second derivatives we can take the expression obtained using the above theorem as a starting point and follow the approach and notation of Magnus \cite{Magnus}. 
-This allows us to express the derivatives as combinations of simple Kronecker product of the arguments, which also is very straightforward and compact to implement. 
-The detailed derivations can be found in the appendix \ref{appendix} while here we only represent the final results. \\
+This allows us to express the derivatives as combinations of simple Kronecker products of the arguments, which is also very straightforward and compact to implement. 
+The detailed derivations can be found in the appendix \ref{appendix} while here we only present the final results. \\
 For the second derivative with respect to the first argument one readily arrives at
 \begin{equation}
     \label{eq:son_xx_der}
@@ -527,14 +535,14 @@ The mixed derivative is given by
     \label{eq:son_xy_der}
     \frac{\partial^2 d^2(X,Y)}{\partial X\partial Y} = -2\left(\mathbbm{1}_n\otimes X \right)\operatorname{D}\log(X^TY) \left(\mathbbm{1}_n\otimes X^T \right).
 \end{equation}
-These expressions are quasi-analytical: Matrix logarithms, exponentials and the Frechet derivative of the logarithms need to be evaluated numerically. Details concerning the 
-implementation of the latter are postponed to section \ref{sec:frechetderivatives}.
+These expressions are quasi-analytic: Matrix logarithms and the Fr\'{e}chet derivative of the matrix logarithm need to be evaluated numerically. Details concerning the 
+implementation of the latter are postponed to Section \ref{sec:frechetderivatives}.
 % subsubsection Second derivatives of the distance function (end)
 
 \subsubsection{Tangent space restriction map} % (fold)
 \label{ssub:TangentSO}
-The dimension the tangent space $T_XSO(n)$ at $X\in SO(n)$ is $d=\frac{n(n-1)}{2}$. We define a basis for the space of skew-symmetric matrices $\operatorname{Skew}(n)$ in the following
-way. Let $K = \lbrace (i,j)\in\mathbb{N}^2: 1\leq i < d,\; i < j \leq d  \rbrace$ and note that $|K|=d$. For all $k\in K$ define the basis vector $B^{(k)}$ by 
+The dimension of the tangent space $T_XSO(n)$ at $X\in SO(n)$ is $d=\frac{n(n-1)}{2}$. We define a basis for the space of skew-symmetric matrices $\operatorname{Skew}(n)$ in the following
+way. Let $K = \lbrace (i,j)\in\mathbb{N}^2: 1\leq i < d,\; i < j \leq d  \rbrace$ and note that $|K|=d$. For all $k=(k_1,k_2)=\in K$ define the basis vector $B^{(k)}$ by 
 \begin{equation}
     B^{(k)}_{ij}=\begin{cases}
 	\frac{1}{\sqrt{2}}, & i=k_1 \text{ and } j=k_2\\
@@ -542,7 +550,7 @@ way. Let $K = \lbrace (i,j)\in\mathbb{N}^2: 1\leq i < d,\; i < j \leq d  \rbrace
 	0, & \text{ else }
     \end{cases}.
 \end{equation}
-The basis of the tangent space is then $\mathcal{B}_{T_XSO(n)}=\lbrace T^{(k)} = XB^{(k)} \rbrace_{k\in K}$ and to obtain the basis 
+The basis of the tangent space is then $\mathcal{B}_{T_XSO(n)}=\lbrace T^{(k)} = XB^{(k)} \rbrace_{k\in K}$ and to obtain the basis transformation map
 we vectorize each basis matrix and define a matrix $T_X\in\mathbb{R}^{n^2\times d}$ whose columns are given by the vectorized basis matrices.
 
 \begin{align}
@@ -565,7 +573,7 @@ For $X\in SPD(n)$ the tangent space at $X$ is isomorphic to the set of symmetric
 \begin{equation}
     T_XSPD(n):=X[\operatorname{Sym}(n)].
 \end{equation}
-The Riemannian metric we define on $T_XSPD(n)$ is given by
+The Riemannian metric defined on $T_XSPD(n)$ is given by
 \begin{equation}
     \label{eq:spdmetric}
     \braket{R,S}_X := \operatorname{tr}(X^{-1}RX^{-1}S).
@@ -596,8 +604,7 @@ where $\norm{\cdot}_F$ denotes the Frobenius norm on $\mathbb{R}^{n\times n}$.
 
 \subsubsection{First derivatives of the squared distance function} % (fold)
 \label{ssub:First derivatives of the squared distance function}
-For the first derivatives we can apply theorem \ref{thm:karcher_theorem} again but some care must be taken this time in the computation since the Riemannian metric
-on $SPD(n)$ depends also on the base point $X$ of a tangent space $T_XSPD(n)$.
+For the first derivatives we can apply theorem \ref{thm:karcher_theorem} again but some care must be taken in the computation this time since the Riemannian metric on $SPD(n)$ depends also on the base point $X$ of its tangent space $T_XSPD(n)$.
 \begin{align}
     \frac{\partial d^2(X,Y)}{\partial X} &= -2\braket{\log_X(Y),\cdot}_{X}\\
     &= -2 \braket{X^{\frac{1}{2}}\log\left(X^{-\frac{1}{2}}YX^{-\frac{1}{2}}\right)X^{\frac{1}{2}},\cdot}_{X} \\
@@ -620,16 +627,17 @@ For the SPD matrices we proceed in the same way as for the orthogonal group and 
     \Bigg] \times\cdots \nonumber \\
     & \cdots\times\left(X^{-\frac{1}{2}}\otimes X^{-\frac{1}{2}}\right)\operatorname{D}(X^{\frac{1}{2}})\nonumber
 \end{align}
-and for the mixed derivatives
+for the non-mixed derivatives and
 \begin{equation}
     \label{eq:spd_xy_der}
     \frac{\partial^2 d^2(X,Y)}{\partial X\partial Y} = -2\left(X^{-\frac{1}{2}}\otimes X^{-\frac{1}{2}}\right)\operatorname{D}\log\left(X^{-\frac{1}{2}}Y X^{-\frac{1}{2}}\right)\left(X^{-\frac{1}{2}}\otimes X^{-\frac{1}{2}}\right)
 \end{equation}
+for the mixed ones.
 
 % subsubsection Second derivatives of the distance function (end)
 \subsubsection{Tangent space restriction map} % (fold)
 \label{ssub:TangentSPD}
-For $SPD(n)$ we have that $d:=\operatorname{dim}=\frac{n(n+1)}{2}$. In analogy the previous manifold, we define a manifold for the space of symmetric matrices 
+For $SPD(n)$ we have that $d:=\operatorname{dim}=\frac{n(n+1)}{2}$. In analogy to the previous manifold, we define a basis for the space of symmetric matrices 
 $\operatorname{Sym(n)}$. In this case we have $K= K_1\cup K_2=\lbrace (i,i)\in\mathbb{N}^2: 1\leq i\leq\rbrace \cup \lbrace (i,j)\in\mathbb{N}^2: 1\leq i < d,\; i < j \leq d  \rbrace$
 such that again $|K|=d$. For all $k\in K$ define the basis vector $B^{(k)}$ by 
 \begin{equation}
@@ -639,15 +647,15 @@ such that again $|K|=d$. For all $k\in K$ define the basis vector $B^{(k)}$ by
 	0, & \text{ else }
     \end{cases}.
 \end{equation}
-For $k\in K_1$, these are single entry diagonal matrices.
+For $k\in K_1$, these are single-entry diagonal matrices.
 The basis of the tangent space is then $\mathcal{B}_{T_XSPD(n)}=\lbrace T^{(k)} = X^{\frac{1}{2}}B^{(k)}X^{\frac{1}{2}} \rbrace_{k\in K}$ and we proceed completely analogous to the $SO(n)$ case.
 % subsubsection Tangent space restriction map (end)
 % subsection SPD(N) (end)
 
-\subsection{Grassmanian Gr(n,p)} % (fold)
+\subsection{Grassmannian Gr(n,p)} % (fold)
 \label{sub:Grassmanian}
 The Grassmann manifold is special among the manifolds so far considered due to the fact that it is a quotient manifold. 
-As such, there are different possbilities for choosing equivalence classes and representatives thereof.\\
+As such, there are different possibilities for choosing equivalence classes and representatives thereof.\\
 
 For positive integers $n$ and $p\leq n$ the Grassmann manifold is defined as the set of $p$-dimensional linear subspaces of $\mathbb{R}^n$. 
 Since a linear subspace $\mathcal{Y}\in Gr(n,p)$ can be specified using a basis, we can arrange its basis vectors as columns of
@@ -666,24 +674,31 @@ Observing now that post-multiplication by any invertible $G\in Gl(p)$ does not c
 consisting of all matrices having the same span as $Y$. These equivalence classes can be thought of as the distinct elements of the Grassmannian which
 leads to the following quotient manifold representation.\\
 \begin{equation}
-    Gr(n,p):=\tilde St(n,p) / Gl(p)
+    \tilde Gr(n,p):=\tilde St(n,p) / Gl(p)
 \end{equation}
 
-This representation used by Absil et al\cite{AbsilGrassmann} which is very general because only the rank is specified.\\
+This representation, used by Absil et al\cite{AbsilGrassmann}, is very general because only the rank is specified.\\
 
 In the next steps of presenting the relevant quantities for the
 algorithm we will follow Absil's derivation and notation but choose the quotient representation used by Edelman et al \cite{EAS} which is based on the orthogonal group. This will simplify most expressions and is also desirable from an algorithmic point of view as it removes more degrees of freedom in the choice of possibly unique representatives.\\
 
 For the sake of completeness we also mention a completely different approach by Sato and Iwai \cite{Sato2014} who choose $\mathbb{R}^{n\times n}$ as embedding space
-where elements of $Gr(n,p)$ are given by rank $p$ orthogonal projection matrices. The presented application are, however, mostly eigenvalue problems while in the case
+where elements of $Gr(n,p)$ are given by rank $p$ orthogonal projection matrices. The presented applications are, however, mostly eigenvalue problems while in the case
 of image denoising the increased memory requirements are disadvantageous.\\
 
-The orthogonal group quotient representation of the Grassmann manifold is given by
+We denote by 
 \begin{equation}
-    Gr(n,p) = St(n,p) / O(p) %= O(n) / (O(p) \times O(n-p)),
+St(n,p)=\left\lbrace Y\in\mathbb{R}^{n\times p}:\; Y^TY=\mathbbm{1}_p,\right\rbrace
 \end{equation}
-where we denote by $St(n,p)=\left\lbrace Y\in\mathbb{R}^{n\times p}:\; Y^TY=\mathbbm{1}_p,\right\rbrace$ the \emph{compact} Stiefel manifold with the additional
-requirement that the basis spanning the subspace $\mathcal{Y}$ must be orthonormal now. The canonical quotient projection map is then given by
+the \emph{compact} Stiefel manifold.\\
+
+The orthogonal group quotient representation of the Grassmann manifold, which is of course isomorphic to the previous representation, is given by
+\begin{equation}
+    Gr(n,p) = St(n,p) / O(p) %= O(n) / (O(p) \times O(n-p)).
+\end{equation}
+The additional requirement is now that the basis spanning the subspace $\mathcal{Y}$ must be orthonormal. \\
+
+Finally, we have the following canonical projection map to the quotient
 \begin{equation}
     \pi : St(n,p)\ni Y \mapsto \operatorname{span} Y=\mathcal{Y} \in Gr(n, p).
 \end{equation}
@@ -691,7 +706,7 @@ requirement that the basis spanning the subspace $\mathcal{Y}$ must be orthonorm
 
 \subsubsection{Locally unique representatives} % (fold)
 \label{ssub:Locally unique Representative}
-Let $U\in St(n,p)$ span $\mathcal{U}\in Gr(n,p)$ and define the local affine cross section through $U$ and orthogonal to the fiber $U[O(p)]=\pi^{-1}(\mathcal{U})\subset St(n,p)$ by
+Let $U\in St(n,p)$ and $\mathcal{U}:=\operatorname{span}(U) \in Gr(n,p)$ and define the local affine cross section through $U$ and orthogonal to the fiber $U[O(p)]=\pi^{-1}(\mathcal{U})\subset St(n,p)$ by
 \begin{equation}
     S_U := \left\lbrace V\in St(n,p): U^T(V-U)=0 \right\rbrace\subset St(n,p).
 \end{equation}
@@ -744,7 +759,7 @@ Let $Y\in St(n,p)\subset\mathbb{R}^{n\times p}$. Then the tangent space at $Y$ (
    T_YSt(n,p)	&= \left\lbrace Z\in\mathbb{R}^{n\times p}: Y^TZ+Z^TY=0 \right\rbrace\\
    &=  \left\lbrace Y\Omega + Y_{\bot}K: \Omega\in\operatorname{Skew}(p),\, K\in\mathbb{R}^{(n-p)\times p} \right\rbrace\nonumber
 \end{align}
-where $Y_{\bot}\in\mathbb{R}^{n\times (n-p)}$ is defined such that $[Y,Y_{\bot}]\in O(n)$. The second representation of (\ref{eq:stiefel_tangentspace})
+where $Y_{\bot}\in\mathbb{R}^{n\times (n-p)}$ is such that $[Y,Y_{\bot}]\in O(n)$. The second representation of (\ref{eq:stiefel_tangentspace})
 already implies the decomposition into vertical and horizontal spaces we are going to perform next.
 
 The vertical space at $Y$ is by definition the tangent space to the fiber $\pi^{-1}(\pi(Y))$
@@ -777,13 +792,7 @@ tangent spaces. Using the cross section mapping (\ref{eq:crosssectionmap}), $\xi
 \end{equation}
 $\xi_{\Diamond Y}$ is called the \emph{horizontal lift} of $\xi\in T_{\mathcal{Y}}Gr(n,p)$ at $Y\in St(n,p)$.\\
 
-\textit{[Hier bin ich mir nicht ganz sicher. Hab leider ichts gefunden zum thema lokaler
-Basis Grassmann tangent space, daher einfach die Ueberlegung mit den $\left\lbrace E_{ij}\right\rbrace_{i=1,j=1}^{n,p}$. Auch nicht wie die tangent space basis dann mit dem horizontalen 
-Lift zusammenarbeiten sollten. Vielleicht müsste man auch noch $d\sigma_Y(\mathcal{Y})B_{ij}$
-berechnen.] 
-}\\
-
-Finally, to obtain a basis for the tangent space we can choose $\left\lbrace E_{ij}\right\rbrace_{i=1,j=1}^{n,p}$, with the (i,j)th entry set to one and the rest zero,
+Finally, to obtain a basis for the tangent space we can choose $\left\lbrace E_{ij}\right\rbrace_{i=1,j=1}^{n-p,p}$, with the (i,j)th entry set to one and the rest zero,
 as a basis of $\mathbb{R}^{(n-p)\times p}$ and compute $Y_{\bot}$ using a QR decomposition of $Y$. The orthogonal complement $Y_{\bot}$ is then just given by 
 $Q_2\in\mathbb{R}^{n\times (n-p)}$ which is part of the decomposition of the orthogonal matrix $Q=[Q_1,Q_2]\in\mathbb{R}^{n\times n}$.\\
 For the basis of the tangent space we get 
@@ -810,7 +819,7 @@ Let $X, Y$ span $\mathcal{X}, \mathcal{Y}$, respectively and let $U\Sigma V^{T}$
 
 \subsubsection{Distance function} % (fold)
 \label{ssub:Distance function}
-Using the previously defined exponential map, one can easily define a geodesic distance function on the Grassmann manifold which is induced by its Riemannian metric
+Using the exponential map, one can easily define a geodesic distance function on the Grassmann manifold which is induced by its Riemannian metric
 \begin{equation}
     g(X,Y) = \tr X^TY
 \end{equation}
@@ -828,7 +837,7 @@ where the the principal angles can be obtained by computing the singular value d
 \end{align}
 
 The distance function (\ref{eq:gr_geod_dist}) has the disadvantage that due to the occurrence of the arccosine,
-analytical expression are much harder to obtain.\\
+analytic expression are much harder to obtain.\\
 
 To avoid this problem, we follow Absil's \cite{AbsilGrassmann} approach and choose an equivalent norm, the so-called projection Frobenius norm, given by
 
@@ -929,7 +938,7 @@ matrices having 1 at $(i,j)$ and zero everywhere else, as a basis for $\mathbb{R
 basis matrix elements. By that, the total complexity can be reduced to $n^2\mathcal{O}(n^3)=\mathcal{O}(n^5)$ and we avoid the 
 potentially problematic explicit computation of inverses altogether.\\
 
-We then obtain the final Kronecker form of the derivative by constructing its rows from the vectorized, tranposed Fr\'{e}chet derivatives:
+We then obtain the final Kronecker form of the derivative by constructing its rows from the vectorized, transposed Fr\'{e}chet derivatives:
 \begin{equation}
     \left(K_{X^{\frac{1}{2}}}\right)_{in + j,\cdot} = \operatorname{vec}\left(L_{X^{\frac{1}{2}}}(X,E^{ij})^T\right) 
 \end{equation}

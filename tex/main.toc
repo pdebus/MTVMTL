@@ -4,7 +4,7 @@
 \contentsline {subsection}{\numberline {1.1.2}Discretization}{6}{subsection.1.1.2}
 \contentsline {section}{\numberline {1.2}Color Images}{7}{section.1.2}
 \contentsline {section}{\numberline {1.3}Manifold-valued Images}{7}{section.1.3}
-\contentsline {section}{\numberline {1.4}Objective and Outline of this work}{7}{section.1.4}
+\contentsline {section}{\numberline {1.4}Objective and Outline of this thesis}{7}{section.1.4}
 \contentsline {chapter}{\numberline {2}Theory}{8}{chapter.2}
 \contentsline {section}{\numberline {2.1}Generalization of the functional}{8}{section.2.1}
 \contentsline {subsection}{\numberline {2.1.1}The Riemannian distance}{8}{subsection.2.1.1}
@@ -19,7 +19,7 @@
 \contentsline {subsection}{\numberline {2.3.4}Newton equation for the TV functional}{12}{subsection.2.3.4}
 \contentsline {subsection}{\numberline {2.3.5}Tangent space restriction}{13}{subsection.2.3.5}
 \contentsline {section}{\numberline {2.4}Manifolds}{13}{section.2.4}
-\contentsline {subsection}{\numberline {2.4.1}Euclidian}{13}{subsection.2.4.1}
+\contentsline {subsection}{\numberline {2.4.1}Euclidean}{13}{subsection.2.4.1}
 \contentsline {subsubsection}{Exponential map}{13}{section*.5}
 \contentsline {subsubsection}{Logarithm map}{13}{section*.6}
 \contentsline {subsubsection}{Squared distance function}{14}{section*.7}
@@ -40,15 +40,15 @@
 \contentsline {subsubsection}{Second derivatives of the distance function}{16}{section*.20}
 \contentsline {subsubsection}{Tangent space restriction map}{16}{section*.21}
 \contentsline {subsection}{\numberline {2.4.4}Symmetric Positive Definite Matrices SPD(n)}{16}{subsection.2.4.4}
-\contentsline {subsubsection}{Exponential map}{16}{section*.22}
+\contentsline {subsubsection}{Exponential map}{17}{section*.22}
 \contentsline {subsubsection}{Logarithm map}{17}{section*.23}
 \contentsline {subsubsection}{Squared distance function}{17}{section*.24}
 \contentsline {subsubsection}{First derivatives of the squared distance function}{17}{section*.25}
 \contentsline {subsubsection}{Second derivatives of the distance function}{17}{section*.26}
 \contentsline {subsubsection}{Tangent space restriction map}{17}{section*.27}
-\contentsline {subsection}{\numberline {2.4.5}Grassmanian Gr(n,p)}{18}{subsection.2.4.5}
+\contentsline {subsection}{\numberline {2.4.5}Grassmannian Gr(n,p)}{18}{subsection.2.4.5}
 \contentsline {subsubsection}{Quotient representations}{18}{section*.28}
-\contentsline {subsubsection}{Locally unique representatives}{18}{section*.29}
+\contentsline {subsubsection}{Locally unique representatives}{19}{section*.29}
 \contentsline {subsubsection}{Tangent space}{19}{section*.30}
 \contentsline {subsubsection}{Exponential map}{20}{section*.31}
 \contentsline {subsubsection}{Logarithm map}{20}{section*.32}
@@ -58,7 +58,7 @@
 \contentsline {section}{\numberline {2.5}Fr\'{e}chet derivatives of matrix logarithm and square root}{21}{section.2.5}
 \contentsline {subsection}{\numberline {2.5.1}Derivative of the matrix square root}{21}{subsection.2.5.1}
 \contentsline {subsection}{\numberline {2.5.2}Derivative of the matrix logarithm}{22}{subsection.2.5.2}
-\contentsline {chapter}{\numberline {3}The TVMT Library}{23}{chapter.3}
+\contentsline {chapter}{\numberline {3}The MTVMT Library}{23}{chapter.3}
 \contentsline {section}{\numberline {3.1}Capabilities}{23}{section.3.1}
 \contentsline {subsection}{\numberline {3.1.1}Supported Manifolds}{23}{subsection.3.1.1}
 \contentsline {subsection}{\numberline {3.1.2}Data}{23}{subsection.3.1.2}
@@ -74,7 +74,7 @@
 \contentsline {subsubsection}{Lambda functions}{27}{section*.40}
 \contentsline {subsubsection}{Variadic templates}{27}{section*.41}
 \contentsline {section}{\numberline {3.3}Components}{28}{section.3.3}
-\contentsline {subsection}{\numberline {3.3.1}Manifold classes}{28}{subsection.3.3.1}
+\contentsline {subsection}{\numberline {3.3.1}Manifold class}{28}{subsection.3.3.1}
 \contentsline {subsubsection}{Static constants}{29}{section*.43}
 \contentsline {subsubsection}{Type definitions}{29}{section*.44}
 \contentsline {subsubsection}{Static methods}{29}{section*.45}
@@ -90,7 +90,7 @@
 \contentsline {subsubsection}{Matrix functions}{35}{section*.54}
 \contentsline {subsubsection}{Function pointers utilities}{35}{section*.55}
 \contentsline {subsubsection}{3D pixel-wise kernels}{35}{section*.56}
-\contentsline {section}{\numberline {3.4}Using TVTML}{35}{section.3.4}
+\contentsline {section}{\numberline {3.4}Using MTVMTL}{35}{section.3.4}
 \contentsline {subsection}{\numberline {3.4.1}Prerequisites}{35}{subsection.3.4.1}
 \contentsline {subsection}{\numberline {3.4.2}Installation}{36}{subsection.3.4.2}
 \contentsline {subsection}{\numberline {3.4.3}Compilation of own projects using CMake}{36}{subsection.3.4.3}
@@ -113,10 +113,10 @@
 \contentsline {subsection}{\numberline {4.3.1}Synthetic data}{48}{subsection.4.3.1}
 \contentsline {subsection}{\numberline {4.3.2}Diffusion Tensor Magnetic Resonance Imaging}{49}{subsection.4.3.2}
 \contentsline {subsection}{\numberline {4.3.3}3D DT MRI data}{50}{subsection.4.3.3}
-\contentsline {section}{\numberline {4.4}Performance profiling of the library}{51}{section.4.4}
+\contentsline {section}{\numberline {4.4}Performance profiling of the library}{50}{section.4.4}
 \contentsline {section}{\numberline {4.5}Comparison IRLS and Proximal Point minimizers}{52}{section.4.5}
 \contentsline {section}{\numberline {4.6}Sensitivity to variations of the original data}{55}{section.4.6}
-\contentsline {chapter}{\numberline {5}Outlook}{57}{chapter.5}
-\contentsline {section}{\numberline {5.1}Extensions}{57}{section.5.1}
-\contentsline {subsection}{\numberline {5.1.1}Functionals}{57}{subsection.5.1.1}
-\contentsline {section}{\numberline {5.2}Recursive computation on subdomains}{58}{section.5.2}
+\contentsline {chapter}{\numberline {5}Conclusion and Outlook}{56}{chapter.5}
+\contentsline {section}{\numberline {5.1}Extensions}{56}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}Functionals}{56}{subsection.5.1.1}
+\contentsline {section}{\numberline {5.2}Recursive computation on subdomains}{57}{section.5.2}

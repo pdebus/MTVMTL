@@ -20,12 +20,12 @@
 \contentsline {figure}{\numberline {4.8}{\ignorespaces Inpainting of synthetic SO(3) picture}}{46}{figure.caption.67}
 \contentsline {figure}{\numberline {4.9}{\ignorespaces Fingerprint orientation denoising}}{47}{figure.caption.68}
 \contentsline {figure}{\numberline {4.10}{\ignorespaces Dense optical flow reconstruction}}{48}{figure.caption.69}
-\contentsline {figure}{\numberline {4.11}{\ignorespaces Denoising of synthetic SPD(3) picture}}{49}{figure.caption.70}
-\contentsline {figure}{\numberline {4.12}{\ignorespaces Denoising DT-MRI data}}{50}{figure.caption.71}
+\contentsline {figure}{\numberline {4.11}{\ignorespaces Denoising of synthetic SPD(3) picture}}{48}{figure.caption.70}
+\contentsline {figure}{\numberline {4.12}{\ignorespaces Denoising DT-MRI data}}{49}{figure.caption.71}
 \contentsline {figure}{\numberline {4.13}{\ignorespaces Denoising 3D DTI-MRI data}}{50}{figure.caption.72}
-\contentsline {figure}{\numberline {4.14}{\ignorespaces Test images}}{53}{figure.caption.76}
-\contentsline {figure}{\numberline {4.15}{\ignorespaces Comparison IRLS \& PRPT for Euclidian $\mathbb {R}^3$ and $S^2$}}{53}{figure.caption.77}
-\contentsline {figure}{\numberline {4.16}{\ignorespaces Comparison IRLS \& PRPT for Euclidian $SO(3)$}}{54}{figure.caption.78}
-\contentsline {figure}{\numberline {4.17}{\ignorespaces Comparison IRLS \& PRPT for Euclidian $SPD(3)$}}{55}{figure.caption.79}
-\contentsline {figure}{\numberline {4.18}{\ignorespaces Sensitivity to variation}}{56}{figure.caption.80}
+\contentsline {figure}{\numberline {4.14}{\ignorespaces Test images}}{52}{figure.caption.76}
+\contentsline {figure}{\numberline {4.15}{\ignorespaces Comparison IRLS \& PRPT for Euclidean $\mathbb {R}^3$ and $S^2$}}{53}{figure.caption.77}
+\contentsline {figure}{\numberline {4.16}{\ignorespaces Comparison IRLS \& PRPT for Euclidean $SO(3)$}}{54}{figure.caption.78}
+\contentsline {figure}{\numberline {4.17}{\ignorespaces Comparison IRLS \& PRPT for Euclidean $SPD(3)$}}{54}{figure.caption.79}
+\contentsline {figure}{\numberline {4.18}{\ignorespaces Sensitivity to variation}}{55}{figure.caption.80}
 \addvspace {10\p@ }

@@ -13,8 +13,8 @@ The method of total variation(TV) noise removal, which has the above described c
 for the case of real-valued, that means grayscale images. Their method is briefly summarized in the following section.
 
 \section{Grayscale images}
-Let $u_0: \Omega\subset \mathbb{R}\to \mathbb{R}$ describe the original, noise-free image, where the image domain $\Omega$ is usually a rectangular or cuboid subset of $\mathbb{R}^2$ or $\mathbb{R}^3$, respectively. 
-Assuming the original pictures is corrupted by gaussian noise $n: \Omega\to\mathbb{R}$ with zero mean and variance $\sigma^2$ the noisy picture is given by $u: \Omega\to \mathbb{R}$, where
+Let $u_0:  \mathbb{R}\supset\Omega\to \mathbb{R}$ describe the original, noise-free image, where the image domain $\Omega$ is usually a rectangular or cuboid subset of $\mathbb{R}^2$ or $\mathbb{R}^3$, respectively. 
+Assuming the original picture is corrupted by Gaussian noise $n: \Omega\to\mathbb{R}$ with zero mean and variance $\sigma^2$ the noisy picture is given by $u: \Omega\to \mathbb{R}$, where
 $u = u_0 + n$. The edge preserving denoising of the picture is then equivalent to the solution $u^* :\Omega\to \mathbb{R}$ of the following constrained optimization problem:
 \begin{align}
     \label{osher_opt}
@@ -32,8 +32,8 @@ the functional
 
 \subsection{Edge preservation} % (fold)
 \label{sub:Edge preservation}
-A basic intuition why the $L^1$ norm in (\cite{RudinOsher}) is better suited for conserving sharp discontinuities such as edges can be seen from the following plot \cite{SceneFlow}.\\
-
+A basic intuition why the $L^1$ norm in (\ref{osher_func}) is better suited for conserving sharp discontinuities such as edges can be seen from the following plot, taken from \cite{SceneFlow}. The gradients in the integral expressions are to be understood in terms of their finite differences approximations with $\nabla f=f(x_{i+1})-f(x_i)/h$ with some $h=1/M<1/N$, $x_i=0$ and $x_{i+1}=x_i+h$.\\
+ 
 \begin{figure}[h!]
         \centering
 	    \includegraphics[width=0.9\linewidth]{./figures/introduction/tv12comparison.pdf}
@@ -105,8 +105,8 @@ The next step in the development of image denoising algorithms was their general
 from $\Omega\to C\simeq \mathbb{R}^3$ where the form and additional properties of $C$ depend on the chosen color model. \\
 In the most simple case of linear models, like RGB for instance, one could choose $C$ as $[0,1]^3$ and consider denoising each component individually (channel-by-channel model)
 or consider $\mathbb{R}^3$ as a normed vector space of tuples $(x_R, x_G, x_B)$ (linear-vectorial model).\\
-For the nonlinear models, especially the so-called chromaticity-brightness model, Chang and Kang \cite{Kang} showed the closest resemblance to human perception.
-In this case we can take $C=S^2\times [0,1]$ such that the chromaticitiy takes values on the sphere $S^2$ considered as a submanifold of the Euclidian space $\mathbb{R}^3$, 
+For the nonlinear models, especially the so-called chromaticity-brightness model, investigated by Chang and March \cite{Kang}, shows the closest resemblance to human perception.
+In this case we can take $C=S^2\times [0,1]$ such that the chromaticitiy takes values on the sphere $S^2$ considered as a submanifold of the Euclidean space $\mathbb{R}^3$, 
 while the brightness is real-valued, as in the case of grayscale images.
 
 \section{Manifold-valued Images} % (fold)
@@ -114,16 +114,16 @@ while the brightness is real-valued, as in the case of grayscale images.
 In the last section we have already seen that, depending on the chosen color model, pixels can take their values on a manifold and are usually represented by matrices.
 This data arises in a variety of applications such as Diffusion Tensor Magnetic Resonance Imaging (DTI-MRI), computer vision and robotics to name just a few.
 
-\section{Objective and Outline of this work}
-In this work we will introduce an extendable multi-threaded C++ template library for the purpose of TV minimization of manifold-valued images. 
+\section{Objective and Outline of this thesis}
+In this thesis we will introduce an extendable multi-threaded C++ template library for the purpose of TV minimization of manifold-valued images. 
 So far the implemented minimization algorithms are based on the iteratively reweighted least squares (IRLS) adaption suggested by Sprecher and Grohs \cite{Grohssprecher} as well as a 
-proximal point algorithm by Weinmann et al \cite{Weinmann}. We extend the implementation to 3D images cubes, the Grassmann manifold and also provides some quasi-analytic expressions
+proximal point algorithm by Weinmann et al \cite{Weinmann}. We extend the implementation to 3D images cubes, the Grassmann manifold and also provide some quasi-analytic expressions
 for derivatives of the Riemannian distance function.\\
 
-In the following chapter 2 a short summary of the necessary theory, a description of the algorithms and relevant properties for each of the implemented manifolds is provided.
-After that the chapter 3 introduces the library itself and in particular its capabilities, design concepts, structure, installation and usage in the form of some typical
+In the following Chapter 2 a short summary of the necessary theory, a description of the algorithms and relevant properties for each of the implemented manifolds is provided.
+After that, Chapter 3 introduces the library itself and in particular its capabilities, design concepts, structure, installation and usage in the form of some typical
 use cases. In Chapter 4 numerical experiments are conducted, showing various application of the library as well as convergence behavior and comparisons between 
-IRLS and proximal point based minimizers.\\
+IRLS and proximal point based algorithms.\\
 
 Finally, chapter 5 concludes with possible extensions and adaptions of the library, in particular possibility of recursive splitting of the image domain into smaller subproblems and
 the transition to distributed architectures.
