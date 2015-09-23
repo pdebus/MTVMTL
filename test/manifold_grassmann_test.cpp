@@ -5,6 +5,7 @@
 #include <unsupported/Eigen/MatrixFunctions>
 
 #define TVMTL_MANIFOLD_DEBUG
+#define TVMTL_MANIFOLD_DEBUG_GRASSMANN
 #include "../core/manifold.hpp"
 
 using namespace tvmtl;
@@ -84,9 +85,13 @@ void test(T& vec1, T& vec2){
 	mf_t::log(vec1, z, v);
 	std::cout << "\n\nLogarithm map test:" << std::endl;
 	std::cout << "U = Log(s1, s2) = \n" << u << std::endl;
-	std::cout << "V = Log(s1, z) = \n" << v << std::endl;
+	std::cout << "dist(s1, s2) = \n" << mf_t::dist_squared(vec1,vec2) << std::endl;
+	std::cout << "tr U^TU = \n" << (u.transpose()*u).trace() << std::endl;
+    
+
 	std::cout << "Z = Exp(s1, U) = \n"  << z << "\n and s2  =\n" << vec2 << "\nshould have distance close to zero:\n";
-	std::cout << "dist(Z, vec2) = " << mf_t::dist_squared(z,v) << std::endl;
+	std::cout << "dist(Z, vec2) = " << mf_t::dist_squared(z,vec2) << std::endl;
+	std::cout << "\nV = Log(s1, Z) = \n" << v << std::endl;
 
 	auto vec1t = vec1.transpose();
 	Eigen::VectorXd vecvec1 = Eigen::Map<Eigen::VectorXd>(vec1.data(), vec1.size());

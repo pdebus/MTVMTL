@@ -62,6 +62,9 @@ struct Manifold< GRASSMANN, N, P> {
 
 	// Manifold distance functions (for IRLS)
 	inline static dist_type dist_squared(cref_type x, cref_type y);
+	inline static dist_type distPF_squared(cref_type x, cref_type y );
+	inline static dist_type distGeod_squared( cref_type x, cref_type y );
+
 	inline static void deriv1x_dist_squared(cref_type x, cref_type y, deriv1_ref_type result);
 	inline static void deriv1y_dist_squared(cref_type x, cref_type y, deriv1_ref_type result);
 
@@ -147,15 +150,37 @@ const typename Manifold < GRASSMANN, N, P>::perm_type Manifold<GRASSMANN, N, P>:
 // Squared GRASSMANN distance function
 template <int N, int P>
 inline typename Manifold <GRASSMANN, N, P>::dist_type Manifold <GRASSMANN, N, P>::dist_squared( cref_type x, cref_type y ){
+    return distPF_squared(x,y); 
+}
+
+template <int N, int P>
+inline typename Manifold <GRASSMANN, N, P>::dist_type Manifold <GRASSMANN, N, P>::distGeod_squared( cref_type x, cref_type y ){
     
     // Geodesic distance
-//    Eigen::JacobiSVD<Eigen::Matrix<scalar_type, Eigen::Dynamic, Eigen::Dynamic> > svd(x.transpose() * y, Eigen::ComputeThinU | Eigen::ComputeThinV);
-//    return svd.singularValues().array().acos().matrix().squaredNorm();
+     Eigen::JacobiSVD<Eigen::Matrix<scalar_type, Eigen::Dynamic, Eigen::Dynamic> > svd(x.transpose() * y, Eigen::ComputeThinU | Eigen::ComputeThinV);
+     Eigen::Matrix<scalar_type, P, 1> sv= svd.singularValues();
+     for(int i=0; i<P; ++i){
+	if(sv(i)>=1.0)
+	    sv(i)=0;
+	else if(sv(i)<=-1.0)
+	    sv(i)=M_PI;
+	else 
+	    sv(i)=std::acos(sv(i));
+    }
+    #ifdef TVMTL_MANIFOLD_DEBUG_GRASSMANN
+     std::cout << sv << std::endl;
+    #endif
+ 
+    return sv.squaredNorm();
 
+}
+
+template <int N, int P>
+inline typename Manifold <GRASSMANN, N, P>::dist_type Manifold <GRASSMANN, N, P>::distPF_squared( cref_type x, cref_type y ){
+    
     // Projection F-distance;
     return 0.5 * (x * x.transpose() - y * y.transpose()).squaredNorm();
 }
-
 
 // Derivative of Squared GRASSMANN distance w.r.t. first argument
 template <int N, int P>
@@ -228,16 +253,16 @@ inline void Manifold <GRASSMANN, N, P>::tangent_plane_base(cref_type x, tm_base_
     //Eigen::JacobiSVD<value_type> svd(Hproj);
     
     // Compute X_orth by SVD 
-    /*
+    
     Eigen::JacobiSVD<value_type> svd(x);
     Eigen::Matrix<scalar_type, N, N - P> xorth = svd.matrixU().rightCols(N-P);
-    */
+    
 
     //Compute X_orth by QR
-    Eigen::HouseholderQR<value_type> qr(x);
+    /*Eigen::HouseholderQR<value_type> qr(x);
     Eigen::Matrix<scalar_type, N, N> Q = qr.householderQ();
     Eigen::Matrix<scalar_type, N, N - P> xorth = Q.rightCols(N-P);
-
+    */
     int k = 0;
     for(int r = 0; r < N - P; r++)
 	for(int c = 0; c < P; c++ ){

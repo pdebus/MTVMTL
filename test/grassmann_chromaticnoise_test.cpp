@@ -49,25 +49,25 @@ int main(int argc, const char *argv[])
 	myBright.rgb_readBrightness(argv[1]);
 
 	cfunc_t cFunc(lam, myChroma);
-	cFunc.seteps2(1e-10);
+	cFunc.seteps2(1e-16);
 
 	bfunc_t bFunc(lam, myBright);
-	bFunc.seteps2(1e-10);
+	bFunc.seteps2(1e-16);
 
 	ctvmin_t cTVMin(cFunc, myChroma);
 	btvmin_t bTVMin(bFunc, myBright);
 	
-	std::cout << "\n\n--==Brightness PART==--" << std::endl;
-	std::cout << "Smooth picture to obtain initial state for Newton iteration..." << std::endl;
-	bTVMin.smoothening(10);
+	//std::cout << "\n\n--==Brightness PART==--" << std::endl;
+	//std::cout << "Smooth picture to obtain initial state for Newton iteration..." << std::endl;
+	//bTVMin.smoothening(10);
 	
-	std::cout << "Start TV minimization..." << std::endl;
-	bTVMin.minimize();
+	//std::cout << "Start TV minimization..." << std::endl;
+	//bTVMin.minimize();
 		
 	std::cout << "\n\n--==CHROMATICITY PART==--" << std::endl;
 
 	//std::cout << "Smooth picture to obtain initial state for Newton iteration..." << std::endl;
-	cTVMin.smoothening(10);
+	//cTVMin.smoothening(10);
 	
 	std::cout << "Start TV minimization..." << std::endl;
 	cTVMin.minimize();
@@ -77,7 +77,8 @@ int main(int argc, const char *argv[])
     	// Recombine Brightness and Chromaticity parts
 	vpp::image2d<vpp::vuchar3> img(myChroma.img_.domain());
 	vpp::pixel_wise(img, myChroma.img_, myBright.img_ ) | [] (auto& i, auto& c, auto& b) {
-	    vpp::vdouble3 v = c * b[0] * std::sqrt(3)  * (double) std::numeric_limits<unsigned char>::max();
+	    //vpp::vdouble3 v = c * b[0] * std::sqrt(3)  * (double) std::numeric_limits<unsigned char>::max();
+	    vpp::vdouble3 v = c * (double) std::numeric_limits<unsigned char>::max();
 	    vpp::vuchar3 vu = vpp::vuchar3::Zero();
 	    vu[0]=(unsigned char) v[2];
 	    vu[1]=(unsigned char) v[1];
@@ -88,7 +89,7 @@ int main(int argc, const char *argv[])
 	cv::imshow( "Input Picture", vpp::to_opencv(img));
 	cv::waitKey(0);
 
-	cv::imwrite("denoised(grassmann)_" + fname, to_opencv(img));
+	cv::imwrite("denoised(grassmann_irls)_" + fname, to_opencv(img));
 
 
 

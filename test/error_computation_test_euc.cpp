@@ -80,6 +80,7 @@ int main(int argc, const char *argv[])
 
 	typename func_t::result_type J = myFunc.evaluateJ();
 	double totalerror = vpp::sum( vpp::pixel_wise(myData.img_, solution.img_) | [](const auto& i, const auto& s) {return mf_t::dist_squared(i,s);} );
+	double eucerror  = vpp::sum( vpp::pixel_wise(myData.img_, solution.img_) | [](const auto& i, const auto& s) {return (i-s).cwiseAbs().sum();} );
 	
 	std::cout << irls_step_ << ", " << 0 << ", " << J << ", " << totalerror << ", " << 0 << std::endl;
 	f << irls_step_ << ", " << 0 << ", " << J << ", " << totalerror << ", " << 0 << std::endl;
@@ -102,6 +103,7 @@ int main(int argc, const char *argv[])
 
 	    J = myFunc.evaluateJ();
 	    totalerror = vpp::sum( vpp::pixel_wise(myData.img_, solution.img_) | [](const auto& i, const auto& s) {return mf_t::dist_squared(i,s);} );
+	    eucerror  = vpp::sum( vpp::pixel_wise(myData.img_, solution.img_) | [](const auto& i, const auto& s) {return (i-s).cwiseAbs().sum();} );
 
 	    end = std::chrono::system_clock::now();
 	    t = end - start; 
@@ -133,8 +135,9 @@ int main(int argc, const char *argv[])
 	
 	J = myFunc.evaluateJ();
 	totalerror = vpp::sum( vpp::pixel_wise(myData.img_, solution.img_) | [](const auto& i, const auto& s) {return mf_t::dist_squared(i,s);} );
-	std::cout << 0 << ", " << 0 << ", " << J << ", " << totalerror << ", " << 0 << std::endl;
-	f << 0 << ", " << 0 << ", " << J << ", " << totalerror << ", " << 0 << std::endl;
+	eucerror  = vpp::sum( vpp::pixel_wise(myData.img_, solution.img_) | [](const auto& i, const auto& s) {return (i-s).cwiseAbs().sum();} );
+	std::cout << 0 << ", " << 0 << ", " << J << ", " << totalerror << ", " << eucerror << "," << 0 << std::endl;
+	f << 0 << ", " << 0 << ", " << J << ", " << totalerror << ", " << eucerror << "," << 0 << std::endl;
 
 	t = std::chrono::duration<double>::zero();
 	start = std::chrono::system_clock::now();
@@ -148,12 +151,13 @@ int main(int argc, const char *argv[])
 
 	    J = myFunc.evaluateJ();
 	    totalerror = vpp::sum( vpp::pixel_wise(myData.img_, solution.img_) | [](const auto& i, const auto& s) {return mf_t::dist_squared(i,s);} );
-	    
+	    eucerror  = vpp::sum( vpp::pixel_wise(myData.img_, solution.img_) | [](const auto& i, const auto& s) {return (i-s).cwiseAbs().sum();} );
+
 	    end = std::chrono::system_clock::now();
 	    t = end - start; 
 	    double seconds = t.count();
-	    std::cout << prpt_step_ << ", " << 0 << ", " << J << ", " << totalerror << ", " << seconds << std::endl;
-	    f << prpt_step_ << ", " << 0 << ", " << J << ", " << totalerror << ", " << seconds << std::endl;
+	    std::cout << prpt_step_ << ", " << 0 << ", " << J << ", " << totalerror << "," << eucerror << ", " << seconds << std::endl;
+	    f << prpt_step_ << ", " << 0 << ", " << J << ", " << totalerror << ", " << eucerror << ", " <<seconds << std::endl;
 	    prpt_step_++;
 	}
 

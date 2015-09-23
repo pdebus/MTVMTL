@@ -58,65 +58,67 @@
 \contentsline {section}{\numberline {2.5}Fr\'{e}chet derivatives of matrix logarithm and square root}{21}{section.2.5}
 \contentsline {subsection}{\numberline {2.5.1}Derivative of the matrix square root}{21}{subsection.2.5.1}
 \contentsline {subsection}{\numberline {2.5.2}Derivative of the matrix logarithm}{22}{subsection.2.5.2}
-\contentsline {chapter}{\numberline {3}The MTVMT Library}{23}{chapter.3}
-\contentsline {section}{\numberline {3.1}Capabilities}{23}{section.3.1}
-\contentsline {subsection}{\numberline {3.1.1}Supported Manifolds}{23}{subsection.3.1.1}
-\contentsline {subsection}{\numberline {3.1.2}Data}{23}{subsection.3.1.2}
-\contentsline {subsection}{\numberline {3.1.3}Functionals}{23}{subsection.3.1.3}
-\contentsline {subsection}{\numberline {3.1.4}Minimizer}{23}{subsection.3.1.4}
-\contentsline {subsection}{\numberline {3.1.5}Visualizations}{24}{subsection.3.1.5}
-\contentsline {section}{\numberline {3.2}Design concepts}{24}{section.3.2}
-\contentsline {subsection}{\numberline {3.2.1}Goals}{24}{subsection.3.2.1}
-\contentsline {subsubsection}{Performance}{24}{section*.36}
-\contentsline {subsubsection}{Modularization and Extendability}{24}{section*.37}
-\contentsline {subsection}{\numberline {3.2.2}Levels of parallelization}{25}{subsection.3.2.2}
-\contentsline {subsection}{\numberline {3.2.3}C++ techniques}{27}{subsection.3.2.3}
-\contentsline {subsubsection}{Lambda functions}{27}{section*.40}
-\contentsline {subsubsection}{Variadic templates}{27}{section*.41}
-\contentsline {section}{\numberline {3.3}Components}{28}{section.3.3}
-\contentsline {subsection}{\numberline {3.3.1}Manifold class}{28}{subsection.3.3.1}
-\contentsline {subsubsection}{Static constants}{29}{section*.43}
-\contentsline {subsubsection}{Type definitions}{29}{section*.44}
-\contentsline {subsubsection}{Static methods}{29}{section*.45}
-\contentsline {subsection}{\numberline {3.3.2}Data class}{30}{subsection.3.3.2}
-\contentsline {subsection}{\numberline {3.3.3}Functional class}{31}{subsection.3.3.3}
-\contentsline {subsection}{\numberline {3.3.4}TV Minimizer class}{32}{subsection.3.3.4}
-\contentsline {subsection}{\numberline {3.3.5}Visualization class}{33}{subsection.3.3.5}
-\contentsline {subsubsection}{SO(3) Visualization}{33}{section*.46}
-\contentsline {subsubsection}{SPD(3) Visualization}{33}{section*.48}
-\contentsline {subsubsection}{3D Volume image rendering}{34}{section*.51}
-\contentsline {subsection}{\numberline {3.3.6}Utility functions}{35}{subsection.3.3.6}
-\contentsline {subsubsection}{Algorithm traits}{35}{section*.53}
-\contentsline {subsubsection}{Matrix functions}{35}{section*.54}
-\contentsline {subsubsection}{Function pointers utilities}{35}{section*.55}
-\contentsline {subsubsection}{3D pixel-wise kernels}{35}{section*.56}
-\contentsline {section}{\numberline {3.4}Using MTVMTL}{35}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}Prerequisites}{35}{subsection.3.4.1}
-\contentsline {subsection}{\numberline {3.4.2}Installation}{36}{subsection.3.4.2}
-\contentsline {subsection}{\numberline {3.4.3}Compilation of own projects using CMake}{36}{subsection.3.4.3}
-\contentsline {subsection}{\numberline {3.4.4}Tutorial and typical use cases}{37}{subsection.3.4.4}
-\contentsline {subsubsection}{Image denoising, vectorial color model}{37}{section*.57}
-\contentsline {subsubsection}{Colorization using color inpainting}{38}{section*.58}
-\contentsline {subsubsection}{3D DT-MRI data denoising and visualization}{40}{section*.59}
-\contentsline {chapter}{\numberline {4}Applications and Numerical Experiments}{42}{chapter.4}
-\contentsline {section}{\numberline {4.1}Image denoising}{42}{section.4.1}
-\contentsline {subsection}{\numberline {4.1.1}Grayscale}{42}{subsection.4.1.1}
-\contentsline {subsection}{\numberline {4.1.2}Color}{43}{subsection.4.1.2}
-\contentsline {subsection}{\numberline {4.1.3}Inpainting}{44}{subsection.4.1.3}
-\contentsline {subsection}{\numberline {4.1.4}Recolorization}{44}{subsection.4.1.4}
-\contentsline {subsection}{\numberline {4.1.5}Volume images}{45}{subsection.4.1.5}
-\contentsline {section}{\numberline {4.2}SO(2) and SO(3) images data}{45}{section.4.2}
-\contentsline {subsection}{\numberline {4.2.1}Synthetic data}{45}{subsection.4.2.1}
-\contentsline {subsection}{\numberline {4.2.2}Fingerprint orientation data}{46}{subsection.4.2.2}
-\contentsline {subsection}{\numberline {4.2.3}Reconstruction of a dense optical flow field}{47}{subsection.4.2.3}
-\contentsline {section}{\numberline {4.3}SPD(3) image data}{48}{section.4.3}
-\contentsline {subsection}{\numberline {4.3.1}Synthetic data}{48}{subsection.4.3.1}
-\contentsline {subsection}{\numberline {4.3.2}Diffusion Tensor Magnetic Resonance Imaging}{49}{subsection.4.3.2}
-\contentsline {subsection}{\numberline {4.3.3}3D DT MRI data}{50}{subsection.4.3.3}
-\contentsline {section}{\numberline {4.4}Performance profiling of the library}{50}{section.4.4}
-\contentsline {section}{\numberline {4.5}Comparison IRLS and Proximal Point minimizers}{52}{section.4.5}
-\contentsline {section}{\numberline {4.6}Sensitivity to variations of the original data}{55}{section.4.6}
-\contentsline {chapter}{\numberline {5}Conclusion and Outlook}{56}{chapter.5}
-\contentsline {section}{\numberline {5.1}Extensions}{56}{section.5.1}
-\contentsline {subsection}{\numberline {5.1.1}Functionals}{56}{subsection.5.1.1}
-\contentsline {section}{\numberline {5.2}Recursive computation on subdomains}{57}{section.5.2}
+\contentsline {chapter}{\numberline {3}The MTVMT Library}{24}{chapter.3}
+\contentsline {section}{\numberline {3.1}Capabilities}{24}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}Supported Manifolds}{24}{subsection.3.1.1}
+\contentsline {subsection}{\numberline {3.1.2}Data}{24}{subsection.3.1.2}
+\contentsline {subsection}{\numberline {3.1.3}Functionals}{24}{subsection.3.1.3}
+\contentsline {subsection}{\numberline {3.1.4}Minimizer}{24}{subsection.3.1.4}
+\contentsline {subsection}{\numberline {3.1.5}Visualizations}{25}{subsection.3.1.5}
+\contentsline {section}{\numberline {3.2}Design concepts}{25}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Goals}{25}{subsection.3.2.1}
+\contentsline {subsubsection}{Performance}{25}{section*.36}
+\contentsline {subsubsection}{Modularization and Extendability}{25}{section*.37}
+\contentsline {subsection}{\numberline {3.2.2}Levels of parallelization}{26}{subsection.3.2.2}
+\contentsline {subsection}{\numberline {3.2.3}C++ techniques}{28}{subsection.3.2.3}
+\contentsline {subsubsection}{Lambda functions}{28}{section*.40}
+\contentsline {subsubsection}{Variadic templates}{28}{section*.41}
+\contentsline {section}{\numberline {3.3}Components}{29}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Manifold class}{29}{subsection.3.3.1}
+\contentsline {subsubsection}{Static constants}{30}{section*.43}
+\contentsline {subsubsection}{Type definitions}{30}{section*.44}
+\contentsline {subsubsection}{Static methods}{30}{section*.45}
+\contentsline {subsection}{\numberline {3.3.2}Data class}{31}{subsection.3.3.2}
+\contentsline {subsection}{\numberline {3.3.3}Functional class}{32}{subsection.3.3.3}
+\contentsline {subsection}{\numberline {3.3.4}TV Minimizer class}{33}{subsection.3.3.4}
+\contentsline {subsection}{\numberline {3.3.5}Visualization class}{34}{subsection.3.3.5}
+\contentsline {subsubsection}{SO(3) Visualization}{34}{section*.46}
+\contentsline {subsubsection}{SPD(3) Visualization}{34}{section*.48}
+\contentsline {subsubsection}{3D Volume image rendering}{35}{section*.51}
+\contentsline {subsection}{\numberline {3.3.6}Utility functions}{36}{subsection.3.3.6}
+\contentsline {subsubsection}{Algorithm traits}{36}{section*.53}
+\contentsline {subsubsection}{Matrix functions}{36}{section*.54}
+\contentsline {subsubsection}{Function pointers utilities}{36}{section*.55}
+\contentsline {subsubsection}{3D pixel-wise kernels}{36}{section*.56}
+\contentsline {section}{\numberline {3.4}Using MTVMTL}{36}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Prerequisites}{36}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.4.2}Installation}{37}{subsection.3.4.2}
+\contentsline {subsection}{\numberline {3.4.3}Compilation of own projects using CMake}{37}{subsection.3.4.3}
+\contentsline {subsection}{\numberline {3.4.4}Tutorial and typical use cases}{38}{subsection.3.4.4}
+\contentsline {subsubsection}{Image denoising, vectorial color model}{38}{section*.57}
+\contentsline {subsubsection}{Colorization using color inpainting}{39}{section*.58}
+\contentsline {subsubsection}{3D DT-MRI data denoising and visualization}{41}{section*.59}
+\contentsline {chapter}{\numberline {4}Applications and Numerical Experiments}{43}{chapter.4}
+\contentsline {section}{\numberline {4.1}Image denoising}{43}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Grayscale}{43}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}Color}{44}{subsection.4.1.2}
+\contentsline {subsection}{\numberline {4.1.3}Inpainting}{45}{subsection.4.1.3}
+\contentsline {subsection}{\numberline {4.1.4}Recolorization}{45}{subsection.4.1.4}
+\contentsline {subsection}{\numberline {4.1.5}Volume images}{46}{subsection.4.1.5}
+\contentsline {section}{\numberline {4.2}SO(2) and SO(3) images data}{46}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Synthetic data}{46}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Fingerprint orientation data}{47}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}Reconstruction of a dense optical flow field}{48}{subsection.4.2.3}
+\contentsline {section}{\numberline {4.3}SPD(3) image data}{49}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}Synthetic data}{49}{subsection.4.3.1}
+\contentsline {subsection}{\numberline {4.3.2}Diffusion Tensor Magnetic Resonance Imaging}{50}{subsection.4.3.2}
+\contentsline {subsection}{\numberline {4.3.3}3D DT MRI data}{51}{subsection.4.3.3}
+\contentsline {section}{\numberline {4.4}Performance analysis of the library}{51}{section.4.4}
+\contentsline {subsection}{\numberline {4.4.1}Time Complexity}{51}{subsection.4.4.1}
+\contentsline {subsection}{\numberline {4.4.2}Profiling}{52}{subsection.4.4.2}
+\contentsline {section}{\numberline {4.5}Comparison IRLS and Proximal Point minimizers}{53}{section.4.5}
+\contentsline {section}{\numberline {4.6}Sensitivity to variations of the original data}{56}{section.4.6}
+\contentsline {chapter}{\numberline {5}Conclusion and Outlook}{58}{chapter.5}
+\contentsline {section}{\numberline {5.1}Extensions}{58}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}Functionals}{58}{subsection.5.1.1}
+\contentsline {section}{\numberline {5.2}Recursive computation on subdomains}{59}{section.5.2}

@@ -125,6 +125,10 @@ add_executable(tvmin_test tvmin_test.cpp)
 add_test(tvmin_test tvmin_test)
 target_link_libraries(tvmin_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 
+add_executable(tvmin_euc_synthetic tvmin_euc_synthetic.cpp)
+add_test(tvmin_euc_synthetic tvmin_euc_synthetic)
+target_link_libraries(tvmin_euc_synthetic ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+
 add_executable(grayscale_tvmin_test grayscale_tvmin_test.cpp)
 target_link_libraries(grayscale_tvmin_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 
@@ -171,6 +175,10 @@ target_link_libraries(sphere_tvmin_prpt_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRA
 add_executable(grassmann_chromaticnoise_test grassmann_chromaticnoise_test.cpp)
 add_test(grassmann_chromaticnoise_test grassmann_chromaticnoise_test)
 target_link_libraries(grassmann_chromaticnoise_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+
+add_executable(grassmann_chromaticnoise_prpt_test grassmann_chromaticnoise_prpt_test.cpp)
+add_test(grassmann_chromaticnoise_prpt_test grassmann_chromaticnoise_prpt_test)
+target_link_libraries(grassmann_chromaticnoise_prpt_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 
 add_executable(son_functional_test son_functional_test.cpp)
 add_test(son_functional_test son_functional_test)

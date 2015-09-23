@@ -64,10 +64,12 @@
 \BOOKMARK [2][-]{subsection.4.3.1}{Synthetic data}{section.4.3}% 64
 \BOOKMARK [2][-]{subsection.4.3.2}{Diffusion Tensor Magnetic Resonance Imaging}{section.4.3}% 65
 \BOOKMARK [2][-]{subsection.4.3.3}{3D DT MRI data}{section.4.3}% 66
-\BOOKMARK [1][-]{section.4.4}{Performance profiling of the library}{chapter.4}% 67
-\BOOKMARK [1][-]{section.4.5}{Comparison IRLS and Proximal Point minimizers}{chapter.4}% 68
-\BOOKMARK [1][-]{section.4.6}{Sensitivity to variations of the original data}{chapter.4}% 69
-\BOOKMARK [0][-]{chapter.5}{Conclusion and Outlook}{}% 70
-\BOOKMARK [1][-]{section.5.1}{Extensions}{chapter.5}% 71
-\BOOKMARK [2][-]{subsection.5.1.1}{Functionals}{section.5.1}% 72
-\BOOKMARK [1][-]{section.5.2}{Recursive computation on subdomains}{chapter.5}% 73
+\BOOKMARK [1][-]{section.4.4}{Performance analysis of the library}{chapter.4}% 67
+\BOOKMARK [2][-]{subsection.4.4.1}{Time Complexity}{section.4.4}% 68
+\BOOKMARK [2][-]{subsection.4.4.2}{Profiling}{section.4.4}% 69
+\BOOKMARK [1][-]{section.4.5}{Comparison IRLS and Proximal Point minimizers}{chapter.4}% 70
+\BOOKMARK [1][-]{section.4.6}{Sensitivity to variations of the original data}{chapter.4}% 71
+\BOOKMARK [0][-]{chapter.5}{Conclusion and Outlook}{}% 72
+\BOOKMARK [1][-]{section.5.1}{Extensions}{chapter.5}% 73
+\BOOKMARK [2][-]{subsection.5.1.1}{Functionals}{section.5.1}% 74
+\BOOKMARK [1][-]{section.5.2}{Recursive computation on subdomains}{chapter.5}% 75

@@ -511,8 +511,8 @@ and Andrew Alexander, W. M. Keck Laboratory for Functional Brain Imaging and Beh
 
 % section SPD(3) image data (end)
 \FloatBarrier
-\section{Performance profiling of the library} % (fold)
-\label{sec:Performance profiling of the library}
+\section{Performance analysis of the library} % (fold)
+\label{sec:Performance analysis of the library}
 In this section we analyze the performance hotspots of the library for the case of the IRLS minimizer. This is done using the Linux tool \emph{perf} which monitors a variety of different
 performance metrics during the execution of a program, like CPU cycles, cache or branch misses. To identify the hotspots, where most of the computation is spent, the number of CPU cycles is
 usually the most suitable metric.\\
@@ -522,6 +522,28 @@ addition and subtraction and the second derivative of the distance function is j
 computations usually involve multiple matrix multiplications, exponentials, logarithms and derivatives thereof. For the analysis we thus choose these two representatives and compare
 different image sizes.\\
 
+\subsection{Time Complexity}
+Before we start with the identification of the performance bottlenecks we will briefly take a look at the measurements of the time complexity
+obtained for the Euclidean $\mathbb{R}^3$ and $SPD(3)$. 
+\begin{figure}[h!]
+    \centering
+    \subfloat[][$SPD(3)$ (30$\times$30) - Functional]{
+	\label{fig:complexity_euc}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/euc_synthetic_times100_1400.pdf}
+    }
+    \subfloat[][$SPD(3)$ (30$\times$30) - Error]{
+	\label{fig:complexity_spd}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/spd_synthetic_times100_500.pdf}
+    }\\
+    \caption[Time complexity IRLS $\mathbb{R}^3$ and $SPD(3)$]{Time complexity for the IRLS $\mathbb{R}^3$ and $SPD(3)$
+	\subref{fig:complexity_euc} Denoising of a synthetic RGB picture of size $n\times n$ with $n=100, 200, \ldots, 1500$
+	\subref{fig:complexity_spd} Denoising of a synthetic $SPD(3)$ picture of size $n\times n$ with $n=100, 200, \ldots, 500$
+	\label{fig:complexity}
+    }
+\end{figure}
+
+
+\subsection{Profiling}
 For the Euclidean manifold we choose the "Lena" and "Mathematicians" pictures already considered in the example above. Minimization in the first case took approximately 9 seconds and 270 seconds in
 the second case. The data is shown in Table \ref{table:perf_euc} where the first column denotes the percentage of CPU cycles spent in the routine specified in the second column 
 while the last column denotes the (external) library to which it belongs. Only the top six routines are shown since the individual share of the others was in most cases less than 1 \%. \\
@@ -777,7 +799,7 @@ the computation of a complex Schur decomposition which then, in turn, needs comp
 	\label{fig:comparison_spd30E}
 	\includegraphics[width=0.5\linewidth]{./figures/experiments/SPD_30x30_Err.pdf}
     }\\
-    \caption[Comparison IRLS \& PRPT for Euclidean $SPD(3)$]{$SPD(3)$: Comparison of functional value and errors for IRLS and PRPT minimizers.
+    \caption[Comparison IRLS \& PRPT for $SPD(3)$]{$SPD(3)$: Comparison of functional value and errors for IRLS and PRPT minimizers.
 	The red circles correspond to IRLS iterations while the line without any markers belongs to the proximal point iterations.
 	\subref{fig:comparison_spd30J} Functional values for synthetic 30$\times$30 $SPD(3)$ image
 	\subref{fig:comparison_spd30E}  Error relative to minimizer for synthetic 30$\times$30 $SPD(3)$ image
