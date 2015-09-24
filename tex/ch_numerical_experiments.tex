@@ -522,28 +522,7 @@ addition and subtraction and the second derivative of the distance function is j
 computations usually involve multiple matrix multiplications, exponentials, logarithms and derivatives thereof. For the analysis we thus choose these two representatives and compare
 different image sizes.\\
 
-\subsection{Time Complexity}
-Before we start with the identification of the performance bottlenecks we will briefly take a look at the measurements of the time complexity
-obtained for the Euclidean $\mathbb{R}^3$ and $SPD(3)$. 
-\begin{figure}[h!]
-    \centering
-    \subfloat[][$SPD(3)$ (30$\times$30) - Functional]{
-	\label{fig:complexity_euc}
-	\includegraphics[width=0.5\linewidth]{./figures/experiments/euc_synthetic_times100_1400.pdf}
-    }
-    \subfloat[][$SPD(3)$ (30$\times$30) - Error]{
-	\label{fig:complexity_spd}
-	\includegraphics[width=0.5\linewidth]{./figures/experiments/spd_synthetic_times100_500.pdf}
-    }\\
-    \caption[Time complexity IRLS $\mathbb{R}^3$ and $SPD(3)$]{Time complexity for the IRLS $\mathbb{R}^3$ and $SPD(3)$
-	\subref{fig:complexity_euc} Denoising of a synthetic RGB picture of size $n\times n$ with $n=100, 200, \ldots, 1500$
-	\subref{fig:complexity_spd} Denoising of a synthetic $SPD(3)$ picture of size $n\times n$ with $n=100, 200, \ldots, 500$
-	\label{fig:complexity}
-    }
-\end{figure}
-
-
-\subsection{Profiling}
+%\subsection{Profiling}
 For the Euclidean manifold we choose the "Lena" and "Mathematicians" pictures already considered in the example above. Minimization in the first case took approximately 9 seconds and 270 seconds in
 the second case. The data is shown in Table \ref{table:perf_euc} where the first column denotes the percentage of CPU cycles spent in the routine specified in the second column 
 while the last column denotes the (external) library to which it belongs. Only the top six routines are shown since the individual share of the others was in most cases less than 1 \%. \\
@@ -552,7 +531,17 @@ We can observe that in both cases computation is dominated by the Basic Linear A
 linear system using Cholesky factorization. The only contribution that does not belong to the linear system is the multi-threading overhead from the OpenMP (OMP) library in the smaller picture.
 We see, however, that for the increased system size the overhead becomes negligibly small such that for both problem sizes more than two thirds of the total computation time is for solving the linear
 system. For the larger picture this share even grows to more than 75\% and could be expected to do so for yet larger images.\\
-
+\begin{figure}[h!]
+    \centering
+    \subfloat[][]{
+	\label{fig:perf_lena}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/perf_euc_irls_lena.pdf}
+    }
+    \subfloat[][]{
+	\label{fig:perf_mathematicians}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/perf_euc_irls_mathematicians.pdf}
+    }
+\end{figure}
 \begin{table}[h!]
 \centering
 \footnotesize
@@ -601,7 +590,17 @@ The next important routine is our implementation of the matrix logarithm Fr\'{e}
 list are auxiliary functions for solving triangular matrix functions which are need for the computation of matrix square roots, logarithms and of course also their
 Fr\'{e}chet derivatives. With increasing problem size, we can again observe how the BLAS routines move to the top of the list, even though their share only amounts 
 to a fifth of all CPU cycles for the $300\times 300$ pixel image. \\
-
+\begin{figure}[h!]
+    \centering
+    \subfloat[][]{
+	\label{fig:perf_spd30}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/perf_spd_irls_30.pdf}
+    }
+    \subfloat[][]{
+	\label{fig:perf_spd100}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/perf_spd_irls_100.pdf}
+    }
+\end{figure}
 \begin{table}[h!]
 \centering
 \footnotesize
@@ -647,6 +646,7 @@ to a fifth of all CPU cycles for the $300\times 300$ pixel image. \\
 \begin{table}[h!]
 \centering
 \footnotesize
+\subfloat[][]{
 \begin{tabular}{rll}
 \hline
 Share & Routine & Library\\
@@ -659,6 +659,11 @@ Share & Routine & Library\\
 5.55& triangular\_solve\_matrix& Eigen\\
 \hline
 \end{tabular}
+}
+ \subfloat[][]{
+	\label{fig:perf_spd30}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/perf_spd_irls_30.pdf}
+    }
 \caption{Share of total CPU cycles for IRLS minimization of synthetic $SPD(3)$ , $300\times 300$ pixel, $M=SPD(3)$
 \label{table:perf_spd300}
 }
@@ -669,7 +674,44 @@ since the corresponding sparse Hessian is not symmetric, resulting in a further 
 the standard diagonal and incomplete LU preconditioner provided by the Eigen library, however, performed worse than the direct solvers from the SparseSuite library collection. Finally, for
 the matrix-valued manifolds, the implementation of the Fr\'{e}chet derivative could potentially be improved.
 
+\subsection{Time Complexity}
+\label{sub:TimeComplexity}
+\begin{figure}[h!]
+    \centering
+    \subfloat[][$\mathbb{R}^3$ Minimization time versus input size]{
+	\label{fig:complexity_euc}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/euc_synthetic_times100_1400.pdf}
+    }
+    \subfloat[][$SPD(3)$ Minimization time versus input size]{
+	\label{fig:complexity_spd}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/spd_synthetic_times100_500.pdf}
+    }\\
+    \caption[Time complexity IRLS $\mathbb{R}^3$ and $SPD(3)$]{Time complexity for the IRLS $\mathbb{R}^3$ and $SPD(3)$. In both cases, minimization was performed using $5$ IRLS steps and $1$ Newton step per
+    reweighting
+	\subref{fig:complexity_euc} Denoising of a synthetic RGB picture of size $n\times n$ with $n=100, 200, \ldots, 1500$
+	\subref{fig:complexity_spd} Denoising of a synthetic $SPD(3)$ picture of size $n\times n$ with $n=100, 200, \ldots, 500$
+	\label{fig:complexity}
+    }
+\end{figure}
+Finally, we will briefly take a look at the measurements of the time complexity
+obtained for the Euclidean $\mathbb{R}^3$ and $SPD(3)$. =
+For both cases the time complexity over the considered input size range, which was limited only due to the available RAM on the test platform, we see subquadratic time complexities. Despite the fact that based on the theory one would expect
+quasi-linear behavior, this deviation is to be expected. Handling large amounts of data, which in the above tests
+are in the GB range, naturally leads to additional cost for memory access. Memory is hierarchically structured with the CPU caches 
+having the lowest access time but also the smallest size, whereas the RAM is comparably huge but has a much larger access time. At the bottom
+of the hierarchy is swap space on the hard drive. The cost of a so-called page-fault, which happens when a program tries to access
+a memory location that is not loaded into the main memory, can amount to more than 1000 CPU cycles. Since with increasing memory
+utilization the probability for page faults may also increase, performance will consequently decrease.\\
 
+It is remarkable, however, that the complexity for the SPD manifold is lower than for Euclidean space. 
+Taking into account the analysis of the previous section, where it was illustrated that most time is spent solving the linear system, a 
+possible explanation might be that for the SPD manifold the share of computational effort of solving the linear system is smaller
+relative to the remaining operations, like calculation of the derivatives for example. Assuming that the latter perform indeed
+quasi-linear, this would suggest that, on the other hand, solving the system must have a complexity larger than 
+$\mathcal{O}(\operatorname{NNZ}(HJ))=\mathcal{O}(N)$.\\
+
+Considering above remarks on the effects of memory access speed, we can support this claim by looking at other performance metrics like
+cache-misses and page-faults, where the BLAS routines are again at the top of the listings.
 % section Performance profiling of the library (end)
 
 
@@ -828,10 +870,10 @@ the picture and set this pixel to zero, i.e. black color. This leads to two diff
 
 Then for the original $u_0$ and the modified image $\hat{u}_0$ an IRLS minimization with $\lambda=0.1$, 5 iterations and one Newton step per reweighting is
 performed to compare the two the solutions $u$ and $\hat{u}$. We take the absolute differences $e_{ij}=|u_{ij}-\hat{u}_{ij}|$ between the solutions
-which leads to the error cone shown in Figure \ref{fig:experiment_sensitivity}\ref{fig:experiment_sensitivity_plot}. This already suggests that the
+which leads to the error cone shown in Figure \ref{fig:experiment_sensitivity_plot}. This already suggests that the
 error caused by changing the original data decays exponentially with distance $r=\sqrt{(i-i_0)^{2}+(j-j_0)^{2}}$.\\
 
-After fitting a cone to the data, which is shown in \ref{fig:experiment_sensitivity}\ref{fig:experiment_sensitivity_fit}
+After fitting a cone to the data, which is shown in \ref{fig:experiment_sensitivity_fit}
 one finds that the aperture half-angle corresponds to a slope of $c=1.XXX$ such that the error will decay as
 \begin{equation}
     e_{ij}\propto e^{-cr}.

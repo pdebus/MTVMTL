@@ -88,7 +88,7 @@ Splitting means considering every summand $f_i$ individually and minimize it usi
     \operatorname{prox}_{f_i}x=\operatorname{argmin}_{y\in\mathbb{R}^n}\left(f_i(y) + \frac{1}{2}\norm{x-y}^2_{2} \right).
 \end{equation}
 For the case of a differentiable function $f$ the minimization problem (\ref{eq:real_proximity}) 
-can be written in a explicit form and we see that $\operatorname{prox}_f x = x-\nabla f$, which 
+can be written in an explicit form and we see that $\operatorname{prox}_f x = x-\nabla f$, which 
 can be interpreted as a gradient descent step.\\
 In addition to that, one can show that the minimizers of $f$ are exactly the fixed points of the proximal mapping (See \cite{ParikhBoyd}, \S 2.3).
 
@@ -522,7 +522,7 @@ Since with (\ref{eq:son_log}), we have a closed form expression for $\log_x(y)$ 
 \label{ssub:SecondDerSO}
 For the computation of the second derivatives we can take the expression obtained using the above theorem as a starting point and follow the approach and notation of Magnus \cite{Magnus}. 
 This allows us to express the derivatives as combinations of simple Kronecker products of the arguments, which is also very straightforward and compact to implement. 
-The detailed derivations can be found in the appendix \ref{appendix} while here we only present the final results. \\
+The detailed derivations can be found in the appendix \ref{ap:derivatives} while here we only present the final results. \\
 For the second derivative with respect to the first argument one readily arrives at
 \begin{equation}
     \label{eq:son_xx_der}
@@ -706,7 +706,12 @@ Finally, we have the following canonical projection map to the quotient
 
 \subsubsection{Locally unique representatives} % (fold)
 \label{ssub:Locally unique Representative}
-Let $U\in St(n,p)$ and $\mathcal{U}:=\operatorname{span}(U) \in Gr(n,p)$ and define the local affine cross section through $U$ and orthogonal to the fiber $U[O(p)]=\pi^{-1}(\mathcal{U})\subset St(n,p)$ by
+From an algorithmic point of view it is desirable to work with representative as unique as possible for two reasons.
+Firstly, it provides us with the means to give well-defined expressions for various quantities we want to compute using arbitrary representatives and secondly, it allows us to find a parametrization of $Gr(n,p)$ in terms of $\mathbb{R}^{n\times p}$ matrices.
+This is necessary to construct a local basis of the tangent base and make the dimension of the sparse linear system a function of the intrinsic manifold dimension $(n-p)p$ instead of the embedding dimension $np$.\\
+
+As we will see next, it is possible to obtain a set of locally unique representatives. By picking some other element $U\in St(n,p)$ and choose as representatives those elements who lie in the intersection of their equivalence classes and an affine cross section
+orthogonal to the equivalence class of $U$: Let $U\in St(n,p)$ and $\mathcal{U}:=\operatorname{span}(U) \in Gr(n,p)$ and define the local affine cross section through $U$ and orthogonal to the fiber $U[O(p)]=\pi^{-1}(\mathcal{U})\subset St(n,p)$ by
 \begin{equation}
     S_U := \left\lbrace V\in St(n,p): U^T(V-U)=0 \right\rbrace\subset St(n,p).
 \end{equation}
@@ -729,10 +734,25 @@ by
 \label{eq:crosssectionmap}
     \sigma_U: Gr(n,p)\supset \mathcal{U}_U\ni\mathcal{V}=\operatorname{span}V\mapsto V(U^{T}V)^{-1} \in S_U \subset St(n,p)\subset \mathbb{R}^{n\times p}.
 \end{equation}
-$\sigma_U$ is also a diffeomorphism providing the differentiable structure.\\
+$\sigma_U$ is also a diffeomorphism providing the differentiable structure. The cross section map is
+illustrated in Figure \ref{fig:crosssection}.\\
 
-From an algorithmic point of view the above considerations are important for two reasons.
-Firstly, it provides us with the means to give well-defined expressions for various quantities we want to compute using arbitrary representatives.
+\begin{figure}[h!]
+        \centering
+	    \includegraphics[width=0.5\linewidth]{./figures/theory/affinecrosssection.pdf}
+	\caption[Affine cross section map]{ The cross section mapping is illustrated for the special
+	case of $St(2,1)\subset\mathbb{R}^2$. Equivalence classes are all lines passing through the origin.
+	We pick a $U\in St(2,1)$, then the cross section is given by all $V\in St(2,1)$ for which $U-V$ is
+	orthogonal to $U$. This is true for the points $V$ and $W$, representing $\mathcal{V}$ and $\mathcal{W}$,
+	respectively but not for the representative $Y$ of $\mathcal{Y}$. 
+	We can use the cross section mapping to obtain a representative $\sigma_U(\mathcal{Y})$ of $\mathcal{Y}$
+	which lies again on the cross section. Hence, the cross section is a tool for obtaining a set 
+	of locally unique 	representatives.	
+	}
+	\label{fig:crosssection}
+\end{figure}
+As an example for the application of the cross section map consider the calculation of averages on the
+Grassmann manifold. 
 \begin{example}[Average]
 For the case of an average for, we can take representatives $Y_1,\ldots,Y_n\in St(n,p)$ for $\mathcal{Y}_1,\ldots,\mathcal{Y}_n\in Gr(n,p)$
 and find a $U\in St(n,p)$ such that $S_U$ has non-zero intersection with all the $Y_i$'s equivalence classes, which is equivalent
@@ -741,17 +761,23 @@ to $U^TY_i\in Gl(p)$. The average $\mathcal{A}$ can then be written as
     \mathcal{A} := \pi\left(\sum_{i=1}^{n}\sigma_U(Y_i)\right)=\pi\left(\sum_{i=1}^{n}Y_i(U^{T}Y_i)^{-1}\right).
 \end{equation}
 \end{example}
-
-Secondly, it allows us to find a parametrization of $Gr(n,p)$ in terms of $\mathbb{R}^{n\times p}$ matrices. This is necessary to construct a local basis of the tangent base
-and make the dimension of the sparse linear system a function of the intrinsic manifold dimension $(n-p)p$ instead of the embedding dimension $np$.
-
 % subsubsection Locally unique Representative (end)
 
 \subsubsection{Tangent space} % (fold)
 \label{ssub:Tangent space}
 Due to the quotient structure which forces us to work with representatives we cannot just use the usual method for finding the tangent space by differentiating
 curves on the manifold. Instead we have to start with the "numerator" of the quotient $St(n,p)$. For the Grassmann manifold only tangent vectors of a special subspace of $T_YSt(n,p)$,
-the horizontal space, can modify the span of a subspace and exactly those belong to the tangent space of $Gr(n,p)$. \\
+the horizontal space, can modify the span of a subspace and exactly those belong to the tangent space of $Gr(n,p)$. 
+The notion of modifying and non-modifying tangent vectors can be best understood with the help of Figure \ref{fig:horizontalspace}.\\
+
+\begin{figure}[h!]
+        \centering
+	    \includegraphics[width=0.6\linewidth]{./figures/theory/quotienttangentspace.pdf}
+	\caption[Vertical and horizontal spaces]{ 
+	}
+	\label{fig:crosssection}
+\end{figure}
+
 
 Let $Y\in St(n,p)\subset\mathbb{R}^{n\times p}$. Then the tangent space at $Y$ (\cite{Absil2009} for details of the derivation) to the compact Stiefel manifold is given by
 \begin{align}
@@ -800,24 +826,25 @@ For the basis of the tangent space we get
     \left\lbrace B_{ij}\right\rbrace_{i=1,j=1}^{n,p}=\left\lbrace Y_{\bot}E_{ij}\right\rbrace_{i=1,j=1}^{n,p}.
 \end{equation}
 
-
-
 % subsubection Tangent space (end)
 
 \subsubsection{Exponential map} % (fold)
 \label{ssub:Exponential map}
-Let $X, Y$ span $\mathcal{X}, \mathcal{Y}$, respectively and let $U\Sigma V^{T}$ denote the compact singular value decomposition of $Y$. Then
+Let $X, R$ span $\mathcal{X}, \mathcal{R}$, respectively and let $U\Sigma V^{T}$ denote the thin singular value decomposition of $R$. Then
 \begin{equation}
-    \operatorname{Exp}_{\mathcal{X}}(\mathcal{Y})=\operatorname{span}\left( XV\cos\Sigma + U\sin\Sigma\right).
+    \operatorname{Exp}_{\mathcal{X}}(\mathcal{R})=\operatorname{span}\left( XV\cos\Sigma V^T + U\sin\Sigma V^T\right).
 \end{equation}
 % subsubsection Exponential map (end)
 
 \subsubsection{Logarithm map} % (fold)
 \label{ssub:Logarithm map}
-Let $X, Y$ span $\mathcal{X}, \mathcal{Y}$, respectively and let $U\Sigma V^{T}$ denote the compact singular value decomposition of $(\mathbbm{1}_n-XX^T)Y(X^TY)^{-1}$.
+Let $X, Y$ span $\mathcal{X}, \mathcal{Y}$, respectively and let $U\Sigma V^{T}$ denote the thin singular value decomposition of $Z=(\mathbbm{1}_n-XX^T)Y(X^TY)^{-1}$. 
 \begin{equation}
 \log_X(Y) = U\arctan\Sigma V^T 
 \end{equation}
+Note that using the notation introduced above, $Z$ can also be written as $\pi_{X_{\bot}}\sigma_X(Y)$ which can be interpreted as
+picking a locally unique representative of $Y$ with respect to the affine cross section defined by $X$ and subsequently projecting
+it back to the tangent space $T_{\mathcal{X}}Gr(n,p)$ at $\mathcal{X}$. 
 % subsubsection Logarithm map (end)
 
 \subsubsection{Distance function} % (fold)

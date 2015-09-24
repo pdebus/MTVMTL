@@ -171,8 +171,10 @@ inline void Manifold <EUCLIDIAN, N>::tangent_plane_base(cref_type x, tm_base_ref
 // Projector, cut off values outside [0,1] (if noise is added)
 template <int N>
 inline void Manifold <EUCLIDIAN, N>::projector(ref_type x){
-    for(int i=0; i<N; ++i)
+    for(int i=0; i<N; ++i){
 	if(x[i] > 1.0) x[i] = 1.0;
+	if(x[i] < 0) x[i] = 0;
+    }
 }
 
 // Convex combination along geodesic

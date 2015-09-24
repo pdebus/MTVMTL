@@ -1,8 +1,49 @@
 \begin{chapter}{Conclusion and Outlook}
-\label{ch:outlook}
+\label{ch:conclusion}
 
-\section{Extensions} % (fold)
+\section{Summary}
+In this thesis we introduced a very versatile, multi-threaded C++ template library for manifold-valued data, which extends the original Matlab prototype in a variety of directions. This includes shared memory and SIMD parallelization for IRLS and 
+proximal point algorithms, 3D images, 
+the Grassmann manifold as well as supporting methods for numerical matrix function derivative computations and OpenGL visualization methods. \\
+
+For the theoretical background we could provide some semi-analytic expressions for the derivatives of the squared
+distance functions using Kronecker product which allows a very compact implementation and gave a short overview about the relevant Grassmann manifold theory.\\
+
+The third chapter can be taken as a high level documentation of the library and its structure and underlying concepts It
+gives more insights on the software engineering point of view on this thesis and also contains some basic tutorials on how to
+use or even extend the library.\\
+
+Finally, we demonstrated the libraries capabilities on many different applications like standard grayscale and color images,
+medical DT-MRI data, synthetic $SPD(3)$ and $SO(3)$ data but also examples based on real applications like image orientation
+maps and optical flow computation. Aside from these more colorful demonstrations also a performance analysis of the 
+library was done to investigate performance bottlenecks of the IRLS minimizer. As main result from this analysis we
+could identify the solution of the sparse linear system as most performance relevant component in the process, which
+does not seem to scale (quasi-)linearly. But also our implementation of the Matrix logarithm Fr\'{e}chet derivative 
+had some influence and has potential for further optimization.\\
+
+Consequently, we found that IRLS performed slower compared to an also parallelized proximal point algorithm despite the much
+higher convergence rate of the first. Lastly, in the course of further optimization opportunities we investigated the sensitivity
+of the computed solution with respect to variations of the original data and found that resulting error in the solution is locally
+confined to a neighborhood around the varied pixel in the original and decays exponentially with the distance from the varied pixel.
+A possibility for an extension of the library exploiting this locality of the error is discussed in
+the last Section \ref{sec:Recursivecomputationonsubdomains}. Next, however, we suggest some more general possibilities.
+
+\section{Extensions and Improvements} % (fold)
 \label{sec:Extensions}
+\subsection{Performance}
+Since the solution of the sparse linear system is the most performance critical component of the algorithm, new 
+solution methods should be tested. In particular, iterative methods could perform better if a good preconditioner
+can be found. \\
+
+By making use of the special block-band structure of the Hessian, we avoided the temporary block diagonal 
+matrix containing the tangent space basis transformation that was used in the Matlab prototype. The tangent space
+transformations could instead be applied directly to the pixels of the derivative containers.
+In a similar manner, it might also be possible to make the algorithm completely matrix-free by 
+implementing a matrix-vector multiplication function for the Hessian matrix that can be used by iterative solver.
+This might save a lot of memory as well as computation time and bring the algorithm closer to the linear complexity
+regime.
+
+\subsection{Manifolds and Minimizers}
 The first thing that can easily be extended is the support for additional manifolds. Possibilities are, for instance, the Stiefel manifold that
 was briefly introduced in section \ref{sub:Grassmanian} or an alternative implementation of the $SPD(n)$ manifold using the Log-Euclidean metric
 based on \cite{LogEuclidian}.\\
@@ -43,11 +84,62 @@ distance from that pixel. \\
 
 This could in principle be exploited by dividing the image into subdomains with a specific small overlap, determined by the error boundaries, and solve each of the smaller 
 subproblems individually. Depending on the size of the necessary overlap this could also be employed recursively until a minimal subimage size is reached. Then, after all subproblems
-are solved the subpictures are recombined just by cropping all overlapping regions to arrive at the global solution.\\
+are solved the subpictures are recombined just by cropping all overlapping regions to arrive at the global solution.
+As a final example we take an extended version of the Lena picture and split it in the middle with $50px$ overlap, as shown in Figure \ref{fig:splitting1}.
 
-The advantages of this procedure are firstly, that even though there is some overhead from this procedure, a collection of smaller subproblems can be usually faster solved than one big
-problem and has a lower memory consumption. Secondly, this splitting scheme would also to introduce an additional layer of parallelism in the from of distributed memory, many core
-parallelization. Each subproblem can be assigned to a different node that in turn locally applies multi-threading.
+\begin{figure}[h!]
+    \centering
+    \subfloat[][Noisy full picture]{
+	\label{fig:splitting_full}
+	\includegraphics[width=0.475\linewidth]{./figures/experiments/noisy_lena_top.jpg}
+    }
+    \subfloat[][Noisy left half]{
+	\label{fig:splitting_left}
+	\includegraphics[width=0.25\linewidth]{./figures/experiments/noisy_lena_top1.jpg}
+    }
+    \subfloat[][Noisy right half]{
+	\label{fig:splitting_right}
+	\includegraphics[width=0.25\linewidth]{./figures/experiments/noisy_lena_top2.jpg}
+    }\\
+    \caption[Splitting the image domain]{Splitting of the Lena picture into two domains
+	\subref{fig:splitting_full} Original image "Lena.jpg", $1000\times 550$ px, 8 bit color depth
+	\subref{fig:splitting_left} Left half, $550\times 550$
+	\subref{fig:splitting_right} Right half $550\times 550$
+	\label{fig:splitting1}
+    }
+\end{figure}
+Next, we run the algorithm on the full picture, which takes 72 seconds, as well as on the two halves, which takes 
+33 second for each run. Then we recombine the two halves after cropping away the overlap. The results, shown in
+Figure \ref{fig:splitting2}, look promising. Of course, at this point some more detailed numerical error analysis
+should be performed but just from visual inspection there are no serious problems, like a visible brightness or color gradient for example, of the splitting procedure evident.\\
+
+\begin{figure}[h!]
+    \centering
+    \subfloat[][]{
+	\label{fig:splitting_denoised}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/denoised_lena_top.jpg}
+    }
+    \subfloat[][]{
+	\label{fig:splitting_recombined}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/recombined_lena_top.png}
+    }\\
+    \caption[Comparison full domain versus splitted domain denoising]{Comparison between the denoising
+    over the full domain and denoising over two subdomains
+	\subref{fig:splitting_denoised} Denoised full picture
+	\subref{fig:splitting_recombined} Recombined, denoised picture halves
+	\label{fig:splitting2}
+    }
+\end{figure}
+
+The advantages of this procedure are firstly, that even though there is some overhead from this procedure, a collection of smaller subproblems can be usually solved faster than one big problem and have a lower memory consumption. The speed up in the above example
+is not very large (66 versus 72 seconds), which is also to be expected from the subquadratic time complexity measured in 
+Section \ref{sub:TimeComplexity}. Nevertheless, the main point is not about the speed up of serial-solving the subproblems but
+the lower memory demand allowing yet larger images to be processed.\\
+
+Secondly, this splitting scheme can also be used to introduce an additional layer of parallelism in the from of distributed memory, 
+many core parallelization. Each subproblem can be assigned to a different node that in turn locally applies multi-threading.
+Building such a distributed computing architecture on top of the solver, a significant speed up can be reached, because except
+from splitting and recombination there is no need for communication between the nodes during the TV minimization.
 % section Recursive computation on subdomains (end)
 
 \end{chapter}

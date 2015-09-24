@@ -862,7 +862,7 @@ myTVMin.minimize();		// Starts the minimization
 Finally we choose the minimizer we want to use, in this case IRLS, and pass functional, manifold and data types as template parameters. The OMP parameter is not fully implemented yet 
 and is supposed to provide choice between different parallelization schemes or also completely serial computation. The last parameter again has default value $2$ and describes the 
 dimension of the data.\\
-The complete listing of this example can be found in \ref{ap:example_listings}.
+The complete listing of this example can be found in Appendix \ref{ap:listings}.
 % subsubsection Image denoising, vectorial color model (end)
 
 \subsubsection{Colorization using color inpainting} % (fold)
@@ -870,7 +870,7 @@ The complete listing of this example can be found in \ref{ap:example_listings}.
 In the following we show a more complicated example: Recolorization of an image where most($\approx$99\%) \textit{color} information has been removed. This means that this
 problem is defined on the product manifold $S^2\times \mathbb{R}$. Optimization, however, will only take place on $S^2$ while the $\mathbb{R}$ data part is only needed to obtain
 edge information. We also use three auxiliary functions (\texttt{removeColor}, \texttt{DisplayImage}, \texttt{recombineAndShow}) here that are not shown in the code snippets but
-will be included in the full listing in the appendix \ref{ap:example_listing}. This time, we start by also obtaining some of the minimization parameters from the command line:\\
+will be included in the full listing in Appendix \ref{ap:listings}. This time, we start by also obtaining some of the minimization parameters from the command line:\\
 
 \cppinline
 \begin{lstlisting}[label=code:tut2_init,caption={Include library files and read parameters from standard input}]

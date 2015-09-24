@@ -37,34 +37,35 @@
 }
 
 % C++ Code macro ---------------------------------------------------------------
-
-\newcommand{\cpp}[1] {
-  \lstset{language=c++,
-          basicstyle=\smaller,
-          basewidth=0.58em,
-          columns=fixed,
-          tabsize=2,
-          fontadjust=true,
-          frame=l,
-          xleftmargin=4.2pt,
-          numbers=left,
-          stepnumber=2,
-          breaklines=true,
-          breakindent=0pt,
-          prebreak=\mbox{\tiny$\searrow$},
-          postbreak=\mbox{{\color{gray}$\cdots$}},
-          numberstyle=\color{gray},
-          commentstyle=\color{gray},
-          stringstyle=\textit,
-          showstringspaces=false,
-        }
-  \lstinputlisting{#1}
-}
-
 \definecolor{cppgreen}{rgb}{0,0.6,0}
 \definecolor{cppblue}{rgb}{0,0,0.6}
 \definecolor{cppred}{rgb}{0.6,0,0}
 \definecolor{lightgray}{rgb}{0.9,0.9,0.9}
+
+
+\newcommand{\cpp}[2][]{
+  \lstset{language=c++,
+        frame=top, frame=bottom,
+          basicstyle=\smaller,
+          xleftmargin=4.2pt,
+          breaklines=true,
+          breakindent=0pt,
+          prebreak=\mbox{\tiny$\searrow$},
+          postbreak=\mbox{{\color{gray}$\cdots$}},
+          keywordstyle=\color{cppgreen}\bfseries,
+          commentstyle=\color{cppblue},
+	  	  stringstyle=\color{cppred},
+          showstringspaces=false,
+	      captionpos=t,
+	      numbers=left,
+	      numberstyle=\color{gray}\tiny,
+        }
+% \captionsetup[lstlisting]{format=snippet,singlelinecheck=false, margin=0pt, 	font={scriptsize,sf},labelsep=space,labelfont=bf}	
+  \lstinputlisting[caption={\texttt{\protect\detokenize{#2}}},#1]{#2}
+}
+
+
+
 
 
 \DeclareCaptionFormat{snippet}{\rule{\dimexpr\textwidth+17pt\relax}{0.4pt}\par\vskip1pt#1#2#3}

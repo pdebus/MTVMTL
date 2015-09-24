@@ -12,8 +12,8 @@ int main(int argc, const char *argv[])
 {
 	using namespace tvmtl;
 
-	if (argc != 2){
-	    std::cerr << "Usage : " << argv[0] << " image" << std::endl;
+	if (argc != 4){
+	    std::cerr << "Usage : " << argv[0] << " csvfile ny nx" << std::endl;
 	    return 1;
 	}
 
@@ -24,10 +24,18 @@ int main(int argc, const char *argv[])
 	typedef typename data_t::storage_type store_type;
 
 	data_t myData=data_t();
+	int nx = atoi(argv[3]);
+	int ny = atoi(argv[2]);
+	//myData.rgb_imread(argv[1]);
+	//myData.findEdgeWeights();
+	//myData.findInpWeights(3);
+	myData.readMatrixDataFromCSV(argv[1],nx,ny);
+	double totalerror = vpp::sum( vpp::pixel_wise(myData.img_, myData.img_) | [](const auto& i, const auto& s) {return mf_t::dist_squared(i,s);} );
+	double eucerror  = vpp::sum( vpp::pixel_wise(myData.img_, myData.img_) | [](const auto& i, const auto& s) {return (i-s).cwiseAbs().sum();} );
 	
-	myData.rgb_imread(argv[1]);
-	myData.findEdgeWeights();
-	myData.findInpWeights(3);
+	std::cout << "Geodesic distance error: " << totalerror << std::endl;
+	std::cout << "Euclidian distance error: " << eucerror << std::endl;
+
 	cv::namedWindow( "Input Picture", cv::WINDOW_NORMAL ); 
 
 	// Convert Picture of double to uchar
