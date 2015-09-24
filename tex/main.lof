@@ -1,38 +1,38 @@
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {1.1}{\ignorespaces Comparison total variation}}{6}{figure.caption.1}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Affine cross section map}}{19}{figure.caption.30}
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Vertical and horizontal spaces}}{20}{figure.caption.32}
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Affine cross section map}}{20}{figure.caption.30}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Vertical and horizontal spaces}}{21}{figure.caption.32}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Calculation using pixel-wise kernels}}{27}{figure.caption.40}
-\contentsline {figure}{\numberline {3.2}{\ignorespaces SIMD parallelization}}{27}{figure.caption.41}
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Overview of library components}}{29}{figure.caption.44}
-\contentsline {figure}{\numberline {3.4}{\ignorespaces SO(3) cube visualization}}{34}{figure.caption.49}
-\contentsline {figure}{\numberline {3.5}{\ignorespaces SPD(3) ellipsoid visualization}}{35}{figure.caption.51}
-\contentsline {figure}{\numberline {3.6}{\ignorespaces 3D SPD(3) Volume Visualization of a helix}}{35}{figure.caption.52}
-\contentsline {figure}{\numberline {3.7}{\ignorespaces 3D Volume image renderer}}{35}{figure.caption.54}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Calculation using pixel-wise kernels}}{28}{figure.caption.40}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces SIMD parallelization}}{28}{figure.caption.41}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Overview of library components}}{30}{figure.caption.44}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces SO(3) cube visualization}}{35}{figure.caption.49}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces SPD(3) ellipsoid visualization}}{36}{figure.caption.51}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces 3D SPD(3) Volume Visualization of a helix}}{36}{figure.caption.52}
+\contentsline {figure}{\numberline {3.7}{\ignorespaces 3D Volume image renderer}}{36}{figure.caption.54}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Color image "Cameraman" grayscale denoising}}{43}{figure.caption.62}
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Color image "Lena" linear vectorial denoising}}{44}{figure.caption.63}
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Large image "mathematicians" linear-vectorial denoising}}{44}{figure.caption.64}
-\contentsline {figure}{\numberline {4.4}{\ignorespaces Large image "crayons" CBR-vectorial denoising}}{45}{figure.caption.65}
-\contentsline {figure}{\numberline {4.5}{\ignorespaces Denoising linear vectorial}}{45}{figure.caption.66}
-\contentsline {figure}{\numberline {4.6}{\ignorespaces Recolorization}}{46}{figure.caption.67}
-\contentsline {figure}{\numberline {4.7}{\ignorespaces Denoising 3D Grayscale Volume Data}}{46}{figure.caption.68}
-\contentsline {figure}{\numberline {4.8}{\ignorespaces Inpainting of synthetic SO(3) picture}}{47}{figure.caption.69}
-\contentsline {figure}{\numberline {4.9}{\ignorespaces Fingerprint orientation denoising}}{48}{figure.caption.70}
-\contentsline {figure}{\numberline {4.10}{\ignorespaces Dense optical flow reconstruction}}{49}{figure.caption.71}
-\contentsline {figure}{\numberline {4.11}{\ignorespaces Denoising of synthetic SPD(3) picture}}{49}{figure.caption.72}
-\contentsline {figure}{\numberline {4.12}{\ignorespaces Denoising DT-MRI data}}{50}{figure.caption.73}
-\contentsline {figure}{\numberline {4.13}{\ignorespaces Denoising 3D DTI-MRI data}}{51}{figure.caption.74}
-\contentsline {figure}{\numberline {4.14}{\ignorespaces Time complexity IRLS $\mathbb {R}^3$ and $SPD(3)$}}{54}{figure.caption.80}
-\contentsline {figure}{\numberline {4.15}{\ignorespaces Test images}}{55}{figure.caption.81}
-\contentsline {figure}{\numberline {4.16}{\ignorespaces Comparison IRLS \& PRPT for Euclidean $\mathbb {R}^3$ and $S^2$}}{55}{figure.caption.82}
-\contentsline {figure}{\numberline {4.17}{\ignorespaces Comparison IRLS \& PRPT for Euclidean $SO(3)$}}{56}{figure.caption.83}
-\contentsline {figure}{\numberline {4.18}{\ignorespaces Comparison IRLS \& PRPT for $SPD(3)$}}{57}{figure.caption.84}
-\contentsline {figure}{\numberline {4.19}{\ignorespaces Sensitivity to variation}}{58}{figure.caption.85}
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Color image "Cameraman" grayscale denoising}}{44}{figure.caption.62}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Color image "Lena" linear vectorial denoising}}{45}{figure.caption.63}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Large image "mathematicians" linear-vectorial denoising}}{45}{figure.caption.64}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Large image "crayons" CBR-vectorial denoising}}{46}{figure.caption.65}
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Denoising linear vectorial}}{46}{figure.caption.66}
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Recolorization}}{47}{figure.caption.67}
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Denoising 3D Grayscale Volume Data}}{47}{figure.caption.68}
+\contentsline {figure}{\numberline {4.8}{\ignorespaces Inpainting of synthetic SO(3) picture}}{48}{figure.caption.69}
+\contentsline {figure}{\numberline {4.9}{\ignorespaces Fingerprint orientation denoising}}{49}{figure.caption.70}
+\contentsline {figure}{\numberline {4.10}{\ignorespaces Dense optical flow reconstruction}}{50}{figure.caption.71}
+\contentsline {figure}{\numberline {4.11}{\ignorespaces Denoising of synthetic SPD(3) picture}}{50}{figure.caption.72}
+\contentsline {figure}{\numberline {4.12}{\ignorespaces Denoising DT-MRI data}}{51}{figure.caption.73}
+\contentsline {figure}{\numberline {4.13}{\ignorespaces Denoising 3D DTI-MRI data}}{52}{figure.caption.74}
+\contentsline {figure}{\numberline {4.14}{\ignorespaces Time complexity IRLS $\mathbb {R}^3$ and $SPD(3)$}}{55}{figure.caption.80}
+\contentsline {figure}{\numberline {4.15}{\ignorespaces Test images}}{56}{figure.caption.81}
+\contentsline {figure}{\numberline {4.16}{\ignorespaces Comparison IRLS \& PRPT for Euclidean $\mathbb {R}^3$ and $S^2$}}{56}{figure.caption.82}
+\contentsline {figure}{\numberline {4.17}{\ignorespaces Comparison IRLS \& PRPT for Euclidean $SO(3)$}}{57}{figure.caption.83}
+\contentsline {figure}{\numberline {4.18}{\ignorespaces Comparison IRLS \& PRPT for $SPD(3)$}}{58}{figure.caption.84}
+\contentsline {figure}{\numberline {4.19}{\ignorespaces Sensitivity to variation}}{59}{figure.caption.85}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Splitting the image domain}}{61}{figure.caption.86}
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Comparison full domain versus splitted domain denoising}}{61}{figure.caption.87}
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Splitting the image domain}}{62}{figure.caption.86}
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Comparison full domain versus splitted domain denoising}}{62}{figure.caption.87}
 \addvspace {10\p@ }
 \addvspace {10\p@ }

@@ -122,10 +122,10 @@ Lastly, the times in the case of $G_{ij}$ and $F_{ij}$ are computed by
 \begin{align}
     t_{TV}&=
     \begin{cases}
-	\lambda, &\text{if } \lambda<d(u_{i,j},u_{i,j+1})\\
-	\lambda<d(u_{i,j},u_{i,j+1}), & \text{else}
+	\mu, &\text{if } \mu<d(u_{i,j},u_{i,j+1})\\
+	\mu<d(u_{i,j},u_{i,j+1}), & \text{else}
     \end{cases}\\
-    t_{l^{2}}&=\frac{\lambda}{1+\lambda}d(u_{i,j},(u_0)_{i,j})
+    t_{l^{2}}&=\frac{\mu}{1+\mu}d(u_{i,j},(u_0)_{i,j})
 \end{align}
 and for $H_{ij}$ analogously.\\
 
@@ -133,17 +133,32 @@ In summary, the parallel version of the proximal algorithm now works by computin
 to the original picture $u_0$, i.e. $[u_{i,j}, v]_t$ with $v\in\lbrace u_{i-1,j},u_{i+1,j},u_{i,j-1}, u_{i,j+1}, (u_0)_{i,j}\rbrace$. Next, the intrinsic (Karcher) mean \cite{Karcher} of 
 these five mappings is computed and the pixel updated to a new value $u_{i,j}'$.\\
 
-Finally, we can state the algorithm
+Finally, we can state the algorithm in \ref{al:parallel_prpt}.
 
 \begin{algorithm}
 \caption{Parallel proximal point algorithm}
-\label{eq:parallel_prpt}
+\label{al:parallel_prpt}
 \begin{algorithmic}
-    \STATE $u\; \leftarrow\;u_0$
-	%\FOR{$r\;\leftarrow\; 1,2,\ldots$} 
-	 %  	\FOR{$i\;\leftarrow\; 1,2,\ldots,m;$ $j\;\leftarrow\; 1,2,\ldots,n;$} 
-	 % 	\ENDFOR
-	 %\ENDFOR
+\REQUIRE $\mu =(\mu_1,\mu_2, \ldots)\in l^2\setminus l^1$
+\STATE $u \leftarrow u_0$
+\FOR{$r\leftarrow 1,2,\ldots$} 
+\FOR{$i\leftarrow 1,2,\ldots,m;$ $j\leftarrow 1,2,\ldots,n;$} 
+\STATE $t \leftarrow t_{l^{2}}=\frac{\mu_r}{1+\mu_r}d(u_{i,j},(u_0)_{i,j})$
+\STATE $z^{(1)} \leftarrow [u_{i,j},(u_0)_{i,j}]_t$
+\STATE $t \leftarrow  t_{TV}(\mu_r\lambda,u_{i,j},u_{i,j+1})$
+\STATE $z^{(2)} \leftarrow [u_{i,j},u_{i,j+1}]_t$
+\STATE $t \leftarrow  t_{TV}(\mu_r\lambda,u_{i,j},u_{i,j-1})$
+\STATE $z^{(3)} \leftarrow [u_{i,j},u_{i,j-1}]_t$
+\STATE $t \leftarrow  t_{TV}(\mu_r\lambda,u_{i,j},u_{i,j+1})$
+\STATE $z^{(4)} \leftarrow [u_{i,j},u_{i,j+1}]_t$
+\STATE $t \leftarrow  t_{TV}(\mu_r\lambda,u_{i,j},u_{i-1,j})$
+\STATE $z^{(5)} \leftarrow [u_{i,j},u_{i-1,j}]_t$
+\STATE $u'_{i,j} \leftarrow$ karchermean($z^{(1)},z^{(2)},z^{(3)},z^{(4)},z^{(5)}$)
+\ENDFOR
+\FOR{$i\leftarrow 1,2,\ldots,m;$ $j\leftarrow 1,2,\ldots,n;$}
+\STATE $u_{i,j} \leftarrow u'_{i,j}$
+\ENDFOR
+\ENDFOR
 \end{algorithmic}
 \end{algorithm}
 
@@ -177,17 +192,26 @@ The anisotropic steps are
 
 Further details on the derivation and proofs on convergence, existence and uniqueness of solutions for different manifold classes, such as Hadamard spaces or the sphere,
 can be found in \cite{SprecherIRLS}. The minimization can in principle be performed using various methods from smooth optimization theory. Due to its quadratic
-convergence rate, here the Newton method was chosen. Finally, the algorithm is given as 
+convergence rate, here the Newton method was chosen. Finally, the algorithm is given in \ref{al:parallel_irls}. 
 
 \begin{algorithm}
 \caption{IRLS algorithm}
-\label{eq:parallel_irls}
+\label{al:parallel_irls}
 \begin{algorithmic}
-    \STATE $u\; \leftarrow\;u_0$
-	%\FOR{$r\;\leftarrow\; 1,2,\ldots$} 
-	 %  	\FOR{$i\;\leftarrow\; 1,2,\ldots,m;$ $j\;\leftarrow\; 1,2,\ldots,n;$} 
-	 % 	\ENDFOR
-	 %\ENDFOR
+\STATE Choose initial value $u^{(0)}$ by application of smoothing filter on $u_0$
+\STATE $i\leftarrow 0$
+\REPEAT
+\STATE $W \leftarrow W^{\epsilon}(u^{(i)})$
+\STATE $u^{(i,0)} \leftarrow u^{(i)}$
+\STATE $k\leftarrow 0$
+\REPEAT
+\STATE $u^{(i,k+1)}=newtonstep^{\lambda,u_0,V_k,V,E}(W,u^{(i,k)})$
+\STATE $k\leftarrow k+1$
+\UNTIL{Stopping criteria (e.g. $k=1, J(u^{(i,k+1)})<J(u^{(i,0)}),d(u^{(i,k+1)},u^{(i,k)}}$)
+\STATE $u^{(i+1)} \leftarrow u^{(i,k+1)}$
+\STATE $i\leftarrow i+1$
+\UNTIL{$d(u^{(i+1)},u^{(i)})<tol$}
+\RETURN $u^{(i+1)}$
 \end{algorithmic}
 \end{algorithm}
 % subsection IRLS (end)
@@ -245,11 +269,11 @@ using the exponential map such that $y'=\exp_x(\eta_x)$. The whole iterative pro
 \caption{Riemannian Newton method for real-valued functions}
 \label{al:real_riemannian_newton}
 \begin{algorithmic}
-    \STATE $u\; \leftarrow\;u_0$
-	%\FOR{$r\;\leftarrow\; 1,2,\ldots$} 
-	 %  	\FOR{$i\;\leftarrow\; 1,2,\ldots,m;$ $j\;\leftarrow\; 1,2,\ldots,n;$} 
-	 % 	\ENDFOR
-	 %\ENDFOR
+\STATE $x_0 \leftarrow x\in M$ (initial value)
+\FOR{$k\leftarrow 0,1,2 \ldots$} 
+\STATE Solve newton equation $\operatorname{Hess} f(x_k)\eta_k = -\operatorname{grad} f(x_k)$ for $\eta_k\in T_{x_k}M$
+\STATE $x_{k+1} \leftarrow \exp_{x_k}(\eta_k)$
+\ENDFOR
 \end{algorithmic}
 \end{algorithm}
 % subsection Newton equation (end)

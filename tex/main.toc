@@ -14,115 +14,115 @@
 \contentsline {subsection}{\numberline {2.2.2}IRLS}{10}{subsection.2.2.2}
 \contentsline {section}{\numberline {2.3}Riemannian Newton method}{11}{section.2.3}
 \contentsline {subsection}{\numberline {2.3.1}Gradient}{11}{subsection.2.3.1}
-\contentsline {subsection}{\numberline {2.3.2}Hessian}{11}{subsection.2.3.2}
-\contentsline {subsection}{\numberline {2.3.3}Newton equation}{11}{subsection.2.3.3}
+\contentsline {subsection}{\numberline {2.3.2}Hessian}{12}{subsection.2.3.2}
+\contentsline {subsection}{\numberline {2.3.3}Newton equation}{12}{subsection.2.3.3}
 \contentsline {subsection}{\numberline {2.3.4}Newton equation for the TV functional}{12}{subsection.2.3.4}
-\contentsline {subsection}{\numberline {2.3.5}Tangent space restriction}{13}{subsection.2.3.5}
-\contentsline {section}{\numberline {2.4}Manifolds}{13}{section.2.4}
-\contentsline {subsection}{\numberline {2.4.1}Euclidean}{13}{subsection.2.4.1}
-\contentsline {subsubsection}{Exponential map}{13}{section*.5}
-\contentsline {subsubsection}{Logarithm map}{13}{section*.6}
+\contentsline {subsection}{\numberline {2.3.5}Tangent space restriction}{14}{subsection.2.3.5}
+\contentsline {section}{\numberline {2.4}Manifolds}{14}{section.2.4}
+\contentsline {subsection}{\numberline {2.4.1}Euclidean}{14}{subsection.2.4.1}
+\contentsline {subsubsection}{Exponential map}{14}{section*.5}
+\contentsline {subsubsection}{Logarithm map}{14}{section*.6}
 \contentsline {subsubsection}{Squared distance function}{14}{section*.7}
 \contentsline {subsubsection}{First derivative of the squared distance function}{14}{section*.8}
 \contentsline {subsubsection}{Second derivatives of the squared distance function}{14}{section*.9}
-\contentsline {subsubsection}{Tangent space restriction map}{14}{section*.10}
-\contentsline {subsection}{\numberline {2.4.2}Sphere $S^n$}{14}{subsection.2.4.2}
-\contentsline {subsubsection}{Exponential map}{14}{section*.11}
-\contentsline {subsubsection}{Logarithm map}{14}{section*.12}
-\contentsline {subsubsection}{Squared distance function}{14}{section*.13}
-\contentsline {subsubsection}{First derivative of the squared distance function}{14}{section*.14}
+\contentsline {subsubsection}{Tangent space restriction map}{15}{section*.10}
+\contentsline {subsection}{\numberline {2.4.2}Sphere $S^n$}{15}{subsection.2.4.2}
+\contentsline {subsubsection}{Exponential map}{15}{section*.11}
+\contentsline {subsubsection}{Logarithm map}{15}{section*.12}
+\contentsline {subsubsection}{Squared distance function}{15}{section*.13}
+\contentsline {subsubsection}{First derivative of the squared distance function}{15}{section*.14}
 \contentsline {subsubsection}{Second derivatives of the squared distance function}{15}{section*.15}
 \contentsline {subsubsection}{Tangent space restriction map}{15}{section*.16}
-\contentsline {subsection}{\numberline {2.4.3}Special Orthogonal Group SO(n)}{15}{subsection.2.4.3}
-\contentsline {subsubsection}{Exponential map}{15}{section*.17}
-\contentsline {subsubsection}{Logarithm map}{15}{section*.18}
-\contentsline {subsubsection}{First derivatives of the distance function}{15}{section*.19}
+\contentsline {subsection}{\numberline {2.4.3}Special Orthogonal Group SO(n)}{16}{subsection.2.4.3}
+\contentsline {subsubsection}{Exponential map}{16}{section*.17}
+\contentsline {subsubsection}{Logarithm map}{16}{section*.18}
+\contentsline {subsubsection}{First derivatives of the distance function}{16}{section*.19}
 \contentsline {subsubsection}{Second derivatives of the distance function}{16}{section*.20}
-\contentsline {subsubsection}{Tangent space restriction map}{16}{section*.21}
-\contentsline {subsection}{\numberline {2.4.4}Symmetric Positive Definite Matrices SPD(n)}{16}{subsection.2.4.4}
+\contentsline {subsubsection}{Tangent space restriction map}{17}{section*.21}
+\contentsline {subsection}{\numberline {2.4.4}Symmetric Positive Definite Matrices SPD(n)}{17}{subsection.2.4.4}
 \contentsline {subsubsection}{Exponential map}{17}{section*.22}
 \contentsline {subsubsection}{Logarithm map}{17}{section*.23}
 \contentsline {subsubsection}{Squared distance function}{17}{section*.24}
 \contentsline {subsubsection}{First derivatives of the squared distance function}{17}{section*.25}
-\contentsline {subsubsection}{Second derivatives of the distance function}{17}{section*.26}
-\contentsline {subsubsection}{Tangent space restriction map}{17}{section*.27}
+\contentsline {subsubsection}{Second derivatives of the distance function}{18}{section*.26}
+\contentsline {subsubsection}{Tangent space restriction map}{18}{section*.27}
 \contentsline {subsection}{\numberline {2.4.5}Grassmannian Gr(n,p)}{18}{subsection.2.4.5}
-\contentsline {subsubsection}{Quotient representations}{18}{section*.28}
+\contentsline {subsubsection}{Quotient representations}{19}{section*.28}
 \contentsline {subsubsection}{Locally unique representatives}{19}{section*.29}
 \contentsline {subsubsection}{Tangent space}{20}{section*.31}
-\contentsline {subsubsection}{Exponential map}{21}{section*.33}
-\contentsline {subsubsection}{Logarithm map}{21}{section*.34}
-\contentsline {subsubsection}{Distance function}{21}{section*.35}
+\contentsline {subsubsection}{Exponential map}{22}{section*.33}
+\contentsline {subsubsection}{Logarithm map}{22}{section*.34}
+\contentsline {subsubsection}{Distance function}{22}{section*.35}
 \contentsline {subsubsection}{First derivatives of the distance function}{22}{section*.36}
-\contentsline {subsubsection}{Second derivatives of the distance function}{22}{section*.37}
-\contentsline {section}{\numberline {2.5}Fr\'{e}chet derivatives of matrix logarithm and square root}{22}{section.2.5}
-\contentsline {subsection}{\numberline {2.5.1}Derivative of the matrix square root}{22}{subsection.2.5.1}
-\contentsline {subsection}{\numberline {2.5.2}Derivative of the matrix logarithm}{23}{subsection.2.5.2}
-\contentsline {chapter}{\numberline {3}The MTVMT Library}{24}{chapter.3}
-\contentsline {section}{\numberline {3.1}Capabilities}{24}{section.3.1}
-\contentsline {subsection}{\numberline {3.1.1}Supported Manifolds}{24}{subsection.3.1.1}
-\contentsline {subsection}{\numberline {3.1.2}Data}{24}{subsection.3.1.2}
-\contentsline {subsection}{\numberline {3.1.3}Functionals}{24}{subsection.3.1.3}
-\contentsline {subsection}{\numberline {3.1.4}Minimizer}{24}{subsection.3.1.4}
-\contentsline {subsection}{\numberline {3.1.5}Visualizations}{25}{subsection.3.1.5}
-\contentsline {section}{\numberline {3.2}Design concepts}{25}{section.3.2}
-\contentsline {subsection}{\numberline {3.2.1}Goals}{25}{subsection.3.2.1}
-\contentsline {subsubsection}{Performance}{25}{section*.38}
-\contentsline {subsubsection}{Modularization and Extendability}{25}{section*.39}
-\contentsline {subsection}{\numberline {3.2.2}Levels of parallelization}{26}{subsection.3.2.2}
-\contentsline {subsection}{\numberline {3.2.3}C++ techniques}{28}{subsection.3.2.3}
-\contentsline {subsubsection}{Lambda functions}{28}{section*.42}
-\contentsline {subsubsection}{Variadic templates}{28}{section*.43}
-\contentsline {section}{\numberline {3.3}Components}{29}{section.3.3}
-\contentsline {subsection}{\numberline {3.3.1}Manifold class}{29}{subsection.3.3.1}
-\contentsline {subsubsection}{Static constants}{30}{section*.45}
-\contentsline {subsubsection}{Type definitions}{30}{section*.46}
-\contentsline {subsubsection}{Static methods}{30}{section*.47}
-\contentsline {subsection}{\numberline {3.3.2}Data class}{31}{subsection.3.3.2}
-\contentsline {subsection}{\numberline {3.3.3}Functional class}{32}{subsection.3.3.3}
-\contentsline {subsection}{\numberline {3.3.4}TV Minimizer class}{33}{subsection.3.3.4}
-\contentsline {subsection}{\numberline {3.3.5}Visualization class}{34}{subsection.3.3.5}
-\contentsline {subsubsection}{SO(3) Visualization}{34}{section*.48}
-\contentsline {subsubsection}{SPD(3) Visualization}{34}{section*.50}
-\contentsline {subsubsection}{3D Volume image rendering}{35}{section*.53}
-\contentsline {subsection}{\numberline {3.3.6}Utility functions}{36}{subsection.3.3.6}
-\contentsline {subsubsection}{Algorithm traits}{36}{section*.55}
-\contentsline {subsubsection}{Matrix functions}{36}{section*.56}
-\contentsline {subsubsection}{Function pointers utilities}{36}{section*.57}
-\contentsline {subsubsection}{3D pixel-wise kernels}{36}{section*.58}
-\contentsline {section}{\numberline {3.4}Using MTVMTL}{36}{section.3.4}
-\contentsline {subsection}{\numberline {3.4.1}Prerequisites}{36}{subsection.3.4.1}
-\contentsline {subsection}{\numberline {3.4.2}Installation}{37}{subsection.3.4.2}
-\contentsline {subsection}{\numberline {3.4.3}Compilation of own projects using CMake}{37}{subsection.3.4.3}
-\contentsline {subsection}{\numberline {3.4.4}Tutorial and typical use cases}{38}{subsection.3.4.4}
-\contentsline {subsubsection}{Image denoising, vectorial color model}{38}{section*.59}
-\contentsline {subsubsection}{Colorization using color inpainting}{39}{section*.60}
-\contentsline {subsubsection}{3D DT-MRI data denoising and visualization}{41}{section*.61}
-\contentsline {chapter}{\numberline {4}Applications and Numerical Experiments}{43}{chapter.4}
-\contentsline {section}{\numberline {4.1}Image denoising}{43}{section.4.1}
-\contentsline {subsection}{\numberline {4.1.1}Grayscale}{43}{subsection.4.1.1}
-\contentsline {subsection}{\numberline {4.1.2}Color}{44}{subsection.4.1.2}
-\contentsline {subsection}{\numberline {4.1.3}Inpainting}{45}{subsection.4.1.3}
-\contentsline {subsection}{\numberline {4.1.4}Recolorization}{45}{subsection.4.1.4}
-\contentsline {subsection}{\numberline {4.1.5}Volume images}{46}{subsection.4.1.5}
-\contentsline {section}{\numberline {4.2}SO(2) and SO(3) images data}{46}{section.4.2}
-\contentsline {subsection}{\numberline {4.2.1}Synthetic data}{46}{subsection.4.2.1}
-\contentsline {subsection}{\numberline {4.2.2}Fingerprint orientation data}{47}{subsection.4.2.2}
-\contentsline {subsection}{\numberline {4.2.3}Reconstruction of a dense optical flow field}{48}{subsection.4.2.3}
-\contentsline {section}{\numberline {4.3}SPD(3) image data}{49}{section.4.3}
-\contentsline {subsection}{\numberline {4.3.1}Synthetic data}{49}{subsection.4.3.1}
-\contentsline {subsection}{\numberline {4.3.2}Diffusion Tensor Magnetic Resonance Imaging}{50}{subsection.4.3.2}
-\contentsline {subsection}{\numberline {4.3.3}3D DT MRI data}{51}{subsection.4.3.3}
-\contentsline {section}{\numberline {4.4}Performance analysis of the library}{51}{section.4.4}
-\contentsline {subsection}{\numberline {4.4.1}Time Complexity}{53}{subsection.4.4.1}
-\contentsline {section}{\numberline {4.5}Comparison IRLS and Proximal Point minimizers}{54}{section.4.5}
-\contentsline {section}{\numberline {4.6}Sensitivity to variations of the original data}{57}{section.4.6}
-\contentsline {chapter}{\numberline {5}Conclusion and Outlook}{59}{chapter.5}
-\contentsline {section}{\numberline {5.1}Summary}{59}{section.5.1}
-\contentsline {section}{\numberline {5.2}Extensions and Improvements}{59}{section.5.2}
-\contentsline {subsection}{\numberline {5.2.1}Performance}{59}{subsection.5.2.1}
-\contentsline {subsection}{\numberline {5.2.2}Manifolds and Minimizers}{60}{subsection.5.2.2}
-\contentsline {subsection}{\numberline {5.2.3}Functionals}{60}{subsection.5.2.3}
-\contentsline {section}{\numberline {5.3}Recursive computation on subdomains}{60}{section.5.3}
-\contentsline {chapter}{\numberline {A}Listings}{63}{chapter.1}
-\contentsline {chapter}{\numberline {B}Derivative Computations}{68}{chapter.2}
+\contentsline {subsubsection}{Second derivatives of the distance function}{23}{section*.37}
+\contentsline {section}{\numberline {2.5}Fr\'{e}chet derivatives of matrix logarithm and square root}{23}{section.2.5}
+\contentsline {subsection}{\numberline {2.5.1}Derivative of the matrix square root}{23}{subsection.2.5.1}
+\contentsline {subsection}{\numberline {2.5.2}Derivative of the matrix logarithm}{24}{subsection.2.5.2}
+\contentsline {chapter}{\numberline {3}The MTVMT Library}{25}{chapter.3}
+\contentsline {section}{\numberline {3.1}Capabilities}{25}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}Supported Manifolds}{25}{subsection.3.1.1}
+\contentsline {subsection}{\numberline {3.1.2}Data}{25}{subsection.3.1.2}
+\contentsline {subsection}{\numberline {3.1.3}Functionals}{25}{subsection.3.1.3}
+\contentsline {subsection}{\numberline {3.1.4}Minimizer}{25}{subsection.3.1.4}
+\contentsline {subsection}{\numberline {3.1.5}Visualizations}{26}{subsection.3.1.5}
+\contentsline {section}{\numberline {3.2}Design concepts}{26}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}Goals}{26}{subsection.3.2.1}
+\contentsline {subsubsection}{Performance}{26}{section*.38}
+\contentsline {subsubsection}{Modularization and Extendability}{26}{section*.39}
+\contentsline {subsection}{\numberline {3.2.2}Levels of parallelization}{27}{subsection.3.2.2}
+\contentsline {subsection}{\numberline {3.2.3}C++ techniques}{29}{subsection.3.2.3}
+\contentsline {subsubsection}{Lambda functions}{29}{section*.42}
+\contentsline {subsubsection}{Variadic templates}{29}{section*.43}
+\contentsline {section}{\numberline {3.3}Components}{30}{section.3.3}
+\contentsline {subsection}{\numberline {3.3.1}Manifold class}{30}{subsection.3.3.1}
+\contentsline {subsubsection}{Static constants}{31}{section*.45}
+\contentsline {subsubsection}{Type definitions}{31}{section*.46}
+\contentsline {subsubsection}{Static methods}{31}{section*.47}
+\contentsline {subsection}{\numberline {3.3.2}Data class}{32}{subsection.3.3.2}
+\contentsline {subsection}{\numberline {3.3.3}Functional class}{33}{subsection.3.3.3}
+\contentsline {subsection}{\numberline {3.3.4}TV Minimizer class}{34}{subsection.3.3.4}
+\contentsline {subsection}{\numberline {3.3.5}Visualization class}{35}{subsection.3.3.5}
+\contentsline {subsubsection}{SO(3) Visualization}{35}{section*.48}
+\contentsline {subsubsection}{SPD(3) Visualization}{35}{section*.50}
+\contentsline {subsubsection}{3D Volume image rendering}{36}{section*.53}
+\contentsline {subsection}{\numberline {3.3.6}Utility functions}{37}{subsection.3.3.6}
+\contentsline {subsubsection}{Algorithm traits}{37}{section*.55}
+\contentsline {subsubsection}{Matrix functions}{37}{section*.56}
+\contentsline {subsubsection}{Function pointers utilities}{37}{section*.57}
+\contentsline {subsubsection}{3D pixel-wise kernels}{37}{section*.58}
+\contentsline {section}{\numberline {3.4}Using MTVMTL}{37}{section.3.4}
+\contentsline {subsection}{\numberline {3.4.1}Prerequisites}{37}{subsection.3.4.1}
+\contentsline {subsection}{\numberline {3.4.2}Installation}{38}{subsection.3.4.2}
+\contentsline {subsection}{\numberline {3.4.3}Compilation of own projects using CMake}{38}{subsection.3.4.3}
+\contentsline {subsection}{\numberline {3.4.4}Tutorial and typical use cases}{39}{subsection.3.4.4}
+\contentsline {subsubsection}{Image denoising, vectorial color model}{39}{section*.59}
+\contentsline {subsubsection}{Colorization using color inpainting}{40}{section*.60}
+\contentsline {subsubsection}{3D DT-MRI data denoising and visualization}{42}{section*.61}
+\contentsline {chapter}{\numberline {4}Applications and Numerical Experiments}{44}{chapter.4}
+\contentsline {section}{\numberline {4.1}Image denoising}{44}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Grayscale}{44}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}Color}{45}{subsection.4.1.2}
+\contentsline {subsection}{\numberline {4.1.3}Inpainting}{46}{subsection.4.1.3}
+\contentsline {subsection}{\numberline {4.1.4}Recolorization}{46}{subsection.4.1.4}
+\contentsline {subsection}{\numberline {4.1.5}Volume images}{47}{subsection.4.1.5}
+\contentsline {section}{\numberline {4.2}SO(2) and SO(3) images data}{47}{section.4.2}
+\contentsline {subsection}{\numberline {4.2.1}Synthetic data}{47}{subsection.4.2.1}
+\contentsline {subsection}{\numberline {4.2.2}Fingerprint orientation data}{48}{subsection.4.2.2}
+\contentsline {subsection}{\numberline {4.2.3}Reconstruction of a dense optical flow field}{49}{subsection.4.2.3}
+\contentsline {section}{\numberline {4.3}SPD(3) image data}{50}{section.4.3}
+\contentsline {subsection}{\numberline {4.3.1}Synthetic data}{50}{subsection.4.3.1}
+\contentsline {subsection}{\numberline {4.3.2}Diffusion Tensor Magnetic Resonance Imaging}{51}{subsection.4.3.2}
+\contentsline {subsection}{\numberline {4.3.3}3D DT MRI data}{52}{subsection.4.3.3}
+\contentsline {section}{\numberline {4.4}Performance analysis of the library}{52}{section.4.4}
+\contentsline {subsection}{\numberline {4.4.1}Time Complexity}{54}{subsection.4.4.1}
+\contentsline {section}{\numberline {4.5}Comparison IRLS and Proximal Point minimizers}{55}{section.4.5}
+\contentsline {section}{\numberline {4.6}Sensitivity to variations of the original data}{58}{section.4.6}
+\contentsline {chapter}{\numberline {5}Conclusion and Outlook}{60}{chapter.5}
+\contentsline {section}{\numberline {5.1}Summary}{60}{section.5.1}
+\contentsline {section}{\numberline {5.2}Extensions and Improvements}{60}{section.5.2}
+\contentsline {subsection}{\numberline {5.2.1}Performance}{60}{subsection.5.2.1}
+\contentsline {subsection}{\numberline {5.2.2}Manifolds and Minimizers}{61}{subsection.5.2.2}
+\contentsline {subsection}{\numberline {5.2.3}Functionals}{61}{subsection.5.2.3}
+\contentsline {section}{\numberline {5.3}Recursive computation on subdomains}{61}{section.5.3}
+\contentsline {chapter}{\numberline {A}Listings}{64}{chapter.1}
+\contentsline {chapter}{\numberline {B}Derivative Computations}{69}{chapter.2}
