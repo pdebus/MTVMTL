@@ -134,8 +134,8 @@ vpp::pixel_wise(YD1, weightsY_ | without_last_row, data_.img_ | without_last_row
         \centering
 	    \includegraphics[width=1.0\linewidth]{./figures/library/pixelwise_kernel.pdf}
 	\caption[Calculation using pixel-wise kernels]{Parallel calculation of derivatives in $y$-direction and weighting using pixel-wise kernels.
-	    For each pixel position $(i,j)$ in the three input pictures, \circnum{1}, \circnum{2} and \circnum{3}, as well as the output picture
-	    \circnum{R} the pixel-wise kernel creates a tuple $(R_{ij}, 2_{ij}, 1_{ij}, 3_{ij})=(\text{YD1}_{i,j},\text{weightY}_{i,j},\text{Image}_{i,j},\text{Image}_{i,j+1})$
+	    For each pixel position $(i,j)$ in the three input pictures, \circnum{1}, \circnum{2} and \circnum{3}, as well as in the output picture
+	    \circnum{R}, the pixel-wise kernel creates a tuple $(R_{ij}, 2_{ij}, 1_{ij}, 3_{ij})=(\text{YD1}_{i,j},\text{weightY}_{i,j},\text{Image}_{i,j},\text{Image}_{i+1,j})$
 	    which is than used to call the specified lambda function. Depending on the row number of the pixel, the calls are executed by different CPU cores.
 	}
 	\label{fig:pixelwise_kernel}
@@ -153,7 +153,7 @@ of variables fitting in the registers. \\
 
 \begin{figure}[h!]
         \centering
-	    \includegraphics[width=0.7\linewidth]{./figures/library/simd.jpg}
+	    \includegraphics[width=0.7\linewidth]{./figures/library/SIMD.pdf}
 	\caption[SIMD parallelization]{Instruction level parallelism using SIMD registers.
 	}
 	\label{fig:simd}
@@ -617,7 +617,7 @@ pivot the camera and with the s key the image is saved using the filename specif
 	\label{fig:helix_inside}
 	\includegraphics[width=0.25\linewidth]{./figures/library/helixTop3.png}
     }\\
-    \caption[3D SPD(3) Volume Visualization of a helix]{Example of the 3D data Visualization of SPD(3) images from different viewpoints.
+    \caption[3D SPD(3) Volume Visualization of a helix]{Example of the 3D data Visualization of SPD(3) images from different viewpoints. The 'helix' synthetic tensor data set, produced with the \texttt{tend} program in the Teem toolkit\cite{teem}
 	\label{fig:helix}
     }
 \end{figure}
@@ -632,7 +632,7 @@ The following \ref{fig:volume_visualization} shows the rendered volume from diff
 \begin{figure}[h!]
         \centering
 	    \includegraphics[width=1.0\linewidth]{./figures/library/3dvol_seq.png}
-	    \caption[3D Volume image renderer]{3D Volume image using texture based rendering. The 'helix' synthetic tensor data set, produced with the \texttt{tend} program in the Teem toolkit\cite{teem}}
+	    \caption[3D Volume image renderer]{3D Volume image using texture based rendering. }
 	\label{fig:volume_visualization}
 \end{figure}
 % subsubsection 3D Volume image rendering (end)

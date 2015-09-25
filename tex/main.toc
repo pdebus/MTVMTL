@@ -16,7 +16,7 @@
 \contentsline {subsection}{\numberline {2.3.1}Gradient}{11}{subsection.2.3.1}
 \contentsline {subsection}{\numberline {2.3.2}Hessian}{12}{subsection.2.3.2}
 \contentsline {subsection}{\numberline {2.3.3}Newton equation}{12}{subsection.2.3.3}
-\contentsline {subsection}{\numberline {2.3.4}Newton equation for the TV functional}{12}{subsection.2.3.4}
+\contentsline {subsection}{\numberline {2.3.4}Newton equation for the TV functional}{13}{subsection.2.3.4}
 \contentsline {subsection}{\numberline {2.3.5}Tangent space restriction}{14}{subsection.2.3.5}
 \contentsline {section}{\numberline {2.4}Manifolds}{14}{section.2.4}
 \contentsline {subsection}{\numberline {2.4.1}Euclidean}{14}{subsection.2.4.1}
@@ -25,7 +25,7 @@
 \contentsline {subsubsection}{Squared distance function}{14}{section*.7}
 \contentsline {subsubsection}{First derivative of the squared distance function}{14}{section*.8}
 \contentsline {subsubsection}{Second derivatives of the squared distance function}{14}{section*.9}
-\contentsline {subsubsection}{Tangent space restriction map}{15}{section*.10}
+\contentsline {subsubsection}{Tangent space restriction map}{14}{section*.10}
 \contentsline {subsection}{\numberline {2.4.2}Sphere $S^n$}{15}{subsection.2.4.2}
 \contentsline {subsubsection}{Exponential map}{15}{section*.11}
 \contentsline {subsubsection}{Logarithm map}{15}{section*.12}
@@ -85,8 +85,8 @@
 \contentsline {subsubsection}{SO(3) Visualization}{35}{section*.48}
 \contentsline {subsubsection}{SPD(3) Visualization}{35}{section*.50}
 \contentsline {subsubsection}{3D Volume image rendering}{36}{section*.53}
-\contentsline {subsection}{\numberline {3.3.6}Utility functions}{37}{subsection.3.3.6}
-\contentsline {subsubsection}{Algorithm traits}{37}{section*.55}
+\contentsline {subsection}{\numberline {3.3.6}Utility functions}{36}{subsection.3.3.6}
+\contentsline {subsubsection}{Algorithm traits}{36}{section*.55}
 \contentsline {subsubsection}{Matrix functions}{37}{section*.56}
 \contentsline {subsubsection}{Function pointers utilities}{37}{section*.57}
 \contentsline {subsubsection}{3D pixel-wise kernels}{37}{section*.58}

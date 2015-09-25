@@ -2,8 +2,8 @@
 #include <opencv2/highgui/highgui.hpp>
 
 #define TV_FUNC_DEBUG
-#include "../core/data.hpp"
-#include "../core/functional.hpp"
+#include <mtvmtl/core/data.hpp>
+#include <mtvmtl/core/functional.hpp>
 
 #include <vpp/vpp.hh>
 #include <vpp/utils/opencv_bridge.hh>

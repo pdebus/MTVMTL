@@ -8,7 +8,7 @@
 
     #define TVMTL_MATRIX_UTILS_DEBUG
 
-    #include "../core/matrix_utils.hpp"
+    #include <mtvmtl/core/matrix_utils.hpp>
 
     int main(){
 

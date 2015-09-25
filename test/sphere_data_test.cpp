@@ -7,7 +7,7 @@
 #include <vpp/utils/opencv_bridge.hh>
 
 #define TV_DATA_DEBUG
-#include "../core/data.hpp"
+#include <mtvmtl/core/data.hpp>
 int main(int argc, const char *argv[])
 {
 	using namespace tvmtl;

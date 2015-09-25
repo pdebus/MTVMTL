@@ -3,7 +3,7 @@
 #include <unsupported/Eigen/MatrixFunctions>
 
 #define TVMTL_MANIFOLD_DEBUG
-#include "../core/manifold.hpp"
+#include <mtvmtl/core/manifold.hpp>
 
 using namespace tvmtl;
 

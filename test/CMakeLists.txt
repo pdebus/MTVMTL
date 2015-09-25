@@ -24,7 +24,8 @@ find_package(SuperLU REQUIRED)
 
 enable_testing()
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/.. /usr/include/superlu /usr/include/eigen3 $ENV{HOME}/projects/iod)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/.. /usr/include/superlu
+    /usr/include/eigen3 $ENV{HOME}/projects/iod ../)
 add_definitions(-std=c++14 -g -fopenmp)
 #add_definitions(-O3 -march=native)
 add_definitions(-Ofast -march=native)

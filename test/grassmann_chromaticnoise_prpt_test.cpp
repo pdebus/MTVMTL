@@ -2,10 +2,10 @@
 #include <string>
 #include <opencv2/highgui/highgui.hpp>
 
-#include "../core/algo_traits.hpp"
-#include "../core/data.hpp"
-#include "../core/functional.hpp"
-#include "../core/tvmin.hpp"
+#include <mtvmtl/core/algo_traits.hpp>
+#include <mtvmtl/core/data.hpp>
+#include <mtvmtl/core/functional.hpp>
+#include <mtvmtl/core/tvmin.hpp>
 
 #include <vpp/vpp.hh>
 #include <vpp/utils/opencv_bridge.hh>
@@ -47,6 +47,7 @@ int main(int argc, const char *argv[])
 	
 	myChroma.rgb_readChromaticity(argv[1]);
 	myBright.rgb_readBrightness(argv[1]);
+	myBright.add_gaussian_noise(0.05);
 
 	cfunc_t cFunc(lam, myChroma);
 	cFunc.seteps2(0);
@@ -68,8 +69,8 @@ int main(int argc, const char *argv[])
 	// Recombine Brightness and Chromaticity parts
 	vpp::image2d<vpp::vuchar3> img(myChroma.img_.domain());
 	vpp::pixel_wise(img, myChroma.img_, myBright.img_ ) | [] (auto& i, auto& c, auto& b) {
-	    //vpp::vdouble3 v = c * b[0] * std::sqrt(3)  * (double) std::numeric_limits<unsigned char>::max();
-	    vpp::vdouble3 v = c * (double) std::numeric_limits<unsigned char>::max();
+	    vpp::vdouble3 v = c * b[0] * std::sqrt(3)  * (double) std::numeric_limits<unsigned char>::max();
+	   // vpp::vdouble3 v = c * (double) std::numeric_limits<unsigned char>::max();
 	    vpp::vuchar3 vu = vpp::vuchar3::Zero();
 	    vu[0]=(unsigned char) v[2];
 	    vu[1]=(unsigned char) v[1];
@@ -91,12 +92,12 @@ int main(int argc, const char *argv[])
 
     	// Recombine Brightness and Chromaticity parts
 	vpp::pixel_wise(img, myChroma.img_, myBright.img_ ) | [] (auto& i, auto& c, auto& b) {
-	    //vpp::vdouble3 v = c * b[0] * std::sqrt(3)  * (double) std::numeric_limits<unsigned char>::max();
-	    vpp::vdouble3 v = c * (double) std::numeric_limits<unsigned char>::max();
+	    vpp::vdouble3 v = c * b[0] * std::sqrt(3)  * (double) std::numeric_limits<unsigned char>::max();
+	    //vpp::vdouble3 v = c * (double) std::numeric_limits<unsigned char>::max();
 	    vpp::vuchar3 vu = vpp::vuchar3::Zero();
-	    vu[0]=(unsigned char) v[2];
-	    vu[1]=(unsigned char) v[1];
-	    vu[2]=(unsigned char) v[0];
+	    vu[0]=std::numeric_limits<unsigned char>::max() - (unsigned char) v[2];
+	    vu[1]=std::numeric_limits<unsigned char>::max() - (unsigned char) v[1];
+	    vu[2]=std::numeric_limits<unsigned char>::max() - (unsigned char) v[0];
 	    i = vu;
 	};
 	cv::namedWindow( "Input Picture", cv::WINDOW_NORMAL ); 

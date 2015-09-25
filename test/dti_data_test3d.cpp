@@ -4,8 +4,8 @@
 #define TV_DATA_DEBUG
 #define TV_VISUAL_CONTROLS_DEBUG
 
-#include "../core/data.hpp"
-#include "../core/visualization.hpp"
+#include <mtvmtl/core/data.hpp>
+#include <mtvmtl/core/visualization.hpp>
 
 int main(int argc, const char *argv[])
 {

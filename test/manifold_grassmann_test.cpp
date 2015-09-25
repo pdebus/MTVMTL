@@ -6,7 +6,7 @@
 
 #define TVMTL_MANIFOLD_DEBUG
 #define TVMTL_MANIFOLD_DEBUG_GRASSMANN
-#include "../core/manifold.hpp"
+#include <mtvmtl/core/manifold.hpp>
 
 using namespace tvmtl;
 

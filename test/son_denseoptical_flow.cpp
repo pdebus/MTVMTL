@@ -10,11 +10,11 @@
 #include <vpp/vpp.hh>
 #include <vpp/algorithms/filters/scharr.hh>
 
-#include "../core/algo_traits.hpp"
-#include "../core/data.hpp"
-#include "../core/functional.hpp"
-#include "../core/tvmin.hpp"
-#include "../core/visualization.hpp"
+#include <mtvmtl/core/algo_traits.hpp>
+#include <mtvmtl/core/data.hpp>
+#include <mtvmtl/core/functional.hpp>
+#include <mtvmtl/core/tvmin.hpp>
+#include <mtvmtl/core/visualization.hpp>
 
 
 void arrowedLine(cv::Mat img, cv::Point pt1, cv::Point pt2, const cv::Scalar& color,

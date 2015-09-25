@@ -2,10 +2,10 @@
 #include <iostream>
 
 // TVM includes
-#include "../core/manifold.hpp"
-#include "../core/data.hpp"
-#include "../core/functional.hpp"
-#include "../core/tvmin.hpp"
+#include <mtvmtl/core/manifold.hpp>
+#include <mtvmtl/core/data.hpp>
+#include <mtvmtl/core/functional.hpp>
+#include <mtvmtl/core/tvmin.hpp>
 
 
 using namespace tvmtl;

@@ -9,10 +9,10 @@
 #define TV_FUNC_DEBUG_VERBOSE
 #define TV_FUNC_DEBUG_VERBOSE2
 
-#include "../core/algo_traits.hpp"
-#include "../core/data.hpp"
-#include "../core/functional.hpp"
-#include "../core/visualization.hpp"
+#include <mtvmtl/core/algo_traits.hpp>
+#include <mtvmtl/core/data.hpp>
+#include <mtvmtl/core/functional.hpp>
+#include <mtvmtl/core/visualization.hpp>
 
 int main(int argc, const char *argv[])
 {

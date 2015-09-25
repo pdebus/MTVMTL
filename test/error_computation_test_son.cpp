@@ -2,10 +2,10 @@
 #include <string>
 #include <sstream>
 
-#include "../core/algo_traits.hpp"
-#include "../core/data.hpp"
-#include "../core/functional.hpp"
-#include "../core/tvmin.hpp"
+#include <mtvmtl/core/algo_traits.hpp>
+#include <mtvmtl/core/data.hpp>
+#include <mtvmtl/core/functional.hpp>
+#include <mtvmtl/core/tvmin.hpp>
 
 int main(int argc, const char *argv[])
 {

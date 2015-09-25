@@ -7,11 +7,11 @@
 //#define TVMTL_TVMIN_DEBUG_VERBOSE
 //#define TV_VISUAL_DEBUG
 
-#include "../core/algo_traits.hpp"
-#include "../core/data.hpp"
-#include "../core/functional.hpp"
-#include "../core/tvmin.hpp"
-#include "../core/visualization.hpp"
+#include <mtvmtl/core/algo_traits.hpp>
+#include <mtvmtl/core/data.hpp>
+#include <mtvmtl/core/functional.hpp>
+#include <mtvmtl/core/tvmin.hpp>
+#include <mtvmtl/core/visualization.hpp>
 
 int main(int argc, const char *argv[])
 {
