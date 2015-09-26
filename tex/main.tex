@@ -5,6 +5,11 @@
 
 % Load ``float'' before ``hyperref`` before ''algorithm``
 % Note: ''algorithm`` would load ''float`` by itself
+\usepackage{tocbibind}
+\usepackage{appendix}
+\usepackage{longtable}
+\usepackage[nonumberlist,acronym]{glossaries}
+
 \usepackage{float}
 \usepackage[pagebackref,hyperindex=true]{hyperref}
 
@@ -55,6 +60,7 @@ urlcolor=linkcol
 
 \newcommand{\circnum}[1]{\mbox{\textcircled{\tiny #1}}}%
 
+\input{./abbreviations.tex}
 
 \begin{document}
 
@@ -65,6 +71,8 @@ urlcolor=linkcol
 \tableofcontents
 \listoffigures
 \listofalgorithms
+\glsaddall
+\printnoidxglossary[type=abbrev,sort=letter,style=long]
 
 \clearemptydoublepage
 
@@ -91,6 +99,7 @@ urlcolor=linkcol
 \appendix
 \input{./ap_listings.tex}
 \input{./ap_derivatives.tex}
+\input{./ap_perf.tex}
 
 \clearemptydoublepage
 

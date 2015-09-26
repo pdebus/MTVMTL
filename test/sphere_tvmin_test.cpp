@@ -47,27 +47,28 @@ int main(int argc, const char *argv[])
 	
 	myChroma.rgb_readChromaticity(argv[1]);
 	myBright.rgb_readBrightness(argv[1]);
+	myChroma.add_gaussian_noise(0.05);
 
 	cfunc_t cFunc(lam, myChroma);
-	cFunc.seteps2(1e-10);
+	cFunc.seteps2(1e-16);
 
 	bfunc_t bFunc(lam, myBright);
-	bFunc.seteps2(1e-10);
+	bFunc.seteps2(1e-16);
 
 	ctvmin_t cTVMin(cFunc, myChroma);
 	btvmin_t bTVMin(bFunc, myBright);
 	
-	std::cout << "\n\n--==Brightness PART==--" << std::endl;
-	std::cout << "Smooth picture to obtain initial state for Newton iteration..." << std::endl;
-	bTVMin.smoothening(10);
+//	std::cout << "\n\n--==Brightness PART==--" << std::endl;
+//	std::cout << "Smooth picture to obtain initial state for Newton iteration..." << std::endl;
+//	bTVMin.smoothening(10);
 	
-	std::cout << "Start TV minimization..." << std::endl;
-	bTVMin.minimize();
+//	std::cout << "Start TV minimization..." << std::endl;
+//	bTVMin.minimize();
 		
 	std::cout << "\n\n--==CHROMATICITY PART==--" << std::endl;
 
-	std::cout << "Smooth picture to obtain initial state for Newton iteration..." << std::endl;
-	cTVMin.smoothening(10);
+//	std::cout << "Smooth picture to obtain initial state for Newton iteration..." << std::endl;
+//	cTVMin.smoothening(10);
 	
 	std::cout << "Start TV minimization..." << std::endl;
 	cTVMin.minimize();

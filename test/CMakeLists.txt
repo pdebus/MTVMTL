@@ -39,6 +39,9 @@ add_executable(autodiff_test autodiff_test.cpp)
 add_test(autodiff_test autodiff_test )
 target_link_libraries(autodiff_test )
 
+add_executable(grassmannDerTest grassmannDerTest.cpp)
+target_link_libraries(grassmannDerTest)
+
 add_executable(mat_util_test mat_util_test.cpp)
 add_test(mat_util_test mat_util_test )
 target_link_libraries(mat_util_test )
@@ -161,6 +164,10 @@ add_executable(error_computation_test_sphere error_computation_test_sphere.cpp)
 add_test(error_computation_test_sphere error_computation_test_sphere)
 target_link_libraries(error_computation_test_sphere ${OpenCV_LIBS} ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES} gomp)
 
+add_executable(error_computation_test_grassmann error_computation_test_grassmann.cpp)
+add_test(error_computation_test_grassmann error_computation_test_grassmann)
+target_link_libraries(error_computation_test_grassmann ${OpenCV_LIBS} ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES} gomp)
+
 add_executable(inpaint_test inpaint_test.cpp)
 add_test(inpaint_test inpaint_test)
 target_link_libraries(inpaint_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
@@ -176,6 +183,10 @@ target_link_libraries(sphere_tvmin_prpt_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRA
 add_executable(grassmann_chromaticnoise_test grassmann_chromaticnoise_test.cpp)
 add_test(grassmann_chromaticnoise_test grassmann_chromaticnoise_test)
 target_link_libraries(grassmann_chromaticnoise_test ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
+
+add_executable(grassmann_chromaticnoise_test2 grassmann_chromaticnoise_test2.cpp)
+add_test(grassmann_chromaticnoise_test2 grassmann_chromaticnoise_test2)
+target_link_libraries(grassmann_chromaticnoise_test2 ${OpenCV_LIBS} gomp ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES}) #${HWLOCK_LIBRARIES} ${SCOTCH_LIBRARIES} ${PASTIX_LIBRARIES})
 
 add_executable(grassmann_chromaticnoise_prpt_test grassmann_chromaticnoise_prpt_test.cpp)
 add_test(grassmann_chromaticnoise_prpt_test grassmann_chromaticnoise_prpt_test)

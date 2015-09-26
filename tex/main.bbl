@@ -1,10 +1,5 @@
 \begin{thebibliography}{10}
 
-\bibitem{teem}
-{Teem} toolkit.
-\newblock \url{http://teem.sourceforge.net/}.
-\newblock Accessed: 2015-09-20.
-
 \bibitem{barmpoutis}
 A.~Barmpoutis A., B.~C. Vemuri, T.~M. Shepherd, and J.~R. Forder.
 \newblock Tensor splines for interpolation and approximation of dt-mri with
@@ -78,7 +73,7 @@ A.~Chambolle and P.-L. Lions.
 \newblock {\em Numerische Mathematik}, 76(2):167--188, 1997.
 
 \bibitem{CombettesPequet}
-PatrickL. Combettes and Jean-Christophe Pesquet.
+Patrick~L. Combettes and Jean-Christophe Pesquet.
 \newblock Proximal splitting methods in signal processing.
 \newblock In Heinz~H. Bauschke, Regina~S. Burachik, Patrick~L. Combettes, Veit
   Elser, D.~Russell Luke, and Henry Wolkowicz, editors, {\em Fixed-Point
@@ -103,15 +98,9 @@ P.~Grohs and M.~Sprecher.
 \newblock Technical Report 2014-39, Seminar for Applied Mathematics, ETH
   Z\"urich, Switzerland, 2014.
 
-\bibitem{Grohssprecher}
-P.~Grohs, M.~Sprecher, and T.~Yu.
-\newblock Scattered manifold-valued data approximation.
-\newblock Technical Report~23, Seminar for Applied Mathematics, ETH Z\"urich,
-  Switzerland, 2014.
-
 \bibitem{HighamPade}
 Nicholas~J. Higham.
-\newblock Evaluating padé approximants of the matrix logarithm.
+\newblock Evaluating pad\'{e} approximants of the matrix logarithm.
 \newblock {\em SIAM Journal on Matrix Analysis and Applications},
   22(4):1126--1135, 2001.
 
@@ -163,6 +152,11 @@ M.~N\"agelin.
 \newblock Total variation regularization for tensor valued images.
 \newblock {\em Bachelor thesis, ETH Z\"urich}, 2014.
 
+\bibitem{nifti}
+Neuroimaging informatics technology initiative - {NIfTI-1} data format.
+\newblock \url{http://nifti.nimh.nih.gov/nifti-1}.
+\newblock Accessed: 2015-09-25.
+
 \bibitem{ParikhBoyd}
 Neal Parikh and Stephen Boyd.
 \newblock Proximal algorithms.
@@ -180,6 +174,24 @@ Hiroyuki Sato and Toshihiro Iwai.
   matrix eigenvalue problems.
 \newblock {\em Japan Journal of Industrial and Applied Mathematics},
   31(2):355--400, 2014.
+
+\bibitem{teem}
+{Teem} toolkit.
+\newblock \url{http://teem.sourceforge.net/}.
+\newblock Accessed: 2015-09-20.
+
+\bibitem{blitz}
+ToddL. Veldhuizen.
+\newblock Arrays in blitz++.
+\newblock In Denis Caromel, RodneyR. Oldehoeft, and Marydell Tholburn, editors,
+  {\em Computing in Object-Oriented Parallel Environments}, volume 1505 of {\em
+  Lecture Notes in Computer Science}, pages 223--230. Springer Berlin
+  Heidelberg, 1998.
+
+\bibitem{volvis}
+Volume image database.
+\newblock \url{http://www.volvis.org/}.
+\newblock Accessed: 2015-09-25.
 
 \bibitem{SceneFlow}
 Andreas Wedel and Daniel Cremers.

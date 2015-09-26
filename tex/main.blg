@@ -3,48 +3,44 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: main.aux
 The style file: plain.bst
 Database file #1: mt.bib
-Warning--I didn't find a database entry for "nifti"
-Warning--I didn't find a database entry for "volumeLib"
-Warning--to sort, need author or key in teem
-You've used 33 entries,
+You've used 35 entries,
             2118 wiz_defined-function locations,
-            737 strings with 9669 characters,
-and the built_in function-call counts, 10296 in all, are:
-= -- 1006
-> -- 455
-< -- 6
-+ -- 183
-- -- 144
-* -- 725
-:= -- 1743
-add.period$ -- 103
-call.type$ -- 33
-change.case$ -- 162
+            747 strings with 10004 characters,
+and the built_in function-call counts, 10849 in all, are:
+= -- 1061
+> -- 457
+< -- 7
++ -- 184
+- -- 143
+* -- 748
+:= -- 1800
+add.period$ -- 110
+call.type$ -- 35
+change.case$ -- 169
 chr.to.int$ -- 0
-cite$ -- 34
-duplicate$ -- 386
-empty$ -- 839
-format.name$ -- 144
-if$ -- 2160
+cite$ -- 35
+duplicate$ -- 416
+empty$ -- 913
+format.name$ -- 143
+if$ -- 2307
 int.to.chr$ -- 0
-int.to.str$ -- 33
-missing$ -- 36
-newline$ -- 168
-num.names$ -- 66
-pop$ -- 162
+int.to.str$ -- 35
+missing$ -- 37
+newline$ -- 178
+num.names$ -- 68
+pop$ -- 181
 preamble$ -- 1
-purify$ -- 135
+purify$ -- 140
 quote$ -- 0
-skip$ -- 254
+skip$ -- 280
 stack$ -- 0
-substring$ -- 646
-swap$ -- 54
-text.length$ -- 6
+substring$ -- 684
+swap$ -- 67
+text.length$ -- 7
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 118
-warning$ -- 1
-while$ -- 91
-width$ -- 35
-write$ -- 367
-(There were 3 warnings)
+type$ -- 126
+warning$ -- 0
+while$ -- 94
+width$ -- 37
+write$ -- 386

@@ -253,16 +253,16 @@ inline void Manifold <GRASSMANN, N, P>::tangent_plane_base(cref_type x, tm_base_
     //Eigen::JacobiSVD<value_type> svd(Hproj);
     
     // Compute X_orth by SVD 
-    
+   /* 
     Eigen::JacobiSVD<value_type> svd(x);
     Eigen::Matrix<scalar_type, N, N - P> xorth = svd.matrixU().rightCols(N-P);
-    
+    */
 
     //Compute X_orth by QR
-    /*Eigen::HouseholderQR<value_type> qr(x);
+    Eigen::HouseholderQR<value_type> qr(x);
     Eigen::Matrix<scalar_type, N, N> Q = qr.householderQ();
     Eigen::Matrix<scalar_type, N, N - P> xorth = Q.rightCols(N-P);
-    */
+    
     int k = 0;
     for(int r = 0; r < N - P; r++)
 	for(int c = 0; c < P; c++ ){

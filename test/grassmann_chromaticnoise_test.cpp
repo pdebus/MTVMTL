@@ -19,8 +19,8 @@ typedef Manifold< EUCLIDIAN, 1 > eucmf_t;
 typedef Data< spheremf_t, 2> chroma_t;	
 typedef Data< eucmf_t, 2> bright_t;	
 
-typedef Functional<FIRSTORDER, ISO, spheremf_t, chroma_t> cfunc_t;
-typedef Functional<FIRSTORDER, ISO, eucmf_t, bright_t> bfunc_t;
+typedef Functional<FIRSTORDER, ANISO, spheremf_t, chroma_t> cfunc_t;
+typedef Functional<FIRSTORDER, ANISO, eucmf_t, bright_t> bfunc_t;
 
 typedef TV_Minimizer< IRLS, cfunc_t, spheremf_t, chroma_t, OMP > ctvmin_t;
 typedef TV_Minimizer< IRLS, bfunc_t, eucmf_t, bright_t, OMP > btvmin_t;
@@ -47,6 +47,7 @@ int main(int argc, const char *argv[])
 	
 	myChroma.rgb_readChromaticity(argv[1]);
 	myBright.rgb_readBrightness(argv[1]);
+	myChroma.add_gaussian_noise(0.1);
 
 	cfunc_t cFunc(lam, myChroma);
 	cFunc.seteps2(1e-16);
@@ -65,6 +66,20 @@ int main(int argc, const char *argv[])
 	//bTVMin.minimize();
 		
 	std::cout << "\n\n--==CHROMATICITY PART==--" << std::endl;
+	vpp::image2d<vpp::vuchar3> img(myChroma.img_.domain());
+	vpp::pixel_wise(img, myChroma.img_, myBright.img_ ) | [] (auto& i, auto& c, auto& b) {
+	    //vpp::vdouble3 v = c * b[0] * std::sqrt(3) * (double) std::numeric_limits<unsigned char>::max();
+	    vpp::vdouble3 v = c * (double) std::numeric_limits<unsigned char>::max();
+	    vpp::vuchar3 vu = vpp::vuchar3::Zero();
+	    vu[0]=std::numeric_limits<unsigned char>::max() - (unsigned char) v[2];
+	    vu[1]=std::numeric_limits<unsigned char>::max() - (unsigned char) v[1];
+	    vu[2]=std::numeric_limits<unsigned char>::max() - (unsigned char) v[0];
+	    i = vu;
+	};
+	cv::namedWindow( "Input Picture", cv::WINDOW_NORMAL ); 
+	cv::imshow( "Input Picture", vpp::to_opencv(img));
+	cv::imwrite("noisy(color)_" + fname, to_opencv(img));
+	cv::waitKey(0);
 
 	//std::cout << "Smooth picture to obtain initial state for Newton iteration..." << std::endl;
 	//cTVMin.smoothening(10);
@@ -75,6 +90,7 @@ int main(int argc, const char *argv[])
 	
 
     	// Recombine Brightness and Chromaticity parts
+	/*
 	vpp::image2d<vpp::vuchar3> img(myChroma.img_.domain());
 	vpp::pixel_wise(img, myChroma.img_, myBright.img_ ) | [] (auto& i, auto& c, auto& b) {
 	    //vpp::vdouble3 v = c * b[0] * std::sqrt(3)  * (double) std::numeric_limits<unsigned char>::max();
@@ -90,8 +106,23 @@ int main(int argc, const char *argv[])
 	cv::waitKey(0);
 
 	cv::imwrite("denoised(grassmann_irls)_" + fname, to_opencv(img));
+	*/
 
+	// Recombine Brightness and Chromaticity parts
+	vpp::pixel_wise(img, myChroma.img_, myBright.img_ ) | [] (auto& i, auto& c, auto& b) {
+	    //vpp::vdouble3 v = c * b[0] * std::sqrt(3) * (double) std::numeric_limits<unsigned char>::max();
+	    vpp::vdouble3 v = c * (double) std::numeric_limits<unsigned char>::max();
+	    vpp::vuchar3 vu = vpp::vuchar3::Zero();
+	    vu[0]=std::numeric_limits<unsigned char>::max() - (unsigned char) v[2];
+	    vu[1]=std::numeric_limits<unsigned char>::max() - (unsigned char) v[1];
+	    vu[2]=std::numeric_limits<unsigned char>::max() - (unsigned char) v[0];
+	    i = vu;
+	};
+	cv::namedWindow( "Input Picture", cv::WINDOW_NORMAL ); 
+	cv::imshow( "Input Picture", vpp::to_opencv(img));
+	cv::waitKey(0);
 
+	cv::imwrite("denoised(grassmann_irls)_" + fname, to_opencv(img));
 
 
 	return 0;
