@@ -21,13 +21,14 @@ int main(int argc, const char *argv[])
 
 	int n = std::atoi(argv[1]);
 
+	solution.create_nonsmooth_spd(n,n);
 	myData.create_nonsmooth_spd(n,n);
-	myData.add_gaussian_noise(0.2);
-	int ny = myData.img_.nrows();
-	int nx = myData.img_.ncols();
+	solution.add_gaussian_noise(0.2);
+	int ny = solution.img_.nrows();
+	int nx = solution.img_.ncols();
 	
-	typename data_t::storage_type copy(myData.img_.domain());
-	copy = vpp::clone(myData.img_);
+	typename data_t::storage_type copy(solution.img_.domain());
+	copy = vpp::clone(solution.img_);
 
 	std::string statfile_name, solfile_name;
 	
@@ -36,24 +37,30 @@ int main(int argc, const char *argv[])
 	sstream << "SPD" << "_" << ny << "x" << nx;
 	statfile_name = sstream.str() + "_IRLSstats.csv";
 	solfile_name = sstream.str() + "_sol.csv";
-	if(argc != 2){
+//	if(argc != 3){
+	{
+		std::cout << "Calculating Minimizer...\n";
 		double lam=0.2;
-		func_t myFunc(lam, myData);
-		myFunc.seteps2(1e-16);
+		func_t mySolFunc(lam, solution);
+		mySolFunc.seteps2(1e-16);
 
-		tvmin_t myTVMin(myFunc, myData);
-		myTVMin.setMax_irls_steps(20);
-		myTVMin.setMax_runtime(10000);
-		myTVMin.minimize();
-		myData.output_matval_img(solfile_name.c_str());
+		tvmin_t mySolTVMin(mySolFunc, solution);
+		mySolTVMin.setMax_irls_steps(20);
+		mySolTVMin.setMax_runtime(10000);
+		mySolTVMin.minimize();
+		solution.output_matval_img(solfile_name.c_str());
 		std::cout << "Minimizer data saved to " << solfile_name << std::endl;
-		return 0;
 	}
+//		return 0;
+//	}
 
-	solution.readMatrixDataFromCSV(argv[2], nx, ny);
+//	solution.readMatrixDataFromCSV(argv[2], nx, ny);
 
 	double lam=0.2;
+	myData.img_ = vpp::clone(copy);
+	myData.noise_img_ = vpp::clone(copy);
 	func_t myFunc(lam, myData);
+	
 	
 	
 	// ====================================IRLS======================================================
@@ -116,6 +123,7 @@ int main(int argc, const char *argv[])
 
 	//===================================== PROXIMAL POINT====================================================
 	myData.img_ = vpp::clone(copy);
+	myData.noise_img_ = vpp::clone(copy);
 
 	typedef TV_Minimizer< PRPT, func_t, mf_t, data_t, OMP > prpt_t;
 	myFunc.seteps2(0.0);

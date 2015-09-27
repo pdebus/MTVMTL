@@ -905,8 +905,10 @@ can already see IRLS catching up.\\
     }
 \end{figure}
 
-For $SO(3)$, shown in \ref{fig:comparison_son}, the difference again becomes much smaller, with both plots being very close and coinciding already after the second iteration. 
-Next, in the case of $SPD(3)$, shown in \ref{fig:comparison_spd}, IRLS falls back to the niveau of $S^2$. One reason for that might be the particularly complicated form of the second
+For $SO(3)$, shown in \ref{fig:comparison_son}, the difference again becomes much smaller, with both plots being very close and coinciding already after the second iteration. In terms of the
+error IRLS even surpasses proximal point after 4 iterations.\\
+
+Next, in the case of $SPD(3)$, shown in \ref{fig:comparison_spd},except for the error, IRLS falls back to the niveau of $S^2$. One reason for that might be the particularly complicated form of the second
 derivative of the square distance function. This could be eventually optimized by improving the implementation of the Fr\'{e}chet derivative. At this time it is based on
 the computation of a complex Schur decomposition which then, in turn, needs complex arithmetic. Switching to a block-based, but real Schur decomposition might provide an additional speed-up.\\
 
