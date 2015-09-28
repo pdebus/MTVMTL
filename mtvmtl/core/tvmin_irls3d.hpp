@@ -302,7 +302,7 @@ typename TV_Minimizer<IRLS, FUNCTIONAL, MANIFOLD, DATA, PAR, 3>::newton_error_ty
 	    value_type* i = &data_.img_(s, r, 0);
 	    const tm_base_type* t = &T(s, r, 0);
 	    for(int c = 0; c < nc; ++c){
-		Eigen::VectorXd v = -t[c]*x.segment(manifold_dim * (c + nc * r + ns * nc * s), manifold_dim); // row_wise coordinates
+		Eigen::VectorXd v = -t[c]*x.segment(manifold_dim * (c + nc * r + nr * nc * s), manifold_dim); // row_wise coordinates
 		MANIFOLD::exp(i[c], Eigen::Map<value_type>(v.data()), i[c]);
 	    }
 	}

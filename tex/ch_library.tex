@@ -20,7 +20,7 @@ and the examples in Section \ref{sub:tutorial}.
     \item Sphere $S^n=\left\lbrace x\in\mathbb{R}^{n+1}:\; \norm{x}=1\right\rbrace$
     \item Special orthogonal group $SO(n)=\left\lbrace Q\in\mathbb{R}^{n\times n}:\; QQ^T=\mathbbm{1}, \operatorname{det}(Q)=1 \right\rbrace$
     \item Symmetric positive definite matrices $SPD(n)=\left\lbrace S\in\mathbb{R}^{n\times n}:\; S=S^T, x^TSx>0\; \forall x\in\mathbb{R}^n\setminus\lbrace 0\rbrace \right\rbrace$
-    \item Grassmann manifold $Gr(n,p) = St(n,p) / O(p)$ (untested)
+    \item Grassmann manifold $Gr(n,p) = St(n,p) / O(p)$
 \end{itemize}
 % subsection Supported Manifolds (end)
 
@@ -726,7 +726,8 @@ The following lists shows the needed packages for the usage of MTVMTL:
     \item CMake ($\geq 2.8.0$)
     \item g++ ($\geq 4.9.1$), any C++14 compatible compiler should also be possible but is untested.
     \item Eigen ($\geq 3.2.5$)
-    \item Video++
+    \item Video++ (a version will be provided with the MTVMTL, otherwise consider \cite{VPP} )
+    \item Boost ($\geq 1.56$) (also needed for CGAL)
 \end{itemize}
 
 Recommended are also the following packages. They are needed if any of the described extended functionality needs to be used.
@@ -873,8 +874,8 @@ As a first example denoising of a simple color picture using the IRLS minimizer 
 code the namespace \texttt{tvmtl} of the library is used. \\
 \cppinline
 \begin{lstlisting}[label=code:tut_include,caption={Inclusion of library headers}]
-#include "../core/algo_traits.hpp"
-#include "../core/tvmin.hpp"
+#include <mtvmtl/core/algo_traits.hpp>
+#include <mtvmtl/core/tvmin.hpp>
 
 using namespace tvmtl;
 \end{lstlisting}
@@ -942,10 +943,10 @@ are obtained from the command line:\\
 #include <cmath>
 
 #include <opencv2/highgui/highgui.hpp>
-#include "../core/algo_traits.hpp"
-#include "../core/data.hpp"
-#include "../core/functional.hpp"
-#include "../core/tvmin.hpp"
+#include <mtvmtl/core/algo_traits.hpp>
+#include <mtvmtl/core/data.hpp>
+#include <mtvmtl/core/functional.hpp>
+#include <mtvmtl/core/tvmin.hpp>
 
 #include <vpp/vpp.hh>
 #include <vpp/utils/opencv_bridge.hh>
@@ -1051,11 +1052,11 @@ per line. The CSV file has no header such that the dimensions must be provided a
 #include <string>
 #include <sstream>
 
-#include "../core/algo_traits.hpp"
-#include "../core/data.hpp"
-#include "../core/functional.hpp"
-#include "../core/tvmin.hpp"
-#include "../core/visualization.hpp"
+#include <mtvmtl/core/algo_traits.hpp>
+#include <mtvmtl/core/data.hpp>
+#include <mtvmtl/core/functional.hpp>
+#include <mtvmtl/core/tvmin.hpp>
+#include <mtvmtl/core/visualization.hpp>
 
 int main(int argc, const char *argv[])
 {       

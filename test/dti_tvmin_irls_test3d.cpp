@@ -50,7 +50,7 @@ int main(int argc, const char *argv[])
 	
 	double lam=0.7;
 	func_t myFunc(lam, myData);
-	myFunc.seteps2(0);
+	myFunc.seteps2(1e-16);
 
 	tvmin_t myTVMin(myFunc, myData);
 
@@ -58,7 +58,7 @@ int main(int argc, const char *argv[])
 	myTVMin.smoothening(5);
 	myTVMin.minimize();
 
-	std::string dfname = "denoised(prpt)_" + fname.str();
+	std::string dfname = "denoised(irls)_" + fname.str();
 	myVisual.saveImage(dfname);
 
 	std::cout << "Starting OpenGL-Renderer..." << std::endl;

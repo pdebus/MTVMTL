@@ -61,9 +61,9 @@ class Data<MANIFOLD, 3>{
 	inline void initInp();
 	
 	// Input functions
-	void rgb_slice_reader(const char* filename, int num_slides);
-	void readMatrixDataFromCSV(const char* filename, const int nz, const int ny, const int nx);
-	void readRawVolumeData(const char* filename, const int nz, const int ny, const int nx);
+	void rgb_slice_reader(std::string filename, int num_slides);
+	void readMatrixDataFromCSV(std::string filename, const int nz, const int ny, const int nx);
+	void readRawVolumeData(std::string filename, const int nz, const int ny, const int nx);
 	
 	// Noise functions
 	void add_gaussian_noise(double stdev);
@@ -76,7 +76,7 @@ class Data<MANIFOLD, 3>{
 
 	//Output functions
 	template <class IMG>
-	void output_matval_img(const IMG& img, const char* filename) const;
+	void output_matval_img(const IMG& img, std::string filename) const;
 
 //  private:
 	storage_type img_;
@@ -143,7 +143,7 @@ void Data<MANIFOLD, 3>::create_noisy_gray(const int nz, const int ny, const int 
     std::random_device rd;
     std::mt19937 gen(rd());
     std::normal_distribution<typename MANIFOLD::scalar_type> rand(0.0, stdev);
-    auto insert = [&] (value_type& i) { i.setConstant(color + rand(gen)); };
+    auto insert = [&] (value_type& i) { i.setConstant(color + rand(gen)); MANIFOLD::projector(i); };
 
     pixel_wise3d(insert, noise_img_);
     clone3d(noise_img_, img_);
@@ -161,7 +161,7 @@ void Data<MANIFOLD, 3>::create_noisy_rgb(const int nz, const int ny, const int n
     std::mt19937 gen(rd());
     std::normal_distribution<typename MANIFOLD::scalar_type> rand(0.0, stdev);
     value_type v(0.7 + rand(gen), 0.3 + rand(gen), 0.3 + rand(gen));
-    auto insert = [&] (value_type& i) { i = v;  };
+    auto insert = [&] (value_type& i) { i = v; MANIFOLD::projector(i); };
 
     pixel_wise3d(insert, noise_img_);
     clone3d(noise_img_, img_);
@@ -170,7 +170,7 @@ void Data<MANIFOLD, 3>::create_noisy_rgb(const int nz, const int ny, const int n
 }
 
 template < typename MANIFOLD >
-void Data<MANIFOLD, 3>::rgb_slice_reader(const char* filename, int num_slices){
+void Data<MANIFOLD, 3>::rgb_slice_reader(std::string filename, int num_slices){
 	static_assert(MANIFOLD::value_dim == 3,"ERROR: RGB Input requires a Manifold with embedding dimension N=3!");
 	std::string fname(filename);
 
@@ -225,7 +225,7 @@ void Data<MANIFOLD, 3>::rgb_slice_reader(const char* filename, int num_slices){
 
 
 template <typename MANIFOLD>
-void Data<MANIFOLD, 3>::readMatrixDataFromCSV(const char* filename, const int nz, const int ny, const int nx){
+void Data<MANIFOLD, 3>::readMatrixDataFromCSV(std::string filename, const int nz, const int ny, const int nx){
     #ifdef TV_DATA_DEBUG
 	std::cout << "ReadMatrixData from CSV File..." << std::endl;
     #endif
@@ -280,7 +280,7 @@ void Data<MANIFOLD, 3>::readMatrixDataFromCSV(const char* filename, const int nz
 }
 
 template <typename MANIFOLD>
-void Data<MANIFOLD, 3>::readRawVolumeData(const char* filename, const int nz, const int ny, const int nx){
+void Data<MANIFOLD, 3>::readRawVolumeData(std::string filename, const int nz, const int ny, const int nx){
 
     static_assert(MANIFOLD::MyType == EUCLIDIAN, "readRawVolumeData is only Implemented for Euclidian Manifolds");
     static_assert(MANIFOLD::value_dim == 1, "readMatrixDataFromCSV is only for grayscale volume picture input");
@@ -334,7 +334,7 @@ void Data<MANIFOLD, 3>::readRawVolumeData(const char* filename, const int nz, co
 
 template < typename MANIFOLD >
 template < class IMG >
-void Data<MANIFOLD, 3>::output_matval_img(const IMG& img, const char* filename) const{
+void Data<MANIFOLD, 3>::output_matval_img(const IMG& img, std::string filename) const{
     int ns = img.nslices();
     int nr = img.nrows();
     int nc = img.ncols();

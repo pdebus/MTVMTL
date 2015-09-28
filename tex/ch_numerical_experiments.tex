@@ -213,7 +213,11 @@ For this picture the proximal point algorithm is used, because the memory and co
 In section \ref{sub:NewtonequationfortheTVfunctional} it was shown that the dimension of the sparse linear system is $\operatorname{dim}(M)XYZ$ which
 in this case amounts to $1.1\times 10^{7}$, which is the length of the gradient while the Hessian will contain $7.7\times 10^{7}$ non-zero-entries.
 The solution of a sparse linear system of that size is computationally very demanding while in comparison the geodesic averaging and Karcher mean calculations
-simplify to mostly vectorized addition and subtraction operations on a simple manifold like $\mathbb{R}$.
+simplify to mostly vectorized addition and subtraction operations on a simple manifold like $\mathbb{R}$.\\
+
+As a result, the IRLS minimization of the $64\times 64 \times 64$ volume image in \ref{fig:application_volume2_orig}, which
+shows the simulation of fuel injection into a combustion chamber, already takes 1100 seconds on the test platform, compared to
+only 109 seconds for the proximal point minimization of the much larger teapot image.
 
 \begin{figure}[h!]
     \centering
@@ -229,13 +233,43 @@ simplify to mostly vectorized addition and subtraction operations on a simple ma
 	\label{fig:application_volume1_denoised}
 	\includegraphics[width=0.325\linewidth]{./figures/experiments/denoisedVolumeImg.png}
     }\\
-    \caption[Denoising 3D Grayscale Volume Data]{Denoising a 3D grayscale volume image
+    \caption[Denoising 3D Grayscale Volume Data PRPT]{Denoising a 3D grayscale volume image
 	\subref{fig:application_volume1_orig} Original image "BostonTeapot.raw", $256\times 256 \times 178$ px, 8 bit color depth
 	\subref{fig:application_volume1_noise} Component-wise Gaussian noise $\mu=0$, $\sigma=0.1$ added
 	\subref{fig:application_volume1_denoised} Denoised, proximal point with $\lambda=0.1$, $50$ PRPT steps
 	\label{fig:application_volume1}
     }
 \end{figure}
+
+
+\begin{figure}[h!]
+    \centering
+    \subfloat[][Original]{
+	\label{fig:application_volume2_orig}
+	\includegraphics[width=0.325\linewidth]{./figures/experiments/FuelVolumeImage.png}
+    }
+    \subfloat[][Noisy]{
+	\label{fig:application_volume2_noise}
+	\includegraphics[width=0.325\linewidth]{./figures/experiments/noisy_fuel64x64x64.jpg}
+    }
+    \subfloat[][Denoised]{
+	\label{fig:application_volume2_denoised}
+	\includegraphics[width=0.325\linewidth]{./figures/experiments/denoised(IRLS)_fuel64x64x64.jpg}
+    }\\
+    \caption[Denoising 3D Grayscale Volume Data IRLS]{Denoising a 3D grayscale volume image
+	\subref{fig:application_volume1_orig} Original image "FuelInjection.raw", $64\times 64 \times 64$ px, 8 bit color depth
+	\subref{fig:application_volume1_noise} Component-wise Gaussian noise $\mu=0$, $\sigma=0.1$ added
+	\subref{fig:application_volume1_denoised} Denoised, IRLS with $\lambda=0.2$, $5$ IRLS steps with 1 Newton step per reweighting
+	\label{fig:application_volume2}
+    }
+\end{figure}
+
+
+
+
+
+
+
 % subsection Volume images (end)
 
 % section Color image denoising (end)

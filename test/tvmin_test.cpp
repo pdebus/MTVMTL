@@ -67,15 +67,19 @@ int main(int argc, const char *argv[])
 	
 	std::cout << "Smoothen picture to obtain initial state for Newton iteration..." << std::endl;
 	myTVMin.smoothening(5);
-	DisplayImage("Smoothened", myData.img_, img);
-	cv::imwrite("smoothened_" + fname, to_opencv(img));
+	myData.rgb_show();
+	myData.rgb_saveimage("smoothened_" + fname);
+//	DisplayImage("Smoothened", myData.img_, img);
+//	cv::imwrite("smoothened_" + fname, to_opencv(img));
 
 	std::cout << "Start TV minimization..." << std::endl;
 	myTVMin.minimize();
 		
+	myData.rgb_show();
+	myData.rgb_saveimage("denoised_" + fname);
 
-	DisplayImage("Denoised", myData.img_, img);
-	cv::imwrite("denoised_" + fname, to_opencv(img));
+//	DisplayImage("Denoised", myData.img_, img);
+//	cv::imwrite("denoised_" + fname, to_opencv(img));
 
 	return 0;
 }

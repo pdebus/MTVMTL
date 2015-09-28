@@ -3,6 +3,7 @@
 
 #define TV_FUNC_DEBUG
 #define TV_FUNC_DEBUG_VERBOSE
+#define TV_FUNC_DEBUG_VERBOSE2
 #include <mtvmtl/core/data.hpp>
 #include <mtvmtl/core/functional.hpp>
 
@@ -21,8 +22,17 @@ int main(int argc, const char *argv[])
 	typedef typename data_t::storage_type store_type;
 
 	data_t myData=data_t();
-	
-	myData.create_noisy_gray(4, 3, 2);
+
+	if(argc!=4){
+	    std::cout << "Usage: " << argv[0] << "zDim yDim xDim " << std::endl;
+	    return 1;
+	}
+
+	int nz=atoi(argv[1]);
+	int ny=atoi(argv[2]);
+	int nx=atoi(argv[3]);
+ 	
+	myData.create_noisy_gray(nz, ny, nx);
 	
 	typedef Functional<FIRSTORDER, ISO, mf_t, data_t, 3> func_t;
 	func_t myFunc(0.1, myData);

@@ -59,11 +59,11 @@ class Data< MANIFOLD, 2>{
 	inline void initInp();
 
 	// Input functions
-	void rgb_imread(const char* filename); 
-	void rgb_readBrightness(const char* filename); 
-	void rgb_readChromaticity(const char* filename); 
+	void rgb_imread(std::string filename); 
+	void rgb_readBrightness(std::string filename); 
+	void rgb_readChromaticity(std::string filename); 
 	
-	void readMatrixDataFromCSV(const char* filename, const int nx, const int ny);
+	void readMatrixDataFromCSV(std::string filename, const int nx, const int ny);
 	
 	// Noise functions
 	void add_gaussian_noise(double stdev);
@@ -85,11 +85,14 @@ class Data< MANIFOLD, 2>{
 
 
 	// OutputFunctions
-	void output_weights(const weights_mat& mat, const char* filename) const;
+	void rgb_saveimage(std::string fname);
+	void rgb_show();
 	
-	void output_img(const char* filename) const;
-	void output_matval_img(const char* filename) const;
-	void output_nimg(const char* filename) const;
+	void output_weights(const weights_mat& mat, std::string filename) const;
+	
+	void output_img(std::string filename) const;
+	void output_matval_img(std::string filename) const;
+	void output_nimg(std::string filename) const;
 //    private:
 	// Data members
 	// TODO Don't forget to initialize with 1px border
@@ -238,7 +241,7 @@ void Data<MANIFOLD, 2>::createRandInpWeights(const double threshold){
 }
 
 template < typename MANIFOLD >
-void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
+void Data<MANIFOLD, 2>::rgb_imread(std::string filename){
 	static_assert(MANIFOLD::value_dim == 3,"ERROR: RGB Input requires a Manifold with embedding dimension N=3!");
 	vpp::image2d<vpp::vuchar3> input_image;
 	input_image = vpp::clone(vpp::from_opencv<vpp::vuchar3 >(cv::imread(filename)));
@@ -260,7 +263,43 @@ void Data<MANIFOLD, 2>::rgb_imread(const char* filename){
 }
 
 template < typename MANIFOLD >
-void Data<MANIFOLD, 2>::rgb_readBrightness(const char* filename){
+void Data<MANIFOLD, 2>::rgb_saveimage(std::string fname){
+    static_assert(MANIFOLD::value_dim == 3,"ERROR: RGB Ouput requires a Manifold with embedding dimension N=3!");
+	// Convert Picture of double to uchar
+	vpp::image2d<vpp::vuchar3> vucharimg(img_.domain());
+	vpp::pixel_wise(vucharimg, img_) | [] (auto& i, auto& n) {
+	    value_type v = n * (double) std::numeric_limits<unsigned char>::max();
+	    vpp::vuchar3 vu = vpp::vuchar3::Zero();
+	    vu[0]=(unsigned char) v[2];
+	    vu[1]=(unsigned char) v[1];
+	    vu[2]=(unsigned char) v[0];
+	    i = vu;
+	};
+
+	cv::imwrite(fname, to_opencv(vucharimg));
+}
+
+template < typename MANIFOLD >
+void Data<MANIFOLD, 2>::rgb_show(){
+    static_assert(MANIFOLD::value_dim == 3,"ERROR: RGB Ouput requires a Manifold with embedding dimension N=3!");
+	// Convert Picture of double to uchar
+	vpp::image2d<vpp::vuchar3> vucharimg(img_.domain());
+	vpp::pixel_wise(vucharimg, img_) | [] (auto& i, auto& n) {
+	    value_type v = n * (double) std::numeric_limits<unsigned char>::max();
+	    vpp::vuchar3 vu = vpp::vuchar3::Zero();
+	    vu[0]=(unsigned char) v[2];
+	    vu[1]=(unsigned char) v[1];
+	    vu[2]=(unsigned char) v[0];
+	    i = vu;
+	};
+	cv::namedWindow("Image Viewer", cv::WINDOW_NORMAL ); 
+	cv::imshow( "Image Viewer", vpp::to_opencv(vucharimg));
+	cv::waitKey(0);
+
+}
+
+template < typename MANIFOLD >
+void Data<MANIFOLD, 2>::rgb_readBrightness(std::string filename){
 	static_assert(MANIFOLD::value_dim == 1,"ERROR: Brightness Input requires a Manifold with embedding dimension N=1!");
 	vpp::image2d<vpp::vuchar3> input_image;
 	input_image = vpp::clone(vpp::from_opencv<vpp::vuchar3 >(cv::imread(filename)));
@@ -283,7 +322,7 @@ void Data<MANIFOLD, 2>::rgb_readBrightness(const char* filename){
 }
 
 template < typename MANIFOLD >
-void Data<MANIFOLD, 2>::rgb_readChromaticity(const char* filename){
+void Data<MANIFOLD, 2>::rgb_readChromaticity(std::string filename){
 	static_assert(MANIFOLD::value_dim == 3,"ERROR: Chromaticity Input requires a Manifold with embedding dimension N=3!");
 	vpp::image2d<vpp::vuchar3> input_image;
 	input_image = vpp::clone(vpp::from_opencv<vpp::vuchar3 >(cv::imread(filename)));
@@ -319,7 +358,7 @@ void Data<MANIFOLD, 2>::rgb_readChromaticity(const char* filename){
 
 
 template <typename MANIFOLD>
-void Data<MANIFOLD, 2>::readMatrixDataFromCSV(const char* filename, const int nx, const int ny){
+void Data<MANIFOLD, 2>::readMatrixDataFromCSV(std::string filename, const int nx, const int ny){
     #ifdef TV_DATA_DEBUG
 	std::cout << "ReadMatrixData from CSV File..." << std::endl;
     #endif
@@ -518,7 +557,7 @@ void Data<MANIFOLD, 2>::create_nonsmooth_spd(const int ny,const int nx){
 
 
 template < typename MANIFOLD >
-void Data<MANIFOLD, 2>::output_weights(const weights_mat& weights, const char* filename) const{
+void Data<MANIFOLD, 2>::output_weights(const weights_mat& weights, std::string filename) const{
     int nr = weights.nrows();
     int nc = weights.ncols();
 
@@ -537,7 +576,7 @@ void Data<MANIFOLD, 2>::output_weights(const weights_mat& weights, const char* f
 }
 
 template < typename MANIFOLD >
-void Data<MANIFOLD, 2>::output_matval_img(const char* filename) const{
+void Data<MANIFOLD, 2>::output_matval_img(std::string filename) const{
     int nr = img_.nrows();
     int nc = img_.ncols();
 
@@ -552,7 +591,7 @@ void Data<MANIFOLD, 2>::output_matval_img(const char* filename) const{
     f.close();
 }
 template < typename MANIFOLD >
-void Data<MANIFOLD, 2>::output_img(const char* filename) const{
+void Data<MANIFOLD, 2>::output_img(std::string filename) const{
     int nr = img_.nrows();
     int nc = img_.ncols();
 
@@ -571,7 +610,7 @@ void Data<MANIFOLD, 2>::output_img(const char* filename) const{
 }
 
 template < typename MANIFOLD >
-void Data<MANIFOLD, 2>::output_nimg(const char* filename) const{
+void Data<MANIFOLD, 2>::output_nimg(std::string filename) const{
     int nr = noise_img_.nrows();
     int nc = noise_img_.ncols();
 

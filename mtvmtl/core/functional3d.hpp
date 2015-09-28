@@ -329,7 +329,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateDJ(){
     {
 	img_type ZD1 = img_type(without_last_z);
 	pixel_wise3d(calc_first_arg_deriv, ZD1, weightsZ_ | without_last_z, data_.img_ | without_last_z, data_.img_ | without_first_z);
-	pixel_wise3d(add_to_gradient, grad | without_first_y, ZD1);
+	pixel_wise3d(add_to_gradient, grad | without_first_z, ZD1);
     }
     
     #ifdef TV_FUNC_DEBUG_VERBOSE
@@ -341,7 +341,11 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateDJ(){
 	pixel_wise3d(calc_second_arg_deriv, ZD2, weightsZ_ | without_last_z, data_.img_ | without_last_z, data_.img_ | without_first_z);
         pixel_wise3d(add_to_gradient, grad | without_first_z, ZD2);
     }
-    
+   
+    #ifdef TV_FUNC_DEBUG
+	    data_.output_matval_img(grad,"3dgrad.csv");
+    #endif
+ 
     DJ_ = gradient_type::Zero(ns*nr*nc*manifold_dim); 
     
     updateTMBase();
@@ -356,14 +360,14 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateDJ(){
 	    value_type* p = &grad(s, r, 0);
 	    tm_base_type* t = &T_(s, r, 0);
 	    for(int c = 0; c < nc; ++c)
-		DJ_.segment(manifold_dim * (ns * nc * s + nc * r + c), manifold_dim) = t[c].transpose() * Eigen::Map<const Eigen::VectorXd>(p[c].data(), p[c].size()); 
+		DJ_.segment(manifold_dim * (nr * nc * s + nc * r + c), manifold_dim) = t[c].transpose() * Eigen::Map<const Eigen::VectorXd>(p[c].data(), p[c].size()); 
 	//	DJ_.segment(manifold_dim * (s + ns * r + ns * nr * c), manifold_dim) = t[c].transpose() * Eigen::Map<const Eigen::VectorXd>(p[c].data(), p[c].size()); 
 	}
     } 
 
     #ifdef TV_FUNC_DEBUG 
 	std::fstream f;
-	f.open("gradJ.csv",std::fstream::out);
+	f.open("3dDJ.csv",std::fstream::out);
 	f << DJ_;
 	f.close();
     #endif
@@ -411,7 +415,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 	    deriv2_type* h = &hessian(s, r, 0);
 	    tm_base_type* t = &T_(s, r, 0);
 	    for(int c = 0; c < nc; ++c){
-		int pos = manifold_dim * (ns * nc * s + nc * r + c); // rowwise flattening
+		int pos = manifold_dim * (nr * nc * s + nc * r + c); // rowwise flattening
 		//int pos = manifold_dim * (s + ns * r + ns * nr * c); // columnwise flattening
 		restricted_deriv2_type ht=t[c].transpose()*h[c]*t[c];
 	    
@@ -447,7 +451,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
     
     //HTV.reserve(Eigen::VectorXi::Constant(nc,5*manifold_dim));
     triplist.clear();
-    triplist.reserve(5 * sparsedim*manifold_dim);
+    triplist.reserve(7 * sparsedim*manifold_dim);
 
     // Subimage boxes
     vpp::box3d without_last_x(vpp::vint3(0,0,0), vpp::vint3(ns - 1, nr - 1, nc - 2)); // subdomain without last xslice
@@ -547,6 +551,9 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 	    data_.output_matval_img(ZD22,"3dZD22.csv");
 	#endif
     } 
+    	#ifdef TV_FUNC_DEBUG
+	    data_.output_matval_img(hessian,"3dhessian.csv");
+	#endif
     #ifdef TV_FUNC_DEBUG_VERBOSE
 	std::cout << "\t\t...Local to global insert" << std::endl;
     #endif
@@ -565,7 +572,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 		tm_base_type* t1 = &T1(s, r, 0);
 		tm_base_type* t2 = &T2(s, r, 0);
 		for(int c = 0; c < Hnc; ++c){
-		    int pos = manifold_dim * (ns * nc * s + nc * r +c); // rowwise flattening
+		    int pos = manifold_dim * (nr * nc * s + nc * r +c); // rowwise flattening
 		   // int pos = manifold_dim * (s + ns * r + ns * nr * c); // columnwise flattening
 		    restricted_deriv2_type ht = t1[c].transpose()*h[c]*t2[c];
 		
@@ -658,13 +665,19 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 	    for(int r=0; r < nr; ++r){
 		 deriv2_type* row = &YD12(s, r, 0);
 		 for(int c=0; c < nc; ++c){
-		    int pos = manifold_dim * (ns * nc * s + nc * r +c); // rowwise flattening
+		    int pos = manifold_dim * (nr * nc * s + nc * r +c); // rowwise flattening
 	//	    int pos = manifold_dim * (s + ns * r + ns * nr * c); // columnwise flattening
 		    HTV_single_insert(row[c], *t1_it, *t2_it, pos, 0, offset);
 		    t1_it.next();
 		    t2_it.next();
+		    #ifdef TV_FUNC_DEBUG_VERBOSE2
+			std::cout << "\n\t\t\tPosition: (" << s << ","<< c << "," << r << ")" << std::endl;
+			std::cout << "\t\t\tValue(YD12): " << row[c] << std::endl;
+			std::cout << "\t\t\tEntry number: " << k << std::endl;
+			std::cout << "\t\t\tPos: " << pos << std::endl;
+		    #endif
 		    ++k;
-		    if(k == max_entry) {do_break = true; break;}
+		    if(k >= max_entry) {do_break = true; break;}
 		 }
 		 if(do_break) break;
 	    }
@@ -704,7 +717,7 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 	    for(int r=0; r < nr; ++r){
 		 deriv2_type* row = &XD12(s, r, 0);
 		 for(int c=0; c < nc; ++c){
-		    int pos = manifold_dim * (ns * nc * s + nc * r +c); // rowwise flattening
+		    int pos = manifold_dim * (nr * nc * s + nc * r +c); // rowwise flattening
 		    //int pos = manifold_dim * (s + ns * r + ns * nr * c); // columnwise flattening
 		    HTV_single_insert(row[c], *t1_it, *t2_it, pos, 0, manifold_dim);
 		    t1_it.next();
@@ -738,7 +751,8 @@ void Functional<FIRSTORDER, disc, MANIFOLD, DATA, 3 >::evaluateHJ(){
 	    std::fstream f;
 	    f.open("H.csv",std::fstream::out);
 	    Eigen::IOFormat CommaInitFmt(Eigen::StreamPrecision, Eigen::DontAlignCols, ", ", ", ", "", "", "", "");
-	    //f << HJ_.format(CommaInitFmt).;
+	    //Eigen::MatrixXd M(HJ_);
+	    //f << M.format(CommaInitFmt);
 	    f << HJ_;
 	    f.close();
 

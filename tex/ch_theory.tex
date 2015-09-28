@@ -319,20 +319,20 @@ The second derivatives, considering only the terms in the first line of (\ref{eq
 Considering the pattern of the Kronecker deltas and reshaping the tensor of second partial derivatives into a single matrix, one 
 obtains a block-band matrix, where sums of non-mixed second derivatives of the squared distance function are located on the main diagonal, while all mixed
 derivatives belonging to the same gradient component ($x,y$ or $z$) populate subdiagonals of equal distance to the main diagonal.
-In particular, discretizations in $z$-direction are on the first, in $y$-direction on the $Z$th and in $x$-direction on the $Z\times Y$th subdiagonals.\\
+In particular, discretizations in $x$-direction are on the first, in $y$-direction on the $X$th and in $z$-direction on the $X\times Y$th subdiagonals.\\
 
 To illustrate this, consider the following schematic of the band structure
 
 \begin{equation}
     HJ=
 \begin{pmatrix}
-D	& Z	    & 		& Y	    & 		& X	    & 	   \\
-Z	& D	    & Z		& 	    & Y		& 	    & X	  \\
-	& Z	    & D	    & Z	    & 		& Y	    & 	 \\
-Y	& 	    & Z		& D	    & Z		& 	    & Y	\\
-	& Y	    & 		& Z	    & D		& Z	    & 	\\
-X	& 	    & Y		& 	    & Z		& D	    & Z	\\
-	& X	    & 		& Y	    & 		& Z	    & D	\\
+D	& X	    & 		& Y	    & 		& Z	    & 	   \\
+X	& D	    & X		& 	    & Y		& 	    & Z	  \\
+	& X	    & D	    & X	    & 		& Y	    & 	 \\
+Y	& 	    & X		& D	    & X		& 	    & Y	\\
+	& Y	    & 		& X	    & D		& X	    & 	\\
+Z	& 	    & Y		& 	    & X		& D	    & X	\\
+	& Z	    & 		& Y	    & 		& X	    & D	\\
 \end{pmatrix},
 \end{equation}
 where $D$ denotes a block, consisting of the sum of non-mixed second derivatives, according to the rules defined by the generalization of (\ref{eq:funcsecder}) to all 

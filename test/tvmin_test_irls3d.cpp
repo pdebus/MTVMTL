@@ -42,9 +42,10 @@ int main(int argc, const char *argv[])
 	    
     data_t myData=data_t();
     myData.create_noisy_gray(nz, ny, nx);
+//    myData.create_noisy_rgb(nz, ny, nx);
     visual_t myVisual(myData);
 
-    myVisual.saveImage("noisy3dRGB.png");
+    myVisual.saveImage("noisy3dgrayscale.jpg");
     std::cout << "Starting OpenGL-Renderer..." << std::endl;
     myVisual.GLInit("Image Cube Renderer ");
     std::cout << "Rendering finished." << std::endl;
@@ -57,7 +58,7 @@ int main(int argc, const char *argv[])
     myTVMin.smoothening(5);
     myTVMin.minimize();
 
-    myVisual.saveImage("noisy3dRGB.png");
+    myVisual.saveImage("noisy3dRGB.jpg");
     std::cout << "Starting OpenGL-Renderer..." << std::endl;
     myVisual.GLInit("Image Cube Renderer ");
     std::cout << "Rendering finished." << std::endl;
