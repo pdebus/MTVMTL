@@ -2,9 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-x1=np.linspace(0,1,10)
+x1=np.linspace(0,1,11)
 x2=np.linspace(0,1,2)
-x3=np.linspace(0,1,100)
+x3=np.linspace(0,1,101)
 
 plt.ylim(-0.01, 1.01)
 plt.plot(x3, x3, linestyle='-', linewidth=3, label=r'$f_3(x)$')

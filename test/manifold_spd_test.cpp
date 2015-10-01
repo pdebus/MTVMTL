@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 
 #include <unsupported/Eigen/MatrixFunctions>
 
@@ -79,6 +80,35 @@ int main(int argc, const char *argv[])
 
 	std::cout << "\n\nRANDOM Matrices" << std::endl;
 	test(s1,s2);
+
+	mf_t::deriv2_type result;
+	int evals =1000000;
+	std::cout << "\n\nTest of Matrix square root implementations for N=3" << std::endl;
+
+	std::cout << "\n First implementation using n^2 directional derivatives: " << std::endl;
+	std::cout << "Test with " <<  evals << " evaluations started..." << std::endl;
+	std::chrono::time_point<std::chrono::system_clock> start, end;
+	std::chrono::duration<double> t = std::chrono::duration<double>::zero();
+	start = std::chrono::system_clock::now();
+	    for(int i=0; i<evals; ++i){
+		KroneckerDSqrt2(s1,result);
+	    }
+	end = std::chrono::system_clock::now();
+	t = end - start; 
+	std::cout << "\t Elapsed time: " << t.count() << " seconds." << std::endl;
+	std::cout << "\t " << t.count() / evals << " seconds per evaluation. " << std::endl;
+
+
+	std::cout << "\n Second implementation using n^2 x n^2 kronecker product inverse: " << std::endl;
+	std::cout << "Test with " <<  evals << " evaluations started..."<< std::endl;
+	start = std::chrono::system_clock::now();
+	    for(int i=0; i<evals; ++i){
+		KroneckerDSqrt(s1,result);
+	    }
+	end = std::chrono::system_clock::now();
+	t = end - start; 
+	std::cout << "\t Elapsed time: " << t.count() << " seconds." << std::endl;
+	std::cout << "\t " << t.count() / evals << " seconds per evaluation. " << std::endl;
 
 	return 0;
 }

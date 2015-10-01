@@ -1,9 +1,9 @@
 \chapter{Derivative Computations}
 \label{ap:derivative}
 
-The following computation are based on the notation used in \cite{Magnus}. At the core of 
+The following computations are based on the notation used in \cite{Magnus}. At the core of 
 the computation is the following relation for the differential $dF$ of a function $f$, considered 
-as map between two matrix spaces.
+as map between two matrix spaces
 
 \begin{equation}
 \mathop{d}\operatorname{vec} F(X) =\operatorname{vec}\mathop{dF}(X),
@@ -33,7 +33,7 @@ The first derivative $\frac{\partial d^2(X,Y)}{\partial X} = -2X\log(X^TY) =: T_
 T_1 &= X^TY \\
 T_2 &= -2X \\	
 T_3 &= \log T_1\\  
-T_4 &= T_2 T_3
+T_4 &= T_2 T_3.
 \end{align}
 
 The derivative of the first line with respect to $X$ is given by
@@ -50,7 +50,7 @@ Hence,
 \end{equation}
 where $K_{nn}$ denotes the so-called commutator matrix transforming the vectorization
 of a matrix to the vectorization of the transpose of the matrix. More details
-on the properties of the permutation matrix can be found in \cite{Magnus}.\\
+on the properties of this permutation matrix can be found in \cite{Magnus}.\\
 
 Now for the second part one has
 \begin{align}
@@ -68,7 +68,7 @@ The third part yields
 \mathop{d}\log(Y^T\otimes\mathbbm{1_n})K_{nn}.
 \end{equation}
 
-Finally, only the last part is need to put everything together. From 
+Finally, only the last part is needed to put everything together. From 
 \begin{align}
 \mathop{d}T_3(X)&=\mathop{d}T_2(X)T_3(X)+T_2(X)\mathop{d}T_3(X)\\
 \mathop{d}\operatorname{vec}T_2(X)&=\operatorname{vec}\mathop{d}T_2T_3

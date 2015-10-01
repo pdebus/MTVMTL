@@ -1,0 +1,1157 @@
+\begin{chapter}{The Manifold Total Variation Minimization Template Library}
+\label{ch:library}
+
+The manifold total variation minimization template library (MTVMTL), which was developed in the course of this thesis is an easy-to-use, fast C++14 template library for TV minimization of manifold valued two- or three-dimensional images. \\
+
+The following chapter summarizes the capabilities of the library
+and introduces into its architecture from a software engineering as well as high performance computing point of view. The last part,
+describing the components in more detail, can also be understood as a high level documentation of the library and includes some basic tutorial on its usage.
+
+
+\section{Capabilities} % (fold)
+\label{sec:Capabilities}
+The following list provides a first overview of the implemented features. More detailed
+information are found in the description of the components in Section \ref{sec:Components}
+and the examples in Section \ref{sub:tutorial}.
+\subsection*{Manifolds} % (fold)
+\label{sub:supportedManifolds}
+\begin{itemize}
+    \item Real Euclidean space $\mathbb{R}^n$
+    \item Sphere $S^n=\left\lbrace x\in\mathbb{R}^{n+1}:\; \norm{x}=1\right\rbrace$
+    \item Special orthogonal group $SO(n)=\left\lbrace Q\in\mathbb{R}^{n\times n}:\; QQ^T=\mathbbm{1}, \operatorname{det}(Q)=1 \right\rbrace$
+    \item Symmetric positive definite matrices $SPD(n)=\left\lbrace S\in\mathbb{R}^{n\times n}:\; S=S^T, x^TSx>0\; \forall x\in\mathbb{R}^n\setminus\lbrace 0\rbrace \right\rbrace$
+    \item Grassmann manifold $Gr(n,p) = St(n,p) / O(p)$
+\end{itemize}
+% subsection Supported Manifolds (end)
+
+\subsection*{Data} % (fold)
+\label{sub:Data}
+\begin{itemize}
+	\item 2D and 3D images
+	\item Input/Output via OpenCV integration supporting all common 2D image formats
+	\item CSV input for matrix valued data
+	\item Input methods for raw volume image data as well as the NIfTI \cite{nifti} format for DT-MRI images
+	\item Various methods to identify damaged areas for inpainting
+\end{itemize}
+% subsection Data (end)
+
+\subsection*{Functionals} % (fold)
+\label{sub:Functionals}
+\begin{itemize}
+    \item isotropic (only possible for IRLS) or anisotropic TV functionals
+    \item first order TV term
+    \item weighting and inpainting possible
+\end{itemize}
+% subsection Functionals (end)
+
+\subsection*{Minimizer} % (fold)
+\label{sub:Minimizer}
+\begin{itemize}
+	\item Iteratively reweighted least squares using Riemannian Newton method
+	\item Proximal point
+\end{itemize}
+% subsection Minimizer (end)
+
+\subsection*{Visualizations} % (fold)
+\label{sub:Visualizations}
+\begin{itemize}
+    \item OpenGL rotated cubes visualization for SO(3) images
+    \item OpenGL ellipsoid visualization for SPD(3) images
+    \item OpenGL volume renderer for 3D volume images
+\end{itemize}
+% subsection Visualization (end)
+
+% section Capabilities (end)
+
+\section{Design concepts} % (fold)
+\label{sec:Design}
+The next sections give more insights in the implementation details of the algorithms introduced in the last chapter.
+The first part discusses the performance relevant changes in data representation and computation
+with respect to the Matlab prototype, which is followed by a discussion of structural changes to make
+MTVMTL as modular and extendable as possible.\\
+
+The next part is then dedicated especially to the question where and how parallelization is used in the implementation.
+A related question is also the use of new language features of the C++11 and C++14 language standards 
+which allow for a real compact formulation of the parallel code segments. 
+The section closes with a short description of those features.
+
+\subsection{Goals} % (fold)
+\label{sub:Goals}
+Traditionally, there has always been a trade-off between performance and usability requirements such as
+maintainability or extendability. A good example for that is the Basic Linear Algebra Subprograms 
+(BLAS) library, written in Fortran, and still considered one of the fastest libraries in existence. 
+For supercomputers, even versions with hand-optimized assembly code are used, nevertheless calling
+the library directly from another high level language like C or C++ is quite cumbersome, the code becomes
+larger and much harder to read. \\
+
+Languages like C++, on the other hand, offer a lot of expressive power and make it possible, through object oriented
+generic programming, to write compact, reusable and even fast, though not as fast as Fortran, code. Nevertheless,
+with the development of template metaprogramming techniques C++ is able to avoid the performance-usability
+trade-off to a certain degree, using very elaborate compile time optimizations. Classical examples for these techniques are expression templates \cite{blitz}, also used by the Eigen linear algebra, and specifically variadic templates, as used by MTVMTL.
+C++ was consequently the ideal choice for achieving high performance and the usability requirements.
+
+\subsubsection{Performance} % (fold)
+\label{ssub:Performance}
+Since the core parts of the implementation are originally based on a Matlab prototype by Sprecher \cite{SprecherIRLS}, \cite{manuel} and \cite{mara}, one of the most important
+goals was a faster implementation with a smaller memory footprint. On the test platform with two hyper-threaded 2.8GHz cores (Intel i5-2520) with AVX vector extensions,
+the Matlab implementation froze for images larger than one Megapixel(MP).\\
+
+Hence, the C++ implementation should enable the algorithm to be tested in a much broader scope which is
+also closer to common picture sizes in image processing, especially since even smart phones today easily produce pictures in the Megapixel range.
+In addition to that, also other factors affecting the performance of the algorithm, such as cache locality and memory speed, can be investigated.\\
+
+The main performance driver for this library is the multilevel-parallelization. Evidently, this does not include the formulation of the IRLS minimization algorithm itself, due to the fact that
+it is naturally an iterative method, but rather any possible subtask such as computation of the functional values, gradient and Hessian, for example. On top of that, it was tried to
+maximize cache locality on the loop level and free memory as soon as possible.
+On the other hand, data that is used very often and requires costly recomputation, like the IRLS weights, are kept in memory.\\ 
+
+In contrast to the original Matlab implementation, the computation of various quantities such as weights, first and second derivatives is not realized with tensor products any more.
+For Matlab, due to the low speed of its internal loop constructs, the approach is justified but in a pure C++ implementation other factors are more important.
+One reason for the change is improved readability and maintainability of the code, since tensor products usually tend to become very convoluted,
+especially for the manifolds with matrix representations. Also the modularization of the manifold class is not straightforward any more, because the tensor products cannot be expressed as binary operation depending on two manifold data points.\\
+
+From a performance and parallelization perspective, contractions of tensor products are similar to matrix products and usually require some sort of blocking scheme for parallelization.
+In addition to that, because certain reshapes of the image container prior to the computation are necessary, the dimensions to be summed over are not necessarily contiguous in memory.
+A high cache utilization is consequently more difficult to achieve.\\
+Finally, in order to formulate certain operations as tensor products, temporary tensors of the correct dimensionality need to be created, which increases the memory consumption.\\
+
+Another measure that significantly reduces the memory footprint for the IRLS minimizer, especially for manifolds with matrix representations, is to only save gradient and Hessian
+in their local tangent space basis representation, such that the degrees of freedom correspond the intrinsic manifold dimension and not the dimension of the embedding space. This also reduces
+the time to solve the sparse linear system.\\
+% subsubsection Performance (end)
+
+\subsubsection{Modularization and Extendability} % (fold)
+\label{ssub:Modularization}
+In principle the programming paradigm in Matlab is still procedural resulting in a hierarchy of functions for the various tasks. Handling different types of manifolds
+then usually requires \texttt{switch} expressions in all functions that use manifold-specific functionality. Adding support for a new manifold to the algorithm or modifying
+existing manifold functionality makes a modification of all \texttt{switch} cases necessary. There is no single point of change but many source files need to be edited.\\
+
+For the MTVMT Library an object oriented and generic programming approach was chosen, which tries to model each variable component of the algorithm in a separate class, as 
+independent of the other components as possible. For general information on C++ design paradigm see, for example, \cite{CPPTemplateMP} or \cite{CPPGeneric}.
+Differences in each class are represented by specializations of their primary class template. The best example for that is the
+manifold class which has a specialization for every supported manifold type and due to the fact that the functions implemented in those class specializations are generally
+just functions of one or two elements of the manifold, they could also be used in other projects which require the same functionality.\\
+
+Interfaces between classes are provided by giving classes higher in the hierarchy template parameters corresponding to lower classes: The class modelling the functional, for instance,
+has a manifold type template parameter, as described in more detail in Section \ref{sec:Components}. Like all other component classes, also the functional class can be extended
+by adding further specializations for other types of functionals, that include for example higher order terms or have different fidelity terms \cite{SceneFlow}.\\
+
+Those specializations also have the advantage that the code is just in one file - a single point of change - to increase readability and maintainability.
+% subsubsection Modularization (end)
+
+% subsection Goals (end)
+
+\subsection{Levels of parallelization} % (fold)
+\label{sub:Levels of parallelization}
+Parallelization takes place on two levels. The first one is shared memory multi-threading implemented with the OpenMP (OMP)language extensions. In most cases this is realized 
+using the so-called \textit{pixel-wise kernels} of the Video++ (VPP) library, which makes it possible to map an arbitrary function on all pixels of a set of image containers: The function is
+called for each tuple of pixels having the same coordinates in their respective image. For the parallel execution each processor is assigned a batch of image rows.
+If the pixel-wise kernels are not applicable, for example if the needed subdomain of the image is too complicated, manual OpenMP loop parallelization is used. Due to the fact that the 3D pixel-wise constructs are not 
+implemented in the current version of VPP, also an own 3D version of the pixel-wise kernels 
+was implemented using OpenMP and variadic templates to keep the code compact.\\
+
+The alternative to the tensor product implementation is to use pixel-wise kernels to parallelize any operation that requires iteration over an image container.
+For most computations, take for instance the case of computing derivatives, only the pixel and its next neighbor in a given dimension are needed. For calculating the forward derivatives one just 
+to has to call the pixel-wise kernel with two subimages of the current working image: One with the last slice (of the given dimension) missing and one with the first slice missing. At this point it must be noted that the concept of subimages does not
+involve any copies but just works by using different addressing schemes for the same
+data in the memory.
+The pixel-wise constructs are demonstrated in the following short Listing \ref{code:pixelwise_demo} and further illustrated in Figure\ref{fig:pixelwise_kernel}:\\
+
+\cppinline
+\begin{lstlisting}[label=code:pixelwise_demo,caption={Pixel-wise forward derivative computation}]
+auto calc_first_arg_deriv = [&] (value_type& x, const weights_type& w, const value_type& i, const value_type& n) { MANIFOLD::deriv1x_dist_squared(i, n, x); x *= w; }; 
+
+img_type YD1 = img_type(without_last_row);
+vpp::pixel_wise(YD1, weightsY_ | without_last_row, data_.img_ | without_last_row, data_.img_ | without_first_row) | calc_first_arg_deriv;
+\end{lstlisting}
+
+\begin{figure}[h!]
+        \centering
+	    \includegraphics[width=1.0\linewidth]{./figures/library/pixelwise_kernel.pdf}
+	\caption[Calculation using pixel-wise kernels]{Parallel calculation of derivatives in $y$-direction and weighting using pixel-wise kernels.
+	    For each pixel position $(i,j)$ in the three input pictures, \circnum{1}, \circnum{2} and \circnum{3}, as well as in the output picture
+	    \circnum{R}, the pixel-wise kernel creates a tuple $(R_{ij}, 2_{ij}, 1_{ij}, 3_{ij})=(\text{YD1}_{i,j},\text{weightY}_{i,j},\text{Image}_{i,j},\text{Image}_{i+1,j})$
+	    which is than used to call the specified lambda function. Depending on the row number of the pixel, the calls are executed by different CPU cores.
+	}
+	\label{fig:pixelwise_kernel}
+\end{figure}
+
+The advantage is that even though some function is evaluated for a pair of neighboring pixels which are not adjacent in memory, the parallel processing is still
+always row-wise. Since rows in row-major languages like C++ are contiguous in memory, one can avoid frequent memory access on distant locations and consequently avoid cache thrashing to a certain degree.\\
+
+The second level of parallelization is instruction level parallelism, also known as \textit{Single Instruction Multiple Data} (SIMD), which uses the
+processor's vector extensions (e.g. SSE, AVX, NEON).
+The CPU provides some additional special SIMD registers with increased size of usually 128 bits to 512 bits such that multiple integer or floating point variables fit inside.
+Then an arithmetic operation is simultaneously applied to all variables in the register (see Figure \ref{fig:simd}) such that theoretically the amount of floating point operations is multiplied by the number
+of variables fitting in the register. \\
+
+\begin{figure}[h!]
+        \centering
+	    \includegraphics[width=0.7\linewidth]{./figures/library/SIMD.pdf}
+	\caption[SIMD parallelization]{Instruction level parallelism using SIMD registers.
+	}
+	\label{fig:simd}
+\end{figure}
+
+In order to achieve this speedup the data must be aligned in memory, which means the addresses of pixels in memory must always be a multiple of the SIMD register size. Fortunately,
+that issue is handled by the VPP and Eigen libraries enabling the compiler to perform the necessary vectorization optimizations.
+
+% subsection Levels of parallelization (end)
+
+
+\subsection{C++ techniques} % (fold)
+\label{sub:C++ techniques}
+The MTVMT Library tries to take advantage of new C++11 and C++14 language features in order to speed up computations via compile-time optimizations and also make the code
+more compact and readable. The most important tools in that regard are lambda functions and variadic templates which are shortly described in the following section.
+For more details check for example \cite{CPPEleven}.
+
+\subsubsection{Lambda functions} % (fold)
+\label{ssub:Lambda functions}
+A lambda function is basically a locally defined function object, which is able to capture variables from the surrounding scope. The function can but needs not to be named.
+The corresponding Matlab language construct is an anonymous function or function handle, usually defined using the @ operator. The following listing
+shows the basic definitions and use cases of lambda functions:\\
+
+\cppinline
+\begin{lstlisting}[label=code:lambdafun,caption={Lambda functions}]
+int init = 5;
+std::vector<int> v {1, 2, 3, 4};
+
+// C++11 lambda function for adding integers
+// init is captured by reference
+auto f = [&] (int a, int b) {return a + b + init;};
+
+// C++14 generic argument lambda function
+// init is captured by value
+auto g = [=] (auto a, auto b) {return a + b + init;};
+
+//Call named lambda functions
+int d = f(8, 3);
+double e = g(1.0f, 5);
+
+// or directly pass anonymous lambda function as argument
+std::transform(v.begin(), v.end(), v.begin(), [] (auto x) { ++x; });
+\end{lstlisting}
+
+In the MTVMT library, lambda functions provide the connection between the static manifold methods and the pixel-wise kernels which apply them to the image containers.
+A typical case can be seen in the already introduced listing \ref{code:pixelwise_demo}. Since lambda functions are only locally defined, in the scope where they are actually needed,
+one can avoid making the method list of the classes unnecessary long.
+% subsubsection Lambda functions (end)
+
+\subsubsection{Variadic templates} % (fold)
+\label{ssub:Variadic templates}
+With variadic templates it is possible to define functions which take a variable number of arguments. Obviously, this is also possible in other languages like Matlab or
+C with the most prominent example being the function \texttt{printf}. However, this is usually implemented using some list type (in C: \texttt{va\_list}), which adds additional 
+overhead, whereas in C++ it is realized via a special kind of template metaprogramming technique, which is recursive in nature. The recursion, in turn, is resolved at compile-time
+and leads to code that is actually equivalent to manually defining a function with the desired number of arguments, and consequently there is no additional runtime effort.\\
+
+\cppinline
+\begin{lstlisting}[label=code:variadic,caption={Variadic template example}]
+// Recursion base case
+template<typename T>
+T sum(T v) {
+    return v;
+}
+
+// Recursive template
+template<typename T, typename... Args>
+T sum(T first, Args... args) {
+    return first + sum(args...);
+}
+\end{lstlisting}
+
+The main application for this constructs in MTVMTL are the implementation of the Karcher mean, needed for the proximal point implementation, and MTVMTL's own version
+of the 3D pixel-wise kernels.
+
+% subsubsection Variadic templates (end)
+% subsection C++ techniques (end)
+% section Design (end)
+
+\section{Components} % (fold)
+\label{sec:Components}
+In the following section the different components of the library are discussed. For the manifold class, this will be done in more detail to enable users to use new or customized manifold classes. A general overview of all the components is provided in Figure \ref{fig:components}.
+\begin{figure}[h!]
+        \centering
+	    \includegraphics[width=1.0\linewidth]{./figures/library/components.pdf}
+	\caption[Overview of library components]{Overview of the class hierarchy and dependencies between the library components and also third party libraries
+	}
+	\label{fig:components}
+\end{figure}
+
+\subsection{Manifold class} % (fold)
+\label{sub:Manifold classes}
+The manifold template class encapsulates all information and methods related to the differential geometric structure of the data. 
+This enables the generic implementation of the functionality higher in the class hierarchy such as functional evaluations or minimizers.
+The primary template has the following parameters
+\cppinline
+\begin{lstlisting}
+// Primary Template
+template <enum MANIFOLD_TYPE MF, int N, int P=0>
+struct Manifold {
+}; 
+\end{lstlisting}
+where \texttt{MF} is an enumeration constant to specify the type of the manifold, $N$ denotes the dimension of the representation space and $P$ the dimension of subspaces,
+as in the case of Grassmann manifolds. In order to add a new manifold one just has to implement a specialization of this primary template.\\
+
+So far, the manifold class contains functionality necessary for TV minimization using either the IRLS or proximal point algorithm and furthermore some additional operations
+that are needed for supporting tasks like interpolation and smoothing. The class specializations are implemented using only static constants and methods: At no time it is necessary or 
+desired to actually instantiate the class. The methods itself are usually unary or binary functions, with parameters and result all passed by reference to avoid copies.
+Since these methods are called very often, basically for every pair of neighboring pixels, they are all declared \texttt{inline} in order to support the compiler during 
+the code optimization.\\
+
+It is also possible to use these class specializations in other projects requiring similar functionality, like 
+for instance when implementing a geodesic finite element solver.\\
+
+In the following, excerpts of the SPD implementation are shown to illustrate which information and functionality a new manifold class needs to provide and to give an overview
+of the available functions.
+
+\subsubsection{Static constants} % (fold)
+\label{ssub:Static constants}
+\cppinline
+\begin{lstlisting}
+static const MANIFOLD_TYPE MyType;	// SPD
+static const int manifold_dim ;		// N*(N+1)/2
+static const int value_dim;		// N*N
+
+static const bool non_isometric_embedding;
+\end{lstlisting}
+The first constant just stores the manifold template parameter introduced above, while \texttt{manifold\_dim} and \texttt{value\_dim} are the intrinsic dimensions of the manifold
+and of its embedding space, respectively. Finally, the Boolean constant is just a flag which tells the algorithm that special pre- and post-processing for interpolation is necessary.\\
+% subsubsection Static constants (end)
+
+\subsubsection{Type definitions} % (fold)
+\label{ssub:Type definitions}
+To allow the generic formulation of the algorithms, the manifold class provides a mapping between the types of their values, derivatives, tangent bases and underlying scalar type and their 
+actual representation as matrix and vector data types of the Eigen linear algebra library. Examples can be seen in the following listing:
+
+\cppinline
+\begin{lstlisting}
+// Scalar and value typedefs
+typedef double scalar_type;
+typedef double dist_type;
+typedef Eigen::Matrix<scalar_type, N, N> value_type;
+// ...
+
+// Tangent space typedefs
+typedef Eigen::Matrix <scalar_type, N*N, N*(N+1)/2> tm_base_type;
+// ...
+
+// Derivative Typedefs
+typedef value_type deriv1_type;
+typedef Eigen::sMatrix<scalar_type, N*N, N*N> deriv2_type;
+typedef Eigen::Matrix<scalar_type, N*(N+1)/2, N*(N+1)/2> restricted_deriv2_type;
+// ...
+\end{lstlisting}
+% subsubsection Type definitions (end)
+
+\subsubsection{Static methods} % (fold)
+\label{ssub:Static methods}
+Finally, the following methods are implemented for the manifold classes.
+
+\begin{description}
+    
+    \item[Riemannian distance function and its derivatives] \hfill \\
+	\cppinline
+	\begin{lstlisting}
+inline static dist_type dist_squared(cref_type x, cref_type y);
+// First derivatives	    
+inline static void deriv1x_dist_squared(cref_type x, cref_type y, deriv1_ref_type result);
+inline static void deriv1y_dist_squared(cref_type x, cref_type y, deriv1_ref_type result);
+// Second derivatives
+inline static void deriv2xx_dist_squared(cref_type x, cref_type y, deriv2_ref_type result);
+inline static void deriv2xy_dist_squared(cref_type x, cref_type y, deriv2_ref_type result);
+inline static void deriv2yy_dist_squared(cref_type x, cref_type y, deriv2_ref_type result);
+	\end{lstlisting}
+    
+    \item[Exponential and Logarithm map] \hfill \\
+	\cppinline
+	\begin{lstlisting}
+template <typename DerivedX, typename DerivedY>
+inline static void exp(const Eigen::MatrixBase<DerivedX>& x, const Eigen::MatrixBase<DerivedY>& y, Eigen::MatrixBase<DerivedX>& result);
+inline static void log(cref_type x, cref_type y, ref_type result);
+
+inline static void convex_combination(cref_type x, cref_type y, double t, ref_type result);
+	\end{lstlisting}
+
+	The parameters of the exponential here are not the manifolds own typedefs but the base class of all Eigen matrix data types. The reason for using this construction is that the function
+	can also be called with composite expressions (e.g. $XY+Z$) without a temporary copy. Most of the other functions are usually called with atomic expression only, hence there is no
+	need to use this more complicated construction on a general basis.\\
+	The \texttt{convex\_combinations} method computes the point $z$ on the manifold reached by following a unit speed geodesic connecting the points $x$ and $y$ for a time $t$.
+
+    \item[Karcher mean] \hfill \\
+	\cppinline
+	\begin{lstlisting}
+inline static void karcher_mean(ref_type x, const value_list& v, double tol=1e-10, int maxit=15);
+inline static void weighted_karcher_mean(ref_type x, const weight_list& w, const value_list& v, double tol=1e-10, int maxit=15);
+
+// Variadic templated version
+template <typename V, class... Args>
+inline static void karcher_mean(V& x, const Args&... args);
+	\end{lstlisting}
+	
+	Implementations for finding the Karcher mean of an arbitrary number of points. The first version requires the points to be stored in a \texttt{std::vector} container while
+	the second version is based on variadic templates and expects the arguments just as a comma separated list after the first argument, where the final result will be stored.
+	Creating the list for the first version eventually requires copying and is consequently slower but has an overloaded version which allows to compute a weighted Karcher mean
+    
+    \item[Tangent plane basis, projector and interpolation] \hfill \\
+	\cppinline
+	\begin{lstlisting}
+// Basis transformation for restriction to tangent space
+inline static void tangent_plane_base(cref_type x, tm_base_ref_type result);
+// Projection
+inline static void projector(ref_type x);
+// Interpolation pre- and postprocessing
+inline static void interpolation_preprocessing(ref_type x);
+inline static void interpolation_postprocessing(ref_type x);
+	\end{lstlisting}
+
+	The first function computes a basis of the tangent space at the point $x$ and stores it in \texttt{result}, as columns of a matrix.\\
+	The projector, if defined for the given manifold, will project a point of the ambient embedding spacing onto the manifold. This might either be an actual projector in the mathematical sense or, as in the Euclidean case, a cutoff
+	function which maps the data back into the desired value range ($[0,1]^n$ in the Euclidean case). \\
+	Interpolation pre- and postprocessing is necessary for instance for the SPD manifold. Other manifolds must just provide an empty implementation.
+\end{description}
+% subsubsection Static end)
+% subsection Manifold classes(end
+\subsection{Data class} % (fold)
+\label{sub:Data class}
+The data class handles anything related to storage, input and output of two- or three-dimensional image data, as well as some support functions for detecting edges and damaged areas in a picture.
+In contrast to the manifold class, the data class needs to be instantiated such that a reference to the data object can be passed to any class which needs data access. In turn, in addition
+to the dimension of the picture, the data class takes a fully specialized manifold class type as a template parameter:
+
+\cppinline
+\begin{lstlisting}
+// Primary Template
+template <typename MANIFOLD, int DIM >
+class Data {
+};    
+\end{lstlisting}
+
+There are basically four multi-dimensional arrays stored in the data class: The original noisy image, the current working image and, if applicable, arrays storing the inpainting
+and edge weight information. For storage, the n-dimensional VPP \cite{VPP} image container is used.\\
+
+This image container class works very well together with the Eigen vector and matrix data types, provides a variety of expressive loop- and iterator constructs and also takes care
+of the alignment of the image data in memory, which is a prerequisite for the \textit{Single Instruction Multiple Data} (SIMD) optimization and vectorization by the compiler.
+Since the memory management of the container is based on \texttt{std::shared\_pointer}, it is also very easy to efficiently access subimages or slices of an image without any copies.\\
+
+The most common input methods for 2D and 3D are summarized in the following code snippet:
+\cppinline
+\begin{lstlisting}
+ // 2D Input functions
+void rgb_imread(std::string filename);	// for R^3
+void rgb_readBrightness(std::string filename); // for R
+void rgb_readChromaticity(std::string filename); // for S^2
+void readMatrixDataFromCSV(std::string filename, const int nx, const int ny);
+
+// Synthetic SO/SPD picture 
+void create_nonsmooth_son(const int ny, const int nx);
+void create_nonsmooth_spd(const int ny, const int nx);
+ 
+//3D Input functions
+void rgb_slice_reader(std::string filename, int num_slides); 
+void readMatrixDataFromCSV(std::string filename, const int nz, const int ny, const int nx);
+void readRawVolumeData(std::string filename, const int nz, const int ny, const int nx);
+
+// OutputFunctions
+void rgb_saveimage(std::string fname); // save image
+void rgb_show();						//open images viewer
+	
+void output_matval_img(std::string filename) const; // save in CSV format
+\end{lstlisting}
+The purpose and usage of most of these methods is self-explanatory. The CSV readers expect the data to be a linear list of pixels, where the components of each pixel are
+comma-separated and row-wise flattened, such that each line of the input file contains exactly one pixel. The order of the list is also row-wise for 2D or slice-wise, then row-wise for 3D images,
+respectively. \\ 
+The slice reader reads a series of images, following the filename scheme \texttt{filenameX.ext}, where \texttt{X} is the number of the slice to be read into an image cube at $z$-coordinate
+\texttt{X}.
+% subsection Data class (end)
+
+\subsection{Functional class} % (fold)
+\label{sub:Functional class}
+In addition to fully specialized Manifold and Data class types (third and fourth template parameters),
+there are three further template parameters that must be specified by the library user. The first one
+is the order of the functional which refers to the order of the highest differential operator in the TV term of the functional.
+So far, only first order functionals are implemented which corresponds to setting \texttt{ord=FIRSTORDER} in the primary template shown below
+
+\cppinline
+\begin{lstlisting}
+//Primary Template
+template <enum FUNCTIONAL_ORDER ord, enum FUNCTIONAL_DISC disc, class MANIFOLD, class DATA, int DIM=2>
+class Functional{
+};
+\end{lstlisting}
+
+The second template parameter \texttt{disc} determines whether the isotropic or the anisotropic version is to be used. Please note that for the proximal point algorithm only
+anisotropic is available. Finally, the last parameter specifies the dimensionality of the data. \\
+The main purpose of the functional class is to provide methods for the computation of all functional-related quantities, such as evaluation of the functional, its gradient,
+Hessian and construction of a local basis of the tangent spaces. That also means that in the IRLS case the functional class stores the sparse linear system that needs to be solved
+in each Newton step.\\
+
+For users of the library, the most important methods are those for setting the $\lambda$ and $\epsilon^2$ parameters.
+\cppinline
+\begin{lstlisting}
+inline param_type getlambda() const { return lambda_; }
+inline void setlambda(param_type lam) { lambda_=lam; }
+inline param_type geteps2() const { return eps2_; }
+inline void seteps2(param_type eps) { eps2_=eps; }
+\end{lstlisting}
+
+Should it be necessary, it is also possible to access some of the stored quantities directly using
+\cppinline
+\begin{lstlisting}
+// Evaluation functions
+result_type evaluateJ();
+void  evaluateDJ();
+void  evaluateHJ();
+ 
+void updateTMBase();
+
+inline const gradient_type& getDJ() const { return DJ_; }
+inline const sparse_hessian_type& getHJ() const { return HJ_; }
+inline const tm_base_mat_type& getT() const { return T_; }
+\end{lstlisting}
+The functions in lines 3, 4 and 6 merely trigger a recomputation while the last three functions return references to these quantities. \texttt{evaluateJ()} returns the functional value and triggers the 
+recomputation of the weights.
+
+
+% subsection Functional class (end)
+
+\subsection{TV minimizer class} % (fold)
+\label{sub:TVMinimizer class}
+For the TV minimizer class it makes sense to consider the IRLS and proximal point implementation separately. The primary template is shown in the following code snippet.
+\cppinline
+\begin{lstlisting}
+//Primary Template 
+template <enum ALGORITHM AL, class FUNCTIONAL, class MANIFOLD, class DATA, enum PARALLEL PAR=OMP, int DIM=2>
+class TV_Minimizer{ 
+};
+\end{lstlisting}
+As in the previous cases one has to provide fully specialized manifold, data and also functional types. Again, the last parameter specifies the dimension of the data. Of the
+remaining two parameters, \texttt{PAR} has the default value OMP, which specifies the method of parallelization, in this case the OpenMP language extensions. Other methods, including just serial
+execution, could be added later. The remaining template parameter, \texttt{AL} specifies the minimizer to be used and can take the values \texttt{IRLS} or \texttt{PRPT} (Proximal point).\\
+
+For IRLS, public class interface looks like\\
+\cppinline
+\begin{lstlisting}
+void first_guess();		    // First guess for inpainting
+void smoothening(int smooth_steps); // Simple averaging box filter
+newton_error_type newton_step();    // perform one newton step
+void minimize();		    // full minimization
+
+// Getters and Setters for parameters
+void setMax_runtime(int t) { max_runtime_ = t; }
+void setMax_irls_steps(int n) { max_irls_steps_ = n; }
+void setMax_newton_steps(int n) { max_newton_steps_ = n; }
+void setTolerance(double t) {tolerance_ =t; }
+	    
+int max_runtime(int t) const { return max_runtime_; }
+int max_irls_steps(int n) const { return max_irls_steps_; }
+int max_newton_steps(int n) const { return max_newton_steps_; }
+int tolerance(double t) const { return tolerance_; }
+\end{lstlisting}
+
+and for proximal point it is\\
+\cppinline
+\begin{lstlisting}
+use_approximate_mean(bool u) { use_approximate_mean_ = u; } // turn mean approximation on/off
+void first_guess();					    // First guess for inpainting
+ 
+void updateFidelity(double muk);			    // Update Fidelity part
+void updateTV(double muk, int dim, const weights_mat& W);   // Update TV part
+
+void geod_mean();	    // Calculate geodesic mean
+void approx_mean();	    // approximate mean using convex combinations
+
+void prpt_step(double muk); // perform one proximal point step
+void minimize();	    // full minimization
+
+// Getters and Setters for parameters
+void setMax_runtime(int t) { max_runtime_ = t; }
+void setMax_prpt_steps(int n) { max_prpt_steps_ = n; }
+	    
+int max_runtime(int t) const { return max_runtime_; }
+int max_prpt_steps(int n) const { return max_prpt_steps_; }
+\end{lstlisting}
+
+
+% subsection TVMinimizer class (end)
+
+\subsection{Visualization class} % (fold)
+\label{sub:Visualization class}
+This class provides visualizations of 3D volume data and so far SO(3) and SPD(3) visualizations by cubes and ellipsoids. If these are to be used in user code it is necessary to link
+against OpenGL, GLUT and GLEW libraries, which is explained in more detail in section \ref{sub:CMakeCompilation}. The visualization class has the following primary template.
+\cppinline
+\begin{lstlisting}
+//Primary Template
+template <enum MANIFOLD_TYPE MF, int N, class DATA, int dim=2>
+class Visualization{
+};
+\end{lstlisting}
+
+The class methods that are relevant to users of the library are summarized here\\
+\cppinline
+\begin{lstlisting}
+void saveImage(std::string filename);
+void GLInit(const char* windowname);
+
+void paint_inpainted_pixel(bool setFlag);
+\end{lstlisting}
+
+The important function here is \texttt{GLInit} which initializes the rendering of the data. If one intends to also save the image, on has to specify a filename using
+\texttt{saveImage} \textit{before} calling \texttt{GLInit}. Finally, \texttt{paint\_inpainted\_pixel} just sets a flag which decides whether inpainted pixels are not painted
+at all (\texttt{setFlag = false}, default value) or if they are visualized with the value they have at the time of rendering. Usually one wants to set this to \texttt{true}
+after the minimization to show the results.\\
+A complete example is presented in section \ref{ssub:dti_tut}\\
+
+\subsubsection{SO(3) visualization} % (fold)
+\label{ssub:SO(3) Visualization}
+For the visualization of SO(3) data a unit volume cube centered at the origin of $\mathbb{R}^3$ with its front face normal vector parallel to the y-axis is created.
+Then the rotation matrix representing the SO(3) element is applied to the cube.
+
+\begin{figure}[h!]
+        \centering
+	    \includegraphics[width=0.8\linewidth]{./figures/library/cubes.pdf}
+	    \caption[SO(3) cube visualization]{SO(3) Visualization as oriented, colored cubes}
+	\label{fig:cube_visualization}
+\end{figure}
+% subsubsection SO(3) Visualization (end)
+
+\subsubsection{SPD(3) visualization} % (fold)
+\label{ssub:SPD(3) Visualization}
+For SPD(3) matrices, there are six degrees of freedom, which in the case of DT-MRI pictures correspond to the diffusion coefficients in different directions.
+Those can be visualized by ellipsoids using three degrees of freedom for their orientation in space and the remaining three for the lengths of its semi-axis.\\
+Starting with the unit sphere centered at the origin, eigenvectors and eigenvalues are computed for every SPD matrix. Due to the SPD property a full basis of eigenvectors
+with positive eigenvalues always exists. The diagonal matrix formed by the vector of eigenvalues is applied as a scaling transformation of the coordinate axis. The matrix
+whose columns are the computed eigenvectors can then be interpreted as a rotation (or principal axis transformation of the ellipsoid).\\
+To avoid large size difference and overlaps between the ellipsoids one should also normalize the eigenvalues using the mean diffusivity $\mu$ defined by
+\begin{equation}
+    \mu = \frac{1}{3} \sum_{i=1}^{3}\lambda_i.
+\end{equation}
+
+Finally, the color is defined by normalizing the largest eigenvector, called the principal direction, and mapping its coordinates to the RGB color space, such that clusters of
+similar orientations can be more easily visually distinguished.
+
+\begin{figure}[h!]
+        \centering
+	    \includegraphics[width=0.8\linewidth]{./figures/library/ellipsoids.pdf}
+	    \caption[SPD(3) ellipsoid visualization]{SPD(3) Visualization as oriented, colored ellipsoids}
+	\label{fig:ellipsoid_visualization}
+\end{figure}
+
+In the case of 3D SPD images the rendering window also provides some controls over the view. The up and down arrow keys can be used to zoom in and out of the picture, left and right keys
+pivot the camera and with the \emph{s} key, the image is saved using the filename specified before.
+\begin{figure}[h!]
+    \centering
+    \subfloat[][Side View]{
+	\label{fig:helix_side}
+	\includegraphics[width=0.25\linewidth]{./figures/library/helixAngled1.png}
+    }
+    \subfloat[][Top View]{
+	\label{fig:helix_top}
+	\includegraphics[width=0.25\linewidth]{./figures/library/helixTop1.png}
+    }
+    \subfloat[][Closeup]{
+	\label{fig:helix_close}
+	\includegraphics[width=0.25\linewidth]{./figures/library/helixTop2.png}
+    }
+    \subfloat[][Inside]{
+	\label{fig:helix_inside}
+	\includegraphics[width=0.25\linewidth]{./figures/library/helixTop3.png}
+    }\\
+    \caption[3D SPD(3) Volume Visualization of a helix]{Example of the 3D data Visualization of SPD(3) images from different viewpoints. The 'helix' synthetic tensor data set, produced with the \texttt{tend} program in the Teem toolkit\cite{teem}
+	\label{fig:helix}
+    }
+\end{figure}
+
+% subsubsection SPD(3) Visualization (end)
+\FloatBarrier
+\subsubsection{3D volume image rendering} % (fold)
+\label{ssub:3D Volume image rendering}
+The volume image renderer just transforms the data to a 3D texture which is then mapped onto a cube rotating about the z-axis.
+Plasticity is created by setting the alpha channel of each displayed voxel to the intensity value of the corresponding data voxel, such that dark areas are more transparent.
+The following \ref{fig:volume_visualization} shows the rendered volume from different angles.
+\begin{figure}[h!]
+        \centering
+	    \includegraphics[width=1.0\linewidth]{./figures/library/3dvol_seq.png}
+	    \caption[3D Volume image renderer]{3D Volume image using texture based rendering. }
+	\label{fig:volume_visualization}
+\end{figure}
+% subsubsection 3D Volume image rendering (end)
+
+% subsection Visualization class (end)
+
+\subsection{Utility functions} % (fold)
+\label{sub:Utility function}
+
+\subsubsection{Algorithm traits} % (fold)
+\label{ssub:AlgoTraits}
+The algorithm traits class contains standard values for the IRLS algorithm, like the number of IRLS iterations, number of Newton iterations and maximal runtime.
+It also contains the standard solver for the linear system. If the solver needs to be switched it must be changed in this file. All other parameters can
+be changed using the methods provided by the TV minimizer class.
+
+
+\subsubsection{Matrix functions} % (fold)
+\label{ssub:Matrix functions}
+In the file \texttt{matrix\_utils.hpp} additional matrix functions not included in the Eigen library are implemented.
+So far, these are only the methods for the computation of the Fr\'{e}chet derivatives of matrix square root and logarithm, as well as their
+Kronecker representations.
+
+% subsubsection Matrix functions (end)
+
+\subsubsection{Function pointers utilities} % (fold)
+\label{ssub:Function pointers}
+Located in the file \texttt{func\_ptr\_utils.hpp}, there are some auxiliary functions needed to transform pointers to class member functions
+to plain C function pointers. The latter are required by the OpenGL and GLUT library API.
+% subsubsection Function pointers (end)
+
+\subsubsection{3D pixel-wise kernels} % (fold)
+\label{ssub:3D pixel-wise kernels}
+The 3D version of the pixel-wise kernels along with useful tools based on them, for copying or filling 3D images.
+% subsubsection 3D pixel-wise kernels (end)
+
+% subsection Utility function (end)
+% section Components (end)
+
+
+\section{Using MTVMTL} % (fold)
+\label{sec:Using TVTML}
+The following section serves as tutorial and illustrates the steps that must be taken
+from the installation to the first compiled code using the library. In the first part
+mandatory and optional requirements are listed, then installation of the library and
+the compilation process are explained. Finally, three use cases are illustrated with
+code examples.
+
+\subsection{Prerequisites} % (fold)
+\label{sub:Prerequisites}
+The main dependencies of MTVMTL are the \textit{Eigen} C++ template library for linear algebra and the \textit{Video++} video and image processing library. 
+Those libraries, as well as MTVMTL's core functionality are provided as header-only libraries. There are, however, some additional static libraries
+that are recommended to speed up the computation, enable easy I/O or which are needed for visualization of the results.
+To administer all these different parts, and because the header-only libraries require additional compiler flags for the code optimization, MTVMTL also relies
+on the \textit{CMake} installation tool for installation and compilation of user code using MTVMTL. \\
+
+The following list shows the needed packages for the usage of MTVMTL:
+\begin{itemize}
+    \item CMake ($\geq 2.8.0$)
+    \item gcc ($\geq 4.9.1$), any C++14 compatible compiler should also be possible but is untested.
+    \item Eigen ($\geq 3.2.5$)
+    \item Video++ (a version will be provided with the MTVMTL, otherwise consider \cite{VPP} )
+    \item Boost ($\geq 1.56$) (also needed for CGAL)
+\end{itemize}
+
+Recommended are also the following packages. They are needed if any of the described extended functionality needs to be used.
+\begin{itemize}
+    \item OpenCV ($\geq 2.4.9$), for image input and output, edge detection for inpainting
+    \item CGAL ($\geq 4.3$), for first guess interpolation during inpainting
+    \item OpenGL ($\geq 3.0$), GLEW($\geq 1.10$) and freeGLUT($\geq 2.8.1$),  for visualizations of SPD, SO and any 3D data
+    \item SuiteSparse ($\geq 4.2.1$), faster parallel sparse solver for the linear system in the IRLS algorithm
+    \item SuperLU ($\geq 4.3$), faster parallel sparse solver for the linear system in the IRLS algorithm
+\end{itemize}
+Some care must be taken with the version recommendations. Usually there are no compatibility issues if only the minor software version changes but for major version updates it must
+be checked whether the new version's API is still backwards compatible.
+
+% subsection Prerequisites (end)
+
+\subsection{Installation} % (fold)
+\label{sub:Installation}
+Using CMake, the installation of the library is very easy. The procedure is described for a Linux system here.
+Since CMake is a platform-independent tool, the installation consists of two steps: First, creating the installation
+files for a platform-\emph{dependent} make-system, in this case the Unix tool \texttt{make}, using CMake and second, the actual installation using \texttt{make}.\\
+
+Once the library is downloaded, change into the directory of the library containing 
+the \texttt{mtvmtl} folder and the \texttt{CMakeLists.txt} file.
+Next, create the installation files in the current directory or in a newly created one. The latter is
+done by
+\begin{lstlisting}[language=bash]
+mkdir build
+cd build
+cmake ..
+\end{lstlisting}
+The last command will prepare the installation at the standard location of libraries on the system, which is usually
+\texttt{/usr/include} or \texttt{/usr/local/include}. If this location is not desired or possible, due to
+access restrictions on the system, an alternative installation path has to be provided as additional parameter:
+\begin{lstlisting}[language=bash]
+cmake .. -DCMAKE_INSTALL_PREFIX=/path/to/desired/location/
+\end{lstlisting}
+
+Finally, start the installation by typing
+\begin{lstlisting}[language=bash]
+make install
+\end{lstlisting}
+which will perform not only the installation of MTVMT library but also of the VPP library and its dependencies. Note that
+all other libraries utilized by MTVMTL need to be installed manually. This is, however, not a problem since they are usually
+included in the package manager of every major Linux distribution.
+% subsection Installation (end)
+
+\subsection{Compilation of own projects using CMake} % (fold)
+\label{sub:CMakeCompilation}
+For the compilation of user code using CMake a file with the name \texttt{CMakeLists.txt} must be provided in the same directory as the user code. Note that this file is used to compile code using the library and is different from the \texttt{CMakeLists.txt} file provided
+for the library installation. This file contains all the information about the locations of header files and external library code as well as compiler optimization flags. \\
+
+In Listing \ref{code:cmake_example} 
+an example is provided for the compilation of a user application \texttt{my\_executable} with a single source file \texttt{mysource.cpp}. 
+The example is minimal in the sense that it is only for the compilation of a single executable and maximal in the sense that it
+links the executable against any possible external library used by MTVMTL.\\
+
+The most important lines for the user are the last two. In the first of these lines, an executable is added by providing its name (\texttt{my\_executable}) and the source file(s) (\texttt{mysource.cpp}) it depends on. Next, one must specify the external libraries the executable is linked against using the \texttt{target\_link\_libraries()} command. It expects the executable
+as the first parameter and then a space-separated list of all target libraries. \\
+
+\begin{lstlisting}[language=bash,label=code:cmake_example,caption={Example CMakeLists.txt}]
+cmake_minimum_required(VERSION 2.8)
+
+list(APPEND CMAKE_MODULE_PATH "/FULL/PATH/TO/MTVMTL/INSTALLATION/LOCATION/include/mtvmtl/SparseSuiteSupport")
+
+find_package(OpenGL REQUIRED)
+find_package(GLUT REQUIRED)
+find_package(GLEW REQUIRED)
+include_directories( ${OPENGL_INCLUDE_DIRS}  ${GLUT_INCLUDE_DIRS} )
+
+find_package(OpenCV REQUIRED)
+find_package(CGAL REQUIRED)
+include(${CGAL_USE_FILE})
+
+find_package(Cholmod REQUIRED)
+find_package(SuperLU REQUIRED)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/.. /usr/include/superlu /usr/include/eigen3 
+/FULL/PATH/TO/MTVMTL/INSTALLATION/LOCATION/)
+add_definitions(-std=c++14 -g -fopenmp)
+add_definitions(-Ofast -march=native)
+add_definitions(-DNDEBUG)
+
+add_executable(my_executable mysource.cpp)
+target_link_libraries(my_executable  gomp ${OpenCV_LIBS} ${CGAL_LIBRARIES} ${CHOLMOD_LIBRARIES} ${SUPERLU_LIBRARIES} ${OPENGL_LIBRARIES} ${GLUT_LIBRARY} ${GLEW_LIBRARIES})
+\end{lstlisting}
+
+In the following steps it will be assumed that the library was installed to \texttt{/usr/include}. Furthermore,
+the current working directory is \texttt{/home/username/myMTVMproject}, which contains some code the user has written
+using MTVMTL, namely \texttt{mysource.cpp}. Thus, the \texttt{CMakeLists.txt} should be created in the same directory and the placeholders in lines 3 and 18 of Listing \ref{code:cmake_example} should be modified to 
+\texttt{/usr/include/mtvmtl/SparseSuiteSupport} and \texttt{/usr/include}, respectively.\\
+
+For the actual compilation, create a separate directory called \texttt{project\_build} and change to this directory.
+\begin{lstlisting}[language=bash]
+mkdir project_build
+cd project_build
+\end{lstlisting}
+
+Next, call \texttt{cmake} providing the source directory which contains your \texttt{CMakeLists.txt} file as argument.
+\begin{lstlisting}[language=bash]
+cmake ../src/
+\end{lstlisting}
+
+If everything was configured correctly, the output should look similar to the following.\\
+\begin{lstlisting}
+-- The C compiler identification is GNU 4.9.2
+-- The CXX compiler identification is GNU 4.9.2
+-- Check for working C compiler: /usr/bin/cc
+-- Check for working C compiler: /usr/bin/cc -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /usr/bin/c++
+-- Check for working CXX compiler: /usr/bin/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Found OpenGL: /usr/lib64/libGL.so  
+-- Found GLUT: /usr/lib64/libglut.so  
+-- Found GLEW: /usr/include  
+-- Build type: Release
+-- USING CXXFLAGS = '-march=corei7 -mtune=native -O2 -pipe -msse3 -msse4 -mcx16 -msahf -mpopcnt  -frounding-math -O3 -DNDEBUG'
+-- USING EXEFLAGS = ' -Wl,-O1 -Wl,--as-needed '
+-- Targetting Unix Makefiles
+-- Using /usr/bin/c++ compiler.
+-- Requested component: MPFR
+-- Requested component: GMPXX
+-- Requested component: GMP
+-- Found CHOLMOD: /usr/include  
+-- Found SUPERLU: /usr/include/superlu  
+-- Configuring done
+-- Generating done
+-- Build files have been written to: [path-to-build-folder]/project_build
+\end{lstlisting}
+
+Finally, type
+\begin{lstlisting}[language=bash]
+make my_executable
+\end{lstlisting}
+to build the program resulting in the creation of the final executable program \texttt{my\_executable} in the folder \texttt{/home/username/myMTVMproject/project\_build/}.
+
+% subsection Compilation of own projects using CMake (end)
+
+\subsection{Tutorial and typical use cases} % (fold)
+\label{sub:tutorial}
+The basic process of using the library is to explicitly specify the necessary template parameters for all needed components. 
+For the sake of compactness and readability this should be done using \texttt{typedef}s. In the next step one can then
+instantiate the classes and start implementing.\\
+
+\subsubsection{Image denoising, vectorial color model} % (fold)
+\label{ssub:Image denoising, vectorial color model}
+As a first example denoising of a simple color picture using the IRLS minimizer is demonstrated. In a first step the necessary classes need to be included. For the sake of shortening the 
+code the namespace \texttt{tvmtl} of the library is used. \\
+\cppinline
+\begin{lstlisting}[label=code:tut_include,caption={Inclusion of library headers}]
+#include <mtvmtl/core/algo_traits.hpp>
+#include <mtvmtl/core/tvmin.hpp>
+
+using namespace tvmtl;
+\end{lstlisting}
+
+Next, specify the manifold type and data type, in this case Euclidean $\mathbb{R}^3$ and a corresponding 2D image container\\
+
+\cppinline
+\begin{lstlisting}[label=code:tut_typedef,caption={Specification of manifold and data type}]
+typedef Manifold< EUCLIDIAN, 3 > mf_t;
+typedef Data< mf_t, 2> data_t;
+\end{lstlisting}
+
+Note that the data type must be specified using the \textit{fully} specialized manifold class type defined in the line before.\\
+The data type is now ready for work such that the input data can be read in the next few lines.\\
+
+\cppinline
+\begin{lstlisting}[label=code:tut_data,caption={Initialization and input of image data}]
+data_t myData=data_t();		// Creating the data object
+myData.rgb_imread(filename);	// Reading an image file, filename is a const char*
+\end{lstlisting}
+
+After the data object is ready one must specify the functional, in this example first order TV, isotropic and 2D. Again,
+also the fully specialized manifold and data class types need to be given as template parameters. The last template parameter, the dimension of the data, 
+has default value $2$ and can also be omitted in this case.\\
+
+\cppinline
+\begin{lstlisting}[label=code:tut_func,caption={Defining the functional and setting parameters}]
+typedef Functional<FIRSTORDER, ISO, mf_t, data_t, 2> func_t;
+
+func_t myFunc(lambda, myData);  // Creation of the functional object
+myFunc.seteps2(1e-10);		// Specify the epsilon parameter 
+\end{lstlisting}
+
+For the instantiation of the functional you need to pass the $\lambda$ for your functional as well as your newly created data object. The \texttt{seteps2} method
+sets the value of $\epsilon^2$ for the reweighting computation. In case of the proximal point algorithm it should be set to zero.\\
+
+\cppinline
+\begin{lstlisting}[label=code:tut_data,caption={Choosing the minimizer, smoothing and minimization}]
+typedef TV_Minimizer< IRLS, func_t, mf_t, data_t, OMP, 2> tvmin_t;
+
+tvmin_t myTVMin(myFunc, myData);// Creation of minimizer object
+
+myTVMin.smoothening(5);		// smoothing to obtain better starting value
+myTVMin.minimize();		// Starts the minimization
+\end{lstlisting}
+
+Finally, choose the minimizer, in this case IRLS, and pass functional, manifold and data types as template parameters. The OMP parameter is not fully implemented yet 
+and is supposed to provide choice between different parallelization schemes or also completely serial computation. The last parameter again has default value $2$ and describes the 
+dimension of the data.\\
+The complete listing of this example can be found in Appendix \ref{ap:listings}.
+% subsubsection Image denoising, vectorial color model (end)
+
+\subsubsection{Colorization using color inpainting} % (fold)
+\label{ssub:Color inpainting}
+In the following a more complicated example is shown: Recolorization of an image where most($\approx$99\%) \textit{color} information has been removed. This means that this
+problem is defined on the product manifold $S^2\times \mathbb{R}$. Optimization, however, will only take place on $S^2$ while the $\mathbb{R}$ data part is only needed to obtain
+edge information. Also three auxiliary functions (\texttt{removeColor}, \texttt{DisplayImage}, \texttt{recombineAndShow}) are used here that are not shown in the code snippets but
+will be included in the full listing in Appendix \ref{ap:listings}. This time, also some of the minimization parameters 
+are obtained from the command line:\\
+
+\cppinline
+\begin{lstlisting}[label=code:tut2_init,caption={Include library files and read parameters from standard input}]
+#include <iostream>
+#include <string>
+#include <cmath>
+
+#include <opencv2/highgui/highgui.hpp>
+#include <mtvmtl/core/algo_traits.hpp>
+#include <mtvmtl/core/data.hpp>
+#include <mtvmtl/core/functional.hpp>
+#include <mtvmtl/core/tvmin.hpp>
+
+#include <vpp/vpp.hh>
+#include <vpp/utils/opencv_bridge.hh>
+
+using namespace tvmtl;
+
+int main(int argc, const char *argv[])
+{
+    if (argc < 3){
+	std::cerr << "Usage : " << argv[0] << " image [lambda] [threshold]" << std::endl;
+	return 1;
+    }
+
+    double lam=0.01;
+    double threshold=0.01;
+
+    if(argc == 4){
+	lam=atof(argv[2]);
+	threshold=atof(argv[3]);
+    }   
+
+    std::string fname(argv[1]);
+
+    //...
+
+}
+\end{lstlisting}
+Here \texttt{threshold} defines the percentage of color information that remains in the picture.\\
+In the next step, make the necessary type definitions for manifold and data classes and create the data objects.
+
+\cppinline
+\begin{lstlisting}[label=code:tut2_mfdata,caption={Manifold and Data class type definitions and instantiation}]
+// typedefs
+typedef Manifold< SPHERE, 3 > spheremf_t;  // S^2
+typedef Manifold< EUCLIDIAN, 1 > eucmf_t;  // R
+ 
+typedef Data< spheremf_t, 2> chroma_t;	// Chromaticity part
+typedef Data< eucmf_t, 2> bright_t;	// Brightness part
+
+// Instantiation
+chroma_t myChroma=chroma_t();
+bright_t myBright=bright_t();
+\end{lstlisting}
+
+When the data containers are ready, one needs to read the input picture, extract color and brightness information and store it in the respective objects.
+This problem is basically a color inpainting problem but the reconstructed color should not blur across edges in the picture. This can be solved
+by making use of the edge weights array that is stored together with the image. Edges can be detected in the brightness part of the picture and used in the chromaticity denoising procedure.\\
+Finally, the color is removed in the following way: Create a random inpainting matrix where the probability a certain pixel is set to false is given
+by the \texttt{threshold} variable and then replace every RGB pixel by the mean of its three color components (those pixels are basically gray scale then).\\
+The necessary steps are shown in the next listing
+
+\cppinline
+\begin{lstlisting}[label=code:tut2_edgeandcolorremoval,caption={Color and brightness input, edge detection and color removal}]
+myBright.rgb_readBrightness(argv[1]);	// Extract brightness from filename argv[1]
+myBright.findEdgeWeights();		// Detect edges and store in matrix
+
+myChroma.rgb_readChromaticity(argv[1]); // Extract chromaticity from filename argv[1]
+myChroma.inpaint_=true;			// Turn inpainting on
+myChroma.setEdgeWeights(myBright.edge_weights_); // Initiliaze chromaticity part edges with brightness part edges
+myChroma.createRandInpWeights(threshold);   // Create random inpainting matrix
+removeColor(myChroma, myBright);	    // Remove color
+
+// Recombine chromaticity and brightness and show the colorless image
+recombineAndShow(myChroma, myBright, "colorless_"+fname, "Colors removed Picture");
+\end{lstlisting}
+
+The next part works almost exactly as in the last example. Define functional, set its parameters, then define the minimizer. The only difference is that
+one has to run \texttt{first\_guess} before the minimization.\\
+
+\cppinline
+\begin{lstlisting}[label=code:tut2_functionalmin,caption={Functional and minimizer definition, first guess and minimization}]
+typedef Functional<FIRSTORDER, ISO, spheremf_t, chroma_t> cfunc_t;
+typedef TV_Minimizer< IRLS, cfunc_t, spheremf_t, chroma_t, OMP > ctvmin_t;
+
+cfunc_t cFunc(lam, myChroma);	    // create functional object
+cFunc.seteps2(1e-10);		    // set eps^2 parameter
+
+ctvmin_t cTVMin(cFunc, myChroma);   // create minimizer object
+cTVMin.first_guess();		    // first guess
+
+std::cout << "Start TV minimization..." << std::endl;
+cTVMin.minimize();		    
+
+// Recombine Brightness and Chromaticity parts of recolored Picture
+recombineAndShow(myChroma, myBright, "recolored_"+fname, "Recolored Picture");
+\end{lstlisting}
+
+Some visual results of the above code are also shown in Section \ref{sub:Recolorization}.
+
+
+
+% subsubsection Color inpainting (end)
+
+\subsubsection{3D DT-MRI data denoising and visualization} % (fold)
+\label{ssub:dti_tut}
+As a final example a more complicated manifold, SPD(3) in this case, is chosen, as well as 3D data to demonstrate the use of the visualization classes. Moreover, the proximal point algorithm will be used in this example. The CSV reader just reads a list of pixels where the numerical values comprising the pixel are stored comma-separated, one pixel
+per line. The CSV file has no header such that the dimensions must be provided as command line parameters.
+
+\cppinline
+\begin{lstlisting}[label=code:tut3_init,caption={Initialization}]
+#include <iostream>
+#include <cstdlib>
+#include <string>
+#include <sstream>
+
+#include <mtvmtl/core/algo_traits.hpp>
+#include <mtvmtl/core/data.hpp>
+#include <mtvmtl/core/functional.hpp>
+#include <mtvmtl/core/tvmin.hpp>
+#include <mtvmtl/core/visualization.hpp>
+
+int main(int argc, const char *argv[])
+{       
+    int nz, ny, nx;
+    nz = std::atoi(argv[2]);
+    ny = std::atoi(argv[3]);
+    nx = std::atoi(argv[4]);
+
+    std::stringstream fname;
+    std::string nfname;
+    fname << "dti3d" << nz << "x" << ny << "x" << ny << ".png";
+    nfname = "noisy_" + fname.str();
+    
+    // ...
+
+    return 0;    
+}
+\end{lstlisting}
+	
+Since the meaning of the individual components should be clear by now, all the necessary type definitions 
+are made at once in the next listing\\
+\cppinline
+\begin{lstlisting}[label=code:tut3_typdefinitions,caption={Type definitions, Visualization type}]
+using namespace tvmtl;
+
+typedef Manifold< SPD, 3 > mf_t;
+typedef Data< mf_t, 3> data_t;
+typedef Functional<FIRSTORDER, ANISO, mf_t, data_t, 3> func_t;
+typedef TV_Minimizer< PRPT, func_t, mf_t, data_t, OMP, 3 > tvmin_t;
+typedef Visualization<SPD, 3, data_t, 3> visual_t;
+\end{lstlisting}
+
+The only innovation is the aforementioned Visualization class. The first $3$ in its template parameter list is the embedding dimension of the manifold 
+and the last $3$ denotes the dimension of the data. Note this time it was necessary to specify it for the functional and minimizer classes, as well, because the default value is $2$. 
+The remaining parameters specify the manifold type via an enumeration constant (in the same way one specifies it for the Manifold class) and the data type via a fully
+specialized data class type.\\
+
+Prior to the minimization, one usually wants to display the original noisy data and eventually save it to a file. The necessary steps are as follows:\\
+
+\cppinline
+\begin{lstlisting}[label=code:tut3_rendernoisyimg,caption={Data input and displaying the noisy data}]
+data_t myData = data_t();   // Create data object
+myData.readMatrixDataFromCSV(argv[1], nz, ny, nx); // Read from CSV file
+
+visual_t myVisual(myData);  // Create visualization object
+myVisual.saveImage(nfname); // Specify file name to save a screenshot
+
+std::cout << "Starting OpenGL-Renderer..." << std::endl;
+myVisual.GLInit("SPD(3) Ellipsoid Visualization"); // Start the Rendering
+\end{lstlisting}
+
+In the last step, create functional and minimizer class, perform the minimization and display the denoised data again.
+
+\cppinline
+\begin{lstlisting}[label=code:tut3_rendernoisyimg,caption={Minimization and final rendering}]
+double lam=0.7;
+func_t myFunc(lam, myData); // Functional object
+myFunc.seteps2(0);  // eps^2 should be 0 for PRPT
+
+tvmin_t myTVMin(myFunc, myData); // Minimizer object
+
+std::cout << "Start TV minimization.." << std::endl;
+myTVMin.minimize();
+
+std::string dfname = "denoised(prpt)_" + fname.str();
+myVisual.saveImage(dfname); // Specify name for denoised image
+
+std::cout << "Starting OpenGL-Renderer..." << std::endl;
+myVisual.GLInit("SPD(3) Ellipsoid Visualization"); // Render
+\end{lstlisting}
+
+The resulting picture for this example is shown in \ref{sub:3DDTMRIdata}.
+
+
+% subsubsection DT-MRI data denoising and visualization (end)
+
+% subsection Tutorial and typical use cases (end)
+
+
+% section Using TVTML (end)
+
+
+\end{chapter}

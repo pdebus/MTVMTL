@@ -7,7 +7,7 @@ A.~Barmpoutis A., B.~C. Vemuri, T.~M. Shepherd, and J.~R. Forder.
 \newblock {\em IEEE Trans Med Imaging}, 26(11):1537--1546, 2007.
 
 \bibitem{CPPTemplateMP}
-David Abrahams and Aleksey Gurtovoy.
+D.~Abrahams and A.~Gurtovoy.
 \newblock {\em C++ Template Metaprogramming: Concepts, Tools, and Techniques
   from Boost and Beyond (C++ in Depth Series)}.
 \newblock Addison-Wesley Professional, 2004.
@@ -16,7 +16,7 @@ David Abrahams and Aleksey Gurtovoy.
 P.~A. Absil, R.~Mahony, and R.~Sepulchre.
 \newblock {\em Riemannian Geometry of Grassmann Manifolds with a View on
   Algorithmic Computation}, volume~80.
-\newblock Springer Netherlands, January 2004.
+\newblock Springer Netherlands, 2004.
 
 \bibitem{Absil2009}
 P.~A. Absil, R.~Mahony, and R.~Sepulchre.
@@ -24,19 +24,19 @@ P.~A. Absil, R.~Mahony, and R.~Sepulchre.
 \newblock Princeton University Press, 2009.
 
 \bibitem{AlmohyFrechet}
-Awad~H. Al-Mohy, Nicholas~J. Higham, and Samuel~D. Relton.
+A.~H. Al-Mohy, N.~J. Higham, and S.~D. Relton.
 \newblock Computing the fr\'{e}chet derivative of the matrix logarithm and
   estimating the condition number.
 \newblock {\em SIAM Journal on Scientific Computing}, 35(4):C394--C410, 2013.
 
 \bibitem{CPPGeneric}
-Andrei Alexandrescu.
+A.~Alexandrescu.
 \newblock {\em Modern C++ Design: Generic Programming and Design Patterns
   Applied}.
 \newblock Addison-Wesley Longman Publishing Co., Inc., Boston, MA, USA, 2001.
 
 \bibitem{AliShah}
-Saad Ali and Mubarak Shah.
+S.~Ali and M.~Shah.
 \newblock A lagrangian particle dynamics approach for crowd flow segmentation
   and stability analysis.
 \newblock In {\em CVPR}. IEEE Computer Society, 2007.
@@ -45,13 +45,6 @@ Saad Ali and Mubarak Shah.
 V.~Arsigny, P.~Fillard, X.~Pennec, and N.~Ayache.
 \newblock Geometric means in a novel vector space structure on symmetric
   positive definite matrices.
-\newblock {\em SIAM Journal on Matrix Analysis and Applications},
-  29(1):328--347, 2007.
-
-\bibitem{LogEuclidian}
-Vincent Arsigny, Pierre Fillard, Xavier Pennec, and Nicholas Ayache.
-\newblock Geometric means in a novel vector space structure on symmetric
-  positive‐definite matrices.
 \newblock {\em SIAM Journal on Matrix Analysis and Applications},
   29(1):328--347, 2007.
 
@@ -72,8 +65,15 @@ A.~Chambolle and P.-L. Lions.
   problems}.
 \newblock {\em Numerische Mathematik}, 76(2):167--188, 1997.
 
+\bibitem{Chan}
+T.~F. Chan, S.~H. Kang, and J.~Shen.
+\newblock Total variation denoising and enhancement of color images based on
+  the {CB} and {HSV} color models.
+\newblock {\em Journal of Visual Communication and Image Representation},
+  12(4):422--435, 2001.
+
 \bibitem{CombettesPequet}
-Patrick~L. Combettes and Jean-Christophe Pesquet.
+P.~L. Combettes and J.-C. Pesquet.
 \newblock Proximal splitting methods in signal processing.
 \newblock In Heinz~H. Bauschke, Regina~S. Burachik, Patrick~L. Combettes, Veit
   Elser, D.~Russell Luke, and Henry Wolkowicz, editors, {\em Fixed-Point
@@ -82,12 +82,12 @@ Patrick~L. Combettes and Jean-Christophe Pesquet.
   New York, 2011.
 
 \bibitem{EAS}
-Alan Edelman, Tom\'{a}s~A. Arias, and Steven~T. Smith.
+A.~Edelman, T.~A. Arias, and S.~T. Smith.
 \newblock The geometry of algorithms with orthogonality constraints.
-\newblock {\em SIAM J. Matrix Anal. Appl.}, 20(2):303--353, April 1999.
+\newblock {\em SIAM J. Matrix Anal. Appl.}, 20(2):303--353, 1999.
 
 \bibitem{VPP}
-Matthieu Garrigues and Antoine Manzanera.
+M.~Garrigues and A.~Manzanera.
 \newblock Video++, a modern image and video processing {C++} framework.
 \newblock Technical report, ENSTA-ParisTech, France, 2014.
 
@@ -99,16 +99,10 @@ P.~Grohs and M.~Sprecher.
   Z\"urich, Switzerland, 2014.
 
 \bibitem{HighamPade}
-Nicholas~J. Higham.
+N.~J. Higham.
 \newblock Evaluating pad\'{e} approximants of the matrix logarithm.
 \newblock {\em SIAM Journal on Matrix Analysis and Applications},
   22(4):1126--1135, 2001.
-
-\bibitem{Kang}
-S.~H. Kang and R.~March.
-\newblock Variational models for image colorization via chromaticity and
-  brightness decomposition.
-\newblock {\em IEEE Transactions on Image Processing}, 16(9):2251--2261, 2007.
 
 \bibitem{Karcher}
 H.~Karcher.
@@ -117,24 +111,19 @@ H.~Karcher.
   1977.
 
 \bibitem{manifoldFlow}
-Julien Lefevre and Sylvain Baillet.
+J.~Lefevre and S.~Baillet.
 \newblock Optical flow and advection on 2-riemannian manifolds: A common
   framework.
 \newblock {\em IEEE Trans. Pattern Anal. Mach. Intell.}, 30(6):1081--1092,
   2008.
 
-\bibitem{RudinOsher}
-Stanley~Osher Leonid I.~Rudin and Emad Fatemi.
-\newblock {Nonlinear total variation based noise removal algorithms}.
-\newblock {\em Physica D}, 60:259--168, 1992.
-
 \bibitem{CPPEleven}
-Ray Lischner.
+R.~Lischner.
 \newblock {\em Exploring {C++}11}.
 \newblock Expert's voice in C++. Apress, New York, 2013.
 
 \bibitem{LucasKanade}
-Bruce~D. Lucas and Takeo Kanade.
+B.~D. Lucas and T.~Kanade.
 \newblock An iterative image registration technique with an application to
   stereo vision.
 \newblock In {\em Proceedings of the 7th International Joint Conference on
@@ -142,7 +131,7 @@ Bruce~D. Lucas and Takeo Kanade.
   CA, USA, 1981. Morgan Kaufmann Publishers Inc.
 
 \bibitem{Magnus}
-Jan~R. Magnus and Heinz Neudecker.
+J.~R. Magnus and H.~Neudecker.
 \newblock {\em Matrix differential calculus with applications in statistics and
   econometrics}.
 \newblock J. Wiley \& Sons, Chichester, New York, Weinheim, 1999.
@@ -160,7 +149,7 @@ Neuroimaging informatics technology initiative - {NIfTI-1} data format.
 \bibitem{ParikhBoyd}
 Neal Parikh and Stephen Boyd.
 \newblock Proximal algorithms.
-\newblock {\em Found. Trends Optim.}, 1(3):127--239, January 2014.
+\newblock {\em Found. Trends Optim.}, 1(3):127--239, 2014.
 
 \bibitem{Rodriguez}
 P.~Rodriguez and B.~Wohlberg.
@@ -168,8 +157,13 @@ P.~Rodriguez and B.~Wohlberg.
   variation functionals.
 \newblock {\em IEEE Signal Processing Letters}, 14(12):948 -- 951, 2007.
 
+\bibitem{RudinOsher}
+L.~I. Rudin, S.~Osher, and E.~Fatemi.
+\newblock {Nonlinear total variation based noise removal algorithms}.
+\newblock {\em Physica D}, 60:259--168, 1992.
+
 \bibitem{Sato2014}
-Hiroyuki Sato and Toshihiro Iwai.
+H.~Sato and T.~Iwai.
 \newblock Optimization algorithms on the grassmann manifold with application to
   matrix eigenvalue problems.
 \newblock {\em Japan Journal of Industrial and Applied Mathematics},
@@ -181,7 +175,7 @@ Hiroyuki Sato and Toshihiro Iwai.
 \newblock Accessed: 2015-09-20.
 
 \bibitem{blitz}
-ToddL. Veldhuizen.
+T.~Veldhuizen.
 \newblock Arrays in blitz++.
 \newblock In Denis Caromel, RodneyR. Oldehoeft, and Marydell Tholburn, editors,
   {\em Computing in Object-Oriented Parallel Environments}, volume 1505 of {\em
@@ -194,7 +188,7 @@ Volume image database.
 \newblock Accessed: 2015-09-25.
 
 \bibitem{SceneFlow}
-Andreas Wedel and Daniel Cremers.
+A.~Wedel and D.~Cremers.
 \newblock {\em Stereo Scene Flow for 3D Motion Analysis.}
 \newblock Springer, 2011.
 
@@ -206,6 +200,6 @@ A.~Weinmann, L.~Demaret, and M.~Storath.
 \bibitem{zhangsuen}
 T.~Y. Zhang and C.~Y. Suen.
 \newblock A fast parallel algorithm for thinning digital patterns.
-\newblock {\em Commun. ACM}, 27(3):236--239, March 1984.
+\newblock {\em Commun. ACM}, 27(3):236--239, 1984.
 
 \end{thebibliography}

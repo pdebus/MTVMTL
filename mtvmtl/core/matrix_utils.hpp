@@ -7,6 +7,7 @@
 
 #include <Eigen/Dense>
 #include <unsupported/Eigen/MatrixFunctions>
+#include <unsupported/Eigen/KroneckerProduct>
 
 
 namespace tvmtl {
@@ -205,7 +206,7 @@ void KroneckerDLog(const Eigen::MatrixBase<DerivedX>& X, Eigen::MatrixBase<Deriv
 }
 
 template <typename DerivedX, typename DerivedY>
-void KroneckerDSqrt(const Eigen::MatrixBase<DerivedX>& X, Eigen::MatrixBase<DerivedY>& Result){
+void KroneckerDSqrt2(const Eigen::MatrixBase<DerivedX>& X, Eigen::MatrixBase<DerivedY>& Result){
     
     typedef Eigen::internal::traits<DerivedX> Traits;
     typedef typename Traits::Scalar Scalar;
@@ -226,6 +227,13 @@ void KroneckerDSqrt(const Eigen::MatrixBase<DerivedX>& X, Eigen::MatrixBase<Deri
     Result = R;
 }
 
+template <typename DerivedX, typename DerivedY>
+void KroneckerDSqrt(const Eigen::MatrixBase<DerivedX>& X, Eigen::MatrixBase<DerivedY>& Result){
+    
+    DerivedX Xsqrt = X.sqrt();
+    DerivedY R = Eigen::kroneckerProduct(DerivedX::Identity(),Xsqrt) + Eigen::kroneckerProduct(Xsqrt.transpose(), DerivedX::Identity());
+    Result = R.inverse();
+}
 
 } // end namespace tvmtl
 

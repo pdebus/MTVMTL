@@ -1,6 +1,6 @@
 \chapter{Performance metrics}
 \label{ap:performancemetrics}
-In this appendix chapter some additional performance metrics of the library are shown.
+In this appendix some additional performance metrics of the library are shown.
 
 \section{Cache Misses}
 
@@ -56,7 +56,7 @@ In this appendix chapter some additional performance metrics of the library are 
 	Share & Routine & Library \\
 	\hline
 	9.97& set\_rom\_triplets(sparse initialization)& Eigen\\
-	8.75& clear\_page(?) & Kernel\\
+	8.75& clear\_page & Kernel\\
 	5.04& memcpy\_sse2\_unaligned& LIBC\\
 	4.55& unknown& unknown\\
 	2.75& DGEMV(matrix vector multiply)& BLAS\\
@@ -86,7 +86,7 @@ In this appendix chapter some additional performance metrics of the library are 
 }
 \end{table}
 
-
+\newpage
 \section{Page Faults}
 \begin{table}[h!]
 \centering
@@ -140,9 +140,9 @@ In this appendix chapter some additional performance metrics of the library are 
 	\hline
 	Share & Routine & Library \\
 	\hline
-	23.88& unbekannt& unbekannt\\
-	11.20& dl\_relocate\_object (?)& TVMTL\\
-	10.89& evaluateHJ & TVMTL\\
+	23.88& unknown& unknown\\
+	11.20& dl\_relocate\_object & unknown\\
+	10.89& evaluateHJ & MTVMTL\\
 	8.21& triplet operation& Eigen\\
 	8.13&  SparseMatrix::operator= & Eigen\\	
 	7.17& memset\_sse2& LIBC\\
@@ -157,7 +157,7 @@ In this appendix chapter some additional performance metrics of the library are 
 	\hline
 	20.75&  SparseMatrix::operator= & Eigen\\	
 	17.41& cholmod\_super\_numeric & CHOLMOD\\
-	15.02& evaluateHJ & TVMTL\\
+	15.02& evaluateHJ & MTVMTL\\
 	13.65& triplet operation& Eigen\\
 	9.37& set\_from\_triplets& Eigen\\
 	7.27& memcpy\_sse2\_unaligned& LIBC\\

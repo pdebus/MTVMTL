@@ -1,0 +1,17 @@
+\providecommand{\keywords}[1]{\textbf{Key words.} #1}
+
+\begin{abstract}
+In this thesis, a versatile, multi-threaded C++ template library for 
+total variation (TV) minimization of manifold-valued image data is introduced. 
+The library implements two minimizers: the iteratively reweighted least squares (IRLS) algorithm using the Riemannian
+Newton method for the optimization step and the proximal point algorithm.
+Pixels can take values in Euclidean space, on the Sphere, the special orthogonal group, 
+the set of positive definite matrices and the Grassmann manifold while images can be either two-
+or three-dimensional. Some semi-analytic expressions for the derivatives of the squared
+distance functions using Kronecker products and a short overview about the relevant Grassmann manifold theory is provided along with a high level documentation of the library and its design concepts.
+The last part demonstrates the library's capabilities on different applications in image and video processing, 
+medical imaging and computer vision. Performance is measured and compared for the IRLS and the proximal point
+implementations. Lastly the influence of the noisy original data on the the minimizer is investigated.\\
+\keywords{total variation minimization, manifold-valued data, iteratively reweighted least squares, proximal
+point algorithm, Riemannian Newton method}
+\end{abstract}

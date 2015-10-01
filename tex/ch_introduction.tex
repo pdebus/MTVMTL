@@ -5,11 +5,11 @@ This noise needs to be removed in order to obtain a meaningful interpretation of
 applications, just for aesthetic reasons. A common everyday example for a noisy image is taking a picture with a digital camera (e.g. integrated in a smart phone) in a weakly illuminated room:
 Especially the dark areas of the picture are not uniform in color and brightness, but have small variations from pixel to pixel.\\
 
-A noise removal algorithm needs to remove these small variations, but at the same time not alter important features of the data. In the case of images important features are for example 
-the edges separating areas of different colors and providing the necessary sharpness of the picture. These edges, on the other hand, are characterized by large variations. The distinction
+A noise removal algorithm needs to remove these small variations, but at the same time not alter important features of the data. In the case of images, important features are for example 
+the edges, separating areas of different colors, which provide the necessary sharpness of the picture. These edges are characterized by large variations. The distinction
 between small and large variations is also helpful in the task of inpainting, which tries to restore the picture at unknown or damaged regions.\\
 
-The method of total variation(TV) noise removal, which has the above described capabilities, was first introduced by Rudin, Osher and Fatemi \cite{RudinOsher} in 1992
+The method of total variation (TV) noise removal, which has the above described capabilities, was first introduced by Rudin, Osher and Fatemi \cite{RudinOsher} in 1992
 for the case of real-valued, that means grayscale images. Their method is briefly summarized in the following section.
 
 \section{Grayscale images}
@@ -32,7 +32,16 @@ the functional
 
 \subsection{Edge preservation} % (fold)
 \label{sub:Edge preservation}
-A basic intuition why the $L^1$ norm in (\ref{osher_func}) is better suited for conserving sharp discontinuities, such as edges, can be seen from the following plot, taken from \cite{SceneFlow}. The gradients in the integral expressions are to be understood in terms of their finite differences approximations with $\nabla f=f(x_{i+1})-f(x_i)/h$ with some $h=1/M<1/N$, $x_i=0$ and $x_{i+1}=x_i+h$.\\
+A basic intuition why the $L^1$ norm in (\ref{osher_func}) is better suited for conserving sharp discontinuities, such as edges, can be seen from the following plot, taken from \cite{SceneFlow}. 
+Discretize the unit interval by setting $x_i=i/N$ for $i=0,\ldots,N:=100$ and define the finite differences
+$(\Delta f)_i=f(x_{i+1})-f(x_i)$, where $f$ is continuous and monotone on $[0,1]$ and satisfies $f(0)=0$ and $f(1)=1$.
+Some possible $f$ are shown in \ref{fig:tv12comparison}. Finally, define discretized versions, $l^1$ and $l^2$,
+for the squared $L^1$ and $L^2$ norms of the gradient by $l^p(\Delta f):=\sum_{i=0}^{N-1}|(\Delta f)_i|^p$
+where $p=1,2$.
+
+%The gradients in the integral expressions are to be understood in terms of their finite difference approximations with $\nabla f=(f(x_{i+1})-f(x_i))/h$ with some $h=1/M<1/N$, $x_i=0$ and $x_{i+1}=x_i+h$. Here $N$ denotes the number of equidistant steps
+%the function does on the unit interval while $M$ denotes the number of subintervals 
+%for the discretization of the unit interval.
  
 \begin{figure}[h!]
         \centering
@@ -44,7 +53,8 @@ A basic intuition why the $L^1$ norm in (\ref{osher_func}) is better suited for 
 \centering
 \begin{tabular}{|l|l|l|}
     \hline
-    \textbf{Function} & $\int_{[0,1]}\left\vert\nabla f\right\vert\mathop{dx}$ & $\int_{[0,1]}\left\vert\nabla f\right\vert^2\mathop{dx}$ \\
+%    \textbf{Function} & $\int_{[0,1]}\left\vert\nabla f\right\vert\mathop{dx}$ & $\int_{[0,1]}\left\vert\nabla f\right\vert^2\mathop{dx}$ \\
+    \textbf{Function} & $l^1(\Delta f_i)$ & $l^2(\Delta f_i)$ \\
     \hline
     $f_1$ & 1.0 & 1.0 \\
     $f_2$ & 1.0 & 0.1 \\
@@ -53,7 +63,7 @@ A basic intuition why the $L^1$ norm in (\ref{osher_func}) is better suited for 
 \end{tabular}
 \end{table}
 
-One can see that the $L^2$ variation term favours continuous transitions, such as $f_3$, rather than the sudden jump in $f_1$ whereas the total variation is the same for
+One can see that the $l^2$ variation term favours continuous transitions, such as $f_3$, rather than the sudden jump in $f_1$ whereas the total variation is the same for
 all cases.
 % subsection Edge preservation (end)
 
@@ -90,7 +100,7 @@ It is given by
     TV_{aniso}(u)=\sum_{i,j}|u_{i+1,j}-u_{i,j}|+|u_{i,j_1}-u_{i,j}|.
 \end{equation}
 
-For the total functional, the pixel-wise differences to the original picture $u_0$ need to be added
+To obtain the final expression for the functional, the 2-norms of the pixel-wise differences to the original picture $u_0$ need to be added
 \begin{equation}
     \label{eq:original_functional}
     J(u)=\sum_{i,j}(u_{i,j}-(u_0)_{i,j})^2 + \lambda TV(u).
@@ -100,39 +110,39 @@ For the total functional, the pixel-wise differences to the original picture $u_
 % subsection Discretization(end)
 
 
-\section{Color Images}
+\section{Color images}
 The next step in the development of image denoising algorithms was their generalization to color images. From a mathematical perspective this just means considering pictures
 from $\Omega\to C\simeq \mathbb{R}^3$ where the form and additional properties of $C$ depend on the chosen color model. \\
-In the most simple case of linear models, like RGB for instance, one could choose $C$ as $[0,1]^3$ and consider denoising each component individually (channel-by-channel model)
+In the most simple case of linear models, RGB for instance, one could choose $C$ as $[0,1]^3$ and consider denoising each component individually (channel-by-channel model)
 or consider $\mathbb{R}^3$ as a normed vector space of tuples $(x_R, x_G, x_B)$ (linear-vectorial model).\\
-For the nonlinear models, especially the so-called chromaticity-brightness model, investigated by Chang and March \cite{Kang}, shows the closest resemblance to human perception.
+Among the nonlinear models, the so-called chromaticity-brightness model, investigated by Chan et al \cite{Chan}, shows the closest resemblance to human perception.
 In this case, take $C=S^2\times [0,1]$ such that the chromaticitiy takes values on the sphere $S^2$ considered as a submanifold of the Euclidean space $\mathbb{R}^3$, 
 while the brightness is real-valued, as in the case of grayscale images.
 
-\section{Manifold-valued Images} % (fold)
+\section{Manifold-valued images} % (fold)
 \label{sec:Manifold-valued Images}
 Just by changing the color model from a linear to a non-linear one, pixels become non-trivially manifold-valued.
-Apart from non-linear color models, more complicated data arises in a variety of applications such as Diffusion Tensor Magnetic Resonance Imaging (DTI-MRI), computer vision and robotics to name just a few. In most cases this data can
-be represented by matrices such that the pixels become matrix-valued as well. In addition to that, the model underlying
+Apart from non-linear color models, more complicated data arises in a variety of applications such as Diffusion Tensor Magnetic Resonance Imaging (DT-MRI), computer vision and robotics to name just a few. In most cases this data can
+be represented by matrices such that the pixels become matrix-valued as well.\\
+
+In addition to that, the model underlying
 the data and the process of data acquisition result in a set of constraints imposed on the matrices. The set of matrices
-defined by those constraints often allows for a differentiable structure thus enabling geometric optimization methods.
+defined by those constraints often allows for a differentiable structure, thus enabling geometric optimization methods.
 For most types of manifold-data also "edges" in the data, for example between two neighboring, homogeneous areas of 
 different orientations in the case of $SO(3)$ data, are considered a feature that needs to be preserved.
-Since also manifold-valued data is subject to noise, the generalization of the algorithm to manifold valued data is the
+Since also manifold-valued data is subject to noise, the generalization of the algorithm to manifold-valued data is the
 next logical step.
 
 
-\section{Objective and Outline of this thesis}
-In this thesis the Manifold Total Variation Minimization Template Library (MTVMTL), an extendable multi-threaded C++ template library for the purpose of TV minimization of manifold-valued images is introduced. 
+\section{Objective and outline of this thesis}
+In this thesis, the Manifold Total Variation Minimization Template Library (MTVMTL), an extendable multi-threaded C++ template library for the purpose of TV minimization of manifold-valued images, is introduced. 
 The implemented minimization algorithms are based on the iteratively reweighted least squares (IRLS) adaption suggested by Sprecher and Grohs \cite{SprecherIRLS} as well as a 
 proximal point algorithm by Weinmann et al \cite{Weinmann}. The implementation is extended to 3D image cubes, the Grassmann manifold and also some quasi-analytic expressions for derivatives of the Riemannian distance function are provided.\\
 
-In the following Chapter 2 a short summary of the necessary theory, a description of the algorithms and relevant properties for each of the implemented manifolds is provided.
+The following Chapter 2 provides a short summary of the necessary theory, a description of the algorithms and relevant properties for each of the implemented manifolds.
 After that, Chapter 3 introduces the library itself and in particular its capabilities, design concepts, structure, installation and usage in the form of some typical
 use cases. In Chapter 4 numerical experiments are conducted, showing various application of the library as well as convergence behavior and comparisons between 
-IRLS and proximal point based algorithms.\\
-
-Finally, chapter 5 concludes with possible extensions and adaptions of the library, in particular possibility of recursive splitting of the image domain into smaller subproblems and
+IRLS and proximal point based algorithms. Finally, chapter 5 concludes with possible extensions and adaptions of the library, in particular the possibility of recursive splitting of the image domain into smaller subproblems and
 the transition to distributed architectures.
 % section Manifold-valued Images (end)
 \end{chapter}

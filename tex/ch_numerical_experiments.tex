@@ -1,8 +1,8 @@
 \begin{chapter}{Applications and Numerical Experiments}
 \label{ch:numericalexperiments}
 In the first part of the chapter the algorithms are applied to a variety of problems in image processing, computer vision, medical imaging and related fields.
-The second part will be dedicated to a performance analysis of the IRLS algorithm, a comparison to the proximal point minimizer and will close with an\ numerical experiment investigating the 
-dependence of the solution on the changes in the original picture. This is a first step in extending the IRLS algorithm towards recursive splitting into subdomain.\\
+The second part will be dedicated to a performance analysis of the IRLS algorithm, a comparison to the proximal point minimizer and will close with a numerical experiment investigating the 
+dependence of the solution on changes in the noisy picture. This is a first step in extending the IRLS algorithm towards recursive splitting into subdomain.\\
 
 The test platform is a Linux machine with two hyper-threaded 2.8GHz cores Intel i5-2520 (thus a total of four hardware threads)
 with AVX vector extensions and 8 GB RAM. 
@@ -10,7 +10,7 @@ with AVX vector extensions and 8 GB RAM.
 
 \section{Image denoising} % (fold)
 \label{sec:image denoising}
-The very basic application of the algorithm is of course denoising of common 2D grayscale or color pictures.
+The most basic application of the algorithm is denoising of a common 2D grayscale or color pictures.
 For grayscale pictures the TV minimization is performed over the Euclidean manifold $M=\mathbb{R}$, while for color
 pictures there is either $M=\mathbb{R}^3$ for the linear-vectorial model or
 $M=S^2\times\mathbb{R}$ for the non-linear chromaticity-brightness model.
@@ -35,7 +35,7 @@ As introductory example and for the sake of completeness, Figure \ref{fig:applic
     \caption[Color image "Cameraman" grayscale denoising]{Denoising of a grayscale image taking values in the manifold $\mathbb{R}$
 	\subref{fig:application_color1_orig} Original image "Cameraman.bmp", $256\times 256$ px, 8 bit depth
 	\subref{fig:application_color1_noise} Component-wise Gaussian noise $\mu=0$, $\sigma=0.01$ added
-	\subref{fig:application_color1_denoised} Denoised, IRLS with $\lambda=0.09$, $5$ IRLS steps, $1$ newton steps per IRLS step
+	\subref{fig:application_color1_denoised} Denoised, IRLS with $\lambda=0.09$, $5$ IRLS steps, $1$ Newton step per IRLS step
 	\label{fig:application_gray}
     }
 \end{figure}
@@ -62,10 +62,10 @@ the linear-vectorial color model using 5 IRLS iterations with one Newton step pe
 	\label{fig:application_color1_denoised}
 	\includegraphics[width=0.325\linewidth]{./figures/experiments/denoised_Lena_noise.jpg}
     }\\
-    \caption[Color image "Lena" linear vectorial denoising]{Denoising of a color images using the linear vectorial color model which corresponds to the manifold $\mathbb{R}^3$
+    \caption[Color image "Lena" linear vectorial denoising]{Denoising of a color image using the linear vectorial color model which corresponds to the manifold $\mathbb{R}^3$
 	\subref{fig:application_color1_orig} Original image "Lena.jpg", $361\times 361$ px, 8 bit color depth
 	\subref{fig:application_color1_noise} Component-wise Gaussian noise $\mu=0$, $\sigma=0.1$ added
-	\subref{fig:application_color1_denoised} Denoised, IRLS with $\lambda=0.1$, $5$ IRLS steps, $1$ newton steps per IRLS step
+	\subref{fig:application_color1_denoised} Denoised, IRLS with $\lambda=0.1$, $5$ IRLS steps, $1$ Newton step per IRLS step
 	\label{fig:application_color1}
     }
 \end{figure}
@@ -90,7 +90,7 @@ time, however, is with $272.6$ seconds quite high. The result can be seen in Fig
     \caption[Large image "mathematicians" linear-vectorial denoising]{Denoising of color images using the linear vectorial color model which corresponds to the manifold $\mathbb{R}^3$
 	\subref{fig:application_color2_orig} Original image "mathematicians.jpg", $1280\times 1024$ px, 8 bit color depth
 	\subref{fig:application_color2_noise} Component-wise Gaussian noise $\mu=0$, $\sigma=0.1$ added
-	\subref{fig:application_color2_denoised} Denoised, IRLS with $\lambda=0.1$, $5$ IRLS steps, $1$ newton steps per IRLS step
+	\subref{fig:application_color2_denoised} Denoised, IRLS with $\lambda=0.1$, $5$ IRLS steps, $1$ Newton step per IRLS step
 	\label{fig:application_color2}
     }
 \end{figure}
@@ -113,10 +113,10 @@ fine-grained control over the process because two $\lambda$ parameters can be ch
 	\label{fig:application_color3_denoised}
 	\includegraphics[width=0.325\linewidth]{./figures/experiments/denoised(CBR)_noisy_crayons.jpg}
     }\\
-    \caption[Large image "crayons" CBR-vectorial denoising]{Denoising of a color images using the CBR color model over the manifold $S^2\times\mathbb{R}$
+    \caption[Large image "crayons" CBR-vectorial denoising]{Denoising of a color image using the CBR color model over the manifold $S^2\times\mathbb{R}$
 	\subref{fig:application_color3_orig} Original image "crayons.jpg", $284\times 177$ px, 8 bit color depth
 	\subref{fig:application_color3_noise} Component-wise Gaussian noise $\mu=0$, $\sigma=0.1$ added
-	\subref{fig:application_color3_denoised} Denoised, IRLS with $\lambda_{Gr(3,1)}=\lambda_{\mathbb{R}}=0.1$, $5$ IRLS steps, $1$ newton steps per IRLS step
+	\subref{fig:application_color3_denoised} Denoised, IRLS with $\lambda_{S^2}=\lambda_{\mathbb{R}}=0.1$, $5$ IRLS steps, $1$ Newton step per IRLS step
 	\label{fig:application_color3}
     }
 \end{figure}
@@ -126,7 +126,7 @@ fine-grained control over the process because two $\lambda$ parameters can be ch
 The next example is a damaged picture where a considerable part has been overpainted with blue color. In the first step the damaged region is detected which in this
 case is done via a simple color selector (e.g. all pixels with a blue value larger than 0.95). In principle many other selection methods known from common raster graphic editors
 could be implemented here as well. \\
-Next, the a first guess is calculated using scattered linear interpolation and lastly the TV minimization itself is performed. The process is summarized in Figure 
+Next, a first guess is calculated using scattered linear interpolation and lastly the TV minimization itself is performed. The process is summarized in Figure 
 \ref{fig:application_colorinpaint1}.
 
 \label{sub:Inpainting}
@@ -152,7 +152,7 @@ Next, the a first guess is calculated using scattered linear interpolation and l
 	\subref{fig:application_colorinpaint1_orig} Original image "Pepper.png", $359\times 361$ px, 8 bit color depth
 	\subref{fig:application_colorinpaint1_dam} Damaged by overpainting with blue color
 	\subref{fig:application_colorinpaint1_guess} First guess via component-wise scattered interpolation
-	\subref{fig:application_colorinpaint1_restored} Restored, IRLS with $\lambda=0.1$, $5$ IRLS steps, $1$ newton steps per IRLS step
+	\subref{fig:application_colorinpaint1_restored} Restored, IRLS with $\lambda=0.12$, $5$ IRLS steps, $1$ Newton step per IRLS step
 	\label{fig:application_colorinpaint1}
     }
 \end{figure}
@@ -168,34 +168,34 @@ Here the picture is not necessarily noisy but it is assumed that only the bright
 Note that this splitting implies that inpainting and TV minimization takes place only on $S^2$.\\
 
 As in the previous example, one first has to detect all damaged, i.e. non-colored, pixels to inpaint. Again scattered interpolation is
-used to obtain the first guess which is depicted
-in Figure \ref{fig:application_colorinpaint1} \subref{fig:application_colorinpaint1_guess}. One can observe that the color runs over the edges of the leaves. To avoid this, the edges need to be detected in the brightness part using the Canny edge detector \cite{Canny}, for example. This
+used to obtain a first guess which is depicted
+in Figure \ref{fig:application_colorization1_guess}. One can observe that red color runs into green regions. To avoid this, the edges need to be detected in the brightness part using the Canny edge detector \cite{Canny}, for example. This
 can be used then to set the edge weights for the chromaticity part accordingly. As a result, one indeed
-obtains sharp and clear edges in the final result \ref{fig:application_colorization1_restored} \subref{fig:application_colorinpaint1_restored}.
+obtains sharp and clear edges in the final result \ref{fig:application_colorization1_restored}.
 
 \begin{figure}[h!]
     \centering
     \subfloat[][Original]{
 	\label{fig:application_colorization1_orig}
-	\includegraphics[width=0.25\linewidth]{./figures/experiments/Basil.jpg}
+	\includegraphics[width=0.25\linewidth]{./figures/experiments/Pepper.jpg}
     }
     \subfloat[][Colors removed]{
 	\label{fig:application_colorization1_colorless}
-	\includegraphics[width=0.25\linewidth]{./figures/experiments/colorless_Basil.jpg}
+	\includegraphics[width=0.25\linewidth]{./figures/experiments/colorless_Pepper.jpg}
     }
     \subfloat[][First guess]{
 	\label{fig:application_colorization1_guess}
-	\includegraphics[width=0.25\linewidth]{./figures/experiments/recolored_fg_Basil.jpg}
+	\includegraphics[width=0.25\linewidth]{./figures/experiments/recolored_fg_Pepper.jpg}
     }
     \subfloat[][Recolored]{
 	\label{fig:application_colorization1_restored}
-	\includegraphics[width=0.25\linewidth]{./figures/experiments/recolored_Basil.jpg}
+	\includegraphics[width=0.25\linewidth]{./figures/experiments/recolored_Pepper.jpg}
     }\\
     \caption[Recolorization]{Recolorization using color inpainting in the Chromaticity-Brightness color model, corresponding to $S^2\times\mathbb{R}$
-	\subref{fig:application_colorization1_orig} Original image "Basil.jpg", $300\times 179$ px, 8 bit color depth
+	\subref{fig:application_colorization1_orig} Original image "Pepper.jpg", $359\times 361$ px, 8 bit color depth
 	\subref{fig:application_colorization1_colorless} Image with a ratio of approximately $0.01$ remaining colored pixels
 	\subref{fig:application_colorization1_guess} First guess via component-wise scattered interpolation
-	\subref{fig:application_colorization1_restored} Recolored, IRLS with $\lambda=0.01$, $5$ IRLS steps, $1$ newton steps per IRLS step
+	\subref{fig:application_colorization1_restored} Recolored, IRLS with $\lambda=0.01$, $5$ IRLS steps, $1$ Newton step per IRLS step
 	\label{fig:application_colorization1}
     }
 \end{figure}
@@ -207,7 +207,7 @@ obtains sharp and clear edges in the final result \ref{fig:application_colorizat
 The picture section concludes with an example of a 3D volume image as they might occur in medical imaging from magnetic resonance imaging (MRI) or
 computed tomography. In this demonstration, however, the so-called \emph{Boston teapot} is chosen, taken from a volume image library \cite{volvis}
 and component-wise Gaussian noise is added. The image represents only intensity values, hence minimization is performed over $\mathbb{R}$. The results are shown
-in Figure \ref{fig:application_volume1_orig}.\\
+in Figure \ref{fig:application_volume1}.\\
 
 For this picture the proximal point algorithm is used, because the memory and computational requirements of the IRLS for a picture of this size are very high:
 In section \ref{sub:NewtonequationfortheTVfunctional} it was shown that the dimension of the sparse linear system is $\operatorname{dim}(M)XYZ$ which
@@ -215,7 +215,7 @@ in this case amounts to $1.1\times 10^{7}$, which is the length of the gradient 
 The solution of a sparse linear system of that size is computationally very demanding while in comparison the geodesic averaging and Karcher mean calculations
 simplify to mostly vectorized addition and subtraction operations on a simple manifold like $\mathbb{R}$.\\
 
-As a result, the IRLS minimization of the $64\times 64 \times 64$ volume image in \ref{fig:application_volume2_orig}, which
+As a result, the IRLS minimization of the $64\times 64 \times 64$ volume image in \ref{fig:application_volume2}, which
 shows the simulation of fuel injection into a combustion chamber, already takes 1100 seconds on the test platform, compared to
 only 109 seconds for the proximal point minimization of the much larger teapot image.
 
@@ -278,7 +278,7 @@ only 109 seconds for the proximal point minimization of the much larger teapot i
 \section{SO(2) and SO(3) image data} % (fold)
 \label{sec:SO image data}
 For the $SO(n)$ test, firstly, non-smooth synthetic data is created. It consists of 
-four regions in each of which orientations vary rather smoothly but sudden jumps
+four regions in each of which orientations vary rather smoothly. Sudden jumps
 in orientation occur when moving across the region boundaries. This is what can be
 considered an edge in $SPD$-valued data. Secondly, the algorithm is applied to two 
 real data examples based on fingerprint matching and video motion analysis.
@@ -300,7 +300,7 @@ where $x=\frac{j}{30}, y=\frac{i}{30}$ and a rotation angle
 	   \frac{\pi}{2} + x - y, \text{ else}
     \end{cases}.
 \end{equation}
-Then assign the corresponding $SO(3)$ element representing a rotation by $\alpha$ and about $v$. Noise is added component-wise and the noisy matrix is
+Then assign the corresponding $SO(3)$ element representing a rotation by $\alpha$ and about $v$. Noise is added componentwise and the noisy matrix is
 then projected back to $SO(3)$ using the projector $P_{SO(n)}(A)=UV^{T}$ where $A=U\Sigma V^T$ is the singular value decomposition of $A$.
 
 \begin{figure}[h!]
@@ -332,12 +332,12 @@ then projected back to $SO(3)$ using the projector $P_{SO(n)}(A)=UV^{T}$ where $
 \label{sub:Fingerprint orientation data}
 Fingerprint matching is  based on extracting a set of particular features, called \emph{minutiae}, which uniquely define the fingerprint.
 These features are usually ridge endpoints or ridge bifurcation points that are saved along with their position and orientation. This
-means that prior to minutia detection and extraction the calculation of an orientation field is necessary.\\
+means that prior to minutiae detection and extraction, the calculation of an orientation field is necessary.\\
 
-For pictures of fingerprints this is just a special form of edge detection which can be done by calculating discrete derivatives for every pixel using a Sobel or Scharr operator. The ridges in the original fingerprint, however, are usually too thick resulting in gradient values close to zero within the ridge and
-consequently ill-defined orientations. For that reason, firstly Zhang-Suen thinning algorithm \cite{zhangsuen} is used to obtain only the ridge skeleton for which then the derivatives are then computed.\\
+For pictures of fingerprints this is just a special form of edge detection which can be done by calculating discrete derivatives for every pixel using a Sobel or Scharr operator. The ridges in the original fingerprint, however, are usually too thick, resulting in gradient values close to zero within the ridge and
+consequently ill-defined orientations. For that reason, firstly Zhang-Suen thinning algorithm \cite{zhangsuen} is used to obtain only the ridge skeleton for which the derivatives are then computed.\\
 
-Depending on the quality and noise level of the picture the computed orientation field can be very noisy itself which is another application
+Depending on the quality and noise level of the picture, the computed orientation field can be very noisy itself, which is another application
 for the TV minimization. An example is provided in Figure \ref{fig:application_fingerprint1}. 
 
 % subsection Fingerprint orientation data (end)
@@ -371,7 +371,7 @@ for the TV minimization. An example is provided in Figure \ref{fig:application_f
 \FloatBarrier
 \subsection{Reconstruction of a dense optical flow field} % (fold)
 \label{sub:reconstructionDenseOpticalFlow}
-An optical flow is the pattern of apparent motion between two consecutive frame of a video sequence. This may be the result of either an actual movement of the depicted object
+An optical flow is the pattern of apparent motion between two consecutive frames of a video sequence. This may be the result of either an actual movement of the depicted object
 or the result of a moving camera. Important applications are for example (abnormal) motion detection, crowd behavior analysis, surveillance, video compression or image segmentation.\\
 A \emph{dense} optical flow field can be interpreted as a vector field where each vector describes the displacement of a point from one frame to the next. If
 the set of points is restricted to only a few points of interest, a sparse feature set, it is called a \emph{sparse} optical flow.\\
@@ -379,11 +379,11 @@ the set of points is restricted to only a few points of interest, a sparse featu
 In the following example, a sparse feature set is used for tracking and flow computation in a short video sequence. The traffic scene was taken from a crowds/high density moving object data 
 set provided by \cite{AliShah}. At first, the sparse optical flow is computed using the Lucas-Kanade algorithm \cite{LucasKanade} implemented in the OpenCV library. \\
 For the set of tracked features 
-$\mathcal{F}_1:=\lbrace{F^{(1)}_i\rbrace}_{i=1}^{400}\subset\Omega\subset\mathbb{R}^2$ in the first frame the algorithm tries to identify each feature in the second frame resulting in a set of
+$\mathcal{F}_1:=\lbrace{F^{(1)}_i\rbrace}_{i=1}^{400}\subset\Omega\subset\mathbb{R}^2$ in the first frame, the algorithm tries to identify each feature in the second frame resulting in a set of
 identified features $\mathcal{F}_2:=\lbrace{F^{(2)}_i\rbrace}_{i=1}^{N<400}\subset\Omega\subset\mathbb{R}^2$ and corresponding displacement vectors 
 $\mathcal{V}_{12}:=\lbrace{V_i\,|\,V_i=F_i^{(2)}-F_i^{(1)}\rbrace}_{i=1}^{N}$.\\
 
-To each pixel in the data an SO(2) element is assigned in the following way
+To each pixel in the data an SO(2) element (of course the optimization could have also been performed on $S^1$)  is assigned in the following way
 \begin{align}
     \alpha_i &=\arctan\left(\frac{V^y_i}{V^x_i}\right) \\
     I(i,j) &= 
@@ -395,6 +395,7 @@ To each pixel in the data an SO(2) element is assigned in the following way
 	0 & \text{ otherwise}
     \end{cases}.
 \end{align}
+
 
 Since reconstruction of the dense optical flow is the goal, this is an inpainting problem and scattered interpolation must be performed before running the algorithm. The result can be seen in 
 Figure \ref{fig:application_flowfield1}.
@@ -415,14 +416,14 @@ Figure \ref{fig:application_flowfield1}.
     \caption[Dense optical flow reconstruction]{Reconstructing a dense flow from sparse feature tracking, orientations represented by SO(2) elements
 	\subref{fig:application_flowfield1_orig} Frame of original video scene 
 	\subref{fig:application_flowfield1_noise} Sparse features tracked using Lucas-Kanade
-	\subref{fig:application_flowfield1_denoised} Reconstructed, IRLS with $\lambda=0.05$, $5$ IRLS steps, $1$ Newton steps per IRLS step
+	\subref{fig:application_flowfield1_denoised} Reconstructed, IRLS with $\lambda=0.05$, $5$ IRLS steps, $1$ Newton step per IRLS step
 	\label{fig:application_flowfield1}
     }
 \end{figure}
 
-Of course the optimization could have also been performed on $S^1$. Furthermore, there is also a more direct, variational approach for the calculation of the flow field
+There is also a more direct, variational approach for the calculation of the flow field
 which is also based on TV minimization but has a different fidelity term. This is one possibility for further extension of the library and is discussed in more detail in 
-section \ref{sec:Extensions}
+Section \ref{sec:Extensions}
 
 % subsection Calculation of a dense flow field (end)
 
@@ -433,7 +434,7 @@ section \ref{sec:Extensions}
 \label{sec:SPD(3) image data}
 As in the case of $SO(3)$, the algorithms are first applied to synthetic data. It consists of 
 approximately five homogeneous regions with large changes in the principal direction
-when moving from one region to another, - the edges in the $SPD(3)$ case.
+when moving from one region to another. These changes are the edges in the $SPD(3)$ case.
 Second, and more challenging due to the large differences in mean diffusivity, the
 algorithms are applied to real 2D and 3D DT-MRI pictures.
 
@@ -457,7 +458,7 @@ where $x=\frac{j}{n}, y=\frac{i}{n}$ and a rotation angle
 \end{equation}
 Let $R$ be the corresponding $SO(3)$ element representing a rotation by $\alpha$ and about $v$. Then define a diagonal matrix $D=\operatorname{diag}(x+0.2,y+0.2,0.5)$
 and assign the matrix $A=R^{T}DR$ to the pixel.\\
-Noise is then added by taking the matrix logarithm of every pixel, adding Gaussian component-wise noise and applying the matrix exponential again.
+Noise is then added by taking the matrix logarithm of every pixel, adding Gaussian componentwise noise and applying the matrix exponential again.
 \begin{figure}[h!]
     \centering
     \subfloat[][Original]{
@@ -473,9 +474,9 @@ Noise is then added by taking the matrix logarithm of every pixel, adding Gaussi
 	\includegraphics[width=0.325\linewidth]{./figures/experiments/denoised_spd100x100.png}
     }\\
     \caption[Denoising of synthetic SPD(3) picture]{Denoising of synthetic SPD(3) picture
-	\subref{fig:application_spd1_orig} Original image: Synthetic, non-smooth SPD(3), $100\times 100$ px PLACEHOLDER
-	\subref{fig:application_spd1_noise} Threshold $p=?$
-	\subref{fig:application_spd1_denoised} Denoised, IRLS with $\lambda=?$, 5 IRLS steps, 1 Newton step per IRLS
+	\subref{fig:application_spd1_orig} Original image: Synthetic, non-smooth SPD(3), $100\times 100$ px 
+	\subref{fig:application_spd1_noise} Componentwise Gaussian noise with $\mu=0$ and $\sigma=0.2$
+	\subref{fig:application_spd1_denoised} Denoised, IRLS with $\lambda=0.7$, 5 IRLS steps, 1 Newton step per IRLS
 	\label{fig:application_spd1}
     }
 \end{figure}
@@ -492,9 +493,9 @@ lot of information about the structure of the brain.\\
 
 DTI data sets are usually calculated from a set of diffusion weighted magnetic resonance imaging (DW-MRI) pictures. The basic magnetic resonance imaging works by applying an external magnetic field along
 the $z$-axis such that the proton spins in the tissue align either parallel or anti-parallel to it while still preceding around the $z$-axis with the so-called Lamor frequency.
-An electromagnetic wave packet(HF-pulse) with that exact frequency leads to a collective state transition to a resonance state such that spin moments will be phase-synchronous before relaxing
+An electromagnetic wave packet (HF-pulse) with that exact frequency leads to a collective state transition such that spin moments will be phase-synchronous before relaxing
 back to their original orientation with respect to the external field. The magnetic field created by having synchronized moments can be measured by a coil where an electric potential will be created.
-From the different relaxation times of different materials one can make conclusions about the structure of the tissue.\\
+From the different relaxation times of different materials conclusions can be made about the structure of the tissue.\\
 
 By applying an additional magnetic gradient field, the Lamor frequency of different layers of the probe can be modified such that only one layer of the material will resonate to the pulse.
 This provides an additional positional resolution of the imaging process.\\
@@ -503,8 +504,8 @@ The DTI image is finally computed using the \emph{Stejskal-Tanner-equation} give
 \begin{equation}
     A(\mathbf{g})=A(0)\exp(-b\mathbf{g}^T\mathbf{D}\mathbf{g})
 \end{equation}
-where $A(\mathbf{g})$ denotes the signal strength, $\mathbf{g}$ the magnetic gradient field and $b$ some measurement related parameters. Solving this equation for $\mathbf{D}$ finally
-leads to desired $SPD(3)$ matrix describing the diffusion coefficients and directions.\\
+where $\mathbf{g}$ denotes the magnetic gradient field, $A(\mathbf{g})$ the signal strength, and $b$ some measurement related parameters. Solving this equation for $\mathbf{D}$ finally
+leads to the desired $SPD(3)$ matrix describing the diffusion coefficients and directions.\\
 % subsection Diffusion Tensor MRI images (end)
 \begin{figure}[h!]
     \centering
@@ -524,7 +525,7 @@ leads to desired $SPD(3)$ matrix describing the diffusion coefficients and direc
 \end{figure}
 
 In Figure \ref{fig:application_dti1} the IRLS minimizer is applied to DTI data set provided by Barmpoutis \cite{barmpoutis}.
-One can clearly identify regions of high anisotropy in the picture, where the molecules are forced to diffuse in one preferred direction.
+In the picture, regions of high anisotropy, where the molecules are forced to diffuse in one preferred direction, can be clearly identified.
 The areas dominated mainly by green spheres correspond to approximately isotropic diffusion which means that there are no obstacles, like axons in the brain, in the 
 immediate proximity of the water molecules.\\
 
@@ -534,7 +535,7 @@ immediate proximity of the water molecules.\\
 \label{sub:3DDTMRIdata}
 % subsection 3D DT MRI data (end)
 
-Finally, in Figure \ref{fig:application_dti2} a 3D DTI image is depicted. Shown is a $16\times 16\times 16$ cube from a human brain scan and the proximal point algorithm was used for denoising. 
+Finally, in Figure \ref{fig:application_dti2} a 3D DTI image is depicted. Shown is a $16\times 16\times 16$ cube from a human brain scan. The proximal point algorithm was used for denoising. 
 The brain data set is a courtesy of Gordon Kindlmann at the Scientific Computing and Imaging Institute, University of Utah, 
 and Andrew Alexander, W. M. Keck Laboratory for Functional Brain Imaging and Behavior, University of Wisconsin-Madison. 
 \begin{figure}[h!]
@@ -566,9 +567,9 @@ beyond the scope of this thesis, a much simpler and more illustrative example wa
 Due to the fact that $Gr(3,1)\simeq S^2$, TV minimization over the Grassmann manifold can also be used to remove
 chromatic noise from pictures, completely analogous to the denoising over $S^2$ considered earlier. 
 
-\subsection{Chromaticity Denoising}
+\subsection{Chromaticity denoising}
 In the first example, shown in Figure \ref{fig:application_grassmann1}, only the color part of the image will be denoised. 
-Then, Figure \label{fig:application_grassmann2} shows the minimization over the product manifold $Gr(3,1)\times \mathbb{R}$, using the same picture as in example \ref{fig:application_color3}.
+Then, Figure \ref{fig:application_grassmann2} shows the minimization over the product manifold $Gr(3,1)\times \mathbb{R}$, using the same picture as in example \ref{fig:application_color3}.
 
 \begin{figure}[h!]
     \centering
@@ -629,17 +630,17 @@ In this section the performance hotspots of the library are analysed for the cas
 performance metrics during the execution of a program, like CPU cycles, cache or branch misses. To identify the hotspots, where most of the computation is spent, the number of CPU cycles is
 usually the most suitable metric. In the last part also the time complexity of the algorithm is measured.\\
 
-Concerning the computational complexity of operations performed on single pixels the Euclidean manifold is certainly the least demanding, because exponential and logarithm map are just 
+Concerning the computational complexity of operations performed on single pixels, the Euclidean manifold is certainly the least demanding, because exponential and logarithm map are 
 addition and subtraction and the second derivative of the distance function is just two times the identity matrix. At the other end of the spectrum is the $SPD$ manifold where
-computations usually involve multiple matrix multiplications, exponentials, logarithms and derivatives thereof. For the analysis metrics 
+computations usually involve multiple matrix multiplications, exponentials, logarithms and derivatives thereof. For the analysis, metrics 
 and running times for these two representatives are compared for different image sizes.\\
 
 \subsection{Profiling}
-For the Euclidean manifold the "Lena" and "Mathematicians" pictures already considered in the example above are used. Minimization in the first case takes approximately 9 seconds and 270 seconds in
+For the Euclidean manifold the "Lena" and "Mathematicians" pictures, already considered in the example above, are used. Minimization in the first case takes approximately 9 seconds and 270 seconds in
 the second case. The data is shown in Table \ref{table:perf_euc} where the first column denotes the percentage of CPU cycles spent in the routine specified in the second column 
 while the last column denotes the (external) library to which it belongs. Only the top six routines are shown since the individual share of the others was in most cases less than 1 \%. \\
 
-One can observe that in both cases computation is dominated by the Basic Linear Algebra Subprograms (BLAS) Library. Those in turn are called by the CHOLMOD library which solves the sparse
+In both cases computation is dominated by the Basic Linear Algebra Subprograms (BLAS) Library. Those in turn are called by the CHOLMOD library which solves the sparse
 linear system using Cholesky factorization. The only contribution that does not belong to the linear system is the multi-threading overhead from the OpenMP (OMP) library in the smaller picture.
 For the increased system size, however, the overhead becomes negligibly small such that for both problem sizes more than two thirds of the total computation time is used for solving the linear
 system. For the larger picture this share even grows to more than 75\% and can be expected to do so for yet larger images.\\
@@ -688,7 +689,7 @@ system. For the larger picture this share even grows to more than 75\% and can b
 	\hline
 	\end{tabular}
 }
-\caption[]{Share of total CPU cycles for IRLS minimization over $M=\mathbb{R}^3$
+\caption[Share of total CPU cycles $M=\mathbb{R}^3$]{Share of total CPU cycles for IRLS minimization over $M=\mathbb{R}^3$
 \subref{table:perf_lena}"Lena.jpg", $361\times 361$ pixel
 \subref{table:perf_mathematicians}"Mathematicians.jpg", $1280\times 1024$ pixel
 \label{table:perf_euc}
@@ -699,8 +700,8 @@ For the $SPD(n)$ manifold the situation, shown in Table \ref{table:perf_spd} and
 For the smallest problem size of $30\times 30$ pixels, there are no dominating parts. The largest contribution is from multi-threading, which is to be expected 
 for such a small picture and which consequently vanishes for larger images. 
 The next important routine is MTVMTL's implementation of the matrix logarithm Fr\'{e}chet derivative, while the remaining Eigen routines in the
-list are auxiliary functions for solving triangular matrix functions. These are need for the computation of matrix square roots, logarithms and of course also their
-Fr\'{e}chet derivatives. With increasing problem size, the BLAS routines seem move to the top of the list, even though their share only amounts 
+list are auxiliary functions for solving triangular matrix functions. These are needed for the computation of matrix square roots, logarithms and of course also their
+Fr\'{e}chet derivatives. With increasing problem size, the BLAS routines seem to move to the top of the list, even though their share only amounts 
 to a fifth of all CPU cycles for the $300\times 300$ pixel image. \\
 \begin{figure}[h!]
     \centering
@@ -724,21 +725,21 @@ to a fifth of all CPU cycles for the $300\times 300$ pixel image. \\
 	Share & Routine & Library \\
 	\hline
 	23.62& Multithreading overhead& OMP\\
-	9.34& MatrixLogarithmFrechetDerivative& TVMTL\\
+	9.34& MatrixLogarithmFrechetDerivative& MTVMTL\\
 	6.51& reduceToTriangularForm& Eigen\\
 	5.62& gebp\_kernel(matrix blocking)& Eigen\\
 	5.36& triangular\_solve\_matrix& Eigen\\
-	5.065& triangular\_solve\_matrix& Eigen\\
+	5.07& triangular\_solve\_matrix& Eigen\\
 	\hline
 	\end{tabular}
-}\,
+}
 \subfloat[][$100\times 100$]{
 	\label{table:perf_spd100}
 	\begin{tabular}{rll}
 	\hline
 	Share & Routine & Library\\
 	\hline
-	11.60& MatrixLogarithmFrechetDerivative& TVMTL\\
+	11.60& MatrixLogarithmFrechetDerivative& MTVMTL\\
 	7.72& reduceToTriangularForm& Eigen\\
 	6.77& gebp\_ kernel(matrix blocking)& Eigen\\
 	6.55& triangular\_solve\_matrix& Eigen\\
@@ -747,7 +748,7 @@ to a fifth of all CPU cycles for the $300\times 300$ pixel image. \\
 	\hline
 	\end{tabular}
 }
-\caption[]{Share of total CPU cycles for IRLS minimization over $M=SPD(3)$
+\caption[Share of total CPU cycles $SPD(3)$]{Share of total CPU cycles for IRLS minimization over $M=SPD(3)$
 \subref{table:perf_spd30} Synthetic $SPD(3)$ , $30\times 30$
 \subref{table:perf_spd100} Synthetic $SPD(3)$ , $100\times 100$
 \label{table:perf_spd}
@@ -764,7 +765,7 @@ to a fifth of all CPU cycles for the $300\times 300$ pixel image. \\
 Share & Routine & Library\\
 \hline
 11.31& DGEMM(matrix matrix multiply)& BLAS\\
-9.73& MatrixLogarithmFrechetDerivative& TVMTL\\
+9.73& MatrixLogarithmFrechetDerivative& MTVMTL\\
 9.19& DSYRK(symmetric rank-k update)& BLAS\\
 6.60& reduceToTriangularForm& Eigen\\
 5.73& gebp\_kernel(matrix blocking)& Eigen\\
@@ -774,19 +775,19 @@ Share & Routine & Library\\
 }
  \subfloat[][]{
 	\label{fig:perf_spd30}
-	\includegraphics[width=0.5\linewidth]{./figures/experiments/perf_spd_irls_30.pdf}
+	\includegraphics[width=0.5\linewidth]{./figures/experiments/perf_spd_irls_300.pdf}
     }
-\caption{Share of total CPU cycles for IRLS minimization of synthetic $SPD(3)$ , $300\times 300$ pixel, $M=SPD(3)$
+\caption[Share of total CPU cycles $SPD(3)$ , $300\times 300$ pixel]{Share of total CPU cycles for IRLS minimization of synthetic $SPD(3)$ , $300\times 300$ pixel, $M=SPD(3)$
 \label{table:perf_spd300}
 }
 \end{table}
 
 It can be concluded that solving the linear system is the most performance relevant aspect of the IRLS minimizer. The share is even higher for $SO(n)$ and $S^n$, where the SuperLU library is used, 
-since the corresponding sparse Hessian is not symmetric, resulting in a further increased operations count. If a good preconditioner is found, iterative solvers might speed up the computation, 
+since the corresponding sparse Hessian is not positive definite, resulting in a further increased operations count. If a good preconditioner is found, iterative solvers might speed up the computation, 
 the standard diagonal and incomplete LU preconditioner provided by the Eigen library, however, performed worse than the direct solvers from the SparseSuite library collection. Finally, for
 the matrix-valued manifolds, the implementation of the Fr\'{e}chet derivative could potentially be improved.
 
-\subsection{Time Complexity}
+\subsection{Time complexity}
 \label{sub:TimeComplexity}
 \begin{figure}[h!]
     \centering
@@ -805,9 +806,9 @@ the matrix-valued manifolds, the implementation of the Fr\'{e}chet derivative co
 	\label{fig:complexity}
     }
 \end{figure}
-Finally, the measurements of the time complexity obtained for the Euclidean $\mathbb{R}^3$ and $SPD(3)$ need to be discussed. 
-For both cases the time complexity over the considered input size range, which was limited only due to the available RAM on the test platform, one can see subquadratic time complexities. Despite the fact that based on the theory one would expect
-quasi-linear behavior, this deviation is to be expected.\\
+Next, the measurements of the time complexity obtained for the Euclidean $\mathbb{R}^3$ and $SPD(3)$ need to be discussed. 
+For both cases subquadratic time complexities can be observed over the considered input size range, which was limited only due to the available RAM on the test platform. This deviation from the theoretical
+expected (quasi-)linearity can eventually be explained by memory access costs.
 
 Handling large amounts of data, which in the above tests are in the GB range, naturally leads to additional cost for memory access. Memory is hierarchically structured with the CPU caches having the lowest access time but also the smallest size, whereas the RAM is comparably huge but has a much larger access time. At the bottom
 of the hierarchy is swap space on the hard drive. The cost of a so-called page-fault, which happens when a program tries to access
@@ -823,18 +824,18 @@ $\mathcal{O}(\operatorname{NNZ}(HJ))=\mathcal{O}(N)$.\\
 
 Considering above remarks on the effects of memory access speed, this claim can be further supported by looking at other performance metrics like
 cache-misses and page-faults, where the BLAS routines are again at the top of the listings.
-The measurement results for this metric can be found in the Appendix \ref{ap:performancemetrics}.
+The measurement results for this metrics can be found in Appendix \ref{ap:performancemetrics}.
 % section Performance profiling of the library (end)
 
 
 \FloatBarrier
 \section{Comparison IRLS and Proximal Point minimizers} % (fold)
-\label{sec:Comparison IRLS and Proximal Point minimizers}
+\label{sec:Comparison IRLS and proximal point minimizers}
 
 To make a comparison with the tests performed in \cite{SprecherIRLS}, using the original Matlab implementation, to a certain degree possible,  the same set of test images (Figure \ref{fig:comparison_testimages}) was chosen but additionally also some larger versions of the pictures for the more interesting 
 case of the matrix manifolds $SO(3)$ and $SPD(3)$. For the Grassmannian $Gr(3,1)$ the same picture as
 for $S^2$ is used.
-Both, the IRLS and the proximal point minimizers are implemented using the same manifold classes and utilize the
+Both, the IRLS and the proximal point minimizers are implemented using the same manifold classes and both utilize the
 same pixel-wise parallelization techniques such that there is no obvious bias in this comparison.\\
 
 The synthetic images are created using the formulas already described in the examples above. To each picture component-wise Gaussian noise with zero mean and
@@ -906,8 +907,8 @@ the sequence $\mu_k=3k^{-0.95}$ (see \cite{Weinmann} for details on this sequenc
 Figure \ref{fig:comparison_euc_s2} shows the results for Euclidean space $\mathbb{R}^3$ and the sphere $S^2$. IRLS needs only five iterations where proximal point needs more than 200
 but nevertheless proximal wins in terms of speed. This result can be interpreted with respect to the performance analysis conducted in the previous section. Most manifold quantities can
 be computed using only addition and subtraction. This includes the geodesic interpolation that proximal point has to perform in every direction as well as the computation of derivatives
-for IRLS. The effort of doing these two task seems intuitively similar. At the end of that process, however, proximal point only has to compute simple arithmetic means while IRLS has to 
-solve the sparse system which was shown to be the dominant part of the computation and thus probably more time consuming than the averaging procedure. For $S^2$, in comparison, one
+for IRLS. The effort of doing these two task seems intuitively to be similar. At the end of that process, however, proximal point only has to compute simple arithmetic means while IRLS has to 
+solve the sparse system which was shown to be the dominant part of the computation and is thus probably more time consuming than the averaging procedure. For $S^2$, in comparison, one
 can already see IRLS catching up.\\
 
 \begin{figure}[h!]
@@ -942,8 +943,8 @@ can already see IRLS catching up.\\
 For $SO(3)$, shown in \ref{fig:comparison_son}, the difference again becomes much smaller, with both plots being very close and coinciding already after the second iteration. In terms of the
 error IRLS even surpasses proximal point after 4 iterations.\\
 
-Next, in the case of $SPD(3)$, shown in \ref{fig:comparison_spd},except for the error, IRLS falls back to the niveau of $S^2$. One reason for that might be the particularly complicated form of the second
-derivative of the square distance function. This could be eventually optimized by improving the implementation of the Fr\'{e}chet derivative. At this time it is based on
+Next, in the case of $SPD(3)$, shown in \ref{fig:comparison_spd}, except for the error, IRLS falls back to the niveau of $S^2$. One reason for that might be the particularly complicated form of the second
+derivative of the squared distance function. This could be eventually optimized by improving the implementation of the Fr\'{e}chet derivative. At this time it is based on
 the computation of a complex Schur decomposition which then, in turn, needs complex arithmetic. Switching to a block-based, but real Schur decomposition might provide an additional speed-up.\\
 
 \begin{figure}[h!]
@@ -970,7 +971,7 @@ manifolds computation of the exponential and logarithm map was very easy, in the
 a singular value decomposition must be performed for every evaluation and the logarithm even requires the solution
 of a small linear system before the decomposition. Computation of the derivatives for IRLS, on the other hand is
 comparably easy, with only matrix-matrix multiplications and Kronecker products involved. Since the proximal point
-algorithm is mainly based on exponential and logarithm map evaluations, the solving the sparse linear system is
+algorithm is mainly based on exponential and logarithm map evaluations, solving the sparse linear system is
 faster here.
 
 \begin{figure}[h!]
@@ -1003,7 +1004,7 @@ faster here.
 %If $N=XYZ$ denotes the number of pixels in the picture than the the number of non-zero entries in the Hessian is still $\mathcal{O}(N)$\\
 In this section a numerical experiment is performed to see how changes of the noisy original picture influence the global solution of TV
 minimization.
-For that purpose only the brightness part of the Lena picture is considered. In this grayscale image a single non-zero pixel is chosen, far enough in the inside of the picture and this pixel is set to zero, i.e. black color. This leads to two different original pictures
+For that purpose only the brightness part of the Lena picture is considered. In this grayscale image a single non-zero pixel is chosen, far enough in the inside of the picture. This pixel is set to zero, i.e. black color. This leads to two different original pictures
 \begin{align}
     u_0,\hat{u}_0:\Omega &\to\mathbb{R}\\
     (\hat{u}_0)_{ij}&=\begin{cases}
@@ -1012,13 +1013,13 @@ For that purpose only the brightness part of the Lena picture is considered. In 
     \end{cases}.
 \end{align}
 
-Then for the original $u_0$ and the modified image $\hat{u}_0$ an IRLS minimization with $\lambda=0.1$, 5 iterations and one Newton step per reweighting is
+Then, for the original $u_0$ and the modified image $\hat{u}_0$ an IRLS minimization with $\lambda=0.1$, 5 iterations and one Newton step per reweighting is
 performed to compare the two the solutions $u$ and $\hat{u}$. Taking the absolute differences $e_{ij}=|u_{ij}-\hat{u}_{ij}|$ between the solutions
 leads to the error cone shown in Figure \ref{fig:experiment_sensitivity_plot}. This already suggests that the
 error caused by changing the original data decays exponentially with distance $r=\sqrt{(i-i_0)^{2}+(j-j_0)^{2}}$.\\
 
 After fitting a cone to the data, which is shown in \ref{fig:experiment_sensitivity_fit}
-one finds that the aperture half-angle corresponds to a slope of $c=1.XXX$ such that the error will decay as
+one finds that the aperture half-angle corresponds to a slope of $c=1.075$ such that the error will decay as
 \begin{equation}
     e_{ij}\propto e^{-cr}.
 \end{equation}
@@ -1035,12 +1036,12 @@ one finds that the aperture half-angle corresponds to a slope of $c=1.XXX$ such 
     }\\
     \caption[Sensitivity to variation]{Sensitivity to change in original data
 	\subref{fig:experiment_sensitivity_plot} Logarithmic plot of absolute differences $e_{ij}=|u_{ij}-\hat{u}_{ij}|$
-	\subref{fig:experiment_sensitivity_fit} Cone fitted to the data, resulting in aperture half-angle of $\alpha=XXX$
+	\subref{fig:experiment_sensitivity_fit} Cone fitted to the data, resulting in aperture half-angle of $\alpha=0.8213$
 	\label{fig:experiment_sensitivity}
     }
 \end{figure}
 
-The most important conclusion one can draw from this is that a pixel in the global minimizer depends practically only on a local neighborhood of that pixel
+The most important conclusion is that a pixel in the global minimizer depends practically only on a local neighborhood of that pixel
 in the original picture, not on pixels far away from that neighborhood. Possible applications of this are discussed in Section \ref{sec:Recursivecomputationonsubdomains}.\\
 
 Of course these findings should be verified analytically by providing sufficiently precise error bounds, which is, however, unfortunately out of the scope of this thesis.

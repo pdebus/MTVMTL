@@ -5,13 +5,12 @@
 
 % Load ``float'' before ``hyperref`` before ''algorithm``
 % Note: ''algorithm`` would load ''float`` by itself
-\usepackage{tocbibind}
 \usepackage{appendix}
 \usepackage{longtable}
 \usepackage[nonumberlist,acronym]{glossaries}
 
 \usepackage{float}
-\usepackage[pagebackref,hyperindex=true]{hyperref}
+
 
 \input{./header_math.tex}
 \input{./header_gfx.tex}
@@ -32,6 +31,7 @@
 \definecolor{linkcol}{rgb}{0,0,0.4}
 \definecolor{citecol}{rgb}{0.5,0,0}
 
+\usepackage[pagebackref,hyperindex=true]{hyperref}
 \hypersetup
 {
 colorlinks=true,
@@ -39,6 +39,9 @@ linkcolor=linkcol,
 citecolor=citecol,
 urlcolor=linkcol
 }
+
+
+
 
 % nicer backref links
 \renewcommand*{\backref}[1]{}
@@ -65,14 +68,33 @@ urlcolor=linkcol
 \begin{document}
 
 \input{./title.tex}
+\input{./ch_abstract.tex}
 
 \clearemptydoublepage
-
 \tableofcontents
+
+\clearemptydoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{\listfigurename}
 \listoffigures
+
+\clearemptydoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{\listtablename}
+\listoftables
+
+\clearemptydoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{\listalgorithmname}
 \listofalgorithms
+
+%\clearemptydoublepage
+
 \glsaddall
-\printnoidxglossary[type=abbrev,sort=letter,style=long]
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Abbreviations}
+\printnoidxglossary[type=abbrev,sort=letter,style=index]
 
 \clearemptydoublepage
 
@@ -95,10 +117,18 @@ urlcolor=linkcol
 \input{./ch_outlook.tex}
 
 \clearemptydoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Acknowledgements}
+\input{./ch_acknowledgements.tex}
+
+\clearemptydoublepage
 
 \appendix
+
 \input{./ap_listings.tex}
+\clearemptydoublepage
 \input{./ap_derivatives.tex}
+\clearemptydoublepage
 \input{./ap_perf.tex}
 
 \clearemptydoublepage
