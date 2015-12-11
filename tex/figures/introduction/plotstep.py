@@ -12,4 +12,5 @@ plt.step(x1, x1, linestyle='--', linewidth=3, drawstyle='steps-mid', label=r'$f_
 plt.step(x2, x2, linestyle='-.', linewidth=3, drawstyle='steps-mid', label=r'$f_1(x)$')
 plt.legend(loc='upper left')
 plt.savefig("tv12comparison.pdf")
+plt.savefig("tv12comparison.png")
 plt.show()
