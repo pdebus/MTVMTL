@@ -22,9 +22,11 @@ manifold-valued two- or three-dimensional images.
 ## Functionals
 - isotropic (only possible for IRLS) or anisotropic TV functionals
 - first order TV term
-- weighting and inpainting possible Minimizer
-- Iteratively reweighted least squares using Riemannian Newton method
-- Proximal point
+- weighting and inpainting possible 
+
+## Minimizer
+- Iteratively reweighted least squares using Riemannian Newton method [1]
+- Proximal point [2]
 
 ## Visualizations
 - OpenGL rotated cubes visualization for SO(3) images
@@ -36,7 +38,7 @@ The following list shows the needed packages for the usage of MTVMTL:
 - CMake (≥ 2.8.0)
 - gcc (≥ 4.9.1), any C++14 compatible compiler should also be possible but is untested.
 - Eigen (≥ 3.2.5)
-- Video++ (a modified version will be provided with the MTVMTL, otherwise consider check https://github.com/matt-42/vpp )
+- Video++ (a modified version will be provided with the MTVMTL, otherwise consider check [https://github.com/matt-42/vpp](https://github.com/matt-42/vpp) )
 - Boost (≥ 1.56) (also needed for CGAL)
 
 Recommended are also the following packages. They are needed if any of the described extended
@@ -47,6 +49,13 @@ functionality needs to be used.
 any 3D data
 - SuiteSparse (≥ 4.2.1), faster parallel sparse solver for the linear system in the IRLS algorithm
 - SuperLU (≥ 4.3), faster parallel sparse solver for the linear system in the IRLS algorithm
+
+[1] P. Grohs and M. Sprecher. Total variation regularization by iteratively reweighted least
+squares on hadamard spaces and the sphere. Technical Report 2014-39, Seminar for Applied
+Mathematics, ETH Zürich, Switzerland, 2014
+[2] A. Weinmann, L. Demaret, and M. Storath. Total variation regularization for manifold-valued
+data. SIAM Journal on Imaging Sciences, 7(4):2226–2257, 2014
+
 
 # Usage
 ## Example: 3D DT-MRI data denoising and visualization
